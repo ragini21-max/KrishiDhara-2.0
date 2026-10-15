@@ -95,12 +95,11 @@
     <script>
         let generatedMobileOTP = "";
         let generatedAadhaarOTP = "";
-       let mobileTimerInterval = null;
+        let mobileTimerInterval = null;
         let aadhaarTimerInterval = null;
 
         function startTimer(duration, displayElementId) {
             let timer = duration, seconds;
-            // Clear any existing interval first to prevent overlap
             if (displayElementId === 'mobileTimer' && mobileTimerInterval) clearInterval(mobileTimerInterval);
             if (displayElementId === 'aadhaarTimer' && aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
 
@@ -125,21 +124,25 @@
                 alert("Please enter a valid 10-digit mobile number.");
                 return;
             }
-            alert("[SIMULATED SMS] Your KrishiDhara OTP is: 1234");
+            
+            // Generates a truly random 4-digit number every single time
+            generatedMobileOTP = Math.floor(1000 + Math.random() * 9000).toString();
+            
+            alert(`[SIMULATED SMS] Your KrishiDhara OTP is: ${generatedMobileOTP}`);
             document.getElementById('mobileOtpBox').classList.remove('hidden');
             startTimer(60, 'mobileTimer');
         }
 
         function verifyMobileOTP() {
             const entered = document.getElementById('mobileOtpInput').value.trim();
-            if (entered === "1234" || entered === "9999") {
+            if (entered === generatedMobileOTP) {
                 if (mobileTimerInterval) clearInterval(mobileTimerInterval);
                 alert("Mobile number verified successfully!");
                 document.getElementById('mobileOtpBox').classList.add('hidden');
                 document.getElementById('mobileInput').disabled = true;
                 document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
             } else {
-                alert("Incorrect OTP. Please enter 1234.");
+                alert(`Incorrect OTP. (Hint for demo: check the alert box popup for the code: ${generatedMobileOTP})`);
             }
         }
 
@@ -147,17 +150,21 @@
             const aadhaarInput = document.getElementById('aadhaarInput');
             const aadhaar = aadhaarInput.value.trim();
             if (aadhaar.length !== 12) {
-                alert("Please enter a valid 12-digit ID number.");
+                alert("Please enter a valid 12-digit number.");
                 return;
             }
-            alert("[e-KYC SMS] Verification OTP is: 5678");
+
+            // Generates a truly random 4-digit number every single time
+            generatedAadhaarOTP = Math.floor(1000 + Math.random() * 9000).toString();
+
+            alert(`[e-KYC SMS] Verification OTP is: ${generatedAadhaarOTP}`);
             document.getElementById('aadhaarOtpBox').classList.remove('hidden');
             startTimer(60, 'aadhaarTimer');
         }
 
         function verifyAadhaarOTP() {
             const entered = document.getElementById('aadhaarOtpInput').value.trim();
-            if (entered === "5678" || entered === "9999") {
+            if (entered === generatedAadhaarOTP) {
                 if (aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
                 document.getElementById('aadhaarOtpBox').classList.add('hidden');
                 document.getElementById('aadhaarInput').disabled = true;
@@ -171,53 +178,9 @@
                 btn.disabled = false;
                 btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
             } else {
-                alert("Incorrect OTP. Please enter 5678.");
+                alert(`Incorrect OTP. (Hint for demo: check the alert box popup for the code: ${generatedAadhaarOTP})`);
             }
         }
-
-        function sendMobileOTP() {
-            generatedMobileOTP = "1234";
-            alert(`[SIMULATED SMS] Your KrishiDhara OTP is: 1234`);
-            document.getElementById('mobileOtpBox').classList.remove('hidden');
-        }
-
-        function verifyMobileOTP() {
-            const entered = document.getElementById('mobileOtpInput').value.trim();
-            if (entered === "1234" || entered === generatedMobileOTP) {
-                alert("Mobile number verified successfully!");
-                document.getElementById('mobileOtpBox').classList.add('hidden');
-                document.getElementById('mobileInput').disabled = true;
-                document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                alert("Incorrect OTP. Try 1234.");
-            }
-        }
-
-        function sendAadhaarOTP() {
-            generatedAadhaarOTP = "5678";
-            alert(`[e-KYC SMS] Verification OTP is: 5678`);
-            document.getElementById('aadhaarOtpBox').classList.remove('hidden');
-        }
-
-        function verifyAadhaarOTP() {
-            const entered = document.getElementById('aadhaarOtpInput').value.trim();
-            if (entered === "5678" || entered === generatedAadhaarOTP) {
-                document.getElementById('aadhaarOtpBox').classList.add('hidden');
-                document.getElementById('aadhaarInput').disabled = true;
-                document.getElementById('profileCard').classList.remove('hidden');
-                
-                const badge = document.getElementById('stepBadge');
-                badge.innerText = "Verified ✅";
-                badge.className = "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
-
-                const btn = document.getElementById('btnProceedSlot');
-                btn.disabled = false;
-                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
-            } else {
-                alert("Incorrect OTP. Try 5678.");
-            }
-        }
-
         function proceedToSlotBooking() {
             localStorage.setItem('kd_farmer_verified', 'true');
             localStorage.setItem('kd_farmer_name', 'Ramesh Kumar');
