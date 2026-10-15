@@ -95,20 +95,84 @@
     <script>
         let generatedMobileOTP = "";
         let generatedAadhaarOTP = "";
-        let mobileTimerInterval = null;
+       let mobileTimerInterval = null;
         let aadhaarTimerInterval = null;
 
         function startTimer(duration, displayElementId) {
             let timer = duration, seconds;
-            return setInterval(function () {
+            // Clear any existing interval first to prevent overlap
+            if (displayElementId === 'mobileTimer' && mobileTimerInterval) clearInterval(mobileTimerInterval);
+            if (displayElementId === 'aadhaarTimer' && aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
+
+            const interval = setInterval(function () {
                 seconds = parseInt(timer % 60, 10);
                 const elem = document.getElementById(displayElementId);
                 if (elem) elem.textContent = seconds + "s";
                 if (--timer < 0) {
-                    clearInterval(mobileTimerInterval);
-                    clearInterval(aadhaarTimerInterval);
+                    clearInterval(interval);
+                    if (elem) elem.textContent = "Expired";
                 }
             }, 1000);
+
+            if (displayElementId === 'mobileTimer') mobileTimerInterval = interval;
+            if (displayElementId === 'aadhaarTimer') aadhaarTimerInterval = interval;
+        }
+
+        function sendMobileOTP() {
+            const mobileInput = document.getElementById('mobileInput');
+            const mobile = mobileInput.value.trim();
+            if (mobile.length !== 10) {
+                alert("Please enter a valid 10-digit mobile number.");
+                return;
+            }
+            alert("[SIMULATED SMS] Your KrishiDhara OTP is: 1234");
+            document.getElementById('mobileOtpBox').classList.remove('hidden');
+            startTimer(60, 'mobileTimer');
+        }
+
+        function verifyMobileOTP() {
+            const entered = document.getElementById('mobileOtpInput').value.trim();
+            if (entered === "1234" || entered === "9999") {
+                if (mobileTimerInterval) clearInterval(mobileTimerInterval);
+                alert("Mobile number verified successfully!");
+                document.getElementById('mobileOtpBox').classList.add('hidden');
+                document.getElementById('mobileInput').disabled = true;
+                document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                alert("Incorrect OTP. Please enter 1234.");
+            }
+        }
+
+        function sendAadhaarOTP() {
+            const aadhaarInput = document.getElementById('aadhaarInput');
+            const aadhaar = aadhaarInput.value.trim();
+            if (aadhaar.length !== 12) {
+                alert("Please enter a valid 12-digit ID number.");
+                return;
+            }
+            alert("[e-KYC SMS] Verification OTP is: 5678");
+            document.getElementById('aadhaarOtpBox').classList.remove('hidden');
+            startTimer(60, 'aadhaarTimer');
+        }
+
+        function verifyAadhaarOTP() {
+            const entered = document.getElementById('aadhaarOtpInput').value.trim();
+            if (entered === "5678" || entered === "9999") {
+                if (aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
+                document.getElementById('aadhaarOtpBox').classList.add('hidden');
+                document.getElementById('aadhaarInput').disabled = true;
+                document.getElementById('profileCard').classList.remove('hidden');
+                
+                const badge = document.getElementById('stepBadge');
+                badge.innerText = "Verified ✅";
+                badge.className = "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
+
+                const btn = document.getElementById('btnProceedSlot');
+                btn.disabled = false;
+                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
+            } else {
+                alert("Incorrect OTP. Please enter 5678.");
+            }
         }
 
         function sendMobileOTP() {
