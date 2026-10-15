@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrishiDhara 2.0 - Farmer Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
+
+    <!-- Header -->
+    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
+        <div class="flex items-center space-x-3">
+            <span class="text-4xl">👨‍🌾</span>
+            <h1 class="text-lg md:text-xl font-bold" data-translate="farmer_header">KrishiDhara 2.0 • Farmer Portal</h1>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+            <!-- 22 Indian Languages Dropdown -->
+            <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-4 py-2.5 rounded-2xl border border-green-600 font-bold focus:outline-none cursor-pointer">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="bn">বাংলা</option>
+                <option value="te">తెలుగు</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="or">ଓଡ଼ିଆ</option>
+                <option value="as">অসমীয়া</option>
+                <option value="ur">اردو</option>
+                <option value="sa">संस्कृतम्</option>
+                <option value="ne">नेपाली</option>
+                <option value="sd">سنڌي</option>
+                <option value="ks">कॉशुर</option>
+                <option value="doi">डोगरी</option>
+                <option value="mni">মৈতৈলোন্</option>
+                <option value="sat">संताली</option>
+                <option value="bho">भोजपुरी</option>
+                <option value="raj">राजस्थानी</option>
+            </select>
+            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 transition shadow cursor-pointer font-bold" data-translate="switch_role">Switch Role</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
+        
+        <!-- Step Indicator -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl md:text-2xl font-extrabold text-green-900" data-translate="step1_title">Step 1: Identity & Aadhaar Verification</h2>
+                <span id="stepBadge" class="text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full" data-translate="pending_badge">Pending</span>
+            </div>
+            <p class="text-sm md:text-base text-gray-600" data-translate="step1_desc">Secure mobile & Aadhaar authentication for procurement slot booking.</p>
+        </div>
+
+        <!-- Verification Form Card -->
+        <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-8">
+            
+            <!-- PHASE A: Mobile OTP -->
+            <div id="mobileSection" class="space-y-4">
+                <label class="block text-base md:text-lg font-bold text-gray-800" data-translate="mobile_label">📱 Mobile Number</label>
+                <div class="flex space-x-4">
+                    <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit mobile no." class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
+                    <button type="button" onclick="sendMobileOTP()" id="btnSendMobileOTP" class="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer" data-translate="send_otp">Send OTP</button>
+                </div>
+
+                <div id="mobileOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
+                    <div class="flex justify-between items-center text-sm md:text-base">
+                        <span class="text-gray-700 font-semibold" data-translate="enter_mobile_otp">Enter 4-digit OTP sent to mobile</span>
+                        <span id="mobileTimer" class="text-red-600 font-bold text-base">60s</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <input type="text" id="mobileOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
+                        <button type="button" onclick="verifyMobileOTP()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer" data-translate="verify_mobile">Verify Mobile OTP ✅</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE B: Aadhaar Verification -->
+            <div id="aadhaarSection" class="space-y-4 pt-6 border-t-2 border-gray-200 opacity-50 pointer-events-none transition-all">
+                <label class="block text-base md:text-lg font-bold text-gray-800" data-translate="id_label">🆔 Aadhaar Number (12-Digit)</label>
+                <div class="flex space-x-4">
+                    <input type="password" id="aadhaarInput" maxlength="12" placeholder="XXXX XXXX XXXX" class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
+                    <button type="button" onclick="sendAadhaarOTP()" id="btnSendAadhaarOTP" class="bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer" data-translate="send_kyc">Send e-KYC OTP</button>
+                </div>
+
+                <div id="aadhaarOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
+                    <div class="flex justify-between items-center text-sm md:text-base">
+                        <span class="text-gray-700 font-semibold" data-translate="enter_kyc_otp">Enter OTP sent to registered Aadhaar mobile</span>
+                        <span id="aadhaarTimer" class="text-red-600 font-bold text-base">60s</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <input type="text" id="aadhaarOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
+                        <button type="button" onclick="verifyAadhaarOTP()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer" data-translate="verify_kyc">Verify & Fetch Profile 🔍</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE C: Verified Profile Card -->
+            <div id="profileCard" class="hidden p-6 bg-green-50 border-2 border-green-500 rounded-2xl space-y-4 shadow-inner">
+                <div class="flex items-center space-x-5">
+                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-4xl shadow-inner border border-green-300 flex-shrink-0">
+                        🧑‍🌾
+                    </div>
+                    <div>
+                        <h3 id="profileName" class="text-lg md:text-xl font-extrabold text-green-900">Ramesh Kumar</h3>
+                        <p class="text-sm md:text-base text-gray-700 font-medium">Age: 42 | Gender: Male</p>
+                        <p class="text-sm text-green-700 font-bold mt-1">Verified Aadhaar Details Confirmed</p>
+                    </div>
+                </div>
+                <div class="text-sm bg-white p-4 rounded-xl border border-green-200 text-green-800 font-medium" data-translate="success_msg">
+                    ✅ Secure Aadhaar e-KYC match successful. Identity confirmed for procurement queue.
+                </div>
+            </div>
+
+            <div class="pt-4 flex items-center space-x-3">
+                <input type="checkbox" id="saveLoginCheck" checked class="w-6 h-6 text-green-600 rounded border-gray-300 focus:ring-green-500 cursor-pointer">
+                <label for="saveLoginCheck" class="text-sm md:text-base text-gray-700 font-medium cursor-pointer" data-translate="save_login">Save login info securely on this phone for future visits</label>
+            </div>
+
+        </div>
+
+        <button type="button" id="btnProceedSlot" onclick="proceedToSlotBooking()" disabled class="w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed" data-translate="proceed_btn">
+            Proceed to Slot Booking →
+        </button>
+
+    </main>
+
+    <footer class="text-center py-4 text-xs md:text-sm text-gray-600 border-t bg-white/60 rounded-2xl max-w-4xl w-full mx-auto font-medium" data-translate="footer_text">
+        KrishiDhara 2.0 • End-to-End Encrypted Verification
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                farmer_header: "KrishiDhara 2.0 • Farmer Portal",
+                switch_role: "Switch Role",
+                step1_title: "Step 1: Identity & Aadhaar Verification",
+                pending_badge: "Pending",
+                verified_badge: "Verified ✅",
+                step1_desc: "Secure mobile & Aadhaar authentication for procurement slot booking.",
+                mobile_label: "📱 Mobile Number",
+                send_otp: "Send OTP",
+                enter_mobile_otp: "Enter 4-digit OTP sent to mobile",
+                verify_mobile: "Verify Mobile OTP ✅",
+                id_label: "🆔 Aadhaar Number (12-Digit)",
+                send_kyc: "Send e-KYC OTP",
+                enter_kyc_otp: "Enter OTP sent to registered Aadhaar mobile",
+                verify_kyc: "Verify & Fetch Profile 🔍",
+                success_msg: "✅ Secure Aadhaar e-KYC match successful. Identity confirmed for procurement queue.",
+                save_login: "Save login info securely on this phone for future visits",
+                proceed_btn: "Proceed to Slot Booking →",
+                footer_text: "KrishiDhara 2.0 • End-to-End Encrypted Verification"
+            },
+            hi: {
+                farmer_header: "कृषिधारा 2.0 • किसान पोर्टल",
+                switch_role: "भूमिका बदलें",
+                step1_title: "चरण 1: पहचान और आधार सत्यापन",
+                pending_badge: "लंबित",
+                verified_badge: "सत्यापित ✅",
+                step1_desc: "प्रोक्कुरमेंट स्लॉट बुकिंग के लिए सुरक्षित मोबाइल और आधार प्रमाणीकरण।",
+                mobile_label: "📱 मोबाइल नंबर",
+                send_otp: "ओटीपी भेजें",
+                enter_mobile_otp: "मोबाइल पर भेजा गया 4-अंकों का ओटीपी दर्ज करें",
+                verify_mobile: "मोबाइल ओटीपी सत्यापित करें ✅",
+                id_label: "🆔 आधार नंबर (12-अंक)",
+                send_kyc: "ई-केवाईसी ओटीपी भेजें",
+                enter_kyc_otp: "पंजीकृत आधार मोबाइल पर भेजा गया ओटीपी दर्ज करें",
+                verify_kyc: "सत्यापित करें और प्रोफाइल प्राप्त करें 🔍",
+                success_msg: "✅ सुरक्षित आधार ई-केवाईसी मिलान सफल। प्रोक्युरमेंट कतार के लिए पहचान पक्की हो गई।",
+                save_login: "भविष्य के लिए इस फोन पर लॉगिन जानकारी सुरक्षित रखें",
+                proceed_btn: "स्लॉट बुकिंग पर आगे बढ़ें →",
+                footer_text: "कृषिधारा 2.0 • एंड-टू-एंड एन्क्रिप्टेड सत्यापन"
+            },
+            mr: {
+                farmer_header: "कृषिधारा २.० • शेतकरी पोर्टल",
+                switch_role: "भूमिका बदला",
+                step1_title: "पायरी १: ओळख आणि आधार पडताळणी",
+                pending_badge: "प्रलंबित",
+                verified_badge: "पडताळणी केली ✅",
+                step1_desc: "प्रोक्युरमेंट स्लॉट बुकिंगसाठी सुरक्षित मोबाईल आणि आधार पडताळणी.",
+                mobile_label: "📱 मोबाईल नंबर",
+                send_otp: "OTP पाठवा",
+                enter_mobile_otp: "मोबाईलवर पाठवलेला ४ अंकी OTP प्रविष्ट करा",
+                verify_mobile: "मोबाईल OTP तपासा ✅",
+                id_label: "🆔 आधार क्रमांक (१२-अंकी)",
+                send_kyc: "e-KYC OTP पाठवा",
+                enter_kyc_otp: "नोंदणीकृत आधार मोबाईलवर पाठवलेला OTP प्रविष्ट करा",
+                verify_kyc: "तपासा आणि प्रोफाइल मिळवा 🔍",
+                success_msg: "✅ सुरक्षित आधार e-KYC जुळणी यशस्वी. प्रोक्युरमेंट रांगेसाठी ओळख निश्चित केली.",
+                save_login: "भविष्यातील भेटींसाठी या फोनवर लॉगिन माहिती सुरक्षित ठेवा",
+                proceed_btn: "स्लॉट बुकिंगकडे जा →",
+                footer_text: "कृषिधारा २.० • सुरक्षित पडताळणी"
+            },
+            pa: {
+                farmer_header: "ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਕਿਸਾਨ ਪੋਰਟਲ",
+                switch_role: "ਭੂਮਿਕਾ ਬਦਲੋ",
+                step1_title: "ਕਦਮ 1: ਪਛਾਣ ਅਤੇ ਆਧਾਰ ਤਸਦੀਕ",
+                pending_badge: "ਬਕਾਇਆ",
+                verified_badge: "ਤਸਦੀਕਸ਼ੁਦਾ ✅",
+                step1_desc: "ਸਲਾਟ ਬੁਕਿੰਗ ਲਈ ਸੁਰੱਖਿਅਤ ਮੋਬਾਈਲ ਅਤੇ ਆਧਾਰ ਪ੍ਰਮਾਣੀਕਰਨ।",
+                mobile_label: "📱 ਮੋਬਾਈਲ ਨੰਬਰ",
+                send_otp: "OTP ਭੇਜੋ",
+                enter_mobile_otp: "4-ਅੰਕਾਂ ਦਾ OTP ਦਰਜ ਕਰੋ",
+                verify_mobile: "OTP ਤਸਦੀਕ ਕਰੋ ✅",
+                id_label: "🆔 ਆਧਾਰ ਨੰਬਰ (12-ਅੰਕ)",
+                send_kyc: "e-KYC OTP ਭੇਜੋ",
+                enter_kyc_otp: "ਰਜਿਸਟਰਡ ਆਧਾਰ ਮੋਬਾਈਲ 'ਤੇ OTP ਦਰਜ ਕਰੋ",
+                verify_kyc: "ਪ੍ਰੋਫਾਈਲ ਪ੍ਰਾਪਤ ਕਰੋ 🔍",
+                success_msg: "✅ ਸੁਰੱਖਿਅਤ ਆਧਾਰ e-KYC ਸਫਲ।",
+                save_login: "ਭਵਿੱਖ ਲਈ ਲੌਗਇਨ ਸੁਰੱਖਿਅਤ ਰੱਖੋ",
+                proceed_btn: "ਸਲਾਟ ਬੁਕਿੰਗ ਵੱਲ ਅੱਗੇ ਵਧੋ →",
+                footer_text: "ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਤਸਦੀਕ"
+            },
+            gu: {
+                farmer_header: "કૃષિધારા ૨.૦ • ખેડૂત પોર્ટલ",
+                switch_role: "ભૂમિકા બદલો",
+                step1_title: "પગલું 1: ઓળખ અને આધાર ચકાસણી",
+                pending_badge: "બાકી",
+                verified_badge: "ચકાસાયેલ ✅",
+                step1_desc: "સ્લોટ બુકિંગ માટે સુરક્ષિત મોબાઇલ અને આધાર પ્રમાણીકરણ.",
+                mobile_label: "📱 મોબાઇલ નંબર",
+                send_otp: "OTP મોકલો",
+                enter_mobile_otp: "4-અંકનો OTP દાખલ કરો",
+                verify_mobile: "મોબાઈલ OTP ચકાસો ✅",
+                id_label: "🆔 આધાર નંબર (12-અંક)",
+                send_kyc: "e-KYC OTP મોકલો",
+                enter_kyc_otp: "મોબાઈલ પર મોકલેલ OTP દાખલ કરો",
+                verify_kyc: "પ્રોફાઈલ મેળવો 🔍",
+                success_msg: "✅ સુરક્ષિત આધાર e-KYC મેળ સફળ.",
+                save_login: "ભવિષ્ય માટે માહિતી સાચવો",
+                proceed_btn: "સ્લોટ બુકિંગ પર આગળ વધો →",
+                footer_text: "કૃષિધારા ૨.૦ • ચકાસણી"
+            },
+            bn: {
+                farmer_header: "কৃষিধারা ২.০ • কৃষক পোর্টাল",
+                switch_role: "ভূমিকা পরিবর্তন",
+                step1_title: "ধাপ ১: পরিচয় এবং আধার যাচাইকরণ",
+                pending_badge: "মূলতুবি",
+                verified_badge: "যাচাই করা হয়েছে ✅",
+                step1_desc: "স্লট বুকিংয়ের জন্য নিরাপদ মোবাইল এবং আধার প্রমাণীকরণ।",
+                mobile_label: "📱 মোবাইল নম্বর",
+                send_otp: "ওটিপি পাঠান",
+                enter_mobile_otp: "মোবাইলে পাঠানো ৪-সংখ্যার ওটিপি লিখুন",
+                verify_mobile: "মোবাইল ওটিপি যাচাই করুন ✅",
+                id_label: "🆔 আধার নম্বর (১২-সংখ্যা)",
+                send_kyc: "ই-কেওয়াইসি ওটিপি পাঠান",
+                enter_kyc_otp: "নিবন্ধিত মোবাইলে ওটিপি লিখুন",
+                verify_kyc: "প্রোফাইল আনুন 🔍",
+                success_msg: "✅ নিরাপদ আধার ই-কেওয়াইসি সফল।",
+                save_login: "লগইন তথ্য সংরক্ষণ করুন",
+                proceed_btn: "স্লট বুকিং এ এগিয়ে যান →",
+                footer_text: "কৃষিধারা ২.০"
+            },
+            te: {
+                farmer_header: "కృషిధార 2.0 • రైతు పోర్టల్",
+                switch_role: "హోదా మార్చండి",
+                step1_title: "దశ 1: గుర్తింపు & ఆధార్ ధృవీకరణ",
+                pending_badge: "పెండింగ్",
+                verified_badge: "ధృవీకరించబడింది ✅",
+                step1_desc: "స్లాట్ బుకింగ్ కోసం సురక్షిత మొబైల్ & ఆధార్ ప్రామాణీకరణ.",
+                mobile_label: "📱 మొబైల్ నంబర్",
+                send_otp: "OTP పంపు",
+                enter_mobile_otp: "OTP నమోదు చేయండి",
+                verify_mobile: "OTP ధృవీకరించండి ✅",
+                id_label: "🆔 ఆధార్ నంబర్ (12-అంకెలు)",
+                send_kyc: "e-KYC OTP పంపు",
+                enter_kyc_otp: "మొబైల్‌కి వచ్చిన OTP నమోదు చేయండి",
+                verify_kyc: "ప్రొఫైల్ పొందండి 🔍",
+                success_msg: "✅ సురక్షిత ఆధార్ e-KYC విజయవంతమైంది.",
+                save_login: "భవిష్యత్ కోసం లాగిన్ సేవ్ చేయండి",
+                proceed_btn: "స్లాట్ బుకింగ్‌కి వెళ్లండి →",
+                footer_text: "కృషిధార 2.0"
+            },
+            ta: {
+                farmer_header: "கிருஷிதாரா 2.0 • விவசாயி போர்டல்",
+                switch_role: "பங்கு மாற்றவும்",
+                step1_title: "படி 1: அடையாளம் & ஆதார் சரிபார்ப்பு",
+                pending_badge: "நிலுவையில்",
+                verified_badge: "சரிபார்க்கப்பட்டது ✅",
+                step1_desc: "ஸ்லாட் முன்பதிவுக்கான பாதுகாப்பான மொபைல் & ஆதார் அங்கீகாரம்.",
+                mobile_label: "📱 மொபைல் எண்",
+                send_otp: "OTP அனுப்பு",
+                enter_mobile_otp: "OTP ஐ உள்ளிடவும்",
+                verify_mobile: "OTP சரிபார்க்கவும் ✅",
+                id_label: "🆔 ஆதார் எண் (12-இலக்கம்)",
+                send_kyc: "e-KYC OTP அனுப்பு",
+                enter_kyc_otp: "பதிவு செய்யப்பட்ட மொபைலில் OTP ஐ உள்ளிடவும்",
+                verify_kyc: "சுயவிவரத்தைப் பெறுக 🔍",
+                success_msg: "✅ பாதுகாப்பான ஆதார் e-KYC வெற்றிகரமாக முடிந்தது.",
+                save_login: "உள்நுழைவு தகவலை சேமிக்கவும்",
+                proceed_btn: "ஸ்லாட் முன்பதிவுக்குச் செல்லவும் →",
+                footer_text: "கிருஷிதாரா 2.0"
+            },
+            kn: {
+                farmer_header: "ಕೃಷಿಧಾರ 2.0 • ರೈತ ಪೋರ್ಟಲ್",
+                switch_role: "ಪಾತ್ರ ಬದಲಿಸಿ",
+                step1_title: "ಹಂತ 1: ಗುರುತು ಮತ್ತು ಆಧಾರ್ ಪರಿಶೀಲನೆ",
+                pending_badge: "ಬಾಕಿ ಇದೆ",
+                verified_badge: "ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✅",
+                step1_desc: "ಸ್ಲಾಟ್ ಬುಕಿಂಗ್ಗಾಗಿ ಸುರಕ್ಷಿತ ಮೊಬೈಲ್ ಮತ್ತು ಆಧಾರ್ ದೃಢೀಕರಣ.",
+                mobile_label: "📱 ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+                send_otp: "OTP ಕಳುಹಿಸಿ",
+                enter_mobile_otp: "OTP ನಮೂದಿಸಿ",
+                verify_mobile: "OTP ಪರಿಶೀಲಿಸಿ ✅",
+                id_label: "🆔 ಆಧಾರ್ ಸಂಖ್ಯೆ (12-ಅಂಕಿ)",
+                send_kyc: "e-KYC OTP ಕಳುಹಿಸಿ",
+                enter_kyc_otp: "ಮೊಬೈಲ್ಗೆ ಬಂದ OTP ನಮೂದಿಸಿ",
+                verify_kyc: "ಪ್ರೊಫೈಲ್ ಪಡೆಯಿರಿ 🔍",
+                success_msg: "✅ ಸುರಕ್ಷಿತ ಆಧಾರ್ e-KYC ಯಶಸ್ವಿಯಾಗಿದೆ.",
+                save_login: "ಲಾಗಿನ್ ಮಾಹಿತಿ ಉಳಿಸಿ",
+                proceed_btn: "ಸ್ಲಾಟ್ ಬುಕಿಂಗ್ಗೆ ಮುಂದುವರಿಯಿರಿ →",
+                footer_text: "ಕೃಷಿಧಾರ 2.0"
+            },
+            ml: {
+                farmer_header: "കൃഷിധാര 2.0 • കർഷക പോർട്ടൽ",
+                switch_role: "റോൾ മാറ്റുക",
+                step1_title: "ഘട്ടം 1: തിരിച്ചറിയലും ആധാർ സ്ഥിരീകരണവും",
+                pending_badge: "തീർച്ചപ്പെടുത്താത്തത്",
+                verified_badge: "സ്ഥിരീകരിച്ചു ✅",
+                step1_desc: "സ്ലോട്ട് ബുക്കിംഗിനായുള്ള സുരക്ഷിത മൊബൈൽ & ആധാർ ഓതന്റിക്കേഷൻ.",
+                mobile_label: "📱 മൊബൈൽ നമ്പർ",
+                send_otp: "OTP അയയ്ക്കുക",
+                enter_mobile_otp: "OTP നൽകുക",
+                verify_mobile: "OTP സ്ഥിരീകരിക്കുക ✅",
+                id_label: "🆔 ആധാർ നമ്പർ (12-അക്കം)",
+                send_kyc: "e-KYC OTP അയയ്ക്കുക",
+                enter_kyc_otp: "മൊബൈലിൽ ലഭിച്ച OTP നൽകുക",
+                verify_kyc: "പ്രൊഫൈൽ നേടുക 🔍",
+                success_msg: "✅ സുരക്ഷിത ആധാർ e-KYC വിജയിച്ചു.",
+                save_login: "ലോഗിൻ വിവരങ്ങൾ സംരക്ഷിക്കുക",
+                proceed_btn: "സ്ലോട്ട് ബുക്കിംഗിലേക്ക് പോവുക →",
+                footer_text: "കൃഷിധാര 2.0"
+            },
+            or: {
+                farmer_header: "କୃଷିଧାରା ୨.୦ • କୃଷକ ପୋର୍ଟାଲ୍",
+                switch_role: "ଭୂମିକା ବଦଳାନ୍ତୁ",
+                step1_title: "ପଦକ୍ଷେପ ୧: ପରିଚୟ ଏବଂ ଆଧାର ଯାଞ୍ଚ",
+                pending_badge: "ବିଚାରାଧୀନ",
+                verified_badge: "ଯାଞ୍ଚ ହୋଇଛି ✅",
+                step1_desc: "ସ୍ଲଟ୍ ବୁକିଂ ପାଇଁ ସୁରକ୍ଷିତ ମୋବାଇଲ୍ ଏବଂ ଆଧାର ପ୍ରମାଣୀକରଣ |",
+                mobile_label: "📱 ମୋବାଇଲ୍ ନମ୍ବର",
+                send_otp: "OTP ପଠାନ୍ତୁ",
+                enter_mobile_otp: "୪-ଅଙ୍କ ବିଶିଷ୍ଟ OTP ପ୍ରବେଶ କରନ୍ତୁ",
+                verify_mobile: "ମୋବାଇଲ୍ OTP ଯାଞ୍ଚ କରନ୍ତୁ ✅",
+                id_label: "🆔 ଆଧାର ନମ୍ବର (୧୨-ଅଙ୍କ)",
+                send_kyc: "e-KYC OTP ପଠାନ୍ତୁ",
+                enter_kyc_otp: "ପଞ୍ଜୀକୃତ ମୋବାଇଲରେ OTP ପ୍ରବେଶ କରନ୍ତୁ",
+                verify_kyc: "ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ପ୍ରୋଫାଇଲ୍ ଆଣନ୍ତୁ 🔍",
+                success_msg: "✅ ସୁରକ୍ଷିତ ଆଧାର e-KYC ସଫଳ |",
+                save_login: "ଭବିଷ୍ୟତ ପାଇଁ ଲଗଇନ୍ ସଂରକ୍ଷଣ କରନ୍ତୁ",
+                proceed_btn: "ସ୍ଲଟ୍ ବୁକିଂ ଆଡକୁ ଆଗେଇ ଚାଲନ୍ତୁ →",
+                footer_text: "କୃଷିଧାରା ୨.୦"
+            },
+            as: {
+                farmer_header: "কৃষিধাৰা ২.০ • কৃষক পোৰ্টেল",
+                switch_role: "ভূমিকা সলনি কৰক",
+                step1_title: "পদক্ষেপ ১: পৰিচয় আৰু আধাৰ সত্যাপন",
+                pending_badge: "অপেক্ষমান",
+                verified_badge: "সত্যাাপিত ✅",
+                step1_desc: "স্লট বুকিংৰ বাবে সুৰক্ষিত ম’বাইল আৰু আধাৰ প্ৰমাণীকৰণ।",
+                mobile_label: "📱 ম’বাইল নম্বৰ",
+                send_otp: "OTP প্ৰেৰণ কৰক",
+                enter_mobile_otp: "৪-টা অংকৰ OTP প্ৰৱেশ কৰাওক",
+                verify_mobile: "ম’বাইল OTP সত্যাাপিত কৰক ✅",
+                id_label: "🆔 আধাৰ নম্বৰ (১২-টা অংক)",
+                send_kyc: "e-KYC OTP প্ৰেৰণ কৰক",
+                enter_kyc_otp: "পঞ্জীয়নভুক্ত ম’বাইলত OTP প্ৰৱেশ কৰাওক",
+                verify_kyc: "সত্যাাপিত কৰক আৰু প্ৰফাইল আনক 🔍",
+                success_msg: "✅ সুৰক্ষিত আধাৰ e-KYC সফল।",
+                save_login: "ভৱিষ্যতৰ বাবে লগইন সংৰক্ষণ কৰক",
+                proceed_btn: "স্লট বুকিং লৈ আগবাঢ়ক →",
+                footer_text: "কৃষিধাৰা ২.০"
+            },
+            ur: {
+                farmer_header: "کرشی دھارا 2.0 • کسان پورٹل",
+                switch_role: "کردار تبدیل کریں",
+                step1_title: "مرحلہ 1: شناخت اور آدھار کی تصدیق",
+                pending_badge: "زیر التوا",
+                verified_badge: "تصدیق شدہ ✅",
+                step1_desc: "سلاٹ بکنگ کے لیے محفوظ موبائل اور آدھار توثیق۔",
+                mobile_label: "📱 موبائل نمبر",
+                send_otp: "او ٹی پی بھیجیں",
+                enter_mobile_otp: "4 ہندسوں کا او ٹی پی درج کریں",
+                verify_mobile: "موبائل او ٹی پی کی تصدیق کریں ✅",
+                id_label: "🆔 آدھار نمبر (12 ہندسے)",
+                send_kyc: "e-KYC او ٹی پی بھیجیں",
+                enter_kyc_otp: "رجسٹرڈ موبائل پر موصول شدہ او ٹی پی درج کریں",
+                verify_kyc: "تصدیق کریں اور پروفائل حاصل کریں 🔍",
+                success_msg: "✅ محفوظ آدھار e-KYC تصدیق کامیاب۔",
+                save_login: "مستقبل کے لیے لاگ ان معلومات محفوظ رکھیں",
+                proceed_btn: "سلاٹ بکنگ کی طرف آگے بڑھیں →",
+                footer_text: "کرشی دھارا 2.0"
+            },
+            sa: {
+                farmer_header: "कृषिधारा २.० • कृषक-पोर्टल्",
+                switch_role: "भूमिकां परिवर्तयतु",
+                step1_title: "प्रथमः चरणः: परिचयः आधार-सत्यापनं च",
+                pending_badge: "लम्बितम्",
+                verified_badge: "सत्यापितम् ✅",
+                step1_desc: "स्थान-आरक्षणाय सुरक्षित-चलभाष-आधार-प्रमाणीकरणम्।",
+                mobile_label: "📱 चलभाष-सङ्ख्या",
+                send_otp: "OTP प्रेषयतु",
+                enter_mobile_otp: "४-अङ्कीयम् OTP लिखतु",
+                verify_mobile: "चलभाष-OTP सत्यापयतु ✅",
+                id_label: "🆔 आधार-सङ्ख्या (१२-अङ्काः)",
+                send_kyc: "e-KYC OTP प्रेषयतु",
+                enter_kyc_otp: "पञ्जीकृत-चलभाषे प्राप्तम् OTP लिखतु",
+                verify_kyc: "सत्याप्य विवरणं प्राप्नोतु 🔍",
+                success_msg: "✅ सुरक्षित-आधार-e-KYC-सत्यापनं सफलम्।",
+                save_login: "भविष्यत्-उपयोगाय प्रवेश-सूचनां रक्षतु",
+                proceed_btn: "स्थान-आरक्षणाय अग्रे सरतु →",
+                footer_text: "कृषिधारा २.०"
+            },
+            ne: {
+                farmer_header: "कृषिधारा २.० • किसान पोर्टल",
+                switch_role: "भूमिका बदल्नुहोस्",
+                step1_title: "चरण १: पहिचान र आधार प्रमाणीकरण",
+                pending_badge: "बाँकी",
+                verified_badge: "प्रमाणित ✅",
+                step1_desc: "स्लट बुकिंगका लागि सुरक्षित मोबाइल र आधार प्रमाणीकरण।",
+                mobile_label: "📱 मोबाइल नम्बर",
+                send_otp: "OTP पठाउनुहोस्",
+                enter_mobile_otp: "४-अङ्कको OTP प्रविष्ट गर्नुहोस्",
+                verify_mobile: "मोबाइल OTP प्रमाणीकरण गर्नुहोस् ✅",
+                id_label: "🆔 आधार नम्बर (१२-अङ्क)",
+                send_kyc: "e-KYC OTP पठाउनुहोस्",
+                enter_kyc_otp: "दर्ता भएको मोबाइलमा प्राप्त OTP प्रविष्ट गर्नुहोस्",
+                verify_kyc: "प्रमाणीकरण गरी प्रोफाइल ल्याउनुहोस् 🔍",
+                success_msg: "✅ सुरक्षित आधार e-KYC सफल भयो।",
+                save_login: "भविष्यका लागि लगइन जानकारी सुरक्षित राख्नुहोस्",
+                proceed_btn: "स्लट बुकिंगतर्फ अघि बढ्नुहोस् →",
+                footer_text: "कृषिधारा २.०"
+            },
+            sd: {
+                farmer_header: "ڪرشي ڌارا 2.0 • هاري پورٽل",
+                switch_role: "ڪردار تبديل ڪريو",
+                step1_title: "قدم 1: سڃاڻپ ۽ آڌار تصديق",
+                pending_badge: "باقي",
+                verified_badge: "تصديق ٿيل ✅",
+                step1_desc: "سلاٽ بڪنگ لاءِ محفوظ موبائل ۽ آڌار پڙتال.",
+                mobile_label: "📱 موبائل نمبر",
+                send_otp: "OTP موڪليو",
+                enter_mobile_otp: "4-انگن وارو OTP داخل ڪريو",
+                verify_mobile: "موبائل OTP تصديق ڪريو ✅",
+                id_label: "🆔 آڌار نمبر (12-انگ)",
+                send_kyc: "e-KYC OTP موڪليو",
+                enter_kyc_otp: "رجسٽرڊ موبائل تي آيل OTP داخل ڪريو",
+                verify_kyc: "تصديق ڪريو ۽ پروفائل حاصل ڪريو 🔍",
+                success_msg: "✅ محفوظ آڌار e-KYC تصديق ڪامياب.",
+                save_login: "مستقبل لاءِ لاگ ان معلومات محفوظ ڪريو",
+                proceed_btn: "سلاٽ بڪنگ ڏانهن اڳتي وڌو →",
+                footer_text: "ڪرشي ڌارا 2.0"
+            },
+            ks: {
+                farmer_header: "کرشی دھارا 2.0 • زمیندار پورٹل",
+                switch_role: "کردار بَدلیو",
+                step1_title: "قَدم 1: زانٛتھ تہ آدھار تصدیق",
+                pending_badge: "مُعَلَق",
+                verified_badge: "تصدیق گٔمٕژ ✅",
+                step1_desc: "سَلاٹ بُکِنگ باپتھ محفوظ موبائل تہ آدھار تصدیق।",
+                mobile_label: "📱 موبائل نمبر",
+                send_otp: "OTP سوزیو",
+                enter_mobile_otp: "4-ہِندسن ہُند OTP درَج کَریو",
+                verify_mobile: "موبائل OTP تصدیق کَریو ✅",
+                id_label: "🆔 آدھار نمبر (12-ہِندسہ)",
+                send_kyc: "e-KYC OTP سوزیو",
+                enter_kyc_otp: "رجسٹرڈ موبائلس پؠٹھ آوُتھ OTP درَج کَریو",
+                verify_kyc: "تصدیق کَریو تہ پروفائل حٲصل کَریو 🔍",
+                success_msg: "✅ محفوظ آدھار e-KYC تصدیق کامِیاب।",
+                save_login: "آئندہ باپتھ لاگ ان معلومات محفوظ تھاویو",
+                proceed_btn: "سَلاٹ بُکِنگ کُن برونٹھ گَچھیو →",
+                footer_text: "کرشی دھارا 2.0"
+            },
+            doi: {
+                farmer_header: "कृषिधारा 2.0 • किसान पोर्टल",
+                switch_role: "भूमिका बदलो",
+                step1_title: "चरण 1: पहचान ते आधार प्रमाणीकरण",
+                pending_badge: "बकाया",
+                verified_badge: "सत्यापित ✅",
+                step1_desc: "स्लाट बुकिंग लेई सुरक्षित मोबाइल ते आधार प्रमाणीकरण।",
+                mobile_label: "📱 मोबाइल नंबर",
+                send_otp: "OTP भेजो",
+                enter_mobile_otp: "4-अंकें दा OTP दर्ज करो",
+                verify_mobile: "मोबाइल OTP सत्यापित करो ✅",
+                id_label: "🆔 आधार नंबर (12-अंक)",
+                send_kyc: "e-KYC OTP भेजो",
+                enter_kyc_otp: "पंजीकृत मोबाइल पर आया दे दा OTP दर्ज करो",
+                verify_kyc: "सत्यापित करो ते प्रोफाइल हासल करो 🔍",
+                success_msg: "✅ सुरक्षित आधार e-KYC सफलता।",
+                save_login: "भविष्य लेई लागइन जानकारी सुरक्षित रखो",
+                proceed_btn: "स्लाट बुकिंग बन्नै अग्गै बधो →",
+                footer_text: "कृषिधारा 2.0"
+            },
+            mni: {
+                farmer_header: "ક્રિશિધારા ૨.૦ • લૌમી પોર્ટલ",
+                switch_role: "રોલ હોંગબિયૌ",
+                step1_title: "સ્ટેપ ૧: મશક ખંગબોગી એન્ડ આધાર Verification",
+                pending_badge: "લેંગ્દુના લેઈબ્રિবা",
+                verified_badge: "ચકાસાયેલ ✅",
+                step1_desc: "સ્લોટ બુકિંગગીદમાક્ત સિક્યોર્ડ મોબાઈલ એન્ડ આધાર Authentication.",
+                mobile_label: "📱 મોબાઈલ નંબર",
+                send_otp: "OTP થાબિયૌ",
+                enter_mobile_otp: "અંક ૪ ગી OTP હેપચિનબિયૌ",
+                verify_mobile: "મોબાઈલ OTP Verify તૌબિયૌ ✅",
+                id_label: "🆔 આધાર નંબર (૧૨-અંક)",
+                send_kyc: "e-KYC OTP થાબિયૌ",
+                enter_kyc_otp: "મોબાઈલદા લકપા OTP હેપચિનબિયૌ",
+                verify_kyc: "Verify તૌબિયૌ એન્ડ પ્રોફાઈલ પુરકબિયૌ 🔍",
+                success_msg: "✅ સિક્યોર્ડ આધાર e-KYC Verification માયાક ચાહરે.",
+                save_login: "તુંગગીદમાક્ત ઈન્ફોર્મેશન લોગઈન સેવ તૌબિયૌ",
+                proceed_btn: "સ્લોટ બુકિંગલોમદા માયંગશીલબિયૌ →",
+                footer_text: "ક્રિશિધારા ૨.૦"
+            },
+            sat: {
+                farmer_header: "ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ ᱒.᱐ • ᱪᱟᱥᱤ ᱯᱳᱨᱴᱟᱞ",
+                switch_role: "ᱠᱟᱹᱢᱤ ᱵᱚᱫᱚᱞ ᱢᱮ",
+                step1_title: "ᱛᱷᱚᱠ ᱑: ᱩᱯᱨᱩᱢ ᱟᱨ ᱟᱫᱷᱟᱨ ᱡᱟᱸᱪ",
+                pending_badge: "ᱛᱟᱸᱦᱮᱱ",
+                verified_badge: "ᱡᱟᱸᱪ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ✅",
+                step1_desc: "ᱥᱞᱚᱴ ᱵᱩᱠᱤᱝ ᱞᱟᱹᱜᱤᱫ ᱥᱩᱨᱠᱷᱤᱛ ᱢᱳᱵᱟᱭᱤᱞ ᱟᱨ ᱟᱫᱷᱟᱨ ᱡᱟᱸᱪ",
+                mobile_label: "📱 ᱢᱳᱵᱟᱭᱤᱞ ᱱᱚᱢᱵᱚᱨ",
+                send_otp: "OTP ᱠᱷᱟᱯᱟ",
+                enter_mobile_otp: "ᱢᱳᱵᱟᱭᱤᱞ ᱨᱮ ᱵᱷᱮᱜᱟᱨ ᱔ ᱰᱤᱡᱤᱴ OTP ᱚᱞ ᱢᱮ",
+                verify_mobile: "ᱢᱳᱵᱟᱭᱤᱞ OTP ᱡᱟᱸᱪ ᱢᱮ ✅",
+                id_label: "🆔 ᱟᱫᱷᱟᱨ ᱱᱚᱢᱵᱚᱨ (᱑᱒ ᱰᱤᱡᱤᱴ)",
+                send_kyc: "e-KYC OTP ᱠᱷᱟᱯᱟ",
+                enter_kyc_otp: "ᱚᱞ ᱟᱠᱟᱱ ᱢᱳᱵᱟᱭᱤᱞ ᱨᱮ OTP ᱚᱞ ᱢᱮ",
+                verify_kyc: "ᱡᱟᱸᱪ ᱢᱮ ᱟᱨ ᱯᱨᱳᱯᱟᱭᱤᱞ ᱟᱜᱩ ᱢᱮ 🔍",
+                success_msg: "✅ ᱥᱩᱨᱠᱷᱤᱛ ᱟᱫᱷᱟᱨ e-KYC ᱡᱟᱸᱪ ᱯᱩᱨᱟᱹᱣ ᱮᱱᱟ",
+                save_login: "ᱛᱟᱭᱚᱢ ᱞᱟᱹᱜᱤᱫ ᱞᱚᱜᱤᱱ ᱡᱚᱛᱚ ᱡᱟᱭᱜᱟ ᱨᱮ ᱫᱚᱦᱚᱭ ᱢᱮ",
+                proceed_btn: "ᱥᱞᱚᱴ ᱵᱩᱠᱤᱝ ᱥᱮᱫ ᱞᱟᱦᱟᱜ ᱢᱮ →",
+                footer_text: "ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ ᱒.᱐"
+            },
+            bho: {
+                farmer_header: "कृषिधारा 2.0 • किसान पोर्टल",
+                switch_role: "भूमिका बदलीन",
+                step1_title: "चरण 1: पहचान आ आधार सत्यापन",
+                pending_badge: "बाकी बा",
+                verified_badge: "सत्यापित ✅",
+                step1_desc: "स्लॉट बुकिंग खातिर सुरक्षित मोबाइल आ आधार प्रमाणीकरण।",
+                mobile_label: "📱 मोबाइल नंबर",
+                send_otp: "ओटीपी भेजीं",
+                enter_mobile_otp: "4-अंक के ओटीपी दर्ज करीं",
+                verify_mobile: "मोबाइल ओटीपी सत्यापित करीं ✅",
+                id_label: "🆔 आधार नंबर (12-अंक)",
+                send_kyc: "ई-केवाईसी ओटीपी भेजीं",
+                enter_kyc_otp: "रजिस्टर्ड मोबाइल पर आइल ओटीपी दर्ज करीं",
+                verify_kyc: "सत्यापित करीं आ प्रोफाइल पाईं 🔍",
+                success_msg: "✅ सुरक्षित आधार ई-केवाईसी मिलान सफल।",
+                save_login: "भविष्य खातिर लॉगिन जानकारी सुरक्षित राखीं",
+                proceed_btn: "स्लॉट बुकिंग पर आगे बढ़ीं →",
+                footer_text: "कृषिधारा 2.0"
+            },
+            raj: {
+                farmer_header: "कृषिधारा 2.0 • किसान पोर्टल",
+                switch_role: "भूमिका बदलो",
+                step1_title: "चरण 1: पहचान अर आधार सत्यापन",
+                pending_badge: "बाकी है",
+                verified_badge: "सत्यापित ✅",
+                step1_desc: "स्लॉट बुकिंग खातर सुरक्षित मोबाइल अर आधार प्रमाणीकरण।",
+                mobile_label: "📱 मोबाइल नंबर",
+                send_otp: "ओटीपी भेजो",
+                enter_mobile_otp: "4-अंक रो ओटीपी दर्ज करो",
+                verify_mobile: "मोबाइल ओटीपी सत्यापित करो ✅",
+                id_label: "🆔 आधार नंबर (12-अंक)",
+                send_kyc: "ई-केवाईसी ओटीपी भेजो",
+                enter_kyc_otp: "पंजीकृत मोबाइल पर आयोडो ओटीपी दर्ज करो",
+                verify_kyc: "सत्यापित करो अर प्रोफाइल लाओ 🔍",
+                success_msg: "✅ सुरक्षित आधार ई-केवाईसी मिलान सफल रह्यो।",
+                save_login: "भविष्य खातर लॉगिन री विगत सुरक्षित राखो",
+                proceed_btn: "स्लॉट बुकिंग कांनी आगै बधो →",
+                footer_text: "कृषिधारा 2.0"
+            }
+        };
+
+        function getTranslation(lang, key) {
+            if (translations[lang] && translations[lang][key]) {
+                return translations[lang][key];
+            }
+            if (translations['hi'] && translations['hi'][key]) {
+                return translations['hi'][key];
+            }
+            return translations['en'][key];
+        }
+
+        function applyLanguage(lang) {
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                el.textContent = getTranslation(lang, key);
+            });
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('langSelect').value;
+            localStorage.setItem('kd_selected_lang', lang);
+            applyLanguage(lang);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
+            const dropdown = document.getElementById('langSelect');
+            if (dropdown) {
+                dropdown.value = savedLang;
+            }
+            applyLanguage(savedLang);
+        });
+
+        let generatedMobileOTP = "";
+        let generatedAadhaarOTP = "";
+        let mobileTimerInterval = null;
+        let aadhaarTimerInterval = null;
+
+        function startTimer(duration, displayElementId) {
+            let timer = duration, seconds;
+            return setInterval(function () {
+                seconds = parseInt(timer % 60, 10);
+                const elem = document.getElementById(displayElementId);
+                if (elem) elem.textContent = seconds + "s";
+                if (--timer < 0) {
+                    clearInterval(mobileTimerInterval);
+                    clearInterval(aadhaarTimerInterval);
+                }
+            }, 1000);
+        }
+
+        function sendMobileOTP() {
+            const mobileInput = document.getElementById('mobileInput');
+            const mobile = mobileInput.value.trim();
+            if (mobile.length !== 10) {
+                alert("Please enter a valid 10-digit mobile number.");
+                return;
+            }
+            generatedMobileOTP = Math.floor(1000 + Math.random() * 9000).toString();
+            alert(`[SIMULATED SMS]\nYour KrishiDhara OTP is: ${generatedMobileOTP}`);
+            
+            document.getElementById('mobileOtpBox').classList.remove('hidden');
+            const btn = document.getElementById('btnSendMobileOTP');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            if (mobileTimerInterval) clearInterval(mobileTimerInterval);
+            mobileTimerInterval = startTimer(60, 'mobileTimer');
+        }
+
+        function verifyMobileOTP() {
+            const entered = document.getElementById('mobileOtpInput').value.trim();
+            if (entered === generatedMobileOTP) {
+                if (mobileTimerInterval) clearInterval(mobileTimerInterval);
+                alert("Mobile number verified successfully!");
+                document.getElementById('mobileOtpBox').classList.add('hidden');
+                document.getElementById('mobileInput').disabled = true;
+                
+                const aadhaarSec = document.getElementById('aadhaarSection');
+                aadhaarSec.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                alert("Incorrect OTP. Please try again.");
+            }
+        }
+
+        function sendAadhaarOTP() {
+            const aadhaarInput = document.getElementById('aadhaarInput');
+            const aadhaar = aadhaarInput.value.trim();
+            if (aadhaar.length !== 12) {
+                alert("Please enter a valid 12-digit Aadhaar number.");
+                return;
+            }
+
+            generatedAadhaarOTP = Math.floor(1000 + Math.random() * 9000).toString();
+            alert(`[e-KYC SMS]\nVerification OTP is: ${generatedAadhaarOTP}`);
+
+            document.getElementById('aadhaarOtpBox').classList.remove('hidden');
+            const btn = document.getElementById('btnSendAadhaarOTP');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            if (aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
+            aadhaarTimerInterval = startTimer(60, 'aadhaarTimer');
+        }
+
+        function verifyAadhaarOTP() {
+            const entered = document.getElementById('aadhaarOtpInput').value.trim();
+            if (entered === generatedAadhaarOTP) {
+                if (aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
+                
+                document.getElementById('aadhaarOtpBox').classList.add('hidden');
+                document.getElementById('aadhaarInput').disabled = true;
+                document.getElementById('profileCard').classList.remove('hidden');
+                
+                const badge = document.getElementById('stepBadge');
+                badge.innerText = "Verified ✅";
+                badge.className = "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
+
+                const btn = document.getElementById('btnProceedSlot');
+                btn.disabled = false;
+                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
+            } else {
+                alert("Incorrect OTP. Please try again.");
+            }
+        }
+
+       function proceedToSlotBooking() {
+    const rememberMe = document.getElementById('saveLoginCheck').checked;
+    if (rememberMe) {
+        localStorage.setItem('kd_farmer_verified', 'true');
+        localStorage.setItem('kd_farmer_name', 'Ramesh Kumar');
+    }
+    window.location.href = 'slot_booking.html';
+}
+
+        function switchRole() {
+            localStorage.clear();
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>
