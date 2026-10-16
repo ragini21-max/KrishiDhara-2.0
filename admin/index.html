@@ -1,171 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiDhara 2.0 - APMC Admin Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-teal-50 via-slate-50 to-emerald-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
-
-    <header class="bg-teal-800 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
-        <div class="flex items-center space-x-3">
-            <span class="text-4xl">📊</span>
-            <div>
-                <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • APMC Admin Portal</h1>
-                <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays & Emergency Locks</p>
-            </div>
-        </div>
-        <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">Switch Role</button>
-    </header>
-
-    <main class="w-full max-w-6xl mx-auto my-8 space-y-8">
-        <div class="bg-white p-6 rounded-3xl shadow-lg border-2 border-teal-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3 w-full md:w-auto">
-                <span class="text-2xl">🏬</span>
-                <div>
-                    <div class="text-xs font-bold text-gray-500 uppercase">Assigned Mandi Jurisdiction</div>
-                    <select id="activeAdminYard" onchange="switchAdminYard()" class="bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-2 font-bold text-teal-900 mt-1 cursor-pointer w-full">
-                        <option value="pune_main">Pune Main APMC Market Yard</option>
-                        <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
-                        <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
-                        <option value="amravati_grain">Amravati Regional Procurement Center</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex items-center space-x-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl w-full md:w-auto justify-between">
-                <div>
-                    <div class="text-xs font-bold text-teal-800 uppercase">Live Yard Tonnage</div>
-                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">14 / 50 Tons</div>
-                </div>
-                <span id="adminYardBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Capacity & Emergency Lock</h2>
-                        <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full">Safety Control</span>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm font-bold text-gray-700">
-                            <span>Adjust Daily Tonnage Limit:</span>
-                            <span id="currentCapVal" class="text-teal-800 font-black">50 Tons</span>
-                        </div>
-                        <input type="range" id="adminCapSlider" min="10" max="100" value="50" oninput="updateYardCapacity(this.value)" class="w-full accent-teal-600 cursor-pointer">
-                    </div>
-                </div>
-                <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-extrabold text-gray-800">Instant Booking Shutdown</div>
-                        <div class="text-xs text-gray-500">Halts all incoming farmer slot tokens.</div>
-                    </div>
-                    <button type="button" id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl transition cursor-pointer">
-                        Halt Yard 🛑
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Break & Slowdown Delay Manager</h2>
-                        <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Time Shift</span>
-                    </div>
-                    <p class="text-xs text-gray-600">Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.</p>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
-                        <select id="delayBufferSelect" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm font-bold cursor-pointer">
-                            <option value="0">No Delay (0 Minutes)</option>
-                            <option value="15">Shift Slots by +15 Minutes</option>
-                            <option value="30">Shift Slots by +30 Minutes (Lunch)</option>
-                            <option value="60">Shift Slots by +60 Minutes (Maintenance)</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="button" onclick="applyTimeDelay()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-3 rounded-xl transition cursor-pointer">
-                    Broadcast Slot Delay to Farmers ⏰
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        function switchAdminYard() {
-            const yard = document.getElementById('activeAdminYard').value;
-            localStorage.setItem('kd_selected_admin_yard', yard);
-            loadYardState();
-        }
-
-        function loadYardState() {
-            const yard = document.getElementById('activeAdminYard').value || 'pune_main';
-            document.getElementById('activeAdminYard').value = yard;
-
-            const isLocked = localStorage.getItem(`kd_lock_${yard}`) === 'true';
-            
-            // Sync fallback capacity with farmer defaults
-            const defaultCap = yard === 'nashik_grain' ? '60' : (yard === 'nagpur_cotton' ? '40' : (yard === 'amravati_grain' ? '30' : '50'));
-            const capacity = localStorage.getItem(`kd_cap_${yard}`) || defaultCap;
-            const booked = localStorage.getItem(`kd_booked_${yard}`) || '14';
-
-            document.getElementById('adminCapSlider').value = capacity;
-            document.getElementById('currentCapVal').textContent = `${capacity} Tons`;
-            document.getElementById('adminYardTonnage').textContent = `${booked} / ${capacity} Tons`;
-
-            const btnLock = document.getElementById('btnAdminLock');
-            const badge = document.getElementById('adminYardBadge');
-
-            if (isLocked) {
-                btnLock.textContent = "Resume Yard ▶";
-                btnLock.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer";
-                badge.textContent = "Emergency Locked 🛑";
-                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-red-100 text-red-800 uppercase";
-            } else {
-                btnLock.textContent = "Halt Yard 🛑";
-                btnLock.className = "bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer";
-                badge.textContent = "Operational";
-                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase";
-            }
-
-            const currentDelay = localStorage.getItem(`kd_delay_${yard}`) || '0';
-            document.getElementById('delayBufferSelect').value = currentDelay;
-        }
-
-        function updateYardCapacity(val) {
-            const yard = document.getElementById('activeAdminYard').value;
-            document.getElementById('currentCapVal').textContent = `${val} Tons`;
-            localStorage.setItem(`kd_cap_${yard}`, val);
-            loadYardState();
-        }
-
-        function toggleYardLock() {
-            const yard = document.getElementById('activeAdminYard').value;
-            const currentLock = localStorage.getItem(`kd_lock_${yard}`) === 'true';
-            const newLockState = !currentLock;
-
-            localStorage.setItem(`kd_lock_${yard}`, newLockState);
-            loadYardState();
-        }
-
-        function applyTimeDelay() {
-            const yard = document.getElementById('activeAdminYard').value;
-            const buffer = document.getElementById('delayBufferSelect').value;
-            localStorage.setItem(`kd_delay_${yard}`, buffer);
-            alert(`Success! A +${buffer} minutes arrival shift buffer has been broadcasted for ${yard}.`);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedYard = localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
-            document.getElementById('activeAdminYard').value = savedYard;
-            loadYardState();
-        });
-
-        function switchRole() {
-            window.location.href = '../index.html';
-        }
-    </script>
-</body>
-</html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Portal</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-gradient-to-br from-teal-50 to-emerald-100 min-h-screen p-6 md:p-12 flex flex-col justify-between">
+<header class="bg-teal-800 text-white p-5 rounded-3xl flex justify-between items-center max-w-6xl mx-auto w-full gap-4"><div class="flex items-center gap-3"><span class="text-4xl">📊</span><div><h1 class="font-bold">APMC Admin Portal</h1><p class="text-xs text-teal-200">Synced 29/50 capacity</p></div></div><div class="flex gap-3"><select id="langSelect" onchange="changeLanguage()" class="bg-teal-900 text-white text-sm px-3 py-2 rounded-2xl border border-teal-700 font-bold"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option><option value="pa">ਪੰਜਾਬੀ</option><option value="gu">ગુજરાતી</option><option value="bn">বাংলা</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option><option value="kn">ಕನ್ನಡ</option><option value="ml">മലയാളം</option><option value="or">ଓଡ଼ିଆ</option><option value="as">অসমীয়া</option><option value="ur">اردو</option><option value="sa">संस्कृतम्</option><option value="ne">नेपाली</option><option value="sd">سنڌي</option><option value="ks">कॉशुर</option><option value="doi">डोगरी</option><option value="mni">মৈতৈলোন্</option><option value="sat">संताली</option><option value="bho">भोजपुरी</option><option value="raj">राजस्थानी</option></select><button onclick="switchRole()" class="bg-teal-900 px-4 py-2 rounded-2xl border font-bold text-sm">Switch Role</button></div></header>
+<main class="max-w-6xl mx-auto my-8 space-y-8 w-full">
+<div class="bg-white p-6 rounded-3xl border-2 border-teal-200 flex flex-col md:flex-row justify-between items-center gap-4"><div class="flex gap-3 items-center"><span class="text-2xl">🏬</span><div><div class="text-xs font-bold text-gray-500">Assigned Mandi</div><select id="activeAdminYard" onchange="switchAdminYard()" class="bg-gray-50 border-2 rounded-xl px-4 py-2 font-bold text-teal-900"><option value="pune_main">Pune Main APMC</option><option value="nashik_grain">Nashik Grain</option><option value="nagpur_cotton">Nagpur Cotton</option><option value="amravati_grain">Amravati Center</option></select></div></div><div class="flex gap-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl items-center"><div><div class="text-xs font-bold uppercase">Live Tonnage</div><div id="adminYardTonnage" class="text-xl font-black">29 / 50 Tons</div></div><span id="adminYardBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100">Operational</span></div></div>
+<div class="grid md:grid-cols-2 gap-8"><div class="bg-white p-8 rounded-3xl border-2 border-teal-200"><h2 class="font-extrabold border-b pb-3">Capacity & Emergency Lock</h2><div class="mt-4"><div class="flex justify-between font-bold"><span>Adjust Limit:</span><span id="currentCapVal">50 Tons</span></div><input type="range" id="adminCapSlider" min="10" max="100" value="50" oninput="updateYardCapacity(this.value)" class="w-full accent-teal-600"></div><div class="pt-4 border-t mt-4 flex justify-between items-center"><div><div class="font-bold text-sm">Instant Shutdown</div><div class="text-xs text-gray-500">Halts farmer tokens</div></div><button id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 text-white px-5 py-3 rounded-xl font-bold">Halt Yard 🛑</button></div></div><div class="bg-white p-8 rounded-3xl border-2 border-teal-200"><h2 class="font-extrabold border-b pb-3">Break & Delay Manager</h2><p class="text-xs text-gray-600 mt-2">Buffer shows in farmer portal</p><select id="delayBufferSelect" class="w-full bg-gray-50 border-2 rounded-xl px-4 py-3 mt-4 font-bold"><option value="0">No Delay (0)</option><option value="15">+15 Minutes</option><option value="30">+30 Minutes</option><option value="60">+60 Minutes</option></select><button onclick="applyTimeDelay()" class="w-full bg-amber-600 text-white font-bold py-3 rounded-xl mt-4">Broadcast Delay ⏰</button></div></div>
+<div id="lastBookingInfo" class="bg-white p-6 rounded-3xl border-2 border-dashed border-green-400 hidden"><h3 class="font-bold">Last Farmer Booking (synced)</h3><p id="lastBookingText" class="text-sm mt-2"></p></div>
+</main>
+<script>
+function switchAdminYard(){localStorage.setItem('kd_selected_admin_yard',document.getElementById('activeAdminYard').value);loadYardState();}
+function loadYardState(){const y=document.getElementById('activeAdminYard').value;const locked=localStorage.getItem(`kd_lock_${y}`)==='true';const cap=localStorage.getItem(`kd_cap_${y}`)||'50';const booked=localStorage.getItem(`kd_booked_${y}`)||'29';document.getElementById('adminCapSlider').value=cap;document.getElementById('currentCapVal').textContent=cap+' Tons';document.getElementById('adminYardTonnage').textContent=`${booked} / ${cap} Tons`;const btn=document.getElementById('btnAdminLock'),badge=document.getElementById('adminYardBadge');if(locked){btn.textContent="Resume Yard ▶";btn.className="bg-emerald-600 text-white px-5 py-3 rounded-xl font-bold";badge.textContent="Locked 🛑";badge.className="text-xs px-3 py-1 rounded-full bg-red-100 text-red-800 font-bold";}else{btn.textContent="Halt Yard 🛑";btn.className="bg-red-600 text-white px-5 py-3 rounded-xl font-bold";badge.textContent="Operational";badge.className="text-xs px-3 py-1 rounded-full bg-emerald-100 font-bold";}document.getElementById('delayBufferSelect').value=localStorage.getItem(`kd_delay_${y}`)||'0';const last=localStorage.getItem('kd_last_booking');if(last){const o=JSON.parse(last);if(o.mandiKey===y){document.getElementById('lastBookingInfo').classList.remove('hidden');document.getElementById('lastBookingText').textContent=`Token ${o.token} | ${o.mandiText} | ${o.commodityText} | ${o.vehicleText} | Qty ${o.qty}T | Slot ${o.slotText}`;}}else document.getElementById('lastBookingInfo').classList.add('hidden');}
+function updateYardCapacity(v){const y=document.getElementById('activeAdminYard').value;localStorage.setItem(`kd_cap_${y}`,v);document.getElementById('currentCapVal').textContent=v+' Tons';loadYardState();}
+function toggleYardLock(){const y=document.getElementById('activeAdminYard').value;localStorage.setItem(`kd_lock_${y}`,localStorage.getItem(`kd_lock_${y}`)!=='true');loadYardState();}
+function applyTimeDelay(){const y=document.getElementById('activeAdminYard').value,b=document.getElementById('delayBufferSelect').value;localStorage.setItem(`kd_delay_${y}`,b);alert(`+${b}m buffer broadcasted for ${y}`);loadYardState();}
+function changeLanguage(){localStorage.setItem('kd_selected_lang',document.getElementById('langSelect').value);}
+window.addEventListener('DOMContentLoaded',()=>{const saved=localStorage.getItem('kd_selected_admin_yard')||'pune_main';document.getElementById('activeAdminYard').value=saved;loadYardState();const lang=localStorage.getItem('kd_selected_lang')||'en';const sel=document.getElementById('langSelect');if(sel)sel.value=lang;});
+function switchRole(){location.href='../index.html';}
+</script></body></html>
