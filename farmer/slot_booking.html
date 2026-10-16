@@ -124,24 +124,24 @@
         let bookedTons = 14; 
 
         // Mapping each mandi to its specific location and its nearby options query
-        const mandiLocationsMap = {
-            'pune_main': {
-                query: 'Pune+APMC+Market+Yard+Gultekdi+Maharashtra',
-                nearby: 'APMC+markets+near+Pune+Gultekdi'
-            },
-            'nashik_grain': {
-                query: 'Nashik+Grain+Vegetable+Mandi+Maharashtra',
-                nearby: 'APMC+markets+near+Nashik'
-            },
-            'nagpur_cotton': {
-                query: 'Nagpur+Cotton+Grain+Yard+Maharashtra',
-                nearby: 'APMC+markets+near+Nagpur'
-            },
-            'amravati_grain': {
-                query: 'Amravati+Regional+Procurement+Center+Maharashtra',
-                nearby: 'APMC+markets+near+Amravati'
-            }
-        };
+       const mandiLocationsMap = {
+    'pune_main': {
+        query: 'Pune APMC Market Yard Gultekdi Maharashtra',
+        nearby: 'APMC markets near Pune Gultekdi Maharashtra'
+    },
+    'nashik_grain': {
+        query: 'Nashik Grain Vegetable Mandi Maharashtra',
+        nearby: 'APMC markets near Nashik Maharashtra'
+    },
+    'nagpur_cotton': {
+        query: 'Nagpur Cotton Grain Yard Maharashtra',
+        nearby: 'APMC markets near Nagpur Maharashtra'
+    },
+    'amravati_grain': {
+        query: 'Amravati Regional Procurement Center Maharashtra',
+        nearby: 'APMC markets near Amravati Maharashtra'
+    }
+};
 
         window.addEventListener('DOMContentLoaded', () => {
             const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
@@ -199,34 +199,31 @@
         }
 
         function renderCapacityUI(isLocked, currentMandiKey) {
-            document.getElementById('capacityCount').textContent = `${bookedTons} Tons / ${maxTonsCapacity} Tons`;
-            const percentage = Math.min(100, Math.round((bookedTons / maxTonsCapacity) * 100));
-            document.getElementById('capacityBar').style.width = percentage + '%';
+    document.getElementById('capacityCount').textContent = `${bookedTons} Tons / ${maxTonsCapacity} Tons`;
+    const percentage = Math.min(100, Math.round((bookedTons / maxTonsCapacity) * 100));
+    document.getElementById('capacityBar').style.width = percentage + '%';
 
-            const alertBanner = document.getElementById('fullCapacityAlert');
-            const submitBtn = document.getElementById('btnConfirmBooking');
-            const mapFrame = document.getElementById('googleMapFrame');
-            const mapTitle = document.getElementById('mapTitle');
-            const mandiGeo = mandiLocationsMap[currentMandiKey] || mandiLocationsMap['pune_main'];
+    const alertBanner = document.getElementById('fullCapacityAlert');
+    const submitBtn = document.getElementById('btnConfirmBooking');
+    const mapFrame = document.getElementById('googleMapFrame');
+    const mandiGeo = mandiLocationsMap[currentMandiKey] || mandiLocationsMap['pune_main'];
 
-            if (isLocked || bookedTons >= maxTonsCapacity) {
-                // Mandi is full or closed: switch map view to nearby alternative APMC mandis
-                alertBanner.classList.remove('hidden');
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed";
-                
-                mapTitle.innerHTML = "🗺️ Selected Mandi Closed/Full — Showing Nearby Alternative APMC Mandis";
-                mapFrame.src = `https://maps.google.com/maps?q=${mandiGeo.nearby}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
-            } else {
-                // Mandi is open: show specific mandi yard location
-                alertBanner.classList.add('hidden');
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer";
-                
-                mapTitle.innerHTML = "🗺️ APMC Mandi Geospatial Locator";
-                mapFrame.src = `https://maps.google.com/maps?q=${mandiGeo.query}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-            }
-        }
+    if (isLocked || bookedTons >= maxTonsCapacity) {
+        alertBanner.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed";
+        
+        // Show nearby mandis when full/closed
+        mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(mandiGeo.nearby)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+    } else {
+        alertBanner.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer";
+        
+        // Show specific mandi yard when open
+        mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(mandiGeo.query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    }
+}
 
         function handleSlotBooking(e) {
             e.preventDefault();
@@ -267,20 +264,20 @@
             document.getElementById('qrModal').classList.add('hidden');
         }
 
-        function switchRole() {
-            // Save active slot booking form inputs before switching roles so data isn't lost
-            localStorage.setItem('kd_temp_mandi', document.getElementById('mandiSelect').value);
-            localStorage.setItem('kd_temp_commodity', document.getElementById('commoditySelect').value);
-            localStorage.setItem('kd_temp_vehicle', document.getElementById('vehicleSelect').value);
-            localStorage.setItem('kd_temp_slot', document.getElementById('slotSelect').value);
-            localStorage.setItem('kd_temp_quantity', document.getElementById('quantityInput').value);
+       function switchRole() {
+    // Save form inputs so they aren't lost on role switch
+    localStorage.setItem('kd_temp_mandi', document.getElementById('mandiSelect').value);
+    localStorage.setItem('kd_temp_commodity', document.getElementById('commoditySelect').value);
+    localStorage.setItem('kd_temp_vehicle', document.getElementById('vehicleSelect').value);
+    localStorage.setItem('kd_temp_slot', document.getElementById('slotSelect').value);
+    localStorage.setItem('kd_temp_quantity', document.getElementById('quantityInput').value);
 
-            const selectedMandiKey = document.getElementById('mandiSelect').value;
-            if (selectedMandiKey) {
-                localStorage.setItem(`kd_booked_${selectedMandiKey}`, bookedTons);
-            }
-            window.location.href = '../index.html';
-        }
+    const selectedMandiKey = document.getElementById('mandiSelect').value;
+    if (selectedMandiKey) {
+        localStorage.setItem(`kd_booked_${selectedMandiKey}`, bookedTons);
+    }
+    window.location.href = '../index.html';
+}
     </script>
 </body>
 </html>
