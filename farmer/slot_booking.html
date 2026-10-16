@@ -14,7 +14,7 @@
             <span class="text-4xl">👨‍🌾</span>
             <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
         </div>
-        <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold">Switch Role</button>
+        <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold cursor-pointer">Switch Role</button>
     </header>
 
     <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
@@ -32,6 +32,7 @@
             </div>
         </div>
 
+        <!-- Google Maps Frame linked to dropdown selection -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
             <h3 class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator</h3>
             <div class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative">
@@ -49,7 +50,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block font-bold text-gray-800">🏬 APMC Mandi Yard</label>
-                    <select id="mandiSelect" onchange="updateMandiCapacity()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <select id="mandiSelect" onchange="updateMandiCapacity()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
                         <option value="pune_main">Pune Main APMC Market Yard</option>
                         <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
                         <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
@@ -58,7 +59,7 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">🌾 Commodity / Crop Type</label>
-                    <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
                         <option value="wheat">Wheat</option>
                         <option value="paddy">Paddy / Rice</option>
                         <option value="soybean">Soybean</option>
@@ -68,7 +69,7 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">🚚 Vehicle Type</label>
-                    <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
                         <option value="tractor">Tractor Trolley (4-6 Tons)</option>
                         <option value="small_truck">Light Commercial Truck (LCV)</option>
                         <option value="heavy_truck">Heavy Commercial Truck (10+ Tons)</option>
@@ -76,7 +77,7 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">⏰ Preferred Arrival Slot</label>
-                    <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
                         <option value="slot1" id="optSlot1">09:00 AM - 11:30 AM (Morning Slot)</option>
                         <option value="slot2" id="optSlot2">11:30 AM - 02:00 PM (Mid-Day Slot)</option>
                         <option value="slot3" id="optSlot3">02:00 PM - 04:30 PM (Afternoon Slot)</option>
@@ -110,8 +111,8 @@
                 <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">KD-2026-8891</span></p>
             </div>
             <div class="flex space-x-3">
-                <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl">Print Pass 🖨️</button>
-                <button type="button" onclick="closeModal()" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl">Close</button>
+                <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">Print Pass 🖨️</button>
+                <button type="button" onclick="closeModal()" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl cursor-pointer">Close</button>
             </div>
         </div>
     </div>
@@ -137,174 +138,37 @@
             updateMandiCapacity();
         });
 
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiDhara 2.0 - Farmer Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
-
-    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
-        <div class="flex items-center space-x-3">
-            <span class="text-4xl">👨‍🌾</span>
-            <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
-        </div>
-        
-        <div class="flex items-center space-x-3">
-            <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-4 py-2.5 rounded-2xl border border-green-600 font-bold focus:outline-none cursor-pointer">
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-                <option value="mr">मराठी</option>
-            </select>
-            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 transition shadow cursor-pointer font-bold">Switch Role</button>
-        </div>
-    </header>
-
-    <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
-        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="text-xl md:text-2xl font-extrabold text-green-900">Step 1: Identity & Aadhaar Verification</h2>
-                <span id="stepBadge" class="text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full">Pending</span>
-            </div>
-            <p class="text-sm md:text-base text-gray-600">Secure mobile & Aadhaar authentication for procurement slot booking.</p>
-        </div>
-
-        <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-8">
-            <div id="mobileSection" class="space-y-4">
-                <label class="block text-base md:text-lg font-bold text-gray-800">📱 Mobile Number</label>
-                <div class="flex space-x-4">
-                    <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit mobile no." class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
-                    <button type="button" onclick="sendMobileOTP()" id="btnSendMobileOTP" class="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">Send OTP</button>
-                </div>
-
-                <div id="mobileOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
-                    <div class="flex justify-between items-center text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Enter 4-digit OTP sent to mobile</span>
-                        <span id="mobileTimer" class="text-red-600 font-bold text-base">60s</span>
-                    </div>
-                    <div class="flex space-x-4">
-                        <input type="text" id="mobileOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
-                        <button type="button" onclick="verifyMobileOTP()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">Verify Mobile OTP ✅</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="aadhaarSection" class="space-y-4 pt-6 border-t-2 border-gray-200 opacity-50 pointer-events-none transition-all">
-                <label class="block text-base md:text-lg font-bold text-gray-800">🆔 Aadhaar Number (12-Digit)</label>
-                <div class="flex space-x-4">
-                    <input type="password" id="aadhaarInput" maxlength="12" placeholder="XXXX XXXX XXXX" class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
-                    <button type="button" onclick="sendAadhaarOTP()" id="btnSendAadhaarOTP" class="bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">Send e-KYC OTP</button>
-                </div>
-
-                <div id="aadhaarOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
-                    <div class="flex justify-between items-center text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Enter OTP sent to registered Aadhaar mobile</span>
-                        <span id="aadhaarTimer" class="text-red-600 font-bold text-base">60s</span>
-                    </div>
-                    <div class="flex space-x-4">
-                        <input type="text" id="aadhaarOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
-                        <button type="button" onclick="verifyAadhaarOTP()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">Verify & Fetch Profile 🔍</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="profileCard" class="hidden p-6 bg-green-50 border-2 border-green-500 rounded-2xl space-y-4 shadow-inner">
-                <div class="flex items-center space-x-5">
-                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-4xl shadow-inner border border-green-300 flex-shrink-0">🧑‍🌾</div>
-                    <div>
-                        <h3 id="profileName" class="text-lg md:text-xl font-extrabold text-green-900">Ramesh Kumar</h3>
-                        <p class="text-sm md:text-base text-gray-700 font-medium">Age: 42 | Gender: Male</p>
-                        <p class="text-sm text-green-700 font-bold mt-1">Verified Aadhaar Details Confirmed</p>
-                    </div>
-                </div>
-                <div class="text-sm bg-white p-4 rounded-xl border border-green-200 text-green-800 font-medium">
-                    ✅ Secure Aadhaar e-KYC match successful. Identity confirmed for procurement queue.
-                </div>
-            </div>
-        </div>
-
-        <button type="button" id="btnProceedSlot" onclick="proceedToSlotBooking()" disabled class="w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed">
-            Proceed to Slot Booking →
-        </button>
-    </main>
-
-    <script>
-        let generatedMobileOTP = "";
-        let generatedAadhaarOTP = "";
-        let mobileTimerInterval = null;
-        let aadhaarTimerInterval = null;
-
-        function startTimer(duration, displayElementId) {
-            let timer = duration, seconds;
-            return setInterval(function () {
-                seconds = parseInt(timer % 60, 10);
-                const elem = document.getElementById(displayElementId);
-                if (elem) elem.textContent = seconds + "s";
-                if (--timer < 0) {
-                    clearInterval(mobileTimerInterval);
-                    clearInterval(aadhaarTimerInterval);
-                }
-            }, 1000);
-        }
-
-        function sendMobileOTP() {
-            generatedMobileOTP = "1234";
-            alert(`[SIMULATED SMS] Your KrishiDhara OTP is: 1234`);
-            document.getElementById('mobileOtpBox').classList.remove('hidden');
-        }
-
-        function verifyMobileOTP() {
-            const entered = document.getElementById('mobileOtpInput').value.trim();
-            if (entered === "1234" || entered === generatedMobileOTP) {
-                alert("Mobile number verified successfully!");
-                document.getElementById('mobileOtpBox').classList.add('hidden');
-                document.getElementById('mobileInput').disabled = true;
-                document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                alert("Incorrect OTP. Try 1234.");
+        function updateMandiCapacity() {
+            const mandiSelectEl = document.getElementById('mandiSelect');
+            const selectedMandi = mandiSelectEl.value || 'pune_main';
+            
+            localStorage.setItem('kd_last_mandi', selectedMandi);
+            
+            // Feature 1: Dynamic Google Maps updating according to dropdown selection
+            let queryLocation = "Pune APMC Market Yard Gultekdi Maharashtra";
+            if (selectedMandi === 'nashik_grain') {
+                queryLocation = "Nashik Grain And Vegetable APMC Market Yard";
+            } else if (selectedMandi === 'nagpur_cotton') {
+                queryLocation = "Nagpur Cotton Market Yard APMC";
+            } else if (selectedMandi === 'amravati_grain') {
+                queryLocation = "Amravati APMC Regional Procurement Center";
             }
-        }
+            
+            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(queryLocation)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
-        function sendAadhaarOTP() {
-            generatedAadhaarOTP = "5678";
-            alert(`[e-KYC SMS] Verification OTP is: 5678`);
-            document.getElementById('aadhaarOtpBox').classList.remove('hidden');
-        }
-
-        function verifyAadhaarOTP() {
-            const entered = document.getElementById('aadhaarOtpInput').value.trim();
-            if (entered === "5678" || entered === generatedAadhaarOTP) {
-                document.getElementById('aadhaarOtpBox').classList.add('hidden');
-                document.getElementById('aadhaarInput').disabled = true;
-                document.getElementById('profileCard').classList.remove('hidden');
-                
-                const badge = document.getElementById('stepBadge');
-                badge.innerText = "Verified ✅";
-                badge.className = "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
-
-                const btn = document.getElementById('btnProceedSlot');
-                btn.disabled = false;
-                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
+            const adminCustomCap = localStorage.getItem(`kd_cap_${selectedMandi}`);
+            if (adminCustomCap) {
+                maxTonsCapacity = parseFloat(adminCustomCap);
             } else {
-                alert("Incorrect OTP. Try 5678.");
+                maxTonsCapacity = selectedMandi === 'nashik_grain' ? 60 : (selectedMandi === 'nagpur_cotton' ? 40 : (selectedMandi === 'amravati_grain' ? 30 : 50));
             }
-        }
 
-        function proceedToSlotBooking() {
-            localStorage.setItem('kd_farmer_verified', 'true');
-            localStorage.setItem('kd_farmer_name', 'Ramesh Kumar');
-            window.location.href = 'slot_booking.html';
-        }
+            bookedTons = parseFloat(localStorage.getItem(`kd_booked_${selectedMandi}`)) || 5;
 
-        function switchRole() {
-            window.location.href = '../index.html';
+            const isYardLocked = localStorage.getItem(`kd_lock_${selectedMandi}`) === 'true';
+            applyTimeBufferUI(selectedMandi);
+            renderCapacityUI(isYardLocked, selectedMandi);
         }
-    </script>
-</body>
-</html>
 
         function applyTimeBufferUI(mandiKey) {
             const delayMins = parseInt(localStorage.getItem(`kd_delay_${mandiKey}`)) || 0;
@@ -314,7 +178,7 @@
             let s3 = "02:00 PM - 04:30 PM";
             let s4 = "04:30 PM - 06:00 PM";
 
-            // Only apply buffer time if admin explicitly added a positive delay value
+            // Feature 2: Only applies buffer time if admin explicitly sets it greater than 0
             if (delayMins > 0) {
                 s1 = `09:${delayMins} AM - 12:00 PM (+${delayMins}m Buffer)`;
                 s2 = `12:00 PM - 02:${delayMins} PM (+${delayMins}m Buffer)`;
@@ -352,16 +216,17 @@
             const selectedMandiKey = document.getElementById('mandiSelect').value;
             const inputTons = parseFloat(document.getElementById('quantityInput').value);
 
-            const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect').selectedIndex].text;
-            const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect').selectedIndex].text;
+            const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect'].selectedIndex].text;
+            const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect'].selectedIndex].text;
             const tokenId = "KD-2026-" + Math.floor(1000 + Math.random() * 9000);
 
             document.getElementById('summaryMandi').textContent = mandi;
             document.getElementById('summarySlot').textContent = slot;
             document.getElementById('summaryToken').textContent = tokenId;
 
+            // Feature 2: Captures the active admin buffer delay and packs it into the QR code string for the judges to scan
             const activeDelay = localStorage.getItem(`kd_delay_${selectedMandiKey}`) || '0';
-            const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Buffer: ${activeDelay}m | Status: VERIFIED`;
+            const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Slot: ${slot} | Admin Buffer Delay: ${activeDelay} mins | Status: VERIFIED`;
 
             document.getElementById('qrModal').classList.remove('hidden');
             const qrContainer = document.getElementById('qrcode');
