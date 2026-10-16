@@ -33,7 +33,7 @@
         </div>
 
         <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
-            <h3 class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator</h3>
+            <h3 id="mapTitle" class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator</h3>
             <div class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative">
                 <iframe id="googleMapFrame" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src="https://maps.google.com/maps?q=Pune+APMC+Market+Yard+Gultekdi+Maharashtra&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
             </div>
@@ -41,7 +41,7 @@
 
         <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
             <div id="alertTitleText" class="text-xl font-black">EMERGENCY YARD LOCK OR CAPACITY FULL!</div>
-            <p id="alertMessageText" class="text-sm font-semibold">Bookings for this specific APMC yard are temporarily suspended.</p>
+            <p id="alertMessageText" class="text-sm font-semibold">Bookings for this specific APMC yard are temporarily suspended. <b>Nearby alternative APMC mandis are now highlighted on the map above.</b></p>
         </div>
 
         <form id="slotForm" onsubmit="handleSlotBooking(event)" class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-6">
@@ -49,6 +49,7 @@
                 <div>
                     <label class="block font-bold text-gray-800">🏬 APMC Mandi Yard</label>
                     <select id="mandiSelect" onchange="onMandiChange()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                        <option value="" disabled selected>Select APMC Mandi</option>
                         <option value="pune_main">Pune Main APMC Market Yard</option>
                         <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
                         <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
@@ -122,11 +123,24 @@
         let maxTonsCapacity = 50;
         let bookedTons = 14; 
 
+        // Mapping each mandi to its specific location and its nearby options query
         const mandiLocationsMap = {
-            'pune_main': 'Pune+APMC+Market+Yard+Gultekdi+Maharashtra',
-            'nashik_grain': 'Nashik+Grain+Vegetable+Mandi+Maharashtra',
-            'nagpur_cotton': 'Nagpur+Cotton+Grain+Yard+Maharashtra',
-            'amravati_grain': 'Amravati+Regional+Procurement+Center+Maharashtra'
+            'pune_main': {
+                query: 'Pune+APMC+Market+Yard+Gultekdi+Maharashtra',
+                nearby: 'APMC+markets+near+Pune+Gultekdi'
+            },
+            'nashik_grain': {
+                query: 'Nashik+Grain+Vegetable+Mandi+Maharashtra',
+                nearby: 'APMC+markets+near+Nashik'
+            },
+            'nagpur_cotton': {
+                query: 'Nagpur+Cotton+Grain+Yard+Maharashtra',
+                nearby: 'APMC+markets+near+Nagpur'
+            },
+            'amravati_grain': {
+                query: 'Amravati+Regional+Procurement+Center+Maharashtra',
+                nearby: 'APMC+markets+near+Amravati'
+            }
         };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -157,11 +171,7 @@
         function onMandiChange() {
             const selectedMandiKey = document.getElementById('mandiSelect').value;
             
-            // 1. Update Google Maps Frame based on dropdown selection
-            const queryLocation = mandiLocationsMap[selectedMandiKey] || 'Pune+APMC+Market+Yard';
-            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${queryLocation}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-
-            // 2. Load capacity metrics for selected mandi
+            // Load capacity metrics for selected mandi
             bookedTons = parseInt(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
             renderCapacityUI(false, selectedMandiKey);
             applyTimeBufferUI(selectedMandiKey);
@@ -195,15 +205,26 @@
 
             const alertBanner = document.getElementById('fullCapacityAlert');
             const submitBtn = document.getElementById('btnConfirmBooking');
+            const mapFrame = document.getElementById('googleMapFrame');
+            const mapTitle = document.getElementById('mapTitle');
+            const mandiGeo = mandiLocationsMap[currentMandiKey] || mandiLocationsMap['pune_main'];
 
             if (isLocked || bookedTons >= maxTonsCapacity) {
+                // Mandi is full or closed: switch map view to nearby alternative APMC mandis
                 alertBanner.classList.remove('hidden');
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed";
+                
+                mapTitle.innerHTML = "🗺️ Selected Mandi Closed/Full — Showing Nearby Alternative APMC Mandis";
+                mapFrame.src = `https://maps.google.com/maps?q=${mandiGeo.nearby}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
             } else {
+                // Mandi is open: show specific mandi yard location
                 alertBanner.classList.add('hidden');
                 submitBtn.disabled = false;
                 submitBtn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer";
+                
+                mapTitle.innerHTML = "🗺️ APMC Mandi Geospatial Locator";
+                mapFrame.src = `https://maps.google.com/maps?q=${mandiGeo.query}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
             }
         }
 
