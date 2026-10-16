@@ -140,8 +140,11 @@
             <div class="text-left text-sm space-y-2 bg-gray-50 p-4 rounded-xl border">
                 <p><b>Farmer:</b> <span id="summaryName" class="text-green-800 font-bold">Ramesh Kumar</span></p>
                 <p><b>Mandi:</b> <span id="summaryMandi">-</span></p>
-                <p><b>Slot:</b> <span id="summarySlot">-</span></p>
-                <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">KD-2026-8891</span></p>
+                <p><b>Commodity:</b> <span id="summaryCommodity">-</span></p>
+                <p><b>Vehicle:</b> <span id="summaryVehicle">-</span></p>
+                <p><b>Quantity:</b> <span id="summaryQuantity">-</span> tons</p>
+                <p><b>Updated arrival slot:</b> <span id="summarySlot">-</span></p>
+                <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">-</span></p>
             </div>
             <div class="flex space-x-3">
                 <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">Print Pass 🖨️</button>
@@ -176,27 +179,33 @@
             const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
             document.getElementById('summaryName').textContent = storedName;
             const saved = getStoredBooking();
-            const savedMandi = (saved && saved.mandiKey) || localStorage.getItem('kd_temp_mandi') || '';
-            const values = {
-                commoditySelect: (saved && saved.commodity) || localStorage.getItem('kd_temp_commodity'),
-                vehicleSelect: (saved && saved.vehicle) || localStorage.getItem('kd_temp_vehicle'),
-                slotSelect: (saved && saved.slotKey) || localStorage.getItem('kd_temp_slot'),
-                quantityInput: (saved && saved.quantity) || localStorage.getItem('kd_temp_quantity')
-            };
-            Object.entries(values).forEach(([id, value]) => {
-                if (value && document.getElementById(id)) document.getElementById(id).value = value;
-            });
-            if (savedMandi) {
-                document.getElementById('mandiSelect').value = savedMandi;
-                showMapForMandi(savedMandi, false);
+            // Do not pre-fill booking choices for a new farmer session. Only restore them
+            // when a confirmed booking exists, so the farmer explicitly chooses each field.
+            const savedMandi = saved && saved.mandiKey ? saved.mandiKey : '';
+            if (saved) {
+                const values = {
+                    commoditySelect: saved.commodity,
+                    vehicleSelect: saved.vehicle,
+                    slotSelect: saved.slotKey,
+                    quantityInput: saved.quantity
+                };
+                Object.entries(values).forEach(([id, value]) => {
+                    if (value !== undefined && value !== null && document.getElementById(id)) document.getElementById(id).value = value;
+                });
+                if (savedMandi) document.getElementById('mandiSelect').value = savedMandi;
             }
+            if (savedMandi) showMapForMandi(savedMandi, false);
             const currentMandi = savedMandi || 'pune_main';
             const cap = parseFloat(localStorage.getItem(`kd_cap_${currentMandi}`)) || 50;
             maxTonsCapacity = cap;
             bookedTons = parseFloat(localStorage.getItem(`kd_booked_${currentMandi}`)) || 14;
             renderCapacityUI(localStorage.getItem(`kd_lock_${currentMandi}`) === 'true', currentMandi);
             applyTimeBufferUI(currentMandi);
-            if (saved) renderSavedBooking(saved);
+            if (saved) {
+                renderSavedBooking(saved);
+                // Re-open the saved QR pass automatically when the farmer returns.
+                document.getElementById('qrModal').classList.remove('hidden');
+            }
             window.addEventListener('storage', (event) => {
                 if (event.key && (event.key.startsWith('kd_delay_') || event.key === 'kd_farmer_booking' || event.key.startsWith('kd_lock_') || event.key.startsWith('kd_cap_'))) {
                     const active = document.getElementById('mandiSelect').value || currentMandi;
@@ -210,10 +219,16 @@
 
         function renderSavedBooking(booking) {
             const delay = parseInt(localStorage.getItem(`kd_delay_${booking.mandiKey}`) || '0', 10);
-            const slotLabel = document.getElementById('slotSelect').selectedOptions[0]?.textContent || booking.slotLabel || '';
+            const selectedOption = document.getElementById('slotSelect').selectedOptions[0];
+            const slotLabel = (selectedOption && selectedOption.value === booking.slotKey ? selectedOption.textContent : booking.slotLabel) || '';
             document.getElementById('summaryName').textContent = booking.farmerName || localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
             document.getElementById('summaryMandi').textContent = booking.mandiName || '';
-            document.getElementById('summarySlot').textContent = `${slotLabel}${delay ? ` • Admin buffer +${delay} min` : ''}`;
+            const commodityNames = {wheat:'Wheat', paddy:'Paddy / Rice', soybean:'Soybean', cotton:'Cotton', onion:'Onion'};
+            const vehicleNames = {tractor:'Tractor Trolley', small_truck:'Light Commercial Truck (LCV)', heavy_truck:'Heavy Commercial Truck'};
+            document.getElementById('summaryCommodity').textContent = commodityNames[booking.commodity] || booking.commodity || '-';
+            document.getElementById('summaryVehicle').textContent = vehicleNames[booking.vehicle] || booking.vehicle || '-';
+            document.getElementById('summaryQuantity').textContent = booking.quantity ?? '-';
+            document.getElementById('summarySlot').textContent = slotLabel;
             document.getElementById('summaryToken').textContent = booking.tokenId || '';
             booking.currentBuffer = delay;
             localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
@@ -260,7 +275,7 @@
             const labels = ['Morning Slot','Mid-Day Slot','Afternoon Slot','Evening Slot'];
             ranges.forEach((range, i) => {
                 const start = fmt(range[0] + delayMins), end = fmt(range[1] + delayMins);
-                document.getElementById(`optSlot${i+1}`).textContent = `${start} - ${end}${delayMins ? ` (+${delayMins}m Buffer)` : ''} (${labels[i]})`;
+                document.getElementById(`optSlot${i+1}`).textContent = `${start} - ${end} (${labels[i]}${delayMins ? ` • Admin +${delayMins}m` : ''})`;
             });
         }
 
@@ -297,7 +312,10 @@
             const inputTons = parseFloat(document.getElementById('quantityInput').value);
             const capacity = parseFloat(localStorage.getItem(`kd_cap_${selectedMandiKey}`)) || (selectedMandiKey === 'nashik_grain' ? 60 : selectedMandiKey === 'nagpur_cotton' ? 40 : selectedMandiKey === 'amravati_grain' ? 30 : 50);
             const currentBooked = parseFloat(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
-            if (!Number.isFinite(inputTons) || inputTons <= 0 || currentBooked + inputTons > capacity) {
+            const existing = getStoredBooking();
+            const alreadyCountedForThisMandi = existing && existing.mandiKey === selectedMandiKey ? (Number(existing.quantity) || 0) : 0;
+            const effectiveBooked = Math.max(0, currentBooked - alreadyCountedForThisMandi);
+            if (!Number.isFinite(inputTons) || inputTons <= 0 || effectiveBooked + inputTons > capacity) {
                 alert('The requested quantity exceeds the available mandi capacity. Please reduce the quantity or choose another mandi.');
                 return;
             }
@@ -305,13 +323,12 @@
             const mandi = mandiSelect.options[mandiSelect.selectedIndex].text;
             const slotSelect = document.getElementById('slotSelect');
             const slot = slotSelect.options[slotSelect.selectedIndex].text;
-            const existing = getStoredBooking();
             const tokenId = existing && existing.mandiKey === selectedMandiKey ? existing.tokenId : `KD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
             const booking = {
                 tokenId, farmerName: localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar',
                 mandiKey: selectedMandiKey, mandiName: mandi, commodity: document.getElementById('commoditySelect').value,
                 vehicle: document.getElementById('vehicleSelect').value, slotKey: slotSelect.value, slotLabel: slot,
-                quantity: inputTons, createdAt: new Date().toISOString()
+                quantity: inputTons, createdAt: (existing && existing.mandiKey === selectedMandiKey ? existing.createdAt : new Date().toISOString())
             };
             // Count the quantity only for a genuinely new booking; re-confirming updates the existing booking.
             if (!existing || existing.mandiKey !== selectedMandiKey || existing.tokenId !== tokenId) {
@@ -400,3 +417,5 @@
 
 </body>
 </html>
+
+Step 2 farmer/slot_booking.html
