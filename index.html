@@ -1,202 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiDhara 2.0 - Agricultural Procurement & Queue Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>KrishiDhara 2.0</title><script src="https://cdn.tailwindcss.com"></script></head>
 <body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
-
-    <!-- Header / Language Selector Bar -->
-    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
-        <div class="flex items-center space-x-4">
-            <span class="text-4xl">🌾</span>
-            <div>
-                <h1 class="text-xl md:text-2xl font-black tracking-wide" data-translate="app_title">KrishiDhara 2.0</h1>
-                <p class="text-sm text-green-200 font-medium" data-translate="app_subtitle">Smart Procurement & Queue Management System</p>
-            </div>
-        </div>
-
-        <!-- 22 Indian Languages Dropdown -->
-        <div class="flex items-center space-x-3 bg-green-800 px-4 py-2.5 rounded-2xl border border-green-600 shadow-inner">
-            <span class="text-lg">🌐</span>
-            <select id="langSelect" onchange="changeLanguage()" class="bg-transparent text-white text-sm md:text-base font-bold focus:outline-none cursor-pointer">
-                <option value="en" class="text-black">English</option>
-                <option value="hi" class="text-black">हिन्दी (Hindi)</option>
-                <option value="mr" class="text-black">मराठी (Marathi)</option>
-                <option value="pa" class="text-black">ਪੰਜਾਬੀ (Punjabi)</option>
-                <option value="gu" class="text-black">ગુજરાતી (Gujarati)</option>
-                <option value="bn" class="text-black">বাংলা (Bengali)</option>
-                <option value="te" class="text-black">తెలుగు (Telugu)</option>
-                <option value="ta" class="text-black">தமிழ் (Tamil)</option>
-                <option value="kn" class="text-black">ಕನ್ನಡ (Kannada)</option>
-                <option value="ml" class="text-black">മലയാളം (Malayalam)</option>
-                <option value="or" class="text-black">ଓଡ଼ିଆ (Odia)</option>
-                <option value="as" class="text-black">অসমীয়া (Assamese)</option>
-                <option value="ur" class="text-black">اردو (Urdu)</option>
-                <option value="sa" class="text-black">संस्कृतम् (Sanskrit)</option>
-                <option value="ne" class="text-black">नेपाली (Nepali)</option>
-                <option value="sd" class="text-black">سنڌي (Sindhi)</option>
-                <option value="ks" class="text-black">कॉशुर (Kashmiri)</option>
-                <option value="doi" class="text-black">डोगरी (Dogri)</option>
-                <option value="mni" class="text-black">মৈতৈলোন্ (Manipuri)</option>
-                <option value="sat" class="text-black">संताली (Santali)</option>
-                <option value="bho" class="text-black">भोजपुरी (Bhojpuri)</option>
-                <option value="raj" class="text-black">राजस्थानी (Rajasthani)</option>
-            </select>
-        </div>
-    </header>
-
-    <!-- Main Role Selection Container -->
-    <main class="w-full max-w-6xl mx-auto my-10 space-y-8">
-        <div class="text-center space-y-3">
-            <h2 id="mainTitle" class="text-3xl md:text-4xl font-extrabold text-green-900" data-translate="select_portal">Select Your Portal</h2>
-            <p id="mainSubtitle" class="text-base md:text-lg text-gray-700 max-w-2xl mx-auto" data-translate="select_subtitle">Choose your role to access encrypted queue management and procurement tools.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div onclick="selectRole('farmer')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-green-200 hover:border-green-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
-                <div class="space-y-4">
-                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">👨‍🌾</div>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-green-900" data-translate="farmer_title">Farmer Portal</h3>
-                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="farmer_desc">Secure slot booking, crop details, Aadhaar verification, and offline QR token generation.</p>
-                </div>
-                <div class="text-sm md:text-base font-bold text-green-700 flex items-center space-x-2">
-                    <span data-translate="enter_portal">Enter Portal</span>
-                    <span class="text-lg">→</span>
-                </div>
-            </div>
-
-            <div onclick="selectRole('officer')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 hover:border-emerald-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
-                <div class="space-y-4">
-                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">🛡️</div>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-emerald-900" data-translate="officer_title">Yard Officer Portal</h3>
-                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="officer_desc">Gate management, QR code scanner, live entry logging, and crop/weight validation.</p>
-                </div>
-                <div class="text-sm md:text-base font-bold text-emerald-700 flex items-center space-x-2">
-                    <span data-translate="enter_portal">Enter Portal</span>
-                    <span class="text-lg">→</span>
-                </div>
-            </div>
-
-            <div onclick="selectRole('admin')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 hover:border-teal-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
-                <div class="space-y-4">
-                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">📊</div>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-teal-900" data-translate="admin_title">APMC Admin Portal</h3>
-                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="admin_desc">Capacity control, emergency mandi shutdowns, traffic flow monitoring, and geospatial rerouting.</p>
-                </div>
-                <div class="text-sm md:text-base font-bold text-teal-700 flex items-center space-x-2">
-                    <span data-translate="enter_portal">Enter Portal</span>
-                    <span class="text-lg">→</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="text-center py-4 text-xs md:text-sm text-gray-600 border-t bg-white/60 rounded-2xl max-w-6xl w-full mx-auto font-medium" data-translate="footer_text">
-        KrishiDhara 2.0 • Live Jury Demonstration Build
-    </footer>
-
-    <script>
-        const nativeDigitMaps = {
-            en: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-            hi: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            mr: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            sa: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            ne: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            doi: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            bho: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            raj: ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
-            bn: ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'],
-            as: ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'],
-            pa: ['੦', '੧', '੨', '੩', '੪', '੫', '੬', '੭', '੮', '੯'],
-            gu: ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'],
-            te: ['౦', '౧', '౨', '౩', '౪', '౫', '౬', '౭', '౮', '౯'],
-            ta: ['௦', '௧', '௨', '௩', '௪', '௫', '௬', '௭', '௮', '௯'],
-            kn: ['೦', '೧', '೨', '೩', '೪', '೫', '೬', '೭', '೮', '೯'],
-            ml: ['൦', '൧', '൨', '൩', '൪', '൫', '൬', '൭', '൮', '൯'],
-            or: ['୦', '୧', '୨', '୩', '୪', '୫', '୬', '୭', '୮', '୯'],
-            ur: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'],
-            sd: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'],
-            ks: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'],
-            mni: ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'],
-            sat: ['᱐', '᱑', '᱒', '᱓', '᱔', '᱕', '᱖', '᱗', '᱘', '᱙']
-        };
-
-        function localizeNumber(num, lang) {
-            const map = nativeDigitMaps[lang] || nativeDigitMaps['en'];
-            return num.toString().replace(/\d/g, (match) => map[parseInt(match)]);
-        }
-
-        const translations = {
-            en: {
-                app_title: "KrishiDhara 2.0", app_subtitle: "Smart Procurement & Queue Management System",
-                select_portal: "Select Your Portal", select_subtitle: "Choose your role to access encrypted queue management and procurement tools.",
-                farmer_title: "Farmer Portal", farmer_desc: "Secure slot booking, crop details, Aadhaar verification, and offline QR token generation.",
-                officer_title: "Yard Officer Portal", officer_desc: "Gate management, QR code scanner, live entry logging, and crop/weight validation.",
-                admin_title: "APMC Admin Portal", admin_desc: "Capacity control, emergency mandi shutdowns, traffic flow monitoring, and geospatial rerouting.",
-                enter_portal: "Enter Portal", footer_text: "KrishiDhara 2.0 • Live Jury Demonstration Build"
-            },
-            hi: {
-                app_title: "कृषिधारा 2.0", app_subtitle: "स्मार्ट प्रोक्योरमेंट और कतार प्रबंधन प्रणाली",
-                select_portal: "अपना पोर्टल चुनें", select_subtitle: "एन्क्रिप्टेड कतार प्रबंधन और प्रोक्योरमेंट टूल तक पहुँचने के लिए अपनी भूमिका चुनें।",
-                farmer_title: "किसान पोर्टल", farmer_desc: "सुरक्षित स्लॉट बुकिंग, फसल विवरण, आधार सत्यापन और ऑफ़लाइन क्यूआर टोकन जेनरेशन।",
-                officer_title: "यार्ड ऑफिसर पोर्टल", officer_desc: "गेट प्रबंधन, क्यूआर कोड स्कैनर, लाइव प्रविष्टि लॉगिंग और फसल/वजन सत्यापन।",
-                admin_title: "एपीएमसी एडमिन पोर्टल", admin_desc: "क्षमता नियंत्रण, आपातकालीन मंडी शटडाउन, ट्रैफिक फ्लो मॉनिटरिंग और जियोस्पेशियल रूटिंग।",
-                enter_portal: "पोर्टल दर्ज करें", footer_text: "कृषिधारा 2.0 • लाइव जूरी प्रदर्शन बिल्ड"
-            },
-            mr: {
-                app_title: "कृषिधारा २.०", app_subtitle: "स्मार्ट प्रोक्युरमेंट आणि रांग व्यवस्थापन प्रणाली",
-                select_portal: "तुमचे पोर्टल निवडा", select_subtitle: "एनक्रिप्टेड रांग व्यवस्थापन आणि प्रोक्युरमेंट टूल्समध्ये प्रवेश करण्यासाठी तुमची भूमिका निवडा.",
-                farmer_title: "शेतकरी पोर्टल", farmer_desc: "सुरक्षित स्लॉट बुकिंग, पिकाचा तपशील, आधार पडताळणी आणि ऑफलाइन QR टोकन निर्मिती.",
-                officer_title: "यार्ड ऑफिसर पोर्टल", officer_desc: "गेट व्यवस्थापन, QR कोड स्कॅनर, थेट नोंदणी लॉगिंग आणि पीक/वजन पडताळणी.",
-                admin_title: "एपीएमसी ॲडमिन पोर्टल", admin_desc: "क्षमता नियंत्रण, आणीबाणी मंडी बंद, रहदारी प्रवाह मॉनिटरिंग आणि जिओस्पेशियल रूटिंग।",
-                enter_portal: "पोर्टल उघडा", footer_text: "कृषिधारा २.० • थेट जूरी प्रात्यक्षिक आवृत्ती"
-            }
-            // All other 19 languages mapped seamlessly...
-        };
-
-        function getTranslation(lang, key) {
-            if (translations[lang] && translations[lang][key]) return translations[lang][key];
-            if (translations['hi'] && translations['hi'][key]) return translations['hi'][key];
-            return translations['en'][key] || key;
-        }
-
-        function applyLanguage(lang) {
-            document.querySelectorAll('[data-translate]').forEach(el => {
-                const key = el.getAttribute('data-translate');
-                el.textContent = getTranslation(lang, key);
-            });
-        }
-
-        function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            localStorage.setItem('kd_selected_lang', lang);
-            applyLanguage(lang);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
-            const dropdown = document.getElementById('langSelect');
-            if (dropdown) dropdown.value = savedLang;
-            applyLanguage(savedLang);
-        });
-
-        function selectRole(role) {
-            localStorage.setItem('kd_user_role', role);
-            if (role === 'farmer') {
-                window.location.href = 'farmer/index.html';
-            } else if (role === 'officer') {
-                window.location.href = 'officer/index.html';
-            } else if (role === 'admin') {
-                window.location.href = 'admin/index.html';
-            }
-        }
-        function switchRole() {
-        // Use '../index.html' if inside a subfolder (admin/farmer/officer)
-        window.location.href = 'farmer/index.html';
-        }
-    </script>
-</body>
-</html>
+<header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
+<div class="flex items-center space-x-4"><span class="text-4xl">🌾</span><div><h1 class="text-xl md:text-2xl font-black" data-translate="app_title">KrishiDhara 2.0</h1><p class="text-sm text-green-200" data-translate="app_subtitle">Smart Procurement & Queue Management</p></div></div>
+<div class="flex items-center space-x-3 bg-green-800 px-4 py-2.5 rounded-2xl border border-green-600"><span>🌐</span>
+<select id="langSelect" onchange="changeLanguage()" class="bg-transparent text-white text-sm font-bold focus:outline-none cursor-pointer">
+<option value="en" class="text-black">English</option><option value="hi" class="text-black">हिन्दी</option><option value="mr" class="text-black">मराठी</option><option value="pa" class="text-black">ਪੰਜਾਬੀ</option><option value="gu" class="text-black">ગુજરાતી</option><option value="bn" class="text-black">বাংলা</option><option value="te" class="text-black">తెలుగు</option><option value="ta" class="text-black">தமிழ்</option><option value="kn" class="text-black">ಕನ್ನಡ</option><option value="ml" class="text-black">മലയാളം</option><option value="or" class="text-black">ଓଡ଼ିଆ</option><option value="as" class="text-black">অসমীয়া</option><option value="ur" class="text-black">اردو</option><option value="sa" class="text-black">संस्कृतम्</option><option value="ne" class="text-black">नेपाली</option><option value="sd" class="text-black">سنڌي</option><option value="ks" class="text-black">कॉशुर</option><option value="doi" class="text-black">डोगरी</option><option value="mni" class="text-black">মৈতৈলোন্</option><option value="sat" class="text-black">संताली</option><option value="bho" class="text-black">भोजपुरी</option><option value="raj" class="text-black">राजस्थानी</option>
+</select></div>
+</header>
+<main class="w-full max-w-6xl mx-auto my-10 space-y-8"><div class="text-center space-y-3"><h2 class="text-3xl md:text-4xl font-extrabold text-green-900" data-translate="select_portal">Select Your Portal</h2><p class="text-gray-700" data-translate="select_subtitle">Choose your role</p></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div onclick="selectRole('farmer')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-green-200 hover:border-green-600 cursor-pointer space-y-4"><div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-4xl">👨‍🌾</div><h3 class="text-xl font-extrabold" data-translate="farmer_title">Farmer Portal</h3><p class="text-sm text-gray-600" data-translate="farmer_desc">Secure slot booking, Aadhaar & QR</p><div class="font-bold text-green-700">Enter Portal →</div></div>
+<div onclick="selectRole('officer')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 hover:border-emerald-600 cursor-pointer space-y-4"><div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl">🛡️</div><h3 class="text-xl font-extrabold" data-translate="officer_title">Yard Officer Portal</h3><p class="text-sm text-gray-600" data-translate="officer_desc">Gate management & QR scanner</p><div class="font-bold text-emerald-700">Enter Portal →</div></div>
+<div onclick="selectRole('admin')" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 hover:border-teal-600 cursor-pointer space-y-4"><div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-4xl">📊</div><h3 class="text-xl font-extrabold" data-translate="admin_title">APMC Admin Portal</h3><p class="text-sm text-gray-600" data-translate="admin_desc">Capacity control & emergency lock</p><div class="font-bold text-teal-700">Enter Portal →</div></div>
+</div></main>
+<script>
+const translations={en:{app_title:"KrishiDhara 2.0",app_subtitle:"Smart Procurement & Queue Management",select_portal:"Select Your Portal",select_subtitle:"Choose your role",farmer_title:"Farmer Portal",farmer_desc:"Secure slot booking & QR",officer_title:"Yard Officer Portal",officer_desc:"Gate management & QR scanner",admin_title:"APMC Admin Portal",admin_desc:"Capacity control & emergency lock"},hi:{app_title:"कृषिधारा 2.0",app_subtitle:"स्मार्ट प्रोक्योरमेंट",select_portal:"अपना पोर्टल चुनें",select_subtitle:"भूमिका चुनें",farmer_title:"किसान पोर्टल",farmer_desc:"सुरक्षित बुकिंग",officer_title:"यार्ड ऑफिसर",officer_desc:"गेट प्रबंधन",admin_title:"एपीएमसी एडमिन",admin_desc:"क्षमता नियंत्रण"},mr:{app_title:"कृषिधारा २.०",select_portal:"तुमचे पोर्टल निवडा",farmer_title:"शेतकरी पोर्टल",officer_title:"यार्ड ऑफिसर",admin_title:"एपीएमसी ॲडमिन"}};
+function getT(l,k){if(translations[l]&&translations[l][k])return translations[l][k];if(translations['hi']&&translations['hi'][k])return translations['hi'][k];return translations['en'][k]||k;}
+function applyLang(l){document.querySelectorAll('[data-translate]').forEach(el=>el.textContent=getT(l,el.getAttribute('data-translate')));}
+function changeLanguage(){const l=document.getElementById('langSelect').value;localStorage.setItem('kd_selected_lang',l);applyLang(l);}
+window.addEventListener('DOMContentLoaded',()=>{const s=localStorage.getItem('kd_selected_lang')||'en';document.getElementById('langSelect').value=s;applyLang(s);});
+function selectRole(r){localStorage.setItem('kd_user_role',r);if(r==='farmer')location.href='farmer/index.html';else if(r==='officer')location.href='officer/index.html';else location.href='admin/index.html';}
+</script></body></html>
