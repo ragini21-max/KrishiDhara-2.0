@@ -186,28 +186,14 @@
         function selectRole(role) {
             localStorage.setItem('kd_user_role', role);
             if (role === 'farmer') {
-                window.location.href = 'Farmer/index.html';
+                window.location.href = './farmer/index.html';
             } else if (role === 'officer') {
-                window.location.href = 'Officer/index.html';
+                window.location.href = './officer/index.html';
             } else if (role === 'admin') {
-                window.location.href = 'Admin/index.html';
+                window.location.href = './admin/index.html';
             }
         }
-        function selectRole(role) {
-    localStorage.setItem('kd_user_role', role);
-
-    if (role === 'farmer') {
-        window.location.href = './farmer/index.html';
-    } else if (role === 'officer') {
-        window.location.href = './officer/index.html';
-    } else if (role === 'admin') {
-        window.location.href = './admin/index.html';
-    }
-}
-
-function switchRole() {
-    window.location.href = './index.html';
-}
+        function switchRole() { window.location.href = 'index.html'; }
     </script>
 \n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
 <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
@@ -264,3 +250,5 @@ function switchRole() {
 
 </body>
 </html>
+
+main/root index.html
