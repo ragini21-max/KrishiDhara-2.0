@@ -434,5 +434,58 @@
             window.location.href = '../index.html';
         }
     </script>
+\n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
+<div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+<script>
+(function () {
+  const STORAGE_KEY = 'kd_selected_lang';
+  // Google Translate language codes. Unsupported codes remain selectable, but may not be translated by Google.
+  const googleCodes = new Set(['en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj']);
+  function setTranslateCookie(lang) {
+    const target = googleCodes.has(lang) ? lang : 'en';
+    const value = '/en/' + target;
+    document.cookie = 'googtrans=' + value + ';path=/;SameSite=Lax';
+    // GitHub Pages may use a subdomain; a host-only cookie is also set above.
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
+  }
+  window.googleTranslateElementInit = function () {
+    if (!window.google || !google.translate || !google.translate.TranslateElement) return;
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
+      autoDisplay: false
+    }, 'google_translate_element');
+    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+    const combo = document.querySelector('.goog-te-combo');
+    if (combo && lang !== 'en' && Array.from(combo.options).some(o => o.value === lang)) {
+      combo.value = lang;
+      combo.dispatchEvent(new Event('change'));
+    }
+  };
+  window.kdApplySelectedLanguage = function (lang) {
+    setTranslateCookie(lang);
+    // Reload lets Google Translate apply the saved language consistently to static and dynamic UI.
+    window.location.reload();
+  };
+  // Keep the existing language selector, but route its choice through the translation engine.
+  window.changeLanguage = function () {
+    const select = document.getElementById('langSelect');
+    if (select) window.kdApplySelectedLanguage(select.value);
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    const select = document.getElementById('langSelect');
+    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+    if (select) select.value = lang;
+    if (!document.querySelector('script[data-kd-google-translate]')) {
+      const script = document.createElement('script');
+      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      script.setAttribute('data-kd-google-translate', 'true');
+      document.head.appendChild(script);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
