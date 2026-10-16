@@ -25,19 +25,23 @@
             </div>
             <div class="bg-emerald-50 border-2 border-green-500 p-4 rounded-2xl shadow-sm w-full md:w-auto">
                 <div class="text-xs text-green-800 font-bold uppercase">Mandi Daily Capacity Intake</div>
-                <div id="capacityCount" class="text-2xl font-black text-green-900">14 Tons / 50 Tons</div>
+                <div id="capacityCount" class="text-2xl font-black text-green-900">29 Tons / 50 Tons</div>
                 <div class="w-full bg-green-200 rounded-full h-2.5 mt-2">
-                    <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 28%;"></div>
+                    <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 58%;"></div>
                 </div>
             </div>
         </div>
 
         <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
-            <h3 id="mapTitle" class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator - <span id="currentMandiName" class="text-green-700">Pune APMC</span></h3>
-            <div class="w-full h-80 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative">
-                <iframe id="googleMapFrame" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Pune%20APMC%20Market%20Yard%20Gultekdi&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
+            <h3 id="mapTitle" class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator - <span id="currentMandiName" class="text-amber-600">Please select a Mandi from dropdown below</span></h3>
+            <div id="mapContainer" class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative flex items-center justify-center">
+                <div id="mapPlaceholder" class="text-center p-6">
+                    <p class="text-4xl mb-2">👇</p>
+                    <p class="font-bold text-gray-700">Please select APMC Mandi Yard from dropdown</p>
+                    <p class="text-sm text-gray-500">Map will show selected mandi location here</p>
+                </div>
+                <iframe id="googleMapFrame" class="hidden" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src=""></iframe>
             </div>
-            <p class="text-xs text-gray-500 font-medium">Map auto-updates based on your mandi selection from the dropdown below.</p>
         </div>
 
         <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
@@ -122,70 +126,53 @@
 
     <script>
         let maxTonsCapacity = 50;
-        let bookedTons = 14; 
+        let bookedTons = 29;
 
         const mandiLocationsMap = {
-            'pune_main': {
-                name: 'Pune APMC Market Yard, Gultekdi',
-                query: 'Pune APMC Market Yard Gultekdi Pune Maharashtra',
-                nearby: 'APMC markets near Pune Gultekdi Maharashtra',
-                latlong: '18.4758,73.8668'
-            },
-            'nashik_grain': {
-                name: 'Nashik Grain Mandi',
-                query: 'Nashik APMC Market Yard Panchavati Nashik',
-                nearby: 'APMC markets near Nashik Maharashtra',
-                latlong: '19.9975,73.7898'
-            },
-            'nagpur_cotton': {
-                name: 'Nagpur Cotton Yard',
-                query: 'Nagpur APMC Market Yard Kalamna Nagpur',
-                nearby: 'APMC markets near Nagpur Maharashtra',
-                latlong: '21.1466,79.0800'
-            },
-            'amravati_grain': {
-                name: 'Amravati Procurement Center',
-                query: 'Amravati APMC Market Yard Amravati Maharashtra',
-                nearby: 'APMC markets near Amravati Maharashtra',
-                latlong: '20.9320,77.7523'
-            }
+            'pune_main': { name: 'Pune Main APMC Market Yard, Gultekdi', query: 'Pune APMC Market Yard Gultekdi Maharashtra', nearby: 'APMC markets near Pune Gultekdi Maharashtra' },
+            'nashik_grain': { name: 'Nashik Grain & Vegetable Mandi', query: 'Nashik Grain Vegetable Mandi Maharashtra', nearby: 'APMC markets near Nashik Maharashtra' },
+            'nagpur_cotton': { name: 'Nagpur Cotton & Grain Yard', query: 'Nagpur Cotton Grain Yard Maharashtra', nearby: 'APMC markets near Nagpur Maharashtra' },
+            'amravati_grain': { name: 'Amravati Regional Procurement Center', query: 'Amravati Regional Procurement Center Maharashtra', nearby: 'APMC markets near Amravati Maharashtra' }
         };
 
         window.addEventListener('DOMContentLoaded', () => {
             const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
             document.getElementById('summaryName').textContent = storedName;
 
-            const savedMandi = localStorage.getItem('kd_temp_mandi');
-            if (savedMandi) document.getElementById('mandiSelect').value = savedMandi;
             if (localStorage.getItem('kd_temp_commodity')) document.getElementById('commoditySelect').value = localStorage.getItem('kd_temp_commodity');
             if (localStorage.getItem('kd_temp_vehicle')) document.getElementById('vehicleSelect').value = localStorage.getItem('kd_temp_vehicle');
             if (localStorage.getItem('kd_temp_slot')) document.getElementById('slotSelect').value = localStorage.getItem('kd_temp_slot');
             if (localStorage.getItem('kd_temp_quantity')) document.getElementById('quantityInput').value = localStorage.getItem('kd_temp_quantity');
 
-            onMandiChange();
+            const savedMandi = localStorage.getItem('kd_temp_mandi');
+            if (savedMandi) {
+                document.getElementById('mandiSelect').value = savedMandi;
+                bookedTons = parseInt(localStorage.getItem(`kd_booked_${savedMandi}`)) || 29;
+                renderCapacityUI(false, savedMandi);
+                showMapForMandi(savedMandi, false);
+            } else {
+                renderCapacityUI(false, 'pune_main');
+            }
+            applyTimeBufferUI(savedMandi || 'pune_main');
         });
 
         function onMandiChange() {
             const selectedMandiKey = document.getElementById('mandiSelect').value;
-            if (!selectedMandiKey) {
-                updateMap('pune_main', false);
-                return;
-            }
-            bookedTons = parseInt(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
+            bookedTons = parseInt(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 29;
             renderCapacityUI(false, selectedMandiKey);
             applyTimeBufferUI(selectedMandiKey);
-            updateMap(selectedMandiKey, false);
+            showMapForMandi(selectedMandiKey, false);
         }
 
-        function updateMap(mandiKey, isFull) {
-            const mandiGeo = mandiLocationsMap[mandiKey] || mandiLocationsMap['pune_main'];
-            const mapFrame = document.getElementById('googleMapFrame');
+        function showMapForMandi(mandiKey, isFull) {
+            const mandiGeo = mandiLocationsMap[mandiKey];
+            if (!mandiGeo) return;
+            document.getElementById('mapPlaceholder').classList.add('hidden');
+            document.getElementById('googleMapFrame').classList.remove('hidden');
             document.getElementById('currentMandiName').textContent = mandiGeo.name;
-
-            let searchQuery = isFull ? mandiGeo.nearby : mandiGeo.query;
-            // FIX: Use proper Google Maps embed format that shows the mandi from dropdown
-            const newSrc = `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&t=&z=${isFull ? 12 : 14}&ie=UTF8&iwloc=&output=embed`;
-            mapFrame.src = newSrc;
+            document.getElementById('currentMandiName').className = "text-green-700";
+            let query = isFull? mandiGeo.nearby : mandiGeo.query;
+            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=${isFull? 13 : 14}&ie=UTF8&iwloc=&output=embed`;
         }
 
         function applyTimeBufferUI(mandiKey) {
@@ -207,15 +194,18 @@
             document.getElementById('capacityCount').textContent = `${bookedTons} Tons / ${maxTonsCapacity} Tons`;
             const percentage = Math.min(100, Math.round((bookedTons / maxTonsCapacity) * 100));
             document.getElementById('capacityBar').style.width = percentage + '%';
-
             const alertBanner = document.getElementById('fullCapacityAlert');
             const submitBtn = document.getElementById('btnConfirmBooking');
-
             if (isLocked || bookedTons >= maxTonsCapacity) {
                 alertBanner.classList.remove('hidden');
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed";
-                updateMap(currentMandiKey, true);
+                if(currentMandiKey) {
+                    const mandiGeo = mandiLocationsMap[currentMandiKey];
+                    document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(mandiGeo.nearby)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+                    document.getElementById('mapPlaceholder').classList.add('hidden');
+                    document.getElementById('googleMapFrame').classList.remove('hidden');
+                }
             } else {
                 alertBanner.classList.add('hidden');
                 submitBtn.disabled = false;
@@ -230,18 +220,14 @@
             const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect').selectedIndex].text;
             const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect').selectedIndex].text;
             const tokenId = "KD-2026-" + Math.floor(1000 + Math.random() * 9000);
-
             document.getElementById('summaryMandi').textContent = mandi;
             document.getElementById('summarySlot').textContent = slot;
             document.getElementById('summaryToken').textContent = tokenId;
-
             const activeDelay = localStorage.getItem(`kd_delay_${selectedMandiKey}`) || '0';
             const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Buffer: ${activeDelay}m | Status: VERIFIED`;
-
             document.getElementById('qrModal').classList.remove('hidden');
             const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = ""; 
-
+            qrContainer.innerHTML = "";
             setTimeout(() => {
                 new QRCode(qrContainer, {
                     text: qrData,
@@ -251,7 +237,6 @@
                     colorLight: "#ffffff"
                 });
             }, 50);
-
             bookedTons += inputTons;
             localStorage.setItem(`kd_booked_${selectedMandiKey}`, bookedTons);
             renderCapacityUI(false, selectedMandiKey);
