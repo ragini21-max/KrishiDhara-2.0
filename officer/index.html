@@ -318,14 +318,30 @@
 
         function parseScannedQrPass(rawText) {
             const currentLang = document.getElementById('langSelect').value || 'en';
+            let parsed = null;
+            try {
+                const candidate = JSON.parse(rawText);
+                if (candidate && candidate.tokenId) parsed = candidate;
+            } catch (_) {}
+            if (!parsed) {
+                // Support the older demo QR text format as well as the demo scan button.
+                const tokenMatch = String(rawText).match(/KD-\d{4}-\d{4}/);
+                parsed = {
+                    tokenId: tokenMatch ? tokenMatch[0] : "KD-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000),
+                    farmerName: localStorage.getItem('kd_farmer_name') || "Ramesh Kumar",
+                    mandi: "Pune Main APMC Market Yard",
+                    commodity: "Wheat", vehicle: "Tractor Trolley", slot: "09:00 AM - 11:30 AM", quantity: "5.0"
+                };
+            }
             currentScannedData = {
-                tokenId: "KD-" + localizeNumber(2026, currentLang) + "-" + localizeNumber(Math.floor(1000 + Math.random() * 9000), currentLang),
-                farmerName: "Ramesh Kumar",
-                mandi: "Pune Main APMC Market Yard",
-                commodity: "Wheat",
-                vehicle: "Tractor Trolley",
-                slot: "09:00 AM - 11:30 AM",
-                tons: "5.0"
+                tokenId: parsed.tokenId,
+                farmerName: parsed.farmerName || parsed.farmer || "Ramesh Kumar",
+                mandi: parsed.mandi || "Pune Main APMC Market Yard",
+                commodity: parsed.commodity || "Wheat",
+                vehicle: parsed.vehicle || "Tractor Trolley",
+                slot: parsed.slot || "09:00 AM - 11:30 AM",
+                tons: String(parsed.quantity || parsed.tons || "5.0"),
+                bufferMinutes: Number(parsed.bufferMinutes || 0)
             };
             displayVerifiedPass(currentScannedData);
         }
@@ -415,11 +431,8 @@
         }
 
         function switchRole() {
-            localStorage.clear();
             window.location.href = '../index.html';
         }
     </script>
 </body>
 </html>
-
-officer portal and there is one more
