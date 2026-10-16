@@ -206,40 +206,66 @@
                 // Re-open the saved QR pass automatically when the farmer returns.
                 document.getElementById('qrModal').classList.remove('hidden');
             }
-            window.addEventListener('storage', (event) => {
-                if (event.key && (event.key.startsWith('kd_delay_') || event.key === 'kd_farmer_booking' || event.key.startsWith('kd_lock_') || event.key.startsWith('kd_cap_'))) {
-                    const active = document.getElementById('mandiSelect').value || currentMandi;
-                    applyTimeBufferUI(active);
-                    renderCapacityUI(localStorage.getItem(`kd_lock_${active}`) === 'true', active);
-                    const latest = getStoredBooking();
-                    if (latest) renderSavedBooking(latest);
-                }
-            });
-        });
+           window.addEventListener('DOMContentLoaded', () => {
+    const languageSelect = document.getElementById('langSelect');
 
-        function renderSavedBooking(booking) {
-            const delay = parseInt(localStorage.getItem(`kd_delay_${booking.mandiKey}`) || '0', 10);
-            const selectedOption = document.getElementById('slotSelect').selectedOptions[0];
-            const slotLabel = (selectedOption && selectedOption.value === booking.slotKey ? selectedOption.textContent : booking.slotLabel) || '';
-            document.getElementById('summaryName').textContent = booking.farmerName || localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
-            document.getElementById('summaryMandi').textContent = booking.mandiName || '';
-            const commodityNames = {wheat:'Wheat', paddy:'Paddy / Rice', soybean:'Soybean', cotton:'Cotton', onion:'Onion'};
-            const vehicleNames = {tractor:'Tractor Trolley', small_truck:'Light Commercial Truck (LCV)', heavy_truck:'Heavy Commercial Truck'};
-            document.getElementById('summaryCommodity').textContent = commodityNames[booking.commodity] || booking.commodity || '-';
-            document.getElementById('summaryVehicle').textContent = vehicleNames[booking.vehicle] || booking.vehicle || '-';
-            document.getElementById('summaryQuantity').textContent = booking.quantity ?? '-';
-            document.getElementById('summarySlot').textContent = slotLabel;
-            document.getElementById('summaryToken').textContent = booking.tokenId || '';
-            booking.currentBuffer = delay;
-            localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
-            if (document.getElementById('qrcode')) {
-                const qrContainer = document.getElementById('qrcode');
-                qrContainer.innerHTML = '';
-                if (window.QRCode && booking.tokenId) {
-                    new QRCode(qrContainer, { text: JSON.stringify({tokenId: booking.tokenId, farmer: booking.farmerName, mandiKey: booking.mandiKey, mandi: booking.mandiName, commodity: booking.commodity, vehicle: booking.vehicle, slot: slotLabel, quantity: booking.quantity, bufferMinutes: delay, status: 'VERIFIED'}), width: 170, height: 170, colorDark: '#065f46', colorLight: '#ffffff' });
-                }
+    if (languageSelect) {
+        languageSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
+    }
+
+    const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
+    document.getElementById('summaryName').textContent = storedName;
+
+    // Start with blank choices. Do not auto-fill old booking information.
+    document.getElementById('mandiSelect').selectedIndex = 0;
+    document.getElementById('commoditySelect').selectedIndex = 0;
+    document.getElementById('vehicleSelect').selectedIndex = 0;
+    document.getElementById('slotSelect').selectedIndex = 0;
+    document.getElementById('quantityInput').value = '';
+
+    // Start with the default mandi's capacity information,
+    // but do not select it for the farmer.
+    const currentMandi = 'pune_main';
+    const cap = parseFloat(localStorage.getItem(`kd_cap_${currentMandi}`)) || 50;
+
+    maxTonsCapacity = cap;
+    bookedTons = parseFloat(localStorage.getItem(`kd_booked_${currentMandi}`)) || 14;
+
+    renderCapacityUI(
+        localStorage.getItem(`kd_lock_${currentMandi}`) === 'true',
+        currentMandi
+    );
+
+    // Show the saved Admin buffer for the default mandi.
+    applyTimeBufferUI(currentMandi);
+
+    // Do not automatically reopen an old QR modal.
+    document.getElementById('qrModal').classList.add('hidden');
+
+    // Update the form if Admin changes settings in another open tab.
+    window.addEventListener('storage', (event) => {
+        if (
+            event.key &&
+            (
+                event.key.startsWith('kd_delay_') ||
+                event.key.startsWith('kd_lock_') ||
+                event.key.startsWith('kd_cap_') ||
+                event.key.startsWith('kd_booked_')
+            )
+        ) {
+            const active = document.getElementById('mandiSelect').value;
+
+            if (active) {
+                applyTimeBufferUI(active);
+
+                renderCapacityUI(
+                    localStorage.getItem(`kd_lock_${active}`) === 'true',
+                    active
+                );
             }
         }
+    });
+});
 
         function onMandiChange() {
             const selectedMandiKey = document.getElementById('mandiSelect').value;
