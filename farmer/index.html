@@ -211,31 +211,37 @@
             localStorage.setItem('kd_farmer_step', 'identity');
             window.location.href = '../index.html';
         }
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
-            const langSelect = document.getElementById('langSelect');
-            if (langSelect) langSelect.value = savedLang;
+       window.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
+    const langSelect = document.getElementById('langSelect');
 
-            const verified = localStorage.getItem('kd_farmer_verified') === 'true';
-            let savedBooking = null;
-            try { savedBooking = JSON.parse(localStorage.getItem('kd_farmer_booking') || 'null'); } catch (_) {}
+    if (langSelect) {
+        langSelect.value = savedLang;
+    }
 
-            // Resume the farmer's saved token directly after returning from another role.
-            if (verified && savedBooking && savedBooking.tokenId) {
-                window.location.replace('slot_booking.html');
-                return;
-            }
-            if (verified) {
-                document.getElementById('mobileInput').disabled = true;
-                document.getElementById('aadhaarInput').disabled = true;
-                document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
-                document.getElementById('profileCard').classList.remove('hidden');
-                document.getElementById('stepBadge').textContent = 'Verified ✓';
-                const btn = document.getElementById('btnProceedSlot');
-                btn.disabled = false;
-                btn.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer';
-            }
-        });
+    const verified = localStorage.getItem('kd_farmer_verified') === 'true';
+
+    // Always display Step 1. Never skip directly to Step 2.
+    if (verified) {
+        document.getElementById('mobileInput').disabled = true;
+        document.getElementById('aadhaarInput').disabled = true;
+
+        document.getElementById('aadhaarSection')
+            .classList.remove('opacity-50', 'pointer-events-none');
+
+        document.getElementById('profileCard')
+            .classList.remove('hidden');
+
+        document.getElementById('stepBadge').textContent = 'Verified ✓';
+        document.getElementById('stepBadge').className =
+            'text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full';
+
+        const btn = document.getElementById('btnProceedSlot');
+        btn.disabled = false;
+        btn.className =
+            'w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer';
+    }
+});
     </script>
 \n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
 <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
