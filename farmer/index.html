@@ -215,7 +215,17 @@
             const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
             const langSelect = document.getElementById('langSelect');
             if (langSelect) langSelect.value = savedLang;
-            if (localStorage.getItem('kd_farmer_verified') === 'true') {
+
+            const verified = localStorage.getItem('kd_farmer_verified') === 'true';
+            let savedBooking = null;
+            try { savedBooking = JSON.parse(localStorage.getItem('kd_farmer_booking') || 'null'); } catch (_) {}
+
+            // Resume the farmer's saved token directly after returning from another role.
+            if (verified && savedBooking && savedBooking.tokenId) {
+                window.location.replace('slot_booking.html');
+                return;
+            }
+            if (verified) {
                 document.getElementById('mobileInput').disabled = true;
                 document.getElementById('aadhaarInput').disabled = true;
                 document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
@@ -282,3 +292,5 @@
 
 </body>
 </html>
+
+Step 1 farmer/index.html
