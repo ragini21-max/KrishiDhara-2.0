@@ -16,7 +16,33 @@
                 <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays & Emergency Locks</p>
             </div>
         </div>
-        <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">Switch Role</button>
+        <div class="flex items-center gap-3">
+            <select id="langSelect" onchange="localStorage.setItem('kd_selected_lang', this.value)" class="bg-teal-900 text-white text-sm px-3 py-2.5 rounded-2xl border border-teal-700 font-bold">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="bn">বাংলা</option>
+                <option value="te">తెలుగు</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="or">ଓଡ଼ିଆ</option>
+                <option value="as">অসমীয়া</option>
+                <option value="ur">اردو</option>
+                <option value="sa">संस्कृतम्</option>
+                <option value="ne">नेपाली</option>
+                <option value="sd">سنڌी</option>
+                <option value="ks">कॉशुर</option>
+                <option value="doi">डोगरी</option>
+                <option value="mni">মৈতৈলোন্</option>
+                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
+                <option value="bho">भोजपुरी</option>
+                <option value="raj">राजस्थानी</option>
+            </select>
+            <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">Switch Role</button>
+        </div>
     </header>
 
     <main class="w-full max-w-6xl mx-auto my-8 space-y-8">
@@ -154,10 +180,22 @@
             const yard = document.getElementById('activeAdminYard').value;
             const buffer = document.getElementById('delayBufferSelect').value;
             localStorage.setItem(`kd_delay_${yard}`, buffer);
+            localStorage.setItem('kd_last_delay_update', JSON.stringify({ yard, buffer: Number(buffer), updatedAt: new Date().toISOString() }));
+            // Persist the latest buffer in the saved booking too; the Farmer portal recalculates its token on return.
+            try {
+                const booking = JSON.parse(localStorage.getItem('kd_farmer_booking') || 'null');
+                if (booking && booking.mandiKey === yard) {
+                    booking.currentBuffer = Number(buffer);
+                    localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
+                }
+            } catch (_) {}
+            loadYardState();
             alert(`Success! A +${buffer} minutes arrival shift buffer has been broadcasted for ${yard}.`);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            const lang = document.getElementById('langSelect');
+            if (lang) lang.value = localStorage.getItem('kd_selected_lang') || 'en';
             const savedYard = localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
             document.getElementById('activeAdminYard').value = savedYard;
             loadYardState();
@@ -169,5 +207,3 @@
     </script>
 </body>
 </html>
-
-Admin/index.html
