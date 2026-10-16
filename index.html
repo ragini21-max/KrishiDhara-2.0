@@ -186,19 +186,14 @@
         function selectRole(role) {
             localStorage.setItem('kd_user_role', role);
             if (role === 'farmer') {
-                window.location.href = 'farmer/index.html';
+                window.location.href = 'Farmer/index.html';
             } else if (role === 'officer') {
-                window.location.href = 'officer/index.html';
+                window.location.href = 'Officer/index.html';
             } else if (role === 'admin') {
-                window.location.href = 'admin/index.html';
+                window.location.href = 'Admin/index.html';
             }
         }
-        function switchRole() {
-        // Use '../index.html' if inside a subfolder (admin/farmer/officer)
-        window.location.href = 'farmer/index.html';
-        }
+        function switchRole() { window.location.href = 'index.html'; }
     </script>
 </body>
 </html>
-
-main/root index.html
