@@ -25,9 +25,9 @@
             </div>
             <div class="bg-emerald-50 border-2 border-green-500 p-4 rounded-2xl shadow-sm w-full md:w-auto">
                 <div class="text-xs text-green-800 font-bold uppercase">Mandi Daily Capacity Intake</div>
-                <div id="capacityCount" class="text-2xl font-black text-green-900">29 Tons / 50 Tons</div>
+                <div id="capacityCount" class="text-2xl font-black text-green-900">14 Tons / 50 Tons</div>
                 <div class="w-full bg-green-200 rounded-full h-2.5 mt-2">
-                    <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 58%;"></div>
+                    <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 28%;"></div>
                 </div>
             </div>
         </div>
@@ -139,17 +139,19 @@
             const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
             document.getElementById('summaryName').textContent = storedName;
 
+            // Keep other saved data for demo continuity but NOT mandi selection
             if (localStorage.getItem('kd_temp_commodity')) document.getElementById('commoditySelect').value = localStorage.getItem('kd_temp_commodity');
             if (localStorage.getItem('kd_temp_vehicle')) document.getElementById('vehicleSelect').value = localStorage.getItem('kd_temp_vehicle');
             if (localStorage.getItem('kd_temp_slot')) document.getElementById('slotSelect').value = localStorage.getItem('kd_temp_slot');
             if (localStorage.getItem('kd_temp_quantity')) document.getElementById('quantityInput').value = localStorage.getItem('kd_temp_quantity');
 
+            // Capacity check for demo - but map stays empty initially
             const savedMandi = localStorage.getItem('kd_temp_mandi');
             if (savedMandi) {
                 document.getElementById('mandiSelect').value = savedMandi;
                 bookedTons = parseInt(localStorage.getItem(`kd_booked_${savedMandi}`)) || 29;
                 renderCapacityUI(false, savedMandi);
-                showMapForMandi(savedMandi, false);
+                showMapForMandi(savedMandi, false); // show map if already selected before
             } else {
                 renderCapacityUI(false, 'pune_main');
             }
@@ -171,6 +173,7 @@
             document.getElementById('googleMapFrame').classList.remove('hidden');
             document.getElementById('currentMandiName').textContent = mandiGeo.name;
             document.getElementById('currentMandiName').className = "text-green-700";
+
             let query = isFull? mandiGeo.nearby : mandiGeo.query;
             document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=${isFull? 13 : 14}&ie=UTF8&iwloc=&output=embed`;
         }
@@ -194,8 +197,10 @@
             document.getElementById('capacityCount').textContent = `${bookedTons} Tons / ${maxTonsCapacity} Tons`;
             const percentage = Math.min(100, Math.round((bookedTons / maxTonsCapacity) * 100));
             document.getElementById('capacityBar').style.width = percentage + '%';
+
             const alertBanner = document.getElementById('fullCapacityAlert');
             const submitBtn = document.getElementById('btnConfirmBooking');
+
             if (isLocked || bookedTons >= maxTonsCapacity) {
                 alertBanner.classList.remove('hidden');
                 submitBtn.disabled = true;
@@ -220,14 +225,18 @@
             const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect').selectedIndex].text;
             const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect').selectedIndex].text;
             const tokenId = "KD-2026-" + Math.floor(1000 + Math.random() * 9000);
+
             document.getElementById('summaryMandi').textContent = mandi;
             document.getElementById('summarySlot').textContent = slot;
             document.getElementById('summaryToken').textContent = tokenId;
+
             const activeDelay = localStorage.getItem(`kd_delay_${selectedMandiKey}`) || '0';
             const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Buffer: ${activeDelay}m | Status: VERIFIED`;
+
             document.getElementById('qrModal').classList.remove('hidden');
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = "";
+
             setTimeout(() => {
                 new QRCode(qrContainer, {
                     text: qrData,
@@ -237,6 +246,7 @@
                     colorLight: "#ffffff"
                 });
             }, 50);
+
             bookedTons += inputTons;
             localStorage.setItem(`kd_booked_${selectedMandiKey}`, bookedTons);
             renderCapacityUI(false, selectedMandiKey);
