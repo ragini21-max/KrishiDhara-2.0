@@ -32,7 +32,6 @@
             </div>
         </div>
 
-        <!-- Google Maps Frame linked to dropdown selection -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
             <h3 class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator</h3>
             <div class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative">
@@ -43,14 +42,13 @@
         <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
             <div id="alertTitleText" class="text-xl font-black">EMERGENCY YARD LOCK OR CAPACITY FULL!</div>
             <p id="alertMessageText" class="text-sm font-semibold">Bookings for this specific APMC yard are temporarily suspended.</p>
-            <div id="nearbyMandisList" class="flex flex-wrap gap-2 justify-center mt-2"></div>
         </div>
 
         <form id="slotForm" onsubmit="handleSlotBooking(event)" class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block font-bold text-gray-800">🏬 APMC Mandi Yard</label>
-                    <select id="mandiSelect" onchange="updateMandiCapacity()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
+                    <select id="mandiSelect" onchange="onMandiChange()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
                         <option value="pune_main">Pune Main APMC Market Yard</option>
                         <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
                         <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
@@ -59,7 +57,8 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">🌾 Commodity / Crop Type</label>
-                    <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
+                    <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                        <option value="" disabled selected>Select commodity</option>
                         <option value="wheat">Wheat</option>
                         <option value="paddy">Paddy / Rice</option>
                         <option value="soybean">Soybean</option>
@@ -69,7 +68,8 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">🚚 Vehicle Type</label>
-                    <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
+                    <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                        <option value="" disabled selected>Select vehicle type</option>
                         <option value="tractor">Tractor Trolley (4-6 Tons)</option>
                         <option value="small_truck">Light Commercial Truck (LCV)</option>
                         <option value="heavy_truck">Heavy Commercial Truck (10+ Tons)</option>
@@ -77,7 +77,8 @@
                 </div>
                 <div>
                     <label class="block font-bold text-gray-800">⏰ Preferred Arrival Slot</label>
-                    <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium cursor-pointer">
+                    <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                        <option value="" disabled selected>Select time slot</option>
                         <option value="slot1" id="optSlot1">09:00 AM - 11:30 AM (Morning Slot)</option>
                         <option value="slot2" id="optSlot2">11:30 AM - 02:00 PM (Mid-Day Slot)</option>
                         <option value="slot3" id="optSlot3">02:00 PM - 04:30 PM (Afternoon Slot)</option>
@@ -121,53 +122,49 @@
         let maxTonsCapacity = 50;
         let bookedTons = 14; 
 
-        const mandiNamesMap = {
-            'pune_main': 'Pune Main APMC Market Yard',
-            'nashik_grain': 'Nashik Grain & Vegetable Mandi',
-            'nagpur_cotton': 'Nagpur Cotton & Grain Yard',
-            'amravati_grain': 'Amravati Regional Procurement Center'
+        const mandiLocationsMap = {
+            'pune_main': 'Pune+APMC+Market+Yard+Gultekdi+Maharashtra',
+            'nashik_grain': 'Nashik+Grain+Vegetable+Mandi+Maharashtra',
+            'nagpur_cotton': 'Nagpur+Cotton+Grain+Yard+Maharashtra',
+            'amravati_grain': 'Amravati+Regional+Procurement+Center+Maharashtra'
         };
 
         window.addEventListener('DOMContentLoaded', () => {
             const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
             document.getElementById('summaryName').textContent = storedName;
 
-            const lastMandi = localStorage.getItem('kd_last_mandi') || 'pune_main';
-            document.getElementById('mandiSelect').value = lastMandi;
+            // Restore saved form state if user switched roles previously
+            const savedMandi = localStorage.getItem('kd_temp_mandi');
+            if (savedMandi) {
+                document.getElementById('mandiSelect').value = savedMandi;
+            }
+            if (localStorage.getItem('kd_temp_commodity')) {
+                document.getElementById('commoditySelect').value = localStorage.getItem('kd_temp_commodity');
+            }
+            if (localStorage.getItem('kd_temp_vehicle')) {
+                document.getElementById('vehicleSelect').value = localStorage.getItem('kd_temp_vehicle');
+            }
+            if (localStorage.getItem('kd_temp_slot')) {
+                document.getElementById('slotSelect').value = localStorage.getItem('kd_temp_slot');
+            }
+            if (localStorage.getItem('kd_temp_quantity')) {
+                document.getElementById('quantityInput').value = localStorage.getItem('kd_temp_quantity');
+            }
 
-            updateMandiCapacity();
+            onMandiChange();
         });
 
-        function updateMandiCapacity() {
-            const mandiSelectEl = document.getElementById('mandiSelect');
-            const selectedMandi = mandiSelectEl.value || 'pune_main';
+        function onMandiChange() {
+            const selectedMandiKey = document.getElementById('mandiSelect').value;
             
-            localStorage.setItem('kd_last_mandi', selectedMandi);
-            
-            // Feature 1: Dynamic Google Maps updating according to dropdown selection
-            let queryLocation = "Pune APMC Market Yard Gultekdi Maharashtra";
-            if (selectedMandi === 'nashik_grain') {
-                queryLocation = "Nashik Grain And Vegetable APMC Market Yard";
-            } else if (selectedMandi === 'nagpur_cotton') {
-                queryLocation = "Nagpur Cotton Market Yard APMC";
-            } else if (selectedMandi === 'amravati_grain') {
-                queryLocation = "Amravati APMC Regional Procurement Center";
-            }
-            
-            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(queryLocation)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+            // 1. Update Google Maps Frame based on dropdown selection
+            const queryLocation = mandiLocationsMap[selectedMandiKey] || 'Pune+APMC+Market+Yard';
+            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${queryLocation}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
-            const adminCustomCap = localStorage.getItem(`kd_cap_${selectedMandi}`);
-            if (adminCustomCap) {
-                maxTonsCapacity = parseFloat(adminCustomCap);
-            } else {
-                maxTonsCapacity = selectedMandi === 'nashik_grain' ? 60 : (selectedMandi === 'nagpur_cotton' ? 40 : (selectedMandi === 'amravati_grain' ? 30 : 50));
-            }
-
-            bookedTons = parseFloat(localStorage.getItem(`kd_booked_${selectedMandi}`)) || 5;
-
-            const isYardLocked = localStorage.getItem(`kd_lock_${selectedMandi}`) === 'true';
-            applyTimeBufferUI(selectedMandi);
-            renderCapacityUI(isYardLocked, selectedMandi);
+            // 2. Load capacity metrics for selected mandi
+            bookedTons = parseInt(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
+            renderCapacityUI(false, selectedMandiKey);
+            applyTimeBufferUI(selectedMandiKey);
         }
 
         function applyTimeBufferUI(mandiKey) {
@@ -178,7 +175,6 @@
             let s3 = "02:00 PM - 04:30 PM";
             let s4 = "04:30 PM - 06:00 PM";
 
-            // Feature 2: Only applies buffer time if admin explicitly sets it greater than 0
             if (delayMins > 0) {
                 s1 = `09:${delayMins} AM - 12:00 PM (+${delayMins}m Buffer)`;
                 s2 = `12:00 PM - 02:${delayMins} PM (+${delayMins}m Buffer)`;
@@ -216,17 +212,16 @@
             const selectedMandiKey = document.getElementById('mandiSelect').value;
             const inputTons = parseFloat(document.getElementById('quantityInput').value);
 
-            const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect'].selectedIndex].text;
-            const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect'].selectedIndex].text;
+            const mandi = document.getElementById('mandiSelect').options[document.getElementById('mandiSelect').selectedIndex].text;
+            const slot = document.getElementById('slotSelect').options[document.getElementById('slotSelect').selectedIndex].text;
             const tokenId = "KD-2026-" + Math.floor(1000 + Math.random() * 9000);
 
             document.getElementById('summaryMandi').textContent = mandi;
             document.getElementById('summarySlot').textContent = slot;
             document.getElementById('summaryToken').textContent = tokenId;
 
-            // Feature 2: Captures the active admin buffer delay and packs it into the QR code string for the judges to scan
             const activeDelay = localStorage.getItem(`kd_delay_${selectedMandiKey}`) || '0';
-            const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Slot: ${slot} | Admin Buffer Delay: ${activeDelay} mins | Status: VERIFIED`;
+            const qrData = `PASS: ${tokenId} | Mandi: ${mandi} | Qty: ${inputTons}T | Buffer: ${activeDelay}m | Status: VERIFIED`;
 
             document.getElementById('qrModal').classList.remove('hidden');
             const qrContainer = document.getElementById('qrcode');
@@ -252,6 +247,13 @@
         }
 
         function switchRole() {
+            // Save active slot booking form inputs before switching roles so data isn't lost
+            localStorage.setItem('kd_temp_mandi', document.getElementById('mandiSelect').value);
+            localStorage.setItem('kd_temp_commodity', document.getElementById('commoditySelect').value);
+            localStorage.setItem('kd_temp_vehicle', document.getElementById('vehicleSelect').value);
+            localStorage.setItem('kd_temp_slot', document.getElementById('slotSelect').value);
+            localStorage.setItem('kd_temp_quantity', document.getElementById('quantityInput').value);
+
             const selectedMandiKey = document.getElementById('mandiSelect').value;
             if (selectedMandiKey) {
                 localStorage.setItem(`kd_booked_${selectedMandiKey}`, bookedTons);
