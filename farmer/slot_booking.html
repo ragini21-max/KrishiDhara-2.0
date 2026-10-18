@@ -154,88 +154,41 @@
     </div>
 
     <script>
-        let maxTonsCapacity = 50;
-        let bookedTons = 14;
+        ;
+       function getMandiDefaultCapacity(mandiKey) {
+    const defaults = {
+        pune_main: 50,
+        nashik_grain: 60,
+        nagpur_cotton: 40,
+        amravati_grain: 30
+    };
 
-        const mandiLocationsMap = {
-            'pune_main': { name: 'Pune Main APMC Market Yard, Gultekdi', query: 'Pune Main APMC Market Yard, Gultekdi, Pune, Maharashtra', nearby: 'APMC markets near Pune Gultekdi Maharashtra' },
-            'nashik_grain': { name: 'Nashik Grain & Vegetable Mandi', query: 'Nashik Grain & Vegetable Mandi, Nashik, Maharashtra', nearby: 'APMC markets near Nashik Maharashtra' },
-            'nagpur_cotton': { name: 'Nagpur Cotton & Grain Yard', query: 'Nagpur Cotton & Grain Yard, Nagpur, Maharashtra', nearby: 'APMC markets near Nagpur Maharashtra' },
-            'amravati_grain': { name: 'Amravati Regional Procurement Center', query: 'Amravati Regional Procurement Center, Amravati, Maharashtra', nearby: 'APMC markets near Amravati Maharashtra' }
-        };
+    return defaults[mandiKey] ?? 50;
+}
 
-        function changeLanguage() {
-            const select = document.getElementById('langSelect');
-            if (select) localStorage.setItem('kd_selected_lang', select.value);
-        }
-        function getStoredBooking() {
-            try { return JSON.parse(localStorage.getItem('kd_farmer_booking') || 'null'); }
-            catch (_) { return null; }
-        }
+function getMandiCapacity(mandiKey) {
+    const saved = localStorage.getItem(`kd_cap_${mandiKey}`);
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const languageSelect = document.getElementById('langSelect');
-            if (languageSelect) languageSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
-            const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
-            document.getElementById('summaryName').textContent = storedName;
-            const saved = getStoredBooking();
-            // Do not pre-fill booking choices for a new farmer session. Only restore them
-            // when a confirmed booking exists, so the farmer explicitly chooses each field.
-            const savedMandi = saved && saved.mandiKey ? saved.mandiKey : '';
-            if (saved) {
-                const values = {
-                    commoditySelect: saved.commodity,
-                    vehicleSelect: saved.vehicle,
-                    slotSelect: saved.slotKey,
-                    quantityInput: saved.quantity
-                };
-                Object.entries(values).forEach(([id, value]) => {
-                    if (value !== undefined && value !== null && document.getElementById(id)) document.getElementById(id).value = value;
-                });
-                if (savedMandi) document.getElementById('mandiSelect').value = savedMandi;
-            }
-            if (savedMandi) showMapForMandi(savedMandi, false);
-            const currentMandi = savedMandi || 'pune_main';
-            const cap = parseFloat(localStorage.getItem(`kd_cap_${currentMandi}`)) || 50;
-            maxTonsCapacity = cap;
-            bookedTons = parseFloat(localStorage.getItem(`kd_booked_${currentMandi}`)) || 14;
-            renderCapacityUI(localStorage.getItem(`kd_lock_${currentMandi}`) === 'true', currentMandi);
-            applyTimeBufferUI(currentMandi);
-            if (saved) {
-                renderSavedBooking(saved);
-                // Re-open the saved QR pass automatically when the farmer returns.
-                document.getElementById('qrModal').classList.remove('hidden');
-            }
-           window.addEventListener('DOMContentLoaded', () => {
-    const languageSelect = document.getElementById('langSelect');
+    return saved === null
+        ? getMandiDefaultCapacity(mandiKey)
+        : Number(saved);
+}
 
-    if (languageSelect) {
-        languageSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
-    }
+function getMandiBookedTons(mandiKey) {
+    const saved = localStorage.getItem(`kd_booked_${mandiKey}`);
 
-    const storedName = localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar';
-    document.getElementById('summaryName').textContent = storedName;
+    return saved === null ? 14 : Number(saved);
+}
 
-    // Start with blank choices. Do not auto-fill old booking information.
-    document.getElementById('mandiSelect').selectedIndex = 0;
-    document.getElementById('commoditySelect').selectedIndex = 0;
-    document.getElementById('vehicleSelect').selectedIndex = 0;
-    document.getElementById('slotSelect').selectedIndex = 0;
-    document.getElementById('quantityInput').value = '';
-
-    // Start with the default mandi's capacity information,
-    // but do not select it for the farmer.
-    const currentMandi = 'pune_main';
-    const cap = parseFloat(localStorage.getItem(`kd_cap_${currentMandi}`)) || 50;
-
-    maxTonsCapacity = cap;
-    bookedTons = parseFloat(localStorage.getItem(`kd_booked_${currentMandi}`)) || 14;
+function refreshMandiCapacity(mandiKey) {
+    maxTonsCapacity = getMandiCapacity(mandiKey);
+    bookedTons = getMandiBookedTons(mandiKey);
 
     renderCapacityUI(
-        localStorage.getItem(`kd_lock_${currentMandi}`) === 'true',
-        currentMandi
+        localStorage.getItem(`kd_lock_${mandiKey}`) === 'true',
+        mandiKey
     );
-
+}
     // Show the saved Admin buffer for the default mandi.
     applyTimeBufferUI(currentMandi);
 
@@ -267,15 +220,15 @@
     });
 });
 
-        function onMandiChange() {
-            const selectedMandiKey = document.getElementById('mandiSelect').value;
-            bookedTons = parseFloat(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
-            maxTonsCapacity = parseFloat(localStorage.getItem(`kd_cap_${selectedMandiKey}`)) || (selectedMandiKey === 'nashik_grain' ? 60 : selectedMandiKey === 'nagpur_cotton' ? 40 : selectedMandiKey === 'amravati_grain' ? 30 : 50);
-            renderCapacityUI(localStorage.getItem(`kd_lock_${selectedMandiKey}`) === 'true', selectedMandiKey);
-            applyTimeBufferUI(selectedMandiKey);
-            showMapForMandi(selectedMandiKey, false);
-        }
+       function onMandiChange() {
+    const mandiKey = document.getElementById('mandiSelect').value;
 
+    if (!mandiKey) return;
+
+    refreshMandiCapacity(mandiKey);
+    applyTimeBufferUI(mandiKey);
+    showMapForMandi(mandiKey, false);
+}
         function showMapForMandi(mandiKey, isFull) {
             const mandiGeo = mandiLocationsMap[mandiKey];
             if (!mandiGeo) return;
