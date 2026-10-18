@@ -7,6 +7,7 @@
     <title>KrishiDhara 2.0 - APMC Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gradient-to-br from-teal-50 via-slate-50 to-emerald-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
 
     <header class="bg-teal-800 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
@@ -14,7 +15,7 @@
             <span class="text-4xl">📊</span>
             <div>
                 <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • APMC Admin Portal</h1>
-                <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays & Emergency Locks</p>
+                <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays &amp; Emergency Locks</p>
             </div>
         </div>
 
@@ -35,7 +36,7 @@
                 <option value="ur">اردو</option>
                 <option value="sa">संस्कृतम्</option>
                 <option value="ne">नेपाली</option>
-                <option value="sd">سنڌी</option>
+                <option value="sd">سنڌي</option>
                 <option value="ks">कॉशुर</option>
                 <option value="doi">डोगरी</option>
                 <option value="mni">মৈতৈলোন্</option>
@@ -68,7 +69,7 @@
             <div class="flex items-center space-x-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl w-full md:w-auto justify-between">
                 <div>
                     <div class="text-xs font-bold text-teal-800 uppercase">Live Yard Tonnage</div>
-                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">0 / 0 Tons</div>
+                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">0 / 50 Tons</div>
                 </div>
                 <span id="adminYardBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
             </div>
@@ -85,7 +86,7 @@
                     <div class="space-y-2">
                         <div class="flex justify-between text-sm font-bold text-gray-700">
                             <span>Adjust Daily Tonnage Limit:</span>
-                            <span id="currentCapVal" class="text-teal-800 font-black">0 Tons</span>
+                            <span id="currentCapVal" class="text-teal-800 font-black">50 Tons</span>
                         </div>
 
                         <input
@@ -94,7 +95,7 @@
                             min="0"
                             max="100"
                             step="1"
-                            value="0"
+                            value="50"
                             oninput="updateYardCapacity(this.value)"
                             class="w-full accent-teal-600 cursor-pointer"
                             aria-label="Adjust daily tonnage capacity"
@@ -155,6 +156,10 @@
             'amravati_grain'
         ];
 
+        const DEFAULT_CAPACITY = 50;
+        const DEFAULT_BOOKED = 0;
+        const MAX_CAPACITY = 100;
+
         function getSelectedYard() {
             const select = document.getElementById('activeAdminYard');
             return YARDS.includes(select.value) ? select.value : 'pune_main';
@@ -163,12 +168,35 @@
         function readNonNegativeNumber(key, fallback = 0) {
             const raw = localStorage.getItem(key);
 
-            // An explicitly saved zero is a valid value. Only a missing or
-            // invalid value should use the fallback.
-            if (raw === null || raw.trim() === '') return fallback;
+            if (raw === null || raw.trim() === '') {
+                return fallback;
+            }
 
             const value = Number(raw);
-            return Number.isFinite(value) && value >= 0 ? value : fallback;
+            return Number.isFinite(value) && value >= 0
+                ? value
+                : fallback;
+        }
+
+        // One-time correction for the reported Pune demo state:
+        // if capacity is explicitly 0 but booked tons are nonzero,
+        // reset that inconsistent demo state to 0 / 50.
+        // Other yards and valid saved values are not changed.
+        function repairReportedPuneDemoState() {
+            const capKey = 'kd_cap_pune_main';
+            const bookedKey = 'kd_booked_pune_main';
+
+            const rawCapacity = localStorage.getItem(capKey);
+            const rawBooked = localStorage.getItem(bookedKey);
+
+            if (
+                rawCapacity === '0' &&
+                rawBooked !== null &&
+                Number(rawBooked) > 0
+            ) {
+                localStorage.setItem(capKey, String(DEFAULT_CAPACITY));
+                localStorage.setItem(bookedKey, String(DEFAULT_BOOKED));
+            }
         }
 
         function switchAdminYard() {
@@ -182,12 +210,17 @@
             document.getElementById('activeAdminYard').value = yard;
 
             const capacity = Math.min(
-                100,
-                readNonNegativeNumber(`kd_cap_${yard}`, 0)
+                MAX_CAPACITY,
+                readNonNegativeNumber(`kd_cap_${yard}`, DEFAULT_CAPACITY)
             );
 
-            const booked = readNonNegativeNumber(`kd_booked_${yard}`, 0);
-            const isLocked = localStorage.getItem(`kd_lock_${yard}`) === 'true';
+            const booked = readNonNegativeNumber(
+                `kd_booked_${yard}`,
+                DEFAULT_BOOKED
+            );
+
+            const isLocked =
+                localStorage.getItem(`kd_lock_${yard}`) === 'true';
 
             const slider = document.getElementById('adminCapSlider');
             slider.value = capacity;
@@ -229,6 +262,7 @@
 
             const savedDelay = localStorage.getItem(`kd_delay_${yard}`);
             const validDelays = ['0', '15', '30', '60'];
+
             document.getElementById('delayBufferSelect').value =
                 validDelays.includes(savedDelay) ? savedDelay : '0';
         }
@@ -237,7 +271,11 @@
             const yard = getSelectedYard();
             const capacity = Number(value);
 
-            if (!Number.isFinite(capacity) || capacity < 0 || capacity > 100) {
+            if (
+                !Number.isFinite(capacity) ||
+                capacity < 0 ||
+                capacity > MAX_CAPACITY
+            ) {
                 return;
             }
 
@@ -247,7 +285,8 @@
 
         function toggleYardLock() {
             const yard = getSelectedYard();
-            const currentLock = localStorage.getItem(`kd_lock_${yard}`) === 'true';
+            const currentLock =
+                localStorage.getItem(`kd_lock_${yard}`) === 'true';
 
             localStorage.setItem(`kd_lock_${yard}`, String(!currentLock));
             loadYardState();
@@ -255,7 +294,10 @@
 
         function applyTimeDelay() {
             const yard = getSelectedYard();
-            const buffer = Number(document.getElementById('delayBufferSelect').value);
+            const buffer = Number(
+                document.getElementById('delayBufferSelect').value
+            );
+
             const allowedBuffers = [0, 15, 30, 60];
 
             if (!allowedBuffers.includes(buffer)) {
@@ -264,6 +306,7 @@
             }
 
             localStorage.setItem(`kd_delay_${yard}`, String(buffer));
+
             localStorage.setItem(
                 'kd_last_delay_update',
                 JSON.stringify({
@@ -273,7 +316,6 @@
                 })
             );
 
-            // Update the saved booking's buffer when it belongs to this yard.
             try {
                 const booking = JSON.parse(
                     localStorage.getItem('kd_farmer_booking') || 'null'
@@ -281,16 +323,21 @@
 
                 if (booking && booking.mandiKey === yard) {
                     booking.currentBuffer = buffer;
+
                     localStorage.setItem(
                         'kd_farmer_booking',
                         JSON.stringify(booking)
                     );
                 }
             } catch (error) {
-                console.warn('Could not update the saved farmer booking buffer.', error);
+                console.warn(
+                    'Could not update the saved farmer booking buffer.',
+                    error
+                );
             }
 
             loadYardState();
+
             alert(
                 `Success! A +${buffer} minute arrival shift buffer has been saved for ${yard}.`
             );
@@ -301,28 +348,30 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const lang = document.getElementById('langSelect');
-            const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
+            repairReportedPuneDemoState();
 
-            if (lang) lang.value = savedLang;
+            const savedLang =
+                localStorage.getItem('kd_selected_lang') || 'en';
 
-            const savedYard = localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
+            document.getElementById('langSelect').value = savedLang;
+
+            const savedYard =
+                localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
+
             document.getElementById('activeAdminYard').value =
                 YARDS.includes(savedYard) ? savedYard : 'pune_main';
 
             loadYardState();
         });
 
-        // Keep the admin yard display in sync when another portal changes
-        // the shared storage keys in a different tab.
         window.addEventListener('storage', event => {
             if (
                 event.key === null ||
                 event.key === 'kd_selected_admin_yard' ||
-                event.key.startsWith('kd_cap_') ||
-                event.key.startsWith('kd_booked_') ||
-                event.key.startsWith('kd_lock_') ||
-                event.key.startsWith('kd_delay_')
+                (event.key && event.key.startsWith('kd_cap_')) ||
+                (event.key && event.key.startsWith('kd_booked_')) ||
+                (event.key && event.key.startsWith('kd_lock_')) ||
+                (event.key && event.key.startsWith('kd_delay_'))
             ) {
                 loadYardState();
             }
@@ -391,6 +440,7 @@
 
         window.changeLanguage = function () {
             const select = document.getElementById('langSelect');
+
             if (select) {
                 window.kdApplySelectedLanguage(select.value);
             }
