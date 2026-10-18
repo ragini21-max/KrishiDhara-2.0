@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,7 @@
     <title>KrishiDhara 2.0 - Farmer Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
 
     <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
@@ -13,7 +15,7 @@
             <span class="text-4xl">👨‍🌾</span>
             <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
         </div>
-        
+
         <div class="flex items-center space-x-3">
             <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-4 py-2.5 rounded-2xl border border-green-600 font-bold focus:outline-none cursor-pointer">
                 <option value="en">English</option>
@@ -39,268 +41,700 @@
                 <option value="bho">भोजपुरी</option>
                 <option value="raj">राजस्थानी</option>
             </select>
-            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 transition shadow cursor-pointer font-bold">Switch Role</button>
+
+            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 transition shadow cursor-pointer font-bold">
+                Switch Role
+            </button>
         </div>
     </header>
 
     <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
+
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200">
             <div class="flex justify-between items-center mb-3">
-                <h2 class="text-xl md:text-2xl font-extrabold text-green-900">Step 1: Identity & Aadhaar Verification</h2>
-                <span id="stepBadge" class="text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full">Pending</span>
+                <h2 class="text-xl md:text-2xl font-extrabold text-green-900">
+                    Step 1: Identity & Aadhaar Verification
+                </h2>
+                <span id="stepBadge" class="text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full">
+                    Pending
+                </span>
             </div>
-            <p class="text-sm md:text-base text-gray-600">Secure mobile & Aadhaar authentication for procurement slot booking.</p>
+
+            <p class="text-sm md:text-base text-gray-600">
+                Secure mobile & Aadhaar authentication for procurement slot booking.
+            </p>
         </div>
 
         <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-8">
+
+            <!-- MOBILE VERIFICATION -->
             <div id="mobileSection" class="space-y-4">
-                <label class="block text-base md:text-lg font-bold text-gray-800">📱 Mobile Number</label>
-                <div class="flex space-x-4">
-                    <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit mobile no." class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
-                    <button type="button" onclick="sendMobileOTP()" id="btnSendMobileOTP" class="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">Send OTP</button>
+                <label for="mobileInput" class="block text-base md:text-lg font-bold text-gray-800">
+                    📱 Mobile Number
+                </label>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        type="tel"
+                        id="mobileInput"
+                        maxlength="10"
+                        inputmode="numeric"
+                        autocomplete="tel-national"
+                        placeholder="Enter 10-digit mobile no."
+                        class="min-w-0 flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
+
+                    <button
+                        type="button"
+                        onclick="sendMobileOTP()"
+                        id="btnSendMobileOTP"
+                        class="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">
+                        Send OTP
+                    </button>
                 </div>
 
                 <div id="mobileOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
                     <div class="flex justify-between items-center text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Enter 4-digit OTP sent to mobile</span>
+                        <span class="text-gray-700 font-semibold">
+                            Enter 4-digit OTP sent to mobile
+                        </span>
                         <span id="mobileTimer" class="text-red-600 font-bold text-base">60s</span>
                     </div>
-                    <div class="flex space-x-4">
-                        <input type="text" id="mobileOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
-                        <button type="button" onclick="verifyMobileOTP()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">Verify Mobile OTP ✅</button>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input
+                            type="text"
+                            id="mobileOtpInput"
+                            maxlength="4"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="••••"
+                            class="w-full sm:w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
+
+                        <button
+                            type="button"
+                            onclick="verifyMobileOTP()"
+                            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">
+                            Verify Mobile OTP ✅
+                        </button>
                     </div>
                 </div>
+
+                <p id="mobileStatus" class="text-sm font-semibold" aria-live="polite"></p>
             </div>
 
+            <!-- AADHAAR VERIFICATION: LOCKED UNTIL MOBILE IS VERIFIED -->
             <div id="aadhaarSection" class="space-y-4 pt-6 border-t-2 border-gray-200 opacity-50 pointer-events-none transition-all">
-                <label class="block text-base md:text-lg font-bold text-gray-800">🆔 Aadhaar Number (12-Digit)</label>
-                <div class="flex space-x-4">
-                    <input type="password" id="aadhaarInput" maxlength="12" placeholder="XXXX XXXX XXXX" class="flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
-                    <button type="button" onclick="sendAadhaarOTP()" id="btnSendAadhaarOTP" class="bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">Send e-KYC OTP</button>
+                <label for="aadhaarInput" class="block text-base md:text-lg font-bold text-gray-800">
+                    🆔 Aadhaar Number (12-Digit)
+                </label>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        type="password"
+                        id="aadhaarInput"
+                        maxlength="12"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        placeholder="XXXX XXXX XXXX"
+                        class="min-w-0 flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
+
+                    <button
+                        type="button"
+                        onclick="sendAadhaarOTP()"
+                        id="btnSendAadhaarOTP"
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">
+                        Send e-KYC OTP
+                    </button>
                 </div>
 
                 <div id="aadhaarOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
                     <div class="flex justify-between items-center text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Enter OTP sent to registered Aadhaar mobile</span>
+                        <span class="text-gray-700 font-semibold">
+                            Enter OTP sent to registered Aadhaar mobile
+                        </span>
                         <span id="aadhaarTimer" class="text-red-600 font-bold text-base">60s</span>
                     </div>
-                    <div class="flex space-x-4">
-                        <input type="text" id="aadhaarOtpInput" maxlength="4" placeholder="••••" class="w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
-                        <button type="button" onclick="verifyAadhaarOTP()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">Verify & Fetch Profile 🔍</button>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input
+                            type="text"
+                            id="aadhaarOtpInput"
+                            maxlength="4"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="••••"
+                            class="w-full sm:w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
+
+                        <button
+                            type="button"
+                            onclick="verifyAadhaarOTP()"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">
+                            Verify & Fetch Profile 🔍
+                        </button>
                     </div>
                 </div>
+
+                <p id="aadhaarStatus" class="text-sm font-semibold" aria-live="polite"></p>
             </div>
 
+            <!-- PROFILE IS SHOWN ONLY AFTER BOTH DEMO STEPS PASS -->
             <div id="profileCard" class="hidden p-6 bg-green-50 border-2 border-green-500 rounded-2xl space-y-4 shadow-inner">
                 <div class="flex items-center space-x-5">
-                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-4xl shadow-inner border border-green-300 flex-shrink-0">🧑‍🌾</div>
+                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-4xl shadow-inner border border-green-300 flex-shrink-0">
+                        🧑‍🌾
+                    </div>
+
                     <div>
-                        <h3 id="profileName" class="text-lg md:text-xl font-extrabold text-green-900">Ramesh Kumar</h3>
+                        <h3 id="profileName" class="text-lg md:text-xl font-extrabold text-green-900">
+                            Ramesh Kumar
+                        </h3>
                         <p class="text-sm md:text-base text-gray-700 font-medium">Age: 42 | Gender: Male</p>
-                        <p class="text-sm text-green-700 font-bold mt-1">Verified Aadhaar Details Confirmed</p>
+                        <p class="text-sm text-green-700 font-bold mt-1">
+                            Demo verification completed
+                        </p>
                     </div>
                 </div>
+
                 <div class="text-sm bg-white p-4 rounded-xl border border-green-200 text-green-800 font-medium">
-                    ✅ Secure Aadhaar e-KYC match successful. Identity confirmed for procurement queue.
+                    ✅ Both demo OTP steps were completed. This browser demo does not independently verify Aadhaar identity.
                 </div>
             </div>
         </div>
 
-        <button type="button" id="btnProceedSlot" onclick="proceedToSlotBooking()" disabled class="w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed">
+        <button
+            type="button"
+            id="btnProceedSlot"
+            onclick="proceedToSlotBooking()"
+            disabled
+            class="w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed">
             Proceed to Slot Booking →
         </button>
+
     </main>
 
     <script>
+        /*
+         * DEMO ONLY:
+         * OTPs are generated and displayed in browser alerts.
+         * This is not a secure OTP service or real Aadhaar e-KYC.
+         */
+
         let generatedMobileOTP = "";
         let generatedAadhaarOTP = "";
+
         let mobileTimerInterval = null;
         let aadhaarTimerInterval = null;
 
-        function startTimer(duration, displayElementId) {
-            let timer = duration, seconds;
-            if (displayElementId === 'mobileTimer' && mobileTimerInterval) clearInterval(mobileTimerInterval);
-            if (displayElementId === 'aadhaarTimer' && aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
+        let mobileVerified = false;
+        let aadhaarVerified = false;
+        let verificationComplete = false;
+
+        let mobileOtpExpiresAt = 0;
+        let aadhaarOtpExpiresAt = 0;
+
+        function getElement(id) {
+            return document.getElementById(id);
+        }
+
+        function setStatus(id, message, success = false) {
+            const element = getElement(id);
+            if (!element) return;
+
+            element.textContent = message;
+            element.className = success
+                ? "text-sm font-semibold text-green-700"
+                : "text-sm font-semibold text-red-600";
+        }
+
+        function stopTimer(type) {
+            if (type === "mobile" && mobileTimerInterval) {
+                clearInterval(mobileTimerInterval);
+                mobileTimerInterval = null;
+            }
+
+            if (type === "aadhaar" && aadhaarTimerInterval) {
+                clearInterval(aadhaarTimerInterval);
+                aadhaarTimerInterval = null;
+            }
+        }
+
+        function startTimer(duration, displayElementId, type) {
+            stopTimer(type);
+
+            let remaining = duration;
+            const display = getElement(displayElementId);
+
+            if (display) {
+                display.textContent = remaining + "s";
+            }
 
             const interval = setInterval(function () {
-                seconds = parseInt(timer % 60, 10);
-                const elem = document.getElementById(displayElementId);
-                if (elem) elem.textContent = seconds + "s";
-                if (--timer < 0) {
+                remaining--;
+
+                const elem = getElement(displayElementId);
+
+                if (remaining <= 0) {
                     clearInterval(interval);
+
+                    if (type === "mobile") {
+                        mobileTimerInterval = null;
+                        generatedMobileOTP = "";
+                        mobileOtpExpiresAt = 0;
+                    } else {
+                        aadhaarTimerInterval = null;
+                        generatedAadhaarOTP = "";
+                        aadhaarOtpExpiresAt = 0;
+                    }
+
                     if (elem) elem.textContent = "Expired";
+
+                    setStatus(
+                        type === "mobile" ? "mobileStatus" : "aadhaarStatus",
+                        "OTP expired. Please request a new OTP."
+                    );
+
+                    return;
+                }
+
+                if (elem) {
+                    elem.textContent = remaining + "s";
                 }
             }, 1000);
 
-            if (displayElementId === 'mobileTimer') mobileTimerInterval = interval;
-            if (displayElementId === 'aadhaarTimer') aadhaarTimerInterval = interval;
+            if (type === "mobile") {
+                mobileTimerInterval = interval;
+            } else {
+                aadhaarTimerInterval = interval;
+            }
+        }
+
+        function resetAadhaarStep() {
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP = "";
+            aadhaarOtpExpiresAt = 0;
+            aadhaarVerified = false;
+            verificationComplete = false;
+
+            getElement("aadhaarOtpBox").classList.add("hidden");
+            getElement("aadhaarOtpInput").value = "";
+            getElement("aadhaarTimer").textContent = "60s";
+            getElement("profileCard").classList.add("hidden");
+            getElement("aadhaarInput").disabled = false;
+
+            setStatus("aadhaarStatus", "");
+
+            const badge = getElement("stepBadge");
+            badge.textContent = "Pending";
+            badge.className =
+                "text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full";
+
+            const button = getElement("btnProceedSlot");
+            button.disabled = true;
+            button.className =
+                "w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed";
         }
 
         function sendMobileOTP() {
-            const mobileInput = document.getElementById('mobileInput');
-            const mobile = mobileInput.value.trim();
-            if (mobile.length !== 10) {
-                alert("Please enter a valid 10-digit mobile number.");
+            if (mobileVerified) {
+                alert("This mobile number has already been verified in this session.");
                 return;
             }
-            
-            // Generates a truly random 4-digit number every single time
-            generatedMobileOTP = Math.floor(1000 + Math.random() * 9000).toString();
-            
-            alert(`[SIMULATED SMS] Your KrishiDhara OTP is: ${generatedMobileOTP}`);
-            document.getElementById('mobileOtpBox').classList.remove('hidden');
-            startTimer(60, 'mobileTimer');
+
+            const mobile = getElement("mobileInput").value.trim();
+
+            if (!/^[6-9]\d{9}$/.test(mobile)) {
+                alert("Please enter a valid 10-digit Indian mobile number.");
+                return;
+            }
+
+            stopTimer("mobile");
+            resetAadhaarStep();
+
+            generatedMobileOTP =
+                Math.floor(1000 + Math.random() * 9000).toString();
+
+            mobileOtpExpiresAt = Date.now() + 60000;
+
+            getElement("mobileOtpInput").value = "";
+            getElement("mobileOtpBox").classList.remove("hidden");
+
+            setStatus(
+                "mobileStatus",
+                "Demo mode: the OTP is displayed in an alert, not sent by SMS."
+            );
+
+            alert(
+                "[SIMULATED SMS — DEMO ONLY]\n\n" +
+                "Your KrishiDhara OTP is: " + generatedMobileOTP +
+                "\n\nThis is not a real SMS."
+            );
+
+            startTimer(60, "mobileTimer", "mobile");
         }
 
         function verifyMobileOTP() {
-            const entered = document.getElementById('mobileOtpInput').value.trim();
-            if (entered === generatedMobileOTP) {
-                if (mobileTimerInterval) clearInterval(mobileTimerInterval);
-                alert("Mobile number verified successfully!");
-                document.getElementById('mobileOtpBox').classList.add('hidden');
-                document.getElementById('mobileInput').disabled = true;
-                document.getElementById('aadhaarSection').classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                alert(`Incorrect OTP. (Hint for demo: check the alert box popup for the code: ${generatedMobileOTP})`);
-            }
-        }
-
-        function sendAadhaarOTP() {
-            const aadhaarInput = document.getElementById('aadhaarInput');
-            const aadhaar = aadhaarInput.value.trim();
-            if (aadhaar.length !== 12) {
-                alert("Please enter a valid 12-digit number.");
+            if (mobileVerified) {
                 return;
             }
 
-            // Generates a truly random 4-digit number every single time
-            generatedAadhaarOTP = Math.floor(1000 + Math.random() * 9000).toString();
+            if (
+                !generatedMobileOTP ||
+                Date.now() >= mobileOtpExpiresAt
+            ) {
+                generatedMobileOTP = "";
+                setStatus(
+                    "mobileStatus",
+                    "OTP expired. Please request a new OTP."
+                );
+                return;
+            }
 
-            alert(`[e-KYC SMS] Verification OTP is: ${generatedAadhaarOTP}`);
-            document.getElementById('aadhaarOtpBox').classList.remove('hidden');
-            startTimer(60, 'aadhaarTimer');
+            const entered = getElement("mobileOtpInput").value.trim();
+
+            if (!/^\d{4}$/.test(entered)) {
+                setStatus("mobileStatus", "Enter the 4-digit OTP.");
+                return;
+            }
+
+            if (entered !== generatedMobileOTP) {
+                setStatus("mobileStatus", "Incorrect OTP. Please try again.");
+                return;
+            }
+
+            stopTimer("mobile");
+
+            generatedMobileOTP = "";
+            mobileOtpExpiresAt = 0;
+            mobileVerified = true;
+
+            getElement("mobileOtpBox").classList.add("hidden");
+            getElement("mobileInput").disabled = true;
+
+            getElement("aadhaarSection").classList.remove(
+                "opacity-50",
+                "pointer-events-none"
+            );
+
+            setStatus(
+                "mobileStatus",
+                "Mobile OTP verified in this demo session.",
+                true
+            );
+
+            alert("Mobile OTP verified successfully!");
+        }
+
+        function sendAadhaarOTP() {
+            if (!mobileVerified) {
+                alert("Please verify your mobile number first.");
+                return;
+            }
+
+            if (aadhaarVerified) {
+                alert("The Aadhaar demo step is already complete.");
+                return;
+            }
+
+            const aadhaar = getElement("aadhaarInput").value.trim();
+
+            if (!/^\d{12}$/.test(aadhaar)) {
+                alert("Please enter a valid 12-digit Aadhaar number.");
+                return;
+            }
+
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP =
+                Math.floor(1000 + Math.random() * 9000).toString();
+
+            aadhaarOtpExpiresAt = Date.now() + 60000;
+
+            getElement("aadhaarOtpInput").value = "";
+            getElement("aadhaarOtpBox").classList.remove("hidden");
+
+            setStatus(
+                "aadhaarStatus",
+                "Demo mode: no real Aadhaar OTP or e-KYC request is made."
+            );
+
+            alert(
+                "[SIMULATED e-KYC SMS — DEMO ONLY]\n\n" +
+                "Verification OTP is: " + generatedAadhaarOTP +
+                "\n\nThis is not a real Aadhaar OTP."
+            );
+
+            startTimer(60, "aadhaarTimer", "aadhaar");
         }
 
         function verifyAadhaarOTP() {
-            const entered = document.getElementById('aadhaarOtpInput').value.trim();
-            if (entered === generatedAadhaarOTP) {
-                if (aadhaarTimerInterval) clearInterval(aadhaarTimerInterval);
-                document.getElementById('aadhaarOtpBox').classList.add('hidden');
-                document.getElementById('aadhaarInput').disabled = true;
-                document.getElementById('profileCard').classList.remove('hidden');
-                
-                const badge = document.getElementById('stepBadge');
-                badge.innerText = "Verified ✅";
-                badge.className = "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
-
-                const btn = document.getElementById('btnProceedSlot');
-                btn.disabled = false;
-                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
-            } else {
-                alert(`Incorrect OTP. (Hint for demo: check the alert box popup for the code: ${generatedAadhaarOTP})`);
+            if (!mobileVerified) {
+                alert("Please verify your mobile number first.");
+                return;
             }
+
+            if (
+                !generatedAadhaarOTP ||
+                Date.now() >= aadhaarOtpExpiresAt
+            ) {
+                generatedAadhaarOTP = "";
+                setStatus(
+                    "aadhaarStatus",
+                    "OTP expired. Please request a new OTP."
+                );
+                return;
+            }
+
+            const entered = getElement("aadhaarOtpInput").value.trim();
+
+            if (!/^\d{4}$/.test(entered)) {
+                setStatus("aadhaarStatus", "Enter the 4-digit OTP.");
+                return;
+            }
+
+            if (entered !== generatedAadhaarOTP) {
+                setStatus("aadhaarStatus", "Incorrect OTP. Please try again.");
+                return;
+            }
+
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP = "";
+            aadhaarOtpExpiresAt = 0;
+            aadhaarVerified = true;
+            verificationComplete = mobileVerified && aadhaarVerified;
+
+            getElement("aadhaarOtpBox").classList.add("hidden");
+            getElement("aadhaarInput").disabled = true;
+            getElement("profileCard").classList.remove("hidden");
+
+            // Do not retain the Aadhaar number in localStorage.
+            getElement("aadhaarInput").value = "";
+
+            setStatus(
+                "aadhaarStatus",
+                "Both demo OTP steps are complete. Aadhaar identity has not been independently verified.",
+                true
+            );
+
+            const badge = getElement("stepBadge");
+            badge.textContent = "Demo Complete ✓";
+            badge.className =
+                "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
+
+            const button = getElement("btnProceedSlot");
+            button.disabled = false;
+            button.className =
+                "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
         }
+
         function proceedToSlotBooking() {
-            localStorage.setItem('kd_farmer_verified', 'true');
-            localStorage.setItem('kd_farmer_name', localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar');
-            localStorage.setItem('kd_farmer_step', 'booking');
-            window.location.href = 'slot_booking.html';
+            if (
+                !verificationComplete ||
+                !mobileVerified ||
+                !aadhaarVerified
+            ) {
+                alert("Please complete both verification steps first.");
+                return;
+            }
+
+            // This flag is for prototype navigation only, not real authentication.
+            localStorage.setItem("kd_farmer_verified", "true");
+            localStorage.setItem("kd_farmer_name", "Ramesh Kumar");
+            localStorage.setItem("kd_farmer_step", "booking");
+
+            window.location.href = "slot_booking.html";
         }
 
         function switchRole() {
-            localStorage.setItem('kd_farmer_step', 'identity');
-            window.location.href = '../index.html';
+            // Clear the prototype verification flag when leaving the portal.
+            localStorage.removeItem("kd_farmer_verified");
+            localStorage.setItem("kd_farmer_step", "identity");
+
+            window.location.href = "../index.html";
         }
-       window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
-    const langSelect = document.getElementById('langSelect');
 
-    if (langSelect) {
-        langSelect.value = savedLang;
-    }
+        // If the mobile number changes, its previous verification is invalid.
+        getElement("mobileInput").addEventListener("input", function () {
+            if (mobileVerified) {
+                mobileVerified = false;
+                verificationComplete = false;
 
-    // Never automatically skip Step 1.
-    const verified = localStorage.getItem('kd_farmer_verified') === 'true';
+                getElement("mobileInput").disabled = false;
+                getElement("mobileOtpBox").classList.remove("hidden");
 
-    const profileCard = document.getElementById('profileCard');
-    const stepBadge = document.getElementById('stepBadge');
-    const proceedButton = document.getElementById('btnProceedSlot');
+                getElement("aadhaarSection").classList.add(
+                    "opacity-50",
+                    "pointer-events-none"
+                );
 
-    if (verified) {
-        document.getElementById('mobileInput').disabled = true;
-        document.getElementById('aadhaarInput').disabled = true;
+                resetAadhaarStep();
 
-        document.getElementById('aadhaarSection')
-            .classList.remove('opacity-50', 'pointer-events-none');
+                localStorage.removeItem("kd_farmer_verified");
+                setStatus(
+                    "mobileStatus",
+                    "Mobile number changed. Please verify it again."
+                );
+            } else if (generatedMobileOTP) {
+                stopTimer("mobile");
+                generatedMobileOTP = "";
+                mobileOtpExpiresAt = 0;
+                getElement("mobileOtpBox").classList.add("hidden");
 
-        profileCard.classList.remove('hidden');
-        stepBadge.textContent = 'Verified ✓';
-        stepBadge.className =
-            'text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full';
+                setStatus(
+                    "mobileStatus",
+                    "Mobile number changed. Request a new OTP."
+                );
+            }
+        });
 
-        proceedButton.disabled = false;
-        proceedButton.className =
-            'w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer';
-    } else {
-        profileCard.classList.add('hidden');
-        proceedButton.disabled = true;
-    }
-});
+        // If the Aadhaar number changes, its previous OTP is invalidated.
+        getElement("aadhaarInput").addEventListener("input", function () {
+            if (aadhaarVerified) {
+                getElement("aadhaarInput").disabled = false;
+                resetAadhaarStep();
+
+                localStorage.removeItem("kd_farmer_verified");
+
+                setStatus(
+                    "aadhaarStatus",
+                    "Aadhaar number changed. Request a new OTP."
+                );
+            } else if (generatedAadhaarOTP) {
+                stopTimer("aadhaar");
+                generatedAadhaarOTP = "";
+                aadhaarOtpExpiresAt = 0;
+                getElement("aadhaarOtpBox").classList.add("hidden");
+
+                setStatus(
+                    "aadhaarStatus",
+                    "Aadhaar number changed. Request a new OTP."
+                );
+            }
+        });
+
+        // Load the chosen language without skipping verification.
+        window.addEventListener("DOMContentLoaded", function () {
+            const savedLang = localStorage.getItem("kd_selected_lang") || "en";
+            const langSelect = getElement("langSelect");
+
+            if (langSelect) {
+                langSelect.value = savedLang;
+            }
+
+            // Never trust an old localStorage flag to unlock this page.
+            localStorage.removeItem("kd_farmer_verified");
+
+            mobileVerified = false;
+            aadhaarVerified = false;
+            verificationComplete = false;
+
+            getElement("profileCard").classList.add("hidden");
+
+            const proceedButton = getElement("btnProceedSlot");
+            proceedButton.disabled = true;
+        });
     </script>
-\n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
-<div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-<script>
-(function () {
-  const STORAGE_KEY = 'kd_selected_lang';
-  // Google Translate language codes. Unsupported codes remain selectable, but may not be translated by Google.
-  const googleCodes = new Set(['en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj']);
-  function setTranslateCookie(lang) {
-    const target = googleCodes.has(lang) ? lang : 'en';
-    const value = '/en/' + target;
-    document.cookie = 'googtrans=' + value + ';path=/;SameSite=Lax';
-    // GitHub Pages may use a subdomain; a host-only cookie is also set above.
-    try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
-  }
-  window.googleTranslateElementInit = function () {
-    if (!window.google || !google.translate || !google.translate.TranslateElement) return;
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-      autoDisplay: false
-    }, 'google_translate_element');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo && lang !== 'en' && Array.from(combo.options).some(o => o.value === lang)) {
-      combo.value = lang;
-      combo.dispatchEvent(new Event('change'));
-    }
-  };
-  window.kdApplySelectedLanguage = function (lang) {
-    setTranslateCookie(lang);
-    // Reload lets Google Translate apply the saved language consistently to static and dynamic UI.
-    window.location.reload();
-  };
-  // Keep the existing language selector, but route its choice through the translation engine.
-  window.changeLanguage = function () {
-    const select = document.getElementById('langSelect');
-    if (select) window.kdApplySelectedLanguage(select.value);
-  };
-  document.addEventListener('DOMContentLoaded', function () {
-    const select = document.getElementById('langSelect');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    if (select) select.value = lang;
-    if (!document.querySelector('script[data-kd-google-translate]')) {
-      const script = document.createElement('script');
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      script.setAttribute('data-kd-google-translate', 'true');
-      document.head.appendChild(script);
-    }
-  });
-})();
-</script>
+
+    <!-- Automatic translation support for languages without a local dictionary.
+         Requires internet access. The original 22-language selector is preserved. -->
+
+    <div
+        id="google_translate_element"
+        aria-hidden="true"
+        style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden">
+    </div>
+
+    <script>
+    (function () {
+        const STORAGE_KEY = "kd_selected_lang";
+
+        // Original 22 language choices are retained.
+        const googleCodes = new Set([
+            "en", "hi", "mr", "pa", "gu", "bn", "te", "ta", "kn", "ml",
+            "or", "as", "ur", "sa", "ne", "sd", "ks", "doi", "mni",
+            "sat", "bho", "raj"
+        ]);
+
+        function setTranslateCookie(lang) {
+            const target = googleCodes.has(lang) ? lang : "en";
+            const value = "/en/" + target;
+
+            document.cookie =
+                "googtrans=" + value + ";path=/;SameSite=Lax";
+
+            try {
+                localStorage.setItem(STORAGE_KEY, lang);
+            } catch (error) {
+                // Translation can still be attempted using the cookie.
+            }
+        }
+
+        window.googleTranslateElementInit = function () {
+            if (
+                !window.google ||
+                !google.translate ||
+                !google.translate.TranslateElement
+            ) {
+                return;
+            }
+
+            new google.translate.TranslateElement({
+                pageLanguage: "en",
+                includedLanguages:
+                    "en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
+                autoDisplay: false
+            }, "google_translate_element");
+
+            const lang = localStorage.getItem(STORAGE_KEY) || "en";
+            const combo = document.querySelector(".goog-te-combo");
+
+            if (
+                combo &&
+                lang !== "en" &&
+                Array.from(combo.options).some(function (option) {
+                    return option.value === lang;
+                })
+            ) {
+                combo.value = lang;
+                combo.dispatchEvent(new Event("change"));
+            }
+        };
+
+        window.kdApplySelectedLanguage = function (lang) {
+            setTranslateCookie(lang);
+            window.location.reload();
+        };
+
+        // Keep the original selector and translation behavior.
+        window.changeLanguage = function () {
+            const select = document.getElementById("langSelect");
+
+            if (select) {
+                window.kdApplySelectedLanguage(select.value);
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("langSelect");
+            const lang = localStorage.getItem(STORAGE_KEY) || "en";
+
+            if (select) {
+                select.value = lang;
+            }
+
+            if (!document.querySelector("script[data-kd-google-translate]")) {
+                const script = document.createElement("script");
+                script.src =
+                    "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+                script.async = true;
+                script.setAttribute("data-kd-google-translate", "true");
+
+                document.head.appendChild(script);
+            }
+        });
+    })();
+    </script>
 
 </body>
 </html>
-
-Step 1 farmer/index.html
