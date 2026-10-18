@@ -1,452 +1,90 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiDhara 2.0 | Officer Gate Portal</title>
-
-  <script src="https://unpkg.com/html5-qrcode"></script>
-
-  <style>
-    :root {
-      --green: #176b3a;
-      --green-dark: #104c2a;
-      --green-light: #e8f5eb;
-      --gold: #f2b544;
-      --red: #b42318;
-      --blue: #175cd3;
-      --bg: #f3f6f4;
-      --border: #dce5de;
-      --text: #182a20;
-      --muted: #647067;
-      --white: #fff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    header {
-      background: linear-gradient(120deg, var(--green-dark), var(--green));
-      color: white;
-      padding: 18px 5%;
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .brand h1 {
-      font-size: 25px;
-      margin: 0 0 5px;
-    }
-
-    .brand p {
-      margin: 0;
-      color: #d9f4df;
-      font-size: 13px;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    select, input, button {
-      font: inherit;
-    }
-
-    select, input {
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: white;
-      min-width: 0;
-    }
-
-    button {
-      border: 0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-    .btn-light { background: white; color: var(--green-dark); }
-    .btn-green { background: var(--green); color: white; }
-    .btn-gold { background: var(--gold); color: #352400; }
-    .btn-red { background: var(--red); color: white; }
-    .btn-blue { background: var(--blue); color: white; }
-    .btn-gray { background: #e8ece9; color: #26352b; }
-
-    main {
-      width: min(1440px, 94%);
-      margin: 22px auto 40px;
-    }
-
-    .section-title {
-      font-size: 19px;
-      margin: 0 0 13px;
-    }
-
-    .subtext {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .yard-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 16px 18px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      margin-bottom: 18px;
-    }
-
-    .yard-name { font-size: 19px; font-weight: 800; }
-    .yard-meta { color: var(--muted); font-size: 13px; margin-top: 5px; }
-
-    .live-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--green);
-      background: var(--green-light);
-      border-radius: 30px;
-      padding: 7px 10px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background: #1e9b50;
-      border-radius: 50%;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .stat {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 17px;
-      min-width: 0;
-    }
-
-    .stat-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 11px;
-    }
-
-    .stat-value {
-      font-size: clamp(23px, 3vw, 31px);
-      font-weight: 800;
-      line-height: 1.15;
-      overflow-wrap: anywhere;
-    }
-
-    .stat-note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 9px;
-      line-height: 1.4;
-    }
-
-    .capacity-track {
-      height: 9px;
-      background: #e5ebe6;
-      border-radius: 30px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
-
-    .capacity-fill {
-      height: 100%;
-      width: 0;
-      background: var(--green);
-      transition: width .25s;
-    }
-
-    .panel {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 20px;
-      margin-bottom: 20px;
-      min-width: 0;
-    }
-
-    .panel-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .panel-heading h2 {
-      margin: 0 0 5px;
-      font-size: 18px;
-    }
-
-    .panel-heading p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 20px;
-      align-items: start;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      min-width: 0;
-    }
-
-    .field.full { grid-column: 1 / -1; }
-
-    .field label {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field input, .field select {
-      width: 100%;
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .notice {
-      border-radius: 9px;
-      padding: 12px;
-      margin: 12px 0;
-      font-size: 13px;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .notice.success { display: block; background: #e8f7ec; color: #176b3a; }
-    .notice.error { display: block; background: #fff0ef; color: #a11a13; }
-    .notice.info { display: block; background: #edf4ff; color: #1849a9; }
-
-    #reader {
-      width: 100%;
-      max-width: 440px;
-      margin: 12px auto;
-      overflow: hidden;
-      border-radius: 10px;
-    }
-
-    .scanner-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .scanner-placeholder {
-      background: #f5f8f5;
-      border: 1px dashed #c6d5c9;
-      padding: 18px;
-      border-radius: 10px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      min-width: 720px;
-    }
-
-    th, td {
-      padding: 12px 11px;
-      text-align: left;
-      border-bottom: 1px solid #e8eee9;
-      vertical-align: top;
-    }
-
-    th {
-      color: #46564a;
-      background: #f6f9f6;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    tbody tr:hover { background: #fbfdfb; }
-
-    .status {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 30px;
-      font-size: 11px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .status.cleared { background: #e4f6e9; color: #176b3a; }
-    .status.pending { background: #fff4d8; color: #875600; }
-    .status.rejected { background: #ffebe9; color: #b42318; }
-
-    .farmer-cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .farmer-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      min-width: 0;
-    }
-
-    .farmer-card h3 {
-      margin: 0 0 8px;
-      font-size: 15px;
-      overflow-wrap: anywhere;
-    }
-
-    .farmer-card p {
-      margin: 5px 0;
-      font-size: 12px;
-      color: #526056;
-      overflow-wrap: anywhere;
-      line-height: 1.45;
-    }
-
-    .empty {
-      color: var(--muted);
-      background: #f8faf8;
-      border: 1px dashed #cbd7cd;
-      border-radius: 9px;
-      padding: 18px;
-      font-size: 13px;
-      line-height: 1.6;
-      text-align: center;
-    }
-
-    .small-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .small-actions button { padding: 8px 10px; font-size: 12px; }
-
-    .footer-note {
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.6;
-      padding: 8px 0 18px;
-    }
-
-    #google_translate_element {
-      background: white;
-      border-radius: 7px;
-      padding: 4px;
-      min-height: 30px;
-      color: #222;
-    }
-
-    .token-display {
-      padding: 10px;
-      background: #f0f7f1;
-      border-radius: 8px;
-      font-weight: 700;
-      color: var(--green-dark);
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 900px) {
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .dashboard-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 560px) {
-      main { width: 94%; margin-top: 14px; }
-      .stats { gap: 9px; }
-      .stat { padding: 13px; }
-      .panel { padding: 14px; }
-      .form-grid, .farmer-cards { grid-template-columns: 1fr; }
-      .brand h1 { font-size: 21px; }
-      .header-actions { width: 100%; }
-      .header-actions > * { max-width: 100%; }
-    }
-
-    @media print {
-      header, .no-print, #farmersPanel, #bookingPanel, #scannerPanel,
-      #searchPanel, .footer-note, .form-actions, .small-actions {
-        display: none !important;
-      }
-
-      body { background: white; }
-      main { width: 100%; margin: 0; }
-      .panel, .stat { break-inside: avoid; border-color: #bbb; }
-      .table-wrap { overflow: visible; }
-      table { min-width: 0; font-size: 10px; }
-      th, td { padding: 6px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiDhara 2.0 - Officer Gate Portal</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+:root {
+  --green:#176b3a;--dark:#104c2a;--light:#e8f5eb;
+  --gold:#f2b544;--red:#b42318;--blue:#175cd3;
+  --bg:#f3f6f4;--border:#dce5de;--text:#182a20;
+  --muted:#647067;--white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,var(--dark),var(--green));color:white;padding:18px 5%}
+.header-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.brand h1{font-size:25px;margin:0 0 5px}
+.brand p{margin:0;color:#d9f4df;font-size:13px}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input,button{font:inherit}
+select,input{padding:10px;border:1px solid var(--border);border-radius:8px;background:white;min-width:0}
+button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn-light{background:white;color:var(--dark)}
+.btn-green{background:var(--green);color:white}
+.btn-gold{background:var(--gold);color:#352400}
+.btn-red{background:var(--red);color:white}
+.btn-blue{background:var(--blue);color:white}
+.btn-gray{background:#e8ece9;color:#26352b}
+main{width:min(1440px,94%);margin:22px auto 40px}
+.section-title{font-size:19px;margin:0 0 13px}
+.subtext{color:var(--muted);font-size:13px;line-height:1.5}
+.yard-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 18px;background:white;border:1px solid var(--border);border-radius:13px;margin-bottom:18px}
+.yard-name{font-size:19px;font-weight:800}
+.yard-meta{color:var(--muted);font-size:13px;margin-top:5px}
+.live-pill{display:inline-flex;align-items:center;gap:6px;color:var(--green);background:var(--light);border-radius:30px;padding:7px 10px;font-size:12px;font-weight:700}
+.live-dot{width:8px;height:8px;background:#1e9b50;border-radius:50%}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat{background:white;border:1px solid var(--border);border-radius:13px;padding:17px;min-width:0}
+.stat-label{font-size:13px;color:var(--muted);margin-bottom:11px}
+.stat-value{font-size:clamp(23px,3vw,31px);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.stat-note{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
+.capacity-track{height:9px;background:#e5ebe6;border-radius:30px;overflow:hidden;margin-top:12px}
+.capacity-fill{height:100%;width:0;background:var(--green);transition:width .25s}
+.panel{background:white;border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:20px;min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.panel-heading h2{margin:0 0 5px;font-size:18px}
+.panel-heading p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:13px;font-weight:700}
+.field input,.field select{width:100%}
+.form-actions,.small-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.small-actions{margin-top:0}
+.notice{border-radius:9px;padding:12px;margin:12px 0;font-size:13px;line-height:1.5;display:none}
+.notice.success{display:block;background:#e8f7ec;color:#176b3a}
+.notice.error{display:block;background:#fff0ef;color:#a11a13}
+.notice.info{display:block;background:#edf4ff;color:#1849a9}
+#reader{width:100%;max-width:440px;margin:12px auto;overflow:hidden;border-radius:10px}
+.scanner-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.scanner-placeholder{background:#f5f8f5;border:1px dashed #c6d5c9;padding:18px;border-radius:10px;text-align:center;color:var(--muted);font-size:13px}
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+th,td{padding:12px 11px;text-align:left;border-bottom:1px solid #e8eee9;vertical-align:top}
+th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}
+tbody tr:hover{background:#fbfdfb}
+.status{display:inline-block;padding:5px 8px;border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap}
+.status.cleared{background:#e4f6e9;color:#176b3a}
+.status.pending{background:#fff4d8;color:#875600}
+.status.rejected{background:#ffebe9;color:#b42318}
+.farmer-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.farmer-card{border:1px solid var(--border);border-radius:10px;padding:14px;min-width:0}
+.farmer-card h3{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}
+.farmer-card p{margin:5px 0;font-size:12px;color:#526056;overflow-wrap:anywhere;line-height:1.45}
+.empty{color:var(--muted);background:#f8faf8;border:1px dashed #cbd7cd;border-radius:9px;padding:18px;font-size:13px;line-height:1.6;text-align:center}
+#google_translate_element{background:white;border-radius:7px;padding:4px;min-height:30px;color:#222}
+.token-display{padding:10px;background:#f0f7f1;border-radius:8px;font-weight:700;color:var(--dark);overflow-wrap:anywhere}
+.footer-note{color:var(--muted);font-size:12px;text-align:center;line-height:1.6;padding:8px 0 18px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:560px){main{width:94%;margin-top:14px}.stats{gap:9px}.stat{padding:13px}.panel{padding:14px}.form-grid,.farmer-cards{grid-template-columns:1fr}.brand h1{font-size:21px}.header-actions{width:100%}}
+@media print{header,.no-print,#farmersPanel,#bookingPanel,#scannerPanel,.footer-note{display:none!important}body{background:white}main{width:100%;margin:0}.panel,.stat{break-inside:avoid;border-color:#bbb}.table-wrap{overflow:visible}table{min-width:0;font-size:10px}th,td{padding:6px}}
+</style>
 </head>
-
 <body>
 <header>
   <div class="header-inner">
@@ -454,7 +92,6 @@
       <h1>🌾 KrishiDhara 2.0</h1>
       <p id="subtitle">Officer Gate Clearance Portal</p>
     </div>
-
     <div class="header-actions no-print">
       <select id="languageSelect" aria-label="Select language">
         <option value="en">English</option>
@@ -480,7 +117,6 @@
         <option value="bho">भोजपुरी</option>
         <option value="raj">राजस्थानी</option>
       </select>
-
       <div id="google_translate_element"></div>
       <button class="btn-light" onclick="switchRole()">Switch Role</button>
     </div>
@@ -491,143 +127,90 @@
   <section class="yard-bar">
     <div>
       <div class="yard-name" id="yardName">Pune Main Yard</div>
-      <div class="yard-meta">
-        <span id="yardKeyLabel">Yard key:</span>
-        <strong id="yardKeyText">pune_main</strong>
-        &nbsp;·&nbsp;
-        <span id="lastUpdated">Waiting for shared data…</span>
-      </div>
+      <div class="yard-meta">Yard key: <strong id="yardKeyText">pune_main</strong> · <span id="lastUpdated">Loading data…</span></div>
     </div>
-    <span class="live-pill"><span class="live-dot"></span><span id="syncLabel">Shared dashboard data</span></span>
+    <span class="live-pill"><span class="live-dot"></span> Shared dashboard data</span>
   </section>
 
-  <h2 class="section-title" id="overviewTitle">Gate Clearance Overview</h2>
-
+  <h2 class="section-title">Gate Clearance Overview</h2>
   <section class="stats">
     <article class="stat">
-      <div class="stat-label" id="capacityLabel">Yard Capacity Cleared / Total</div>
-      <div class="stat-value" id="capacityValue">0 / 0 Tons</div>
+      <div class="stat-label">Cleared / Total Yard Capacity</div>
+      <div class="stat-value" id="capacityValue">34 / 50 Tons</div>
       <div class="capacity-track"><div class="capacity-fill" id="capacityFill"></div></div>
-      <div class="stat-note" id="capacityNote">Reading shared yard capacity</div>
+      <div class="stat-note" id="capacityNote">68% of yard capacity</div>
     </article>
-
     <article class="stat">
-      <div class="stat-label" id="vehiclesLabel">Vehicles Cleared</div>
-      <div class="stat-value" id="vehiclesValue">0</div>
-      <div class="stat-note" id="vehiclesNote">Based on recorded gate entries</div>
+      <div class="stat-label">Vehicles Cleared</div>
+      <div class="stat-value" id="vehiclesValue">4</div>
+      <div class="stat-note" id="vehiclesNote">4 cleared gate records</div>
     </article>
-
     <article class="stat">
-      <div class="stat-label" id="farmersLabel">Farmers Cleared</div>
-      <div class="stat-value" id="farmersValue">0</div>
-      <div class="stat-note" id="farmersNote">Unique farmers in gate records</div>
+      <div class="stat-label">Farmers Cleared</div>
+      <div class="stat-value" id="farmersValue">4</div>
+      <div class="stat-note">Unique farmers in cleared gate records</div>
     </article>
-
     <article class="stat">
-      <div class="stat-label" id="tonsLabel">Tons in Gate Logs</div>
-      <div class="stat-value" id="tonsValue">0</div>
-      <div class="stat-note" id="tonsNote">Sum of verified entry quantities</div>
+      <div class="stat-label">Tons in Gate Logs</div>
+      <div class="stat-value" id="tonsValue">34</div>
+      <div class="stat-note">Sum of cleared gate record quantities</div>
     </article>
   </section>
 
   <section class="panel">
     <div class="panel-heading">
       <div>
-        <h2 id="noticeTitle">Yard Status & Data Reconciliation</h2>
-        <p id="noticeDescription">Compare the shared yard counter with actual gate-entry records.</p>
+        <h2>Yard Status & Data Reconciliation</h2>
+        <p>Compare shared capacity with the gate-entry records.</p>
       </div>
-      <button class="btn-gray no-print" onclick="refreshDashboard()" id="refreshBtn">↻ Refresh Data</button>
+      <button class="btn-gray no-print" onclick="refreshDashboard()">↻ Refresh Data</button>
     </div>
-    <div id="reconciliationNotice" class="notice info">
-      Loading shared yard and gate records…
-    </div>
-    <div class="subtext" id="dataSourceNote">
-      Capacity is read from kd_cap_&lt;yard&gt; and kd_booked_&lt;yard&gt;.
-      Cleared vehicles and farmers are counted from kd_gate_entries.
-    </div>
+    <div id="reconciliationNotice" class="notice info"></div>
+    <div class="subtext">Capacity uses kd_cap_&lt;yard&gt; and kd_booked_&lt;yard&gt;. Cleared vehicle counts, farmer counts, and gate logs use kd_gate_entries.</div>
   </section>
 
   <div class="dashboard-grid">
     <section class="panel" id="scannerPanel">
       <div class="panel-heading">
-        <div>
-          <h2 id="scannerTitle">📷 Scan Farmer Token</h2>
-          <p id="scannerDescription">Scan a QR token or enter its ID manually.</p>
-        </div>
+        <div><h2>📷 Scan Farmer Token</h2><p>Scan a QR token or enter its ID manually.</p></div>
       </div>
-
-      <div id="scannerPlaceholder" class="scanner-placeholder">
-        Camera scanner is stopped. Start the scanner or use demo scan.
-      </div>
+      <div id="scannerPlaceholder" class="scanner-placeholder">Scanner stopped. Start the scanner or use demo scan.</div>
       <div id="reader"></div>
-
       <div class="scanner-actions no-print">
         <button class="btn-green" id="startScannerBtn" onclick="startScanner()">Start Scanner</button>
         <button class="btn-gray" id="stopScannerBtn" onclick="stopScanner()" disabled>Stop Scanner</button>
         <button class="btn-gold" onclick="demoScan()">Demo Scan Saved Booking</button>
       </div>
-
       <div id="scanNotice" class="notice"></div>
-
       <div style="margin-top:16px" class="field">
-        <label for="tokenInput" id="tokenLabel">Token / Booking ID</label>
+        <label for="tokenInput">Token / Booking ID</label>
         <input id="tokenInput" placeholder="e.g. KD-1001" autocomplete="off">
       </div>
       <div class="form-actions no-print">
-        <button class="btn-blue" onclick="validateToken()" id="validateBtn">Validate Token</button>
+        <button class="btn-blue" onclick="validateToken()">Validate Token</button>
       </div>
       <div id="bookingPreview" style="margin-top:12px"></div>
     </section>
 
     <section class="panel" id="entryPanel">
       <div class="panel-heading">
-        <div>
-          <h2 id="entryTitle">✅ Gate Entry Approval</h2>
-          <p id="entryDescription">Verify booking information before clearing a vehicle.</p>
-        </div>
+        <div><h2>✅ Gate Entry Approval</h2><p>Verify booking information before clearing a vehicle.</p></div>
       </div>
-
       <form id="entryForm">
         <div class="form-grid">
-          <div class="field full">
-            <label for="fToken" id="fTokenLabel">Verified Token</label>
-            <input id="fToken" required placeholder="Validate a token first">
-          </div>
-          <div class="field">
-            <label for="fFarmer" id="fFarmerLabel">Farmer Name</label>
-            <input id="fFarmer" required placeholder="Farmer name">
-          </div>
-          <div class="field">
-            <label for="fPhone" id="fPhoneLabel">Phone Number</label>
-            <input id="fPhone" placeholder="Phone number">
-          </div>
-          <div class="field">
-            <label for="fCommodity" id="fCommodityLabel">Commodity</label>
-            <input id="fCommodity" required placeholder="Wheat, rice, etc.">
-          </div>
-          <div class="field">
-            <label for="fVehicle" id="fVehicleLabel">Vehicle Number</label>
-            <input id="fVehicle" required placeholder="MH-12-AB-1234">
-          </div>
-          <div class="field">
-            <label for="fTons" id="fTonsLabel">Quantity (Tons)</label>
-            <input id="fTons" type="number" min="0.01" step="0.01" required placeholder="e.g. 2.5">
-          </div>
-          <div class="field">
-            <label for="fGate" id="fGateLabel">Gate Number</label>
-            <input id="fGate" value="Gate 1" required>
-          </div>
-          <div class="field full">
-            <label for="fNotes" id="fNotesLabel">Officer Notes</label>
-            <input id="fNotes" placeholder="Optional notes">
-          </div>
+          <div class="field full"><label for="fToken">Verified Token</label><input id="fToken" required placeholder="Validate a token first"></div>
+          <div class="field"><label for="fFarmer">Farmer Name</label><input id="fFarmer" required></div>
+          <div class="field"><label for="fPhone">Phone Number</label><input id="fPhone"></div>
+          <div class="field"><label for="fCommodity">Commodity</label><input id="fCommodity" required></div>
+          <div class="field"><label for="fVehicle">Vehicle Number</label><input id="fVehicle" required></div>
+          <div class="field"><label for="fTons">Quantity (Tons)</label><input id="fTons" type="number" min="0.01" step="0.01" required></div>
+          <div class="field"><label for="fGate">Gate Number</label><input id="fGate" value="Gate 1" required></div>
+          <div class="field full"><label for="fNotes">Officer Notes</label><input id="fNotes" placeholder="Optional notes"></div>
         </div>
-
         <div id="entryNotice" class="notice"></div>
-
         <div class="form-actions no-print">
-          <button type="submit" class="btn-green" id="approveBtn">Approve Gate Entry</button>
-          <button type="button" class="btn-gray" onclick="clearEntryForm()" id="clearBtn">Clear Form</button>
+          <button type="submit" class="btn-green">Approve Gate Entry</button>
+          <button type="button" class="btn-gray" onclick="clearEntryForm()">Clear Form</button>
         </div>
       </form>
     </section>
@@ -635,1103 +218,536 @@
 
   <section class="panel" id="farmersPanel">
     <div class="panel-heading">
-      <div>
-        <h2 id="farmersTitle">👨‍🌾 Farmer Clearance Summary</h2>
-        <p id="farmersDescription">Farmers with cleared gate entries, alongside bookings still awaiting clearance.</p>
-      </div>
-      <div class="small-actions no-print">
-        <button class="btn-gray" onclick="refreshDashboard()">Refresh</button>
-      </div>
+      <div><h2>👨‍🌾 Farmer Clearance Summary</h2><p>Cleared farmers and any saved bookings still awaiting clearance.</p></div>
     </div>
     <div id="farmerSummary" class="farmer-cards"></div>
   </section>
 
   <section class="panel" id="bookingPanel">
     <div class="panel-heading">
-      <div>
-        <h2 id="bookingTitle">📋 Farmer Booking Register</h2>
-        <p id="bookingDescription">Saved booking data is shown separately from verified gate clearances.</p>
-      </div>
+      <div><h2>📋 Farmer Booking Register</h2><p>Bookings are shown separately from actual gate clearance records.</p></div>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Farmer</th>
-            <th>Token</th>
-            <th>Commodity</th>
-            <th>Vehicle</th>
-            <th>Tons</th>
-            <th>Booking Status</th>
-            <th>Gate Status</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Farmer</th><th>Token</th><th>Commodity</th><th>Vehicle</th><th>Tons</th><th>Booking Status</th><th>Gate Status</th></tr></thead>
         <tbody id="bookingTableBody"></tbody>
       </table>
     </div>
   </section>
 
-  <section class="panel" id="searchPanel">
+  <section class="panel" id="logsPanel">
     <div class="panel-heading">
-      <div>
-        <h2 id="logsTitle">🧾 Cleared Gate Entry Logs</h2>
-        <p id="logsDescription">Every row represents a saved gate clearance record.</p>
-      </div>
+      <div><h2>🧾 Cleared Gate Entry Logs</h2><p>Four demo clearances are included if no gate records existed when this page first loaded.</p></div>
       <div class="small-actions no-print">
         <button class="btn-green" onclick="exportCSV()">Export CSV</button>
         <button class="btn-blue" onclick="window.print()">Print Logs</button>
       </div>
     </div>
-
     <div class="form-grid no-print" style="margin-bottom:15px">
-      <div class="field">
-        <label for="logSearch" id="searchLabel">Search logs</label>
-        <input id="logSearch" placeholder="Farmer, token, vehicle…" oninput="renderLogs()">
-      </div>
-      <div class="field">
-        <label for="logDate" id="dateLabel">Filter by date</label>
-        <input id="logDate" type="date" onchange="renderLogs()">
-      </div>
+      <div class="field"><label for="logSearch">Search logs</label><input id="logSearch" placeholder="Farmer, token, vehicle…" oninput="renderLogs()"></div>
+      <div class="field"><label for="logDate">Filter by date</label><input id="logDate" type="date" onchange="renderLogs()"></div>
     </div>
-
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Date & Time</th>
-            <th>Farmer</th>
-            <th>Token</th>
-            <th>Vehicle</th>
-            <th>Commodity</th>
-            <th>Tons</th>
-            <th>Gate</th>
-            <th>Officer</th>
-            <th>Status</th>
-            <th class="no-print">Receipt</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Date & Time</th><th>Farmer</th><th>Token</th><th>Vehicle</th><th>Commodity</th><th>Tons</th><th>Gate</th><th>Officer</th><th>Status</th><th class="no-print">Receipt</th></tr></thead>
         <tbody id="logsTableBody"></tbody>
       </table>
     </div>
   </section>
 
-  <div class="footer-note">
-    KrishiDhara 2.0 · Officer Gate Portal · Keep shared admin, farmer, and officer pages on the same origin
-    and browser storage to share localStorage data.
-  </div>
+  <div class="footer-note">KrishiDhara 2.0 · Officer Gate Portal · Demo farmer records are sample data.</div>
 </main>
 
 <script>
 "use strict";
 
-/*
- * SHARED STORAGE CONTRACT
- *
- * kd_cap_<yard>          = total yard capacity, e.g. 50
- * kd_booked_<yard>       = shared capacity used/cleared tons, e.g. 34
- * kd_selected_admin_yard = currently selected yard key, e.g. pune_main
- * kd_gate_entries        = array of gate-entry records
- * kd_farmer_booking      = single booking object OR an array of bookings
- * kd_selected_lang       = selected language code
- *
- * IMPORTANT:
- * If kd_booked_<yard> is the value that the admin dashboard uses for
- * cleared tonnage, this page labels it as shared cleared/used tons.
- * Actual cleared vehicle and farmer counts are computed from gate entries.
- */
-
 const KEYS = {
-  selectedYard: "kd_selected_admin_yard",
-  gateEntries: "kd_gate_entries",
-  farmerBooking: "kd_farmer_booking",
-  selectedLang: "kd_selected_lang"
+  yard: "kd_selected_admin_yard",
+  entries: "kd_gate_entries",
+  booking: "kd_farmer_booking",
+  language: "kd_selected_lang"
 };
 
-const DEFAULT_YARD = "pune_main";
-let activeYard = DEFAULT_YARD;
+let activeYard = localStorage.getItem(KEYS.yard) || "pune_main";
 let gateEntries = [];
 let bookings = [];
 let validatedBooking = null;
 let scanner = null;
 let scannerRunning = false;
-let lastScanValue = "";
-let lastRenderTime = null;
+window.currentDisplayedEntries = [];
 
 const $ = id => document.getElementById(id);
 
 function readJSON(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
-    if (raw === null || raw === "") return fallback;
-    return JSON.parse(raw);
-  } catch (error) {
-    console.warn("Invalid JSON in storage:", key, error);
-    return fallback;
-  }
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch (_) { return fallback; }
 }
-
 function writeJSON(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
-
-function numberValue(value, fallback = 0) {
-  if (value === null || value === undefined || value === "") return fallback;
-  const n = Number(String(value).replace(/,/g, ""));
+function num(value, fallback=0) {
+  const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
 }
-
-function firstValue(obj, keys, fallback = "") {
+function first(obj, keys, fallback="") {
   if (!obj || typeof obj !== "object") return fallback;
   for (const key of keys) {
-    if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") {
-      return obj[key];
-    }
+    if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
   }
   return fallback;
 }
-
-function getToken(record) {
-  return String(firstValue(record, [
-    "token", "tokenId", "tokenID", "bookingId", "bookingID",
-    "farmerToken", "qrToken", "id"
-  ], "")).trim();
+function tokenOf(r) {
+  return String(first(r,["token","tokenId","tokenID","bookingId","bookingID","farmerToken","qrToken","id"],"")).trim();
 }
-
-function getFarmer(record) {
-  return String(firstValue(record, [
-    "farmerName", "name", "farmer", "fullName", "applicantName"
-  ], "Unknown farmer")).trim();
+function farmerOf(r) {
+  return String(first(r,["farmerName","name","farmer","fullName","applicantName"],"Unknown farmer"));
 }
-
-function getPhone(record) {
-  return String(firstValue(record, [
-    "phone", "phoneNumber", "mobile", "mobileNumber", "contact"
-  ], "")).trim();
+function phoneOf(r) {
+  return String(first(r,["phone","phoneNumber","mobile","mobileNumber","contact"],""));
 }
-
-function getCommodity(record) {
-  return String(firstValue(record, [
-    "commodity", "crop", "cropName", "produce", "product"
-  ], "Not specified")).trim();
+function commodityOf(r) {
+  return String(first(r,["commodity","crop","cropName","produce","product"],"Not specified"));
 }
-
-function getVehicle(record) {
-  return String(firstValue(record, [
-    "vehicleNumber", "vehicleNo", "vehicle", "truckNumber", "registrationNumber"
-  ], "")).trim();
+function vehicleOf(r) {
+  return String(first(r,["vehicleNumber","vehicleNo","vehicle","truckNumber","registrationNumber"],""));
 }
-
-function getTons(record) {
-  return numberValue(firstValue(record, [
-    "tons", "quantityTons", "quantityInTons", "quantity", "weightTons",
-    "weight", "bookedTons"
-  ], 0));
+function tonsOf(r) {
+  return num(first(r,["tons","quantityTons","quantityInTons","quantity","weightTons","weight","bookedTons"],0));
 }
-
-function getYardKey(record) {
-  return String(firstValue(record, [
-    "mandiKey", "yardKey", "mandiId", "yardId", "marketKey"
-  ], "")).trim();
+function yardOf(r) {
+  return String(first(r,["mandiKey","yardKey","mandiId","yardId","marketKey"],""));
 }
-
-function getStatus(record) {
-  return String(firstValue(record, [
-    "status", "entryStatus", "gateStatus", "bookingStatus"
-  ], "")).trim();
+function statusOf(r) {
+  return String(first(r,["status","entryStatus","gateStatus","bookingStatus"],"")).toLowerCase();
 }
-
-function isCleared(record) {
-  const status = getStatus(record).toLowerCase();
-  if (record && (record.cleared === true || record.gateCleared === true)) return true;
-
-  // Older gate records may have no status field because they were written
-  // only after an officer clicked Approve Gate Entry.
-  if (!status) return true;
-
-  return [
-    "cleared", "approved", "approved at gate", "gate cleared",
-    "verified", "success", "completed", "passed"
-  ].includes(status);
+function isCleared(r) {
+  if (r && (r.cleared === true || r.gateCleared === true)) return true;
+  const s = statusOf(r);
+  if (!s) return true;
+  return ["cleared","approved","approved at gate","gate cleared","verified","success","completed","passed"].includes(s);
 }
-
-function getEntryDate(record) {
-  const raw = firstValue(record, [
-    "timestamp", "clearedAt", "entryTime", "dateTime", "createdAt", "date"
-  ], "");
+function dateOf(r) {
+  const raw = first(r,["timestamp","clearedAt","entryTime","dateTime","createdAt","date"],"");
   if (!raw) return null;
-  const date = new Date(raw);
-  return Number.isNaN(date.getTime()) ? null : date;
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : d;
 }
-
-function formatDateTime(record) {
-  const date = getEntryDate(record);
-  return date ? date.toLocaleString() : "Date unavailable";
+function dateText(r) {
+  const d = dateOf(r);
+  return d ? d.toLocaleString() : "Date unavailable";
 }
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-
 function normaliseList(value) {
-  if (Array.isArray(value)) return value.filter(v => v && typeof v === "object");
-  if (value && typeof value === "object") {
-    // Some booking implementations wrap a list inside a property.
-    for (const key of ["bookings", "farmers", "data", "records", "items"]) {
-      if (Array.isArray(value[key])) {
-        return value[key].filter(v => v && typeof v === "object");
-      }
+  if (Array.isArray(value)) return value.filter(v=>v && typeof v==="object");
+  if (value && typeof value==="object") {
+    for (const key of ["bookings","farmers","data","records","items"]) {
+      if (Array.isArray(value[key])) return value[key].filter(v=>v && typeof v==="object");
     }
     return [value];
   }
   return [];
 }
+function yardName(key) {
+  const names={pune_main:"Pune Main Yard",pune:"Pune Yard",nashik_main:"Nashik Main Yard",nagpur_main:"Nagpur Main Yard",mumbai_main:"Mumbai Main Yard"};
+  return names[key] || key.split(/[_-]/).map(s=>s?s[0].toUpperCase()+s.slice(1):"").join(" ");
+}
 
-function loadSharedData() {
-  const selected = localStorage.getItem(KEYS.selectedYard);
-  activeYard = selected ? selected.trim() : DEFAULT_YARD;
+/*
+ * INITIAL DEMO DATA:
+ * Seed four cleared vehicles and four farmers, totaling 34 tons.
+ * This only happens when kd_gate_entries is empty or invalid.
+ * It does not replace existing gate-entry history.
+ */
+function seedDemoDataIfEmpty() {
+  const raw = readJSON(KEYS.entries, []);
+  if (Array.isArray(raw) && raw.length > 0) return;
 
-  const storedEntries = readJSON(KEYS.gateEntries, []);
-  gateEntries = Array.isArray(storedEntries)
-    ? storedEntries.filter(entry => entry && typeof entry === "object")
-    : [];
+  const yard = localStorage.getItem(KEYS.yard) || "pune_main";
+  const now = Date.now();
 
-  bookings = normaliseList(readJSON(KEYS.farmerBooking, null));
+  const demo = [
+    {
+      id:"KD-GATE-1001",token:"KD-1001",farmerName:"Ramesh Patil",
+      phone:"9000000001",commodity:"Wheat",vehicleNumber:"MH12 AB 1234",
+      tons:10,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-4*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1002",token:"KD-1002",farmerName:"Sunita Jadhav",
+      phone:"9000000002",commodity:"Soybean",vehicleNumber:"MH14 CD 5678",
+      tons:8,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-3*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1003",token:"KD-1003",farmerName:"Suresh Pawar",
+      phone:"9000000003",commodity:"Maize",vehicleNumber:"MH12 EF 9012",
+      tons:9,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-2*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1004",token:"KD-1004",farmerName:"Anita Shinde",
+      phone:"9000000004",commodity:"Onion",vehicleNumber:"MH15 GH 3456",
+      tons:7,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-3600000).toISOString(),
+      notes:"Demo seed record"
+    }
+  ];
 
-  // Accommodate an older app that saves the booking under a yard-specific key.
-  if (!bookings.length) {
-    const yardBooking = readJSON("kd_farmer_booking_" + activeYard, null);
-    bookings = normaliseList(yardBooking);
+  writeJSON(KEYS.entries,demo);
+
+  // Initialize the yard values for the demo only if not already configured.
+  if (localStorage.getItem("kd_cap_"+yard) === null) {
+    localStorage.setItem("kd_cap_"+yard,"50");
+  }
+  if (localStorage.getItem("kd_booked_"+yard) === null) {
+    localStorage.setItem("kd_booked_"+yard,"34");
+  }
+
+  // Provide matching demo bookings so tokens can be validated.
+  // Do not overwrite an existing booking object/list.
+  if (localStorage.getItem(KEYS.booking) === null) {
+    writeJSON(KEYS.booking,demo.map(e=>({
+      token:e.token,farmerName:e.farmerName,phone:e.phone,
+      commodity:e.commodity,vehicleNumber:e.vehicleNumber,
+      tons:e.tons,status:"CLEARED",gateCleared:true,mandiKey:yard
+    })));
   }
 }
 
-function yardNameFromKey(key) {
-  const names = {
-    pune_main: "Pune Main Yard",
-    pune: "Pune Yard",
-    nashik_main: "Nashik Main Yard",
-    nagpur_main: "Nagpur Main Yard",
-    mumbai_main: "Mumbai Main Yard"
-  };
-  if (names[key]) return names[key];
-  return key.split(/[_-]/g)
-    .map(word => word ? word[0].toUpperCase() + word.slice(1) : "")
-    .join(" ") || "Selected Yard";
+function loadData() {
+  activeYard=localStorage.getItem(KEYS.yard)||"pune_main";
+  const saved=readJSON(KEYS.entries,[]);
+  gateEntries=Array.isArray(saved)?saved.filter(e=>e&&typeof e==="object"):[];
+  bookings=normaliseList(readJSON(KEYS.booking,null));
 }
-
-function getYardEntries() {
-  return gateEntries.filter(entry => {
-    const key = getYardKey(entry);
-    // Records without a yard key are retained for compatibility with the
-    // original shared storage format, which may only store one active yard.
-    return !key || key === activeYard;
-  });
+function yardEntries() {
+  return gateEntries.filter(e=>!yardOf(e)||yardOf(e)===activeYard);
 }
-
-function getClearedEntries() {
-  return getYardEntries().filter(isCleared);
+function clearedEntries() {
+  return yardEntries().filter(isCleared);
 }
-
-function getCapacityData() {
-  const capRaw = localStorage.getItem("kd_cap_" + activeYard);
-  const bookedRaw = localStorage.getItem("kd_booked_" + activeYard);
-
-  // Compatibility with alternate storage names used in older prototypes.
-  const capFallback = localStorage.getItem("kd_capacity_" + activeYard);
-  const bookedFallback = localStorage.getItem("kd_cleared_" + activeYard);
-
-  const capacity = numberValue(capRaw ?? capFallback, 0);
-  const sharedClearedTons = numberValue(bookedRaw ?? bookedFallback, 0);
-
+function capacityData() {
+  const cap=localStorage.getItem("kd_cap_"+activeYard);
+  const used=localStorage.getItem("kd_booked_"+activeYard);
+  const capAlt=localStorage.getItem("kd_capacity_"+activeYard);
+  const usedAlt=localStorage.getItem("kd_cleared_"+activeYard);
   return {
-    capacity,
-    clearedTons: sharedClearedTons,
-    hasCapacity: capRaw !== null || capFallback !== null,
-    hasClearedTons: bookedRaw !== null || bookedFallback !== null
+    capacity:num(cap??capAlt,50),
+    tons:num(used??usedAlt,34),
+    hasCapacity:cap!==null||capAlt!==null,
+    hasTons:used!==null||usedAlt!==null
   };
 }
-
-function getUniqueFarmers(entries) {
-  const seen = new Set();
-  return entries.filter(entry => {
-    const token = getToken(entry);
-    const vehicle = getVehicle(entry);
-    const name = getFarmer(entry).toLowerCase();
-    const identity = token || vehicle || name;
-    if (!identity || seen.has(identity)) return false;
-    seen.add(identity);
-    return true;
+function uniqueFarmers(entries) {
+  const seen=new Set();
+  return entries.filter(e=>{
+    const key=(tokenOf(e)||vehicleOf(e)||farmerOf(e)).toLowerCase();
+    if(seen.has(key)) return false;
+    seen.add(key);return true;
   });
 }
-
-function getTodayEntries(entries) {
-  const today = new Date();
-  return entries.filter(entry => {
-    const date = getEntryDate(entry);
-    return date &&
-      date.getFullYear() === today.getFullYear() &&
-      date.getMonth() === today.getMonth() &&
-      date.getDate() === today.getDate();
-  });
-}
-
 function renderDashboard() {
-  const yardEntries = getYardEntries();
-  const clearedEntries = yardEntries.filter(isCleared);
-  const capacity = getCapacityData();
+  const entries=clearedEntries();
+  const cap=capacityData();
+  const totalTons=entries.reduce((sum,e)=>sum+tonsOf(e),0);
+  const farmers=uniqueFarmers(entries);
+  const vehicles=new Set(entries.map(e=>(vehicleOf(e)||tokenOf(e)||e.id||"").toLowerCase()).filter(Boolean));
 
-  const clearedTonsFromLogs = clearedEntries.reduce((sum, entry) => sum + getTons(entry), 0);
-  const uniqueFarmers = getUniqueFarmers(clearedEntries);
-  const todayEntries = getTodayEntries(clearedEntries);
+  $("yardName").textContent=yardName(activeYard);
+  $("yardKeyText").textContent=activeYard;
+  $("capacityValue").textContent=cap.tons+" / "+cap.capacity+" Tons";
+  $("capacityFill").style.width=Math.max(0,Math.min(100,cap.capacity?cap.tons/cap.capacity*100:0))+"%";
+  $("capacityNote").textContent=(cap.capacity?((cap.tons/cap.capacity)*100).toFixed(1):"0")+"% of yard capacity";
+  $("vehiclesValue").textContent=vehicles.size;
+  $("vehiclesNote").textContent=entries.length+" cleared gate record(s)";
+  $("farmersValue").textContent=farmers.length;
+  $("tonsValue").textContent=Number(totalTons.toFixed(2)).toLocaleString();
+  $("lastUpdated").textContent="Last refreshed: "+new Date().toLocaleTimeString();
 
-  $("yardName").textContent = yardNameFromKey(activeYard);
-  $("yardKeyText").textContent = activeYard;
-
-  $("capacityValue").textContent =
-    (capacity.hasClearedTons ? capacity.clearedTons : 0) + " / " +
-    (capacity.hasCapacity ? capacity.capacity : 0) + " Tons";
-
-  const percent = capacity.capacity > 0
-    ? Math.max(0, Math.min(100, capacity.clearedTons / capacity.capacity * 100))
-    : 0;
-
-  $("capacityFill").style.width = percent + "%";
-
-  $("capacityNote").textContent = capacity.hasCapacity && capacity.hasClearedTons
-    ? percent.toFixed(1) + "% of shared yard capacity used/cleared"
-    : "Capacity data missing: check shared admin storage keys";
-
-  // Count cleared vehicles from actual cleared gate records.
-  // Use unique vehicle numbers when available; otherwise each gate record
-  // counts as one clearance event.
-  const vehicleKeys = new Set();
-  let vehiclesCleared = 0;
-
-  for (const entry of clearedEntries) {
-    const vehicle = getVehicle(entry).toLowerCase();
-    const token = getToken(entry).toLowerCase();
-    const key = vehicle || token || ("entry-" + vehiclesCleared);
-    if (!vehicleKeys.has(key)) {
-      vehicleKeys.add(key);
-      vehiclesCleared++;
-    }
+  const notice=$("reconciliationNotice");
+  const messages=[];
+  if(!cap.hasCapacity||!cap.hasTons) messages.push("Capacity keys were missing; demo defaults are shown where needed.");
+  if(Math.abs(totalTons-cap.tons)>0.01) {
+    messages.push("Mismatch: shared capacity counter is "+cap.tons+" tons, but gate logs sum to "+totalTons.toFixed(2)+" tons.");
+    notice.className="notice info";
+  } else {
+    messages.push("Capacity total matches gate logs: "+totalTons.toFixed(2)+" tons across "+vehicles.size+" cleared vehicles.");
+    notice.className="notice success";
   }
-
-  $("vehiclesValue").textContent = String(vehiclesCleared);
-  $("vehiclesNote").textContent =
-    todayEntries.length + " cleared gate record(s) today";
-
-  $("farmersValue").textContent = String(uniqueFarmers.length);
-  $("farmersNote").textContent = "Unique farmers in cleared gate records";
-
-  $("tonsValue").textContent = Number(clearedTonsFromLogs.toFixed(2)).toLocaleString();
-  $("tonsNote").textContent =
-    "Sum of " + clearedEntries.length + " cleared gate record(s)";
-
-  const notices = [];
-  if (!capacity.hasCapacity || !capacity.hasClearedTons) {
-    notices.push(
-      "The capacity counter is not fully configured. Expected keys: kd_cap_" +
-      activeYard + " and kd_booked_" + activeYard + "."
-    );
-  }
-
-  if (capacity.hasClearedTons) {
-    const diff = Math.abs(capacity.clearedTons - clearedTonsFromLogs);
-    if (diff > 0.01) {
-      notices.push(
-        "Reconciliation needed: shared dashboard shows " +
-        capacity.clearedTons + " tons, while cleared gate logs sum to " +
-        Number(clearedTonsFromLogs.toFixed(2)) +
-        " tons. Check whether the admin counter includes records not yet saved to kd_gate_entries."
-      );
-    } else {
-      notices.push("Shared capacity tonnage matches the sum of cleared gate logs.");
-    }
-  }
-
-  notices.push(
-    "Vehicle and farmer counts are derived from actual gate-entry records, not estimated from tonnage."
-  );
-
-  const notice = $("reconciliationNotice");
-  notice.className = "notice " + (
-    notices.some(text => text.includes("Reconciliation needed") || text.includes("not fully configured"))
-      ? "info" : "success"
-  );
-  notice.textContent = notices.join(" ");
-
-  $("lastUpdated").textContent = "Last refreshed: " + new Date().toLocaleTimeString();
-
+  notice.textContent=messages.join(" ");
   renderFarmers();
   renderBookings();
   renderLogs();
 }
 
 function renderFarmers() {
-  const container = $("farmerSummary");
-  const cleared = getUniqueFarmers(getClearedEntries());
-  const clearedTokens = new Set(getClearedEntries().map(e => getToken(e)).filter(Boolean));
-  const pendingBookings = bookings.filter(booking => {
-    const token = getToken(booking);
-    return !token || !clearedTokens.has(token);
-  });
+  const container=$("farmerSummary");
+  const entries=uniqueFarmers(clearedEntries());
+  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean));
+  const pending=bookings.filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
+  const cards=[];
 
-  const cards = [];
+  entries.forEach(e=>cards.push(`
+    <article class="farmer-card">
+      <h3>${esc(farmerOf(e))}</h3><span class="status cleared">GATE CLEARED</span>
+      <p><strong>Token:</strong> ${esc(tokenOf(e)||"—")}</p>
+      <p><strong>Phone:</strong> ${esc(phoneOf(e)||"—")}</p>
+      <p><strong>Vehicle:</strong> ${esc(vehicleOf(e)||"—")}</p>
+      <p><strong>Commodity:</strong> ${esc(commodityOf(e))}</p>
+      <p><strong>Cleared quantity:</strong> ${tonsOf(e)} tons</p>
+      <p><strong>Time:</strong> ${esc(dateText(e))}</p>
+    </article>`));
 
-  cleared.forEach(entry => {
-    cards.push(`
-      <article class="farmer-card">
-        <h3>${escapeHTML(getFarmer(entry))}</h3>
-        <span class="status cleared">GATE CLEARED</span>
-        <p><strong>Token:</strong> ${escapeHTML(getToken(entry) || "—")}</p>
-        <p><strong>Vehicle:</strong> ${escapeHTML(getVehicle(entry) || "—")}</p>
-        <p><strong>Commodity:</strong> ${escapeHTML(getCommodity(entry))}</p>
-        <p><strong>Cleared quantity:</strong> ${getTons(entry)} tons</p>
-        <p><strong>Gate time:</strong> ${escapeHTML(formatDateTime(entry))}</p>
-      </article>
-    `);
-  });
+  pending.forEach(b=>cards.push(`
+    <article class="farmer-card">
+      <h3>${esc(farmerOf(b))}</h3><span class="status pending">BOOKING — NOT CLEARED</span>
+      <p><strong>Token:</strong> ${esc(tokenOf(b)||"—")}</p>
+      <p><strong>Vehicle:</strong> ${esc(vehicleOf(b)||"—")}</p>
+      <p><strong>Commodity:</strong> ${esc(commodityOf(b))}</p>
+      <p><strong>Booked quantity:</strong> ${tonsOf(b)} tons</p>
+    </article>`));
 
-  pendingBookings.forEach(booking => {
-    cards.push(`
-      <article class="farmer-card">
-        <h3>${escapeHTML(getFarmer(booking))}</h3>
-        <span class="status pending">BOOKING — NOT CLEARED</span>
-        <p><strong>Token:</strong> ${escapeHTML(getToken(booking) || "—")}</p>
-        <p><strong>Vehicle:</strong> ${escapeHTML(getVehicle(booking) || "—")}</p>
-        <p><strong>Commodity:</strong> ${escapeHTML(getCommodity(booking))}</p>
-        <p><strong>Booked quantity:</strong> ${getTons(booking)} tons</p>
-        <p>Booking exists, but no matching cleared gate record was found.</p>
-      </article>
-    `);
-  });
-
-  container.innerHTML = cards.length
-    ? cards.join("")
-    : `<div class="empty" style="grid-column:1/-1">
-        No farmer records found in the saved booking or gate-entry data.
-        New records will appear here after bookings are saved or gate entries are approved.
-      </div>`;
+  container.innerHTML=cards.length?cards.join(""):'<div class="empty" style="grid-column:1/-1">No farmer records found.</div>';
 }
-
+function getTokenSafe(b){return tokenOf(b).toLowerCase();}
 function renderBookings() {
-  const body = $("bookingTableBody");
-  const clearedTokens = new Set(getClearedEntries().map(e => getToken(e)).filter(Boolean));
-
-  if (!bookings.length) {
-    body.innerHTML = `<tr><td colspan="7">
-      <div class="empty">No saved farmer booking found under kd_farmer_booking.</div>
-    </td></tr>`;
-    return;
+  const body=$("bookingTableBody");
+  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(t=>t.toLowerCase()));
+  if(!bookings.length) {
+    body.innerHTML='<tr><td colspan="7"><div class="empty">No saved booking list found.</div></td></tr>';return;
   }
-
-  body.innerHTML = bookings.map(booking => {
-    const token = getToken(booking);
-    const cleared = token && clearedTokens.has(token);
-    const bookingStatus = getStatus(booking) || "Booked";
+  body.innerHTML=bookings.map(b=>{
+    const token=tokenOf(b),done=clearedTokens.has(token.toLowerCase());
     return `<tr>
-      <td>${escapeHTML(getFarmer(booking))}</td>
-      <td>${escapeHTML(token || "—")}</td>
-      <td>${escapeHTML(getCommodity(booking))}</td>
-      <td>${escapeHTML(getVehicle(booking) || "—")}</td>
-      <td>${getTons(booking)}</td>
-      <td>${escapeHTML(bookingStatus)}</td>
-      <td><span class="status ${cleared ? "cleared" : "pending"}">
-        ${cleared ? "CLEARED" : "NOT CLEARED"}
-      </span></td>
+      <td>${esc(farmerOf(b))}</td><td>${esc(token||"—")}</td>
+      <td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b)||"—")}</td>
+      <td>${tonsOf(b)}</td><td>${esc(first(b,["status","bookingStatus"],"Booked"))}</td>
+      <td><span class="status ${done?"cleared":"pending"}">${done?"CLEARED":"NOT CLEARED"}</span></td>
     </tr>`;
   }).join("");
 }
-
 function renderLogs() {
-  const body = $("logsTableBody");
-  const search = ($("logSearch").value || "").trim().toLowerCase();
-  const dateFilter = $("logDate").value;
+  const search=$("logSearch").value.trim().toLowerCase();
+  const dateFilter=$("logDate").value;
+  const entries=clearedEntries().filter(e=>{
+    const text=[farmerOf(e),tokenOf(e),vehicleOf(e),commodityOf(e),phoneOf(e)].join(" ").toLowerCase();
+    if(search&&!text.includes(search)) return false;
+    if(dateFilter) {
+      const d=dateOf(e);
+      if(!d||d.toISOString().slice(0,10)!==dateFilter) return false;
+    }
+    return true;
+  }).sort((a,b)=>(dateOf(b)?.getTime()||0)-(dateOf(a)?.getTime()||0));
 
-  const entries = getClearedEntries()
-    .filter(entry => {
-      const haystack = [
-        getFarmer(entry), getToken(entry), getVehicle(entry),
-        getCommodity(entry), getPhone(entry), getStatus(entry),
-        firstValue(entry, ["officer", "officerName", "approvedBy"], "")
-      ].join(" ").toLowerCase();
-
-      if (search && !haystack.includes(search)) return false;
-
-      if (dateFilter) {
-        const date = getEntryDate(entry);
-        if (!date || date.toISOString().slice(0, 10) !== dateFilter) return false;
-      }
-
-      return true;
-    })
-    .sort((a, b) => {
-      const da = getEntryDate(a);
-      const db = getEntryDate(b);
-      return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
-    });
-
-  if (!entries.length) {
-    body.innerHTML = `<tr><td colspan="10">
-      <div class="empty">No cleared gate-entry logs match this filter. Only approved entries saved in kd_gate_entries appear here.</div>
-    </td></tr>`;
-    return;
+  window.currentDisplayedEntries=entries;
+  const body=$("logsTableBody");
+  if(!entries.length) {
+    body.innerHTML='<tr><td colspan="10"><div class="empty">No cleared gate entries match this filter.</div></td></tr>';return;
   }
-
-  body.innerHTML = entries.map((entry, index) => {
-    const officer = firstValue(entry, ["officer", "officerName", "approvedBy"], "Gate Officer");
-    return `<tr>
-      <td>${escapeHTML(formatDateTime(entry))}</td>
-      <td>${escapeHTML(getFarmer(entry))}</td>
-      <td>${escapeHTML(getToken(entry) || "—")}</td>
-      <td>${escapeHTML(getVehicle(entry) || "—")}</td>
-      <td>${escapeHTML(getCommodity(entry))}</td>
-      <td>${getTons(entry)}</td>
-      <td>${escapeHTML(firstValue(entry, ["gate", "gateNumber"], "Gate 1"))}</td>
-      <td>${escapeHTML(officer)}</td>
-      <td><span class="status cleared">CLEARED</span></td>
-      <td class="no-print"><button class="btn-gray" onclick="printReceipt(${index}, ${JSON.stringify(getToken(entry))})">Receipt</button></td>
-    </tr>`;
-  }).join("");
-
-  // Keep a stable reference for receipt buttons, independent of the current search.
-  window.currentDisplayedEntries = entries;
+  body.innerHTML=entries.map((e,i)=>`<tr>
+    <td>${esc(dateText(e))}</td><td>${esc(farmerOf(e))}</td>
+    <td>${esc(tokenOf(e)||"—")}</td><td>${esc(vehicleOf(e)||"—")}</td>
+    <td>${esc(commodityOf(e))}</td><td>${tonsOf(e)}</td>
+    <td>${esc(first(e,["gate","gateNumber"],"Gate 1"))}</td>
+    <td>${esc(first(e,["officer","officerName","approvedBy"],"Gate Officer"))}</td>
+    <td><span class="status cleared">CLEARED</span></td>
+    <td class="no-print"><button class="btn-gray" onclick="printReceipt(${i})">Receipt</button></td>
+  </tr>`).join("");
 }
-
-function findBookingByToken(token) {
-  const cleanToken = String(token || "").trim().toLowerCase();
-  if (!cleanToken) return null;
-  return bookings.find(booking => getToken(booking).toLowerCase() === cleanToken) || null;
+function findBooking(token) {
+  return bookings.find(b=>tokenOf(b).toLowerCase()===String(token).trim().toLowerCase())||null;
 }
-
-function findClearedEntryByToken(token) {
-  const cleanToken = String(token || "").trim().toLowerCase();
-  if (!cleanToken) return null;
-  return getClearedEntries().find(entry => getToken(entry).toLowerCase() === cleanToken) || null;
+function findCleared(token) {
+  return clearedEntries().find(e=>tokenOf(e).toLowerCase()===String(token).trim().toLowerCase())||null;
 }
-
-function setNotice(id, message, type = "info") {
-  const node = $(id);
-  node.textContent = message;
-  node.className = "notice " + type;
+function notice(id,msg,type="info") {
+  const el=$(id);el.textContent=msg;el.className="notice "+type;
 }
-
 function clearNotice(id) {
-  const node = $(id);
-  node.textContent = "";
-  node.className = "notice";
+  $(id).textContent="";$(id).className="notice";
 }
-
 function validateToken() {
-  const token = $("tokenInput").value.trim();
-  if (!token) {
-    setNotice("scanNotice", "Enter or scan a token ID first.", "error");
-    return;
-  }
-
-  const booking = findBookingByToken(token);
-  if (!booking) {
-    validatedBooking = null;
-    clearBookingPreview();
-    setNotice(
-      "scanNotice",
-      "Token not found in kd_farmer_booking. Confirm the farmer booking was saved to shared storage.",
-      "error"
-    );
-    return;
-  }
-
-  const previousEntry = findClearedEntryByToken(token);
-  if (previousEntry) {
-    validatedBooking = null;
-    clearBookingPreview();
-    setNotice(
-      "scanNotice",
-      "This token already has a cleared gate entry. Duplicate approval is blocked.",
-      "error"
-    );
-    return;
-  }
-
-  validatedBooking = booking;
-  populateFormFromBooking(booking);
-  renderBookingPreview(booking);
-  setNotice("scanNotice", "Booking token validated. Review the details before approving entry.", "success");
+  loadData();
+  const token=$("tokenInput").value.trim();
+  if(!token){notice("scanNotice","Enter or scan a token ID first.","error");return;}
+  const booking=findBooking(token);
+  if(!booking){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","Token not found in saved farmer bookings.","error");return;}
+  if(findCleared(token)){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","This token already has a cleared gate entry. Duplicate approval is blocked.","error");return;}
+  validatedBooking=booking;
+  $("fToken").value=token;
+  $("fFarmer").value=farmerOf(booking)==="Unknown farmer"?"":farmerOf(booking);
+  $("fPhone").value=phoneOf(booking);
+  $("fCommodity").value=commodityOf(booking)==="Not specified"?"":commodityOf(booking);
+  $("fVehicle").value=vehicleOf(booking);
+  $("fTons").value=tonsOf(booking)||"";
+  $("bookingPreview").innerHTML=`<div class="token-display">Verified booking: ${esc(token)}<div style="font-size:13px;margin-top:8px;font-weight:400">Farmer: ${esc(farmerOf(booking))}<br>Commodity: ${esc(commodityOf(booking))}<br>Vehicle: ${esc(vehicleOf(booking)||"Not provided")}<br>Booked quantity: ${tonsOf(booking)} tons</div></div>`;
+  notice("scanNotice","Booking token validated. Review the details before approval.","success");
 }
-
-function renderBookingPreview(booking) {
-  $("bookingPreview").innerHTML = `
-    <div class="token-display">
-      <div>Verified booking: ${escapeHTML(getToken(booking))}</div>
-      <div style="font-size:13px;margin-top:8px;font-weight:400">
-        Farmer: ${escapeHTML(getFarmer(booking))}<br>
-        Commodity: ${escapeHTML(getCommodity(booking))}<br>
-        Vehicle: ${escapeHTML(getVehicle(booking) || "Not provided")}<br>
-        Booked quantity: ${getTons(booking)} tons
-      </div>
-    </div>`;
-}
-
-function clearBookingPreview() {
-  $("bookingPreview").innerHTML = "";
-}
-
-function populateFormFromBooking(booking) {
-  $("fToken").value = getToken(booking);
-  $("fFarmer").value = getFarmer(booking) === "Unknown farmer" ? "" : getFarmer(booking);
-  $("fPhone").value = getPhone(booking);
-  $("fCommodity").value = getCommodity(booking) === "Not specified" ? "" : getCommodity(booking);
-  $("fVehicle").value = getVehicle(booking);
-  $("fTons").value = getTons(booking) || "";
-  clearNotice("entryNotice");
-}
-
 function demoScan() {
-  loadSharedData();
-
-  if (!bookings.length) {
-    setNotice("scanNotice", "No saved farmer booking is available for demo scan. Save a booking first.", "error");
-    renderDashboard();
-    return;
-  }
-
-  const pending = bookings.find(booking => {
-    const token = getToken(booking);
-    return token && !findClearedEntryByToken(token);
-  });
-
-  const booking = pending || bookings[0];
-  $("tokenInput").value = getToken(booking);
-  validateToken();
+  loadData();
+  const booking=bookings.find(b=>tokenOf(b)&&!findCleared(tokenOf(b)));
+  if(!booking){notice("scanNotice","No pending booking is available for demo scan. The four seeded demo records are already cleared.","info");return;}
+  $("tokenInput").value=tokenOf(booking);validateToken();
 }
-
-function normaliseScannedText(text) {
-  const value = String(text || "").trim();
-  try {
-    const parsed = JSON.parse(value);
-    if (typeof parsed === "string") return parsed.trim();
-    if (parsed && typeof parsed === "object") {
-      return String(firstValue(parsed, [
-        "token", "tokenId", "bookingId", "qrToken", "id"
-      ], value)).trim();
-    }
-  } catch (_) {}
-  return value;
-}
-
 async function startScanner() {
-  if (typeof Html5Qrcode === "undefined") {
-    setNotice("scanNotice", "QR scanner library could not load. Use manual token entry.", "error");
-    return;
-  }
-
-  if (scannerRunning) return;
-
+  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR scanner library failed to load. Enter the token manually.","error");return;}
+  if(scannerRunning)return;
   try {
-    scanner = new Html5Qrcode("reader");
-    $("scannerPlaceholder").style.display = "none";
-
-    await scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 230, height: 230 } },
-      decodedText => {
-        const token = normaliseScannedText(decodedText);
-        if (!token || token === lastScanValue) return;
-        lastScanValue = token;
-        $("tokenInput").value = token;
-        validateToken();
-        stopScanner();
-      },
-      () => {}
-    );
-
-    scannerRunning = true;
-    $("startScannerBtn").disabled = true;
-    $("stopScannerBtn").disabled = false;
-    setNotice("scanNotice", "Scanner started. Point the camera at a farmer QR token.", "info");
-  } catch (error) {
-    scanner = null;
-    scannerRunning = false;
-    $("scannerPlaceholder").style.display = "block";
-    setNotice(
-      "scanNotice",
-      "Could not start the camera. Allow camera permission and use HTTPS or localhost, or enter the token manually.",
-      "error"
-    );
-    console.warn(error);
+    scanner=new Html5Qrcode("reader");
+    $("scannerPlaceholder").style.display="none";
+    await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>{
+      $("tokenInput").value=String(text).trim();validateToken();stopScanner();
+    },()=>{});
+    scannerRunning=true;$("startScannerBtn").disabled=true;$("stopScannerBtn").disabled=false;
+    notice("scanNotice","Scanner started. Point the camera at a QR token.","info");
+  } catch(e) {
+    scanner=null;scannerRunning=false;$("scannerPlaceholder").style.display="block";
+    notice("scanNotice","Camera unavailable. Allow camera access and use HTTPS/localhost, or enter the token manually.","error");
   }
 }
-
 async function stopScanner() {
-  if (scanner && scannerRunning) {
-    try {
-      await scanner.stop();
-      await scanner.clear();
-    } catch (error) {
-      console.warn("Scanner stop:", error);
-    }
+  if(scanner&&scannerRunning) {
+    try{await scanner.stop();await scanner.clear();}catch(e){console.warn(e);}
   }
-
-  scanner = null;
-  scannerRunning = false;
-  $("startScannerBtn").disabled = false;
-  $("stopScannerBtn").disabled = true;
-  $("scannerPlaceholder").style.display = "block";
+  scanner=null;scannerRunning=false;
+  $("startScannerBtn").disabled=false;$("stopScannerBtn").disabled=true;
+  $("scannerPlaceholder").style.display="block";
 }
-
 function clearEntryForm() {
-  $("entryForm").reset();
-  $("fGate").value = "Gate 1";
-  validatedBooking = null;
-  clearBookingPreview();
-  clearNotice("entryNotice");
-  clearNotice("scanNotice");
-  $("tokenInput").value = "";
+  $("entryForm").reset();$("fGate").value="Gate 1";validatedBooking=null;
+  $("bookingPreview").innerHTML="";clearNotice("entryNotice");clearNotice("scanNotice");
+  $("tokenInput").value="";
 }
-
-$("entryForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  approveGateEntry();
-});
+$("entryForm").addEventListener("submit",e=>{e.preventDefault();approveGateEntry();});
 
 function approveGateEntry() {
-  loadSharedData();
-
-  const token = $("fToken").value.trim();
-  const booking = findBookingByToken(token);
-
-  if (!token || !booking || !validatedBooking ||
-      getToken(validatedBooking).toLowerCase() !== token.toLowerCase()) {
-    setNotice("entryNotice", "Validate a saved booking token before approving gate entry.", "error");
-    return;
+  loadData();
+  const token=$("fToken").value.trim();
+  const booking=findBooking(token);
+  if(!token||!booking||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==token.toLowerCase()) {
+    notice("entryNotice","Validate a saved booking token before approving gate entry.","error");return;
   }
+  if(findCleared(token)){notice("entryNotice","This token is already cleared.","error");return;}
 
-  if (findClearedEntryByToken(token)) {
-    setNotice("entryNotice", "This token has already been cleared. Duplicate gate entry is not allowed.", "error");
-    return;
+  const farmer=$("fFarmer").value.trim(),commodity=$("fCommodity").value.trim();
+  const vehicle=$("fVehicle").value.trim(),tons=num($("fTons").value,0);
+  if(!farmer||!commodity||!vehicle||tons<=0) {
+    notice("entryNotice","Enter a farmer, commodity, vehicle number, and valid positive tonnage.","error");return;
   }
-
-  const farmer = $("fFarmer").value.trim();
-  const commodity = $("fCommodity").value.trim();
-  const vehicle = $("fVehicle").value.trim();
-  const tons = numberValue($("fTons").value, 0);
-
-  if (!farmer || !commodity || !vehicle || tons <= 0) {
-    setNotice("entryNotice", "Enter a farmer, commodity, vehicle number, and valid positive tonnage.", "error");
-    return;
+  const cap=capacityData();
+  if(cap.capacity>0&&tons>cap.capacity-cap.tons+0.0001) {
+    notice("entryNotice","Approval blocked: quantity exceeds remaining capacity of "+Math.max(0,cap.capacity-cap.tons).toFixed(2)+" tons.","error");return;
   }
-
-  // Do not silently approve a quantity that exceeds remaining shared capacity.
-  const capacity = getCapacityData();
-  if (capacity.hasCapacity && capacity.hasClearedTons) {
-    const remaining = capacity.capacity - capacity.clearedTons;
-    if (tons > remaining + 0.0001) {
-      setNotice(
-        "entryNotice",
-        "Approval blocked: " + tons + " tons exceeds the remaining shared capacity of " +
-        Math.max(0, remaining).toFixed(2) + " tons.",
-        "error"
-      );
-      return;
-    }
-  }
-
-  const duplicateVehicle = getClearedEntries().some(entry =>
-    getVehicle(entry).toLowerCase() === vehicle.toLowerCase() &&
-    getVehicle(entry) !== ""
-  );
-
-  if (duplicateVehicle) {
-    const proceed = confirm(
-      "A cleared gate record already uses vehicle " + vehicle +
-      ". Approve another entry for this vehicle?"
-    );
-    if (!proceed) return;
-  }
-
-  const entry = {
-    id: "GATE-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7).toUpperCase(),
-    token: token,
-    farmerName: farmer,
-    phone: $("fPhone").value.trim(),
-    commodity: commodity,
-    vehicleNumber: vehicle,
-    tons: tons,
-    gate: $("fGate").value.trim() || "Gate 1",
-    officer: "Gate Officer",
-    notes: $("fNotes").value.trim(),
-    status: "CLEARED",
-    cleared: true,
-    mandiKey: activeYard,
-    timestamp: new Date().toISOString()
+  const entry={
+    id:"KD-GATE-"+Date.now(),token,farmerName:farmer,phone:$("fPhone").value.trim(),
+    commodity,vehicleNumber:vehicle,tons,gate:$("fGate").value.trim()||"Gate 1",
+    officer:"Gate Officer",notes:$("fNotes").value.trim(),status:"CLEARED",
+    cleared:true,mandiKey:activeYard,timestamp:new Date().toISOString()
   };
 
   try {
-    // Save the gate record and update the same shared capacity counter.
-    // The counter is kept consistent with the admin page's shared key.
-    const latestEntries = readJSON(KEYS.gateEntries, []);
-    const entryList = Array.isArray(latestEntries) ? latestEntries : [];
-    const duplicate = entryList.some(item =>
-      getToken(item).toLowerCase() === token.toLowerCase() && isCleared(item)
-    );
+    const latest=readJSON(KEYS.entries,[]);
+    const list=Array.isArray(latest)?latest:[];
+    if(list.some(e=>tokenOf(e).toLowerCase()===token.toLowerCase()&&isCleared(e))) {
+      notice("entryNotice","This token was cleared in another tab. Refresh and retry.","error");refreshDashboard();return;
+    }
+    list.push(entry);writeJSON(KEYS.entries,list);
 
-    if (duplicate) {
-      setNotice("entryNotice", "This token was just cleared in another tab. Refresh before continuing.", "error");
-      loadSharedData();
-      renderDashboard();
-      return;
+    const current=localStorage.getItem("kd_booked_"+activeYard);
+    if(current!==null) localStorage.setItem("kd_booked_"+activeYard,String(Number((num(current)+tons).toFixed(2))));
+
+    const rawBooking=readJSON(KEYS.booking,null);
+    if(Array.isArray(rawBooking)) {
+      writeJSON(KEYS.booking,rawBooking.map(b=>tokenOf(b).toLowerCase()===token.toLowerCase()?{...b,status:"CLEARED",gateCleared:true,clearedAt:entry.timestamp}:b));
+    } else if(rawBooking&&typeof rawBooking==="object"&&tokenOf(rawBooking).toLowerCase()===token.toLowerCase()) {
+      writeJSON(KEYS.booking,{...rawBooking,status:"CLEARED",gateCleared:true,clearedAt:entry.timestamp});
     }
 
-    entryList.push(entry);
-    writeJSON(KEYS.gateEntries, entryList);
-
-    const capData = getCapacityData();
-    if (capData.hasClearedTons) {
-      localStorage.setItem(
-        "kd_booked_" + activeYard,
-        String(Number((capData.clearedTons + tons).toFixed(2)))
-      );
-    }
-
-    // Update the booking record's status where the saved structure allows it.
-    // Keep the original booking fields and token intact.
-    const latestBookingRaw = readJSON(KEYS.farmerBooking, null);
-    if (Array.isArray(latestBookingRaw)) {
-      const updated = latestBookingRaw.map(item =>
-        getToken(item).toLowerCase() === token.toLowerCase()
-          ? { ...item, status: "CLEARED", gateCleared: true, clearedAt: entry.timestamp }
-          : item
-      );
-      writeJSON(KEYS.farmerBooking, updated);
-    } else if (latestBookingRaw && typeof latestBookingRaw === "object") {
-      if (getToken(latestBookingRaw).toLowerCase() === token.toLowerCase()) {
-        writeJSON(KEYS.farmerBooking, {
-          ...latestBookingRaw,
-          status: "CLEARED",
-          gateCleared: true,
-          clearedAt: entry.timestamp
-        });
-      } else {
-        // A single-booking storage slot cannot retain a full history of farmers.
-        // Keep the existing booking object rather than overwriting it.
-        console.warn("Single-booking storage contains a different token; booking status was not overwritten.");
-      }
-    }
-
-    validatedBooking = null;
-    loadSharedData();
-    renderDashboard();
-    setNotice("entryNotice", "Gate entry cleared successfully. The gate log and shared capacity have been updated.", "success");
-
-    $("tokenInput").value = "";
-    clearBookingPreview();
-    $("fToken").value = "";
-  } catch (error) {
-    console.error(error);
-    setNotice("entryNotice", "Could not save gate entry. Check browser storage permissions and retry.", "error");
+    validatedBooking=null;refreshDashboard();
+    notice("entryNotice","Gate entry approved and saved successfully.","success");
+    $("tokenInput").value="";$("bookingPreview").innerHTML="";$("fToken").value="";
+  } catch(error) {
+    console.error(error);notice("entryNotice","Could not save entry. Check browser storage and retry.","error");
   }
 }
-
 function exportCSV() {
-  const entries = getClearedEntries().slice().sort((a, b) => {
-    const da = getEntryDate(a);
-    const db = getEntryDate(b);
-    return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
-  });
-
-  if (!entries.length) {
-    alert("There are no cleared gate entries to export.");
-    return;
-  }
-
-  const headers = [
-    "Entry ID", "Date & Time", "Yard", "Farmer", "Phone",
-    "Token", "Vehicle", "Commodity", "Tons", "Gate", "Officer", "Status", "Notes"
-  ];
-
-  const rows = entries.map(entry => [
-    firstValue(entry, ["id", "entryId"], ""),
-    formatDateTime(entry),
-    getYardKey(entry) || activeYard,
-    getFarmer(entry),
-    getPhone(entry),
-    getToken(entry),
-    getVehicle(entry),
-    getCommodity(entry),
-    getTons(entry),
-    firstValue(entry, ["gate", "gateNumber"], "Gate 1"),
-    firstValue(entry, ["officer", "officerName", "approvedBy"], "Gate Officer"),
-    getStatus(entry) || "CLEARED",
-    firstValue(entry, ["notes", "remarks"], "")
+  const entries=clearedEntries();
+  if(!entries.length){alert("No cleared entries to export.");return;}
+  const headers=["Entry ID","Date & Time","Yard","Farmer","Phone","Token","Vehicle","Commodity","Tons","Gate","Officer","Status","Notes"];
+  const rows=entries.map(e=>[
+    first(e,["id","entryId"],""),dateText(e),yardOf(e)||activeYard,farmerOf(e),phoneOf(e),
+    tokenOf(e),vehicleOf(e),commodityOf(e),tonsOf(e),first(e,["gate","gateNumber"],"Gate 1"),
+    first(e,["officer","officerName","approvedBy"],"Gate Officer"),statusOf(e)||"cleared",
+    first(e,["notes","remarks"],"")
   ]);
-
-  const csvCell = value => '"' + String(value ?? "").replace(/"/g, '""') + '"';
-  const csv = [headers, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n");
-  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "KrishiDhara_Gate_Entries_" + activeYard + "_" +
-    new Date().toISOString().slice(0, 10) + ".csv";
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+  const cell=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const csv=[headers,...rows].map(r=>r.map(cell).join(",")).join("\r\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="KrishiDhara_Gate_Entries_"+activeYard+".csv";
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
-
-function printReceipt(displayIndex, token) {
-  const entries = window.currentDisplayedEntries || [];
-  const entry = entries[displayIndex] ||
-    getClearedEntries().find(item => getToken(item) === token);
-
-  if (!entry) {
-    alert("Gate entry record not found. Refresh the page and try again.");
-    return;
-  }
-
-  const receiptWindow = window.open("", "_blank", "width=650,height=750");
-  if (!receiptWindow) {
-    alert("Allow pop-ups to print a gate receipt.");
-    return;
-  }
-
-  const receipt = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>KrishiDhara Gate Receipt</title>
-      <style>
-        body{font-family:Arial,sans-serif;padding:28px;color:#182a20}
-        h1{color:#176b3a;margin-bottom:5px}
-        .muted{color:#68746b;font-size:13px}
-        .box{border:1px solid #cbd7cd;border-radius:10px;padding:18px;margin-top:20px}
-        .row{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid #e6ece7}
-        .row:last-child{border-bottom:0}
-        .stamp{color:#176b3a;font-weight:bold;border:2px solid #176b3a;display:inline-block;padding:8px 13px;margin-top:18px}
-        @media print{button{display:none}}
-      </style>
-    </head>
-    <body>
-      <h1>🌾 KrishiDhara 2.0</h1>
-      <div class="muted">Official Gate Clearance Receipt</div>
-      <div class="box">
-        <div class="row"><strong>Receipt ID</strong><span>${escapeHTML(firstValue(entry, ["id", "entryId"], "—"))}</span></div>
-        <div class="row"><strong>Yard</strong><span>${escapeHTML(yardNameFromKey(getYardKey(entry) || activeYard))}</span></div>
-        <div class="row"><strong>Date & Time</strong><span>${escapeHTML(formatDateTime(entry))}</span></div>
-        <div class="row"><strong>Farmer</strong><span>${escapeHTML(getFarmer(entry))}</span></div>
-        <div class="row"><strong>Phone</strong><span>${escapeHTML(getPhone(entry) || "—")}</span></div>
-        <div class="row"><strong>Token</strong><span>${escapeHTML(getToken(entry) || "—")}</span></div>
-        <div class="row"><strong>Vehicle</strong><span>${escapeHTML(getVehicle(entry) || "—")}</span></div>
-        <div class="row"><strong>Commodity</strong><span>${escapeHTML(getCommodity(entry))}</span></div>
-        <div class="row"><strong>Quantity</strong><span>${getTons(entry)} tons</span></div>
-        <div class="row"><strong>Gate</strong><span>${escapeHTML(firstValue(entry, ["gate", "gateNumber"], "Gate 1"))}</span></div>
-        <div class="row"><strong>Officer</strong><span>${escapeHTML(firstValue(entry, ["officer", "officerName", "approvedBy"], "Gate Officer"))}</span></div>
-      </div>
-      <div class="stamp">GATE CLEARED</div>
-      <p class="muted">This receipt reflects a saved gate-entry record.</p>
-      <button onclick="window.print()">Print Receipt</button>
-    </body>
-    </html>`;
-
-  receiptWindow.document.open();
-  receiptWindow.document.write(receipt);
-  receiptWindow.document.close();
+function printReceipt(index) {
+  const e=window.currentDisplayedEntries[index];
+  if(!e){alert("Gate record not found. Refresh and try again.");return;}
+  const w=window.open("","_blank","width=650,height=750");
+  if(!w){alert("Allow pop-ups to print the receipt.");return;}
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gate Receipt</title>
+  <style>body{font-family:Arial;padding:28px;color:#182a20}h1{color:#176b3a}.box{border:1px solid #ccc;border-radius:10px;padding:18px;margin-top:20px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.stamp{color:#176b3a;font-weight:bold;border:2px solid #176b3a;display:inline-block;padding:8px;margin-top:18px}@media print{button{display:none}}</style></head><body>
+  <h1>🌾 KrishiDhara 2.0</h1><p>Official Gate Clearance Receipt</p><div class="box">
+  ${[
+    ["Receipt ID",first(e,["id","entryId"],"—")],["Yard",yardName(yardOf(e)||activeYard)],
+    ["Date & Time",dateText(e)],["Farmer",farmerOf(e)],["Phone",phoneOf(e)||"—"],
+    ["Token",tokenOf(e)||"—"],["Vehicle",vehicleOf(e)||"—"],["Commodity",commodityOf(e)],
+    ["Quantity",tonsOf(e)+" tons"],["Gate",first(e,["gate","gateNumber"],"Gate 1")],
+    ["Officer",first(e,["officer","officerName","approvedBy"],"Gate Officer")]
+  ].map(r=>`<div class="row"><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div>`).join("")}
+  </div><div class="stamp">GATE CLEARED</div><p><button onclick="window.print()">Print Receipt</button></p></body></html>`);
+  w.document.close();
 }
+function refreshDashboard(){loadData();renderDashboard();}
+function switchRole(){window.location.href=localStorage.getItem("kd_admin_portal_url")||"admin.html";}
 
-function switchRole() {
-  // Change this destination to the exact admin role page in your project.
-  const roleURL = localStorage.getItem("kd_admin_portal_url") || "admin.html";
-  window.location.href = roleURL;
-}
-
-function refreshDashboard() {
-  loadSharedData();
-  renderDashboard();
-}
-
-window.addEventListener("storage", function(event) {
-  if (
-    event.key === null ||
-    event.key === KEYS.gateEntries ||
-    event.key === KEYS.farmerBooking ||
-    event.key === KEYS.selectedYard ||
-    event.key === "kd_cap_" + activeYard ||
-    event.key === "kd_booked_" + activeYard ||
-    event.key === "kd_capacity_" + activeYard ||
-    event.key === "kd_cleared_" + activeYard
-  ) {
-    refreshDashboard();
-  }
+window.addEventListener("storage",e=>{
+  if(e.key===null||[KEYS.entries,KEYS.booking,KEYS.yard,"kd_cap_"+activeYard,"kd_booked_"+activeYard].includes(e.key))refreshDashboard();
 });
+window.addEventListener("focus",refreshDashboard);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDashboard();});
 
-window.addEventListener("focus", refreshDashboard);
-document.addEventListener("visibilitychange", function() {
-  if (!document.hidden) refreshDashboard();
-});
-
-/* Google Translate supports translation beyond the built-in language labels. */
 function googleTranslateElementInit() {
-  if (window.google && google.translate) {
+  if(window.google&&google.translate) {
     new google.translate.TranslateElement({
-      pageLanguage: "en",
-      includedLanguages: "en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
-      autoDisplay: false
-    }, "google_translate_element");
+      pageLanguage:"en",
+      includedLanguages:"en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
+      autoDisplay:false
+    },"google_translate_element");
   }
 }
-
-(function loadGoogleTranslate() {
-  const script = document.createElement("script");
-  script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  script.async = true;
-  document.head.appendChild(script);
+(function(){
+  const s=document.createElement("script");
+  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+  s.async=true;document.head.appendChild(s);
 })();
-
-const languageNames = {
-  en: "en", hi: "hi", mr: "mr", pa: "pa", gu: "gu", bn: "bn",
-  te: "te", ta: "ta", kn: "kn", ml: "ml", or: "or", as: "as",
-  ur: "ur", sa: "sa", ne: "ne", sd: "sd", ks: "ks", doi: "doi",
-  mni: "mni", sat: "sat", bho: "bho", raj: "raj"
-};
-
-$("languageSelect").addEventListener("change", function() {
-  const lang = this.value;
-  localStorage.setItem(KEYS.selectedLang, lang);
-
-  // Set the Google Translate language cookie when available.
-  const value = "/en/" + lang;
-  document.cookie = "googtrans=" + value + ";path=/";
-  document.cookie = "googtrans=" + value + ";path=/;SameSite=Lax";
-
-  const combo = document.querySelector(".goog-te-combo");
-  if (combo) {
-    combo.value = lang;
-    combo.dispatchEvent(new Event("change"));
-  } else if (lang !== "en") {
-    // Google Translate may still be loading. The selector selection is saved.
-    setNotice("scanNotice", "Language preference saved. If the page did not translate, use the Google Translate menu after it loads.", "info");
-  } else {
-    location.reload();
-  }
+$("languageSelect").addEventListener("change",function(){
+  const lang=this.value;localStorage.setItem(KEYS.language,lang);
+  document.cookie="googtrans=/en/"+lang+";path=/";
+  const combo=document.querySelector(".goog-te-combo");
+  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
+  else if(lang==="en")location.reload();
 });
+const savedLang=localStorage.getItem(KEYS.language)||"en";
+if([...$("languageSelect").options].some(o=>o.value===savedLang))$("languageSelect").value=savedLang;
 
-function restoreLanguage() {
-  const lang = localStorage.getItem(KEYS.selectedLang) || "en";
-  const select = $("languageSelect");
-  if ([...select.options].some(option => option.value === lang)) {
-    select.value = lang;
-  }
-}
-
-loadSharedData();
-restoreLanguage();
+/* Seed the requested demo figures, then load and render the portal. */
+seedDemoDataIfEmpty();
+loadData();
 renderDashboard();
 </script>
 </body>
