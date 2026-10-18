@@ -2,26 +2,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiDhara 2.0 - Yard Officer Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiDhara 2.0 - Yard Officer Portal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
+<body class="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 min-h-screen font-sans p-4 md:p-8">
 
-<header class="bg-emerald-800 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
-    <div class="flex items-center space-x-3">
+<header class="bg-emerald-800 text-white p-5 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-7xl mx-auto gap-4">
+    <div class="flex items-center gap-3">
         <span class="text-4xl">🛡️</span>
         <div>
-            <h1 class="text-lg md:text-xl font-black tracking-wide" data-translate="officer_header">KrishiDhara 2.0 • Yard Officer Portal</h1>
-            <p class="text-xs md:text-sm text-emerald-200 font-medium" data-translate="officer_subtitle">Gate Scanner & Live Procurement Queue Logging</p>
+            <h1 class="text-xl font-black" data-translate="header">KrishiDhara 2.0 • Yard Officer Portal</h1>
+            <p class="text-sm text-emerald-200" data-translate="subtitle">Gate Scanner & Procurement Summary</p>
         </div>
     </div>
-
-    <div class="flex items-center space-x-3">
-        <select id="langSelect" onchange="changeLanguage()" class="bg-emerald-900 text-white text-sm px-4 py-2.5 rounded-2xl border border-emerald-600 font-bold focus:outline-none cursor-pointer">
+    <div class="flex items-center gap-3">
+        <select id="langSelect" onchange="changeLanguage()" class="bg-emerald-900 text-white text-sm px-3 py-2 rounded-xl border border-emerald-600">
             <option value="en">English</option>
             <option value="hi">हिन्दी</option>
             <option value="mr">मराठी</option>
@@ -45,403 +44,237 @@
             <option value="bho">भोजपुरी</option>
             <option value="raj">राजस्थानी</option>
         </select>
-        <button type="button" onclick="switchRole()" class="bg-emerald-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-emerald-950 border border-emerald-600 transition shadow cursor-pointer font-bold" data-translate="switch_role">Switch Role</button>
+        <button onclick="switchRole()" class="bg-emerald-900 px-4 py-2 rounded-xl border border-emerald-600 font-bold" data-translate="switch">Switch Role</button>
     </div>
 </header>
 
-<main class="w-full max-w-6xl mx-auto my-8 space-y-8">
+<main class="max-w-7xl mx-auto my-6 space-y-6">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-emerald-200 flex items-center space-x-4">
-            <div class="w-14 h-14 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center text-3xl font-bold">🚪</div>
+    <!-- YARD CAPACITY AND LIVE SUMMARY -->
+    <section>
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
             <div>
-                <div class="text-xs text-gray-500 font-bold uppercase" data-translate="gate_status_lbl">Active Mandi Gate</div>
-                <div class="text-lg md:text-xl font-black text-emerald-950" data-translate="gate_name">Pune Main Gate 01</div>
-                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full inline-block mt-1" data-translate="gate_open_badge">Gate Open • Normal Flow</span>
+                <h2 class="text-xl font-black text-emerald-950">Yard Operations Summary</h2>
+                <p class="text-sm text-gray-600">Shared booking capacity and recorded gate activity</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="officerYardSelect" class="text-sm font-bold text-gray-700">Select yard:</label>
+                <select id="officerYardSelect" onchange="changeOfficerYard()" class="bg-white border border-emerald-300 rounded-xl p-2 text-sm font-bold">
+                    <option value="pune_main">Pune Main Yard</option>
+                    <option value="nashik_grain">Nashik Grain Yard</option>
+                    <option value="nagpur_cotton">Nagpur Cotton Yard</option>
+                    <option value="amravati_grain">Amravati Grain Yard</option>
+                </select>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-emerald-200 flex items-center space-x-4">
-            <div class="w-14 h-14 bg-teal-100 text-teal-800 rounded-2xl flex items-center justify-center text-3xl font-bold">🚚</div>
-            <div>
-                <div class="text-xs text-gray-500 font-bold uppercase" data-translate="vehicles_scanned_lbl">Vehicles Processed Today</div>
-                <div class="text-2xl md:text-3xl font-black text-teal-950" id="totalScannedCount">0 <span data-translate="vehicles_unit">Vehicles</span></div>
-                <span class="text-xs text-gray-600 font-medium">
-                    <span data-translate="verified_lbl">Total Verified:</span>
-                    <span id="tonsVal">0.0</span>
-                    <span data-translate="tons_unit">Tons</span>
-                </span>
-            </div>
-        </div>
-
-        <div class="bg-amber-50 border-2 border-amber-400 p-6 rounded-3xl shadow-md flex items-center space-x-4">
-            <div class="text-3xl">⚠️</div>
-            <div>
-                <div class="text-xs text-amber-900 font-bold uppercase" data-translate="admin_notice_title">APMC Admin Notice</div>
-                <p class="text-xs md:text-sm text-amber-900 font-medium leading-tight mt-1" data-translate="admin_notice_msg">Peak hours expected between 11:30 AM - 02:00 PM. Verify moisture content before weight scale entry.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 space-y-6 flex flex-col justify-between">
-            <div>
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-extrabold text-emerald-950 flex items-center space-x-2">
-                        <span>📷</span>
-                        <span data-translate="scan_pass_title">Scan Entry QR Pass</span>
-                    </h2>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full" data-translate="scanner_active">Camera Ready</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl shadow border-2 border-blue-200">
+                <p class="text-xs uppercase font-bold text-gray-500">Booked / Total Capacity</p>
+                <p id="capacityValue" class="text-3xl font-black text-blue-900 mt-2">0 / 50 Tons</p>
+                <p id="remainingValue" class="text-sm text-gray-600 mt-1">50 tons remaining</p>
+                <div class="h-3 bg-gray-100 rounded-full mt-4 overflow-hidden">
+                    <div id="capacityBar" class="h-full bg-blue-600 rounded-full" style="width:0%"></div>
                 </div>
-
-                <p class="text-sm text-gray-600 mb-6" data-translate="scan_instruction">Point the gate scanner camera at the farmer's QR token code or upload pass screenshot.</p>
-
-                <div id="reader" class="w-full bg-emerald-50 rounded-2xl border-2 border-dashed border-emerald-400 overflow-hidden min-h-[260px] flex items-center justify-center"></div>
-                <p id="scannerMessage" class="text-sm text-gray-600 mt-3" role="status" aria-live="polite"></p>
             </div>
 
-            <div class="space-y-3 pt-4 border-t border-gray-200">
-                <button type="button" onclick="startCameraScanner()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl transition shadow flex items-center justify-center space-x-2 cursor-pointer">
-                    <span>📹</span>
-                    <span data-translate="start_cam_btn">Start Live Gate Camera</span>
-                </button>
+            <div class="bg-white p-5 rounded-2xl shadow border-2 border-emerald-200">
+                <p class="text-xs uppercase font-bold text-gray-500">Vehicles Cleared</p>
+                <p id="clearedVehicles" class="text-3xl font-black text-emerald-900 mt-2">0</p>
+                <p class="text-sm text-gray-600 mt-1">Recorded approved gate entries</p>
+            </div>
 
-                <button type="button" onclick="loadDemoPass()" class="w-full bg-teal-100 hover:bg-teal-200 text-teal-900 font-bold py-3 rounded-2xl transition border border-teal-300 text-sm cursor-pointer flex items-center justify-center space-x-2">
-                    <span>⚡</span>
-                    <span data-translate="simulate_scan_btn">Simulate Demo Pass Scan</span>
-                </button>
-                <p class="text-xs text-gray-500">Demo scan uses the saved booking, if one exists. It does not authenticate a real farmer.</p>
+            <div class="bg-white p-5 rounded-2xl shadow border-2 border-teal-200">
+                <p class="text-xs uppercase font-bold text-gray-500">Verified Tonnage</p>
+                <p id="verifiedTonnage" class="text-3xl font-black text-teal-900 mt-2">0.0 Tons</p>
+                <p class="text-sm text-gray-600 mt-1">Actual recorded weighbridge weights</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow border-2 border-amber-200">
+                <p class="text-xs uppercase font-bold text-gray-500">Farmer Bookings</p>
+                <p id="farmerBookingCount" class="text-3xl font-black text-amber-900 mt-2">0</p>
+                <p class="text-sm text-gray-600 mt-1">Saved booking records for this yard</p>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
-                <h2 class="text-xl font-extrabold text-emerald-950 flex items-center space-x-2">
-                    <span>📋</span>
-                    <span data-translate="verification_title">Pass Verification Details</span>
-                </h2>
-                <span id="passStatusBadge" class="text-xs bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full uppercase" data-translate="waiting_scan">Awaiting Scan</span>
-            </div>
+        <p id="syncMessage" role="status" class="text-sm text-gray-600 mt-3"></p>
+    </section>
 
-            <div id="emptyScanState" class="text-center py-12 space-y-3">
-                <span class="text-5xl opacity-40">🔍</span>
-                <p class="text-sm text-gray-500 font-medium" data-translate="no_scan_yet">Scan a QR code to view farmer identity, token ID, commodity, and entry slot.</p>
-            </div>
-
-            <form id="verifiedPassForm" class="hidden space-y-4" onsubmit="processGateEntry(event)">
-                <div class="grid grid-cols-2 gap-4 text-xs md:text-sm bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200">
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="token_lbl">Token ID:</span>
-                        <span id="scannedToken" class="font-mono font-black text-emerald-900 text-base"></span>
-                    </div>
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="farmer_lbl">Farmer Name:</span>
-                        <span id="scannedFarmer" class="font-bold text-gray-900 text-base"></span>
-                    </div>
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="mandi_lbl">Destination Yard:</span>
-                        <span id="scannedMandi" class="font-bold text-gray-900"></span>
-                    </div>
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="commodity_lbl">Commodity:</span>
-                        <span id="scannedCommodity" class="font-bold text-gray-900"></span>
-                    </div>
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="vehicle_lbl">Vehicle:</span>
-                        <span id="scannedVehicle" class="font-bold text-gray-900"></span>
-                    </div>
-                    <div>
-                        <span class="block text-gray-500 font-bold" data-translate="slot_lbl">Arrival Slot:</span>
-                        <span id="scannedSlot" class="font-bold text-emerald-800"></span>
-                    </div>
-                </div>
-
-                <div class="space-y-4 pt-2">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="actualWeightInput" class="block text-xs font-bold text-gray-700 mb-1" data-translate="weight_scale_lbl">⚖️ Weighbridge Net Weight (Tons)</label>
-                            <input type="number" step="0.1" min="0.1" id="actualWeightInput" required placeholder="5.0" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 font-bold">
-                        </div>
-                        <div>
-                            <label for="vehicleNumberInput" class="block text-xs font-bold text-gray-700 mb-1" data-translate="vehicle_no_lbl">🚛 Vehicle Registration No.</label>
-                            <input type="text" id="vehicleNumberInput" required maxlength="20" placeholder="MH-12-AB-1234" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 font-bold uppercase">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="qualityGradeSelect" class="block text-xs font-bold text-gray-700 mb-1" data-translate="quality_grade_lbl">🌾 Quality Inspection / Moisture Grade</label>
-                        <select id="qualityGradeSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 font-medium cursor-pointer">
-                            <option value="Grade A" data-translate="grade_a">Grade A (Premium Fair Average Quality - FAQ)</option>
-                            <option value="Grade B" data-translate="grade_b">Grade B (Standard Market Quality)</option>
-                            <option value="Grade C" data-translate="grade_c">Grade C (Slight Moisture / Needs Processing)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-2xl transition shadow cursor-pointer text-base" data-translate="approve_entry_btn">
-                    Approve Gate Entry & Print Receipt ✅
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
+    <!-- FARMER SUMMARY -->
+    <section class="bg-white p-6 rounded-3xl shadow-xl border border-emerald-200">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
             <div>
-                <h2 class="text-xl font-extrabold text-emerald-950 flex items-center space-x-2">
-                    <span>📊</span>
-                    <span data-translate="live_log_title">Live Mandi Gate Entry Log</span>
-                </h2>
-                <p class="text-xs text-gray-500 font-medium" data-translate="live_log_desc">Real-time record of all validated vehicles entering through Gate 01.</p>
+                <h2 class="text-xl font-black text-emerald-950">Farmer & Vehicle Summary</h2>
+                <p class="text-sm text-gray-600">Booking details and gate clearance status</p>
             </div>
-
-            <button type="button" onclick="exportLogCSV()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs transition border border-emerald-300 cursor-pointer" data-translate="export_log">Export Log CSV 📥</button>
+            <button onclick="refreshAll()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-4 py-2 rounded-xl text-sm font-bold border border-emerald-300">Refresh Summary ↻</button>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs md:text-sm">
+            <table class="w-full text-sm text-left">
                 <thead>
-                    <tr class="bg-emerald-50 text-emerald-950 font-black border-b border-emerald-200">
-                        <th class="p-3.5 rounded-l-xl" data-translate="tbl_time">Time</th>
-                        <th class="p-3.5" data-translate="tbl_token">Token ID</th>
-                        <th class="p-3.5" data-translate="tbl_farmer">Farmer Name</th>
-                        <th class="p-3.5" data-translate="tbl_commodity">Commodity</th>
-                        <th class="p-3.5" data-translate="tbl_vehicle">Vehicle No.</th>
-                        <th class="p-3.5" data-translate="tbl_weight">Weight (Tons)</th>
-                        <th class="p-3.5" data-translate="tbl_grade">Quality Grade</th>
-                        <th class="p-3.5 rounded-r-xl" data-translate="tbl_status">Gate Status</th>
+                    <tr class="bg-emerald-50 text-emerald-950 border-b border-emerald-200">
+                        <th class="p-3">Farmer</th>
+                        <th class="p-3">Token ID</th>
+                        <th class="p-3">Commodity</th>
+                        <th class="p-3">Vehicle</th>
+                        <th class="p-3">Booked Tons</th>
+                        <th class="p-3">Arrival Slot</th>
+                        <th class="p-3">Gate Status</th>
                     </tr>
                 </thead>
-                <tbody id="entryLogTableBody" class="divide-y divide-gray-100 font-medium">
-                    <tr id="emptyLogRow">
-                        <td colspan="8" class="p-8 text-center text-gray-500">No gate entries recorded yet.</td>
-                    </tr>
+                <tbody id="farmerSummaryBody">
+                    <tr><td colspan="7" class="p-6 text-center text-gray-500">No saved farmer bookings found for this yard.</td></tr>
                 </tbody>
             </table>
         </div>
-    </div>
+        <p class="text-xs text-gray-500 mt-3">A booking is not counted as a cleared vehicle unless its token appears in the gate-entry log.</p>
+    </section>
+
+    <!-- SCANNER AND VERIFICATION -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-3xl shadow-xl border border-emerald-200 space-y-4">
+            <h2 class="text-xl font-black text-emerald-950">📷 Scan Entry QR Pass</h2>
+            <p class="text-sm text-gray-600">Scan a farmer's booking QR. The token must match a saved booking in this browser.</p>
+            <div id="reader" class="w-full bg-emerald-50 rounded-2xl border-2 border-dashed border-emerald-400 overflow-hidden min-h-64 flex items-center justify-center"></div>
+            <p id="scannerMessage" class="text-sm text-gray-600" role="status" aria-live="polite"></p>
+
+            <button onclick="startCameraScanner()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl">📹 Start Live Gate Camera</button>
+            <button onclick="loadDemoPass()" class="w-full bg-teal-100 hover:bg-teal-200 text-teal-900 font-bold py-3 rounded-xl border border-teal-300">⚡ Load Saved Booking Demo</button>
+            <p class="text-xs text-gray-500">Demo mode loads saved booking details without scanning a physical QR. It is not real identity authentication.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-xl border border-emerald-200">
+            <div class="flex justify-between items-center gap-2 border-b pb-4 mb-4">
+                <h2 class="text-xl font-black text-emerald-950">📋 Pass Verification</h2>
+                <span id="passStatusBadge" class="text-xs bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full">Awaiting Scan</span>
+            </div>
+
+            <div id="emptyScanState" class="text-center py-10">
+                <span class="text-5xl opacity-40">🔍</span>
+                <p class="text-sm text-gray-500 mt-3">Scan a booking QR to display farmer details.</p>
+            </div>
+
+            <form id="verifiedPassForm" class="hidden space-y-4" onsubmit="processGateEntry(event)">
+                <div class="grid grid-cols-2 gap-4 bg-emerald-50 p-4 rounded-xl text-sm">
+                    <div><p class="text-gray-500">Token ID</p><p id="scannedToken" class="font-black break-all"></p></div>
+                    <div><p class="text-gray-500">Farmer</p><p id="scannedFarmer" class="font-bold"></p></div>
+                    <div><p class="text-gray-500">Destination Yard</p><p id="scannedMandi" class="font-bold"></p></div>
+                    <div><p class="text-gray-500">Commodity</p><p id="scannedCommodity" class="font-bold"></p></div>
+                    <div><p class="text-gray-500">Vehicle Type</p><p id="scannedVehicle" class="font-bold"></p></div>
+                    <div><p class="text-gray-500">Arrival Slot</p><p id="scannedSlot" class="font-bold"></p></div>
+                </div>
+
+                <div>
+                    <label for="actualWeightInput" class="block text-sm font-bold mb-1">Weighbridge Net Weight (Tons)</label>
+                    <input type="number" step="0.1" min="0.1" id="actualWeightInput" required placeholder="5.0" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label for="vehicleNumberInput" class="block text-sm font-bold mb-1">Vehicle Registration Number</label>
+                    <input type="text" id="vehicleNumberInput" required maxlength="20" placeholder="MH-12-AB-1234" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 uppercase">
+                </div>
+                <div>
+                    <label for="qualityGradeSelect" class="block text-sm font-bold mb-1">Quality / Moisture Grade</label>
+                    <select id="qualityGradeSelect" required class="w-full border-2 border-gray-300 rounded-xl px-4 py-3">
+                        <option value="Grade A">Grade A — Premium FAQ</option>
+                        <option value="Grade B">Grade B — Standard Quality</option>
+                        <option value="Grade C">Grade C — Needs Processing</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-xl">Approve Gate Entry & Print Receipt ✅</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- CLEARED GATE LOG -->
+    <section class="bg-white p-6 rounded-3xl shadow-xl border border-emerald-200">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b pb-4 mb-4">
+            <div>
+                <h2 class="text-xl font-black text-emerald-950">📊 Cleared Gate Entry Log</h2>
+                <p class="text-sm text-gray-600">Vehicles recorded as approved by the officer</p>
+            </div>
+            <button onclick="exportLogCSV()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold px-4 py-2 rounded-xl border border-emerald-300">Export CSV 📥</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead>
+                    <tr class="bg-emerald-50 text-emerald-950 border-b border-emerald-200">
+                        <th class="p-3">Date / Time</th>
+                        <th class="p-3">Token</th>
+                        <th class="p-3">Farmer</th>
+                        <th class="p-3">Commodity</th>
+                        <th class="p-3">Vehicle No.</th>
+                        <th class="p-3">Weight</th>
+                        <th class="p-3">Grade</th>
+                        <th class="p-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="entryLogTableBody">
+                    <tr><td colspan="8" class="p-6 text-center text-gray-500">No gate entries recorded yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </main>
 
-<footer class="text-center py-4 text-xs md:text-sm text-gray-600 border-t bg-white/60 rounded-2xl max-w-6xl w-full mx-auto font-medium" data-translate="footer_text">
+<footer class="text-center py-4 text-sm text-gray-600 bg-white/60 rounded-2xl max-w-7xl mx-auto">
     KrishiDhara 2.0 • Gate Officer Verification Portal
 </footer>
 
 <script>
 'use strict';
 
-const STORAGE_KEY = 'kd_selected_lang';
-const GATE_ENTRIES_KEY = 'kd_gate_entries';
-const FARMER_BOOKING_KEY = 'kd_farmer_booking';
+const LANG_KEY = 'kd_selected_lang';
+const GATE_KEY = 'kd_gate_entries';
+const BOOKING_KEY = 'kd_farmer_booking';
+const DEFAULT_CAPACITY = 50;
+const DEFAULT_BOOKED = 0;
 
-const nativeDigitMaps = {
-    en: ['0','1','2','3','4','5','6','7','8','9'],
-    hi: ['०','१','२','३','४','५','६','७','८','९'],
-    mr: ['०','१','२','३','४','५','६','७','८','९'],
-    sa: ['०','१','२','३','४','५','६','७','८','९'],
-    ne: ['०','१','२','३','४','५','६','७','८','९'],
-    doi: ['०','१','२','३','४','५','६','७','८','९'],
-    bho: ['०','१','२','३','४','५','६','७','८','९'],
-    raj: ['०','१','२','३','४','५','६','७','८','९'],
-    bn: ['০','১','২','৩','৪','৫','৬','৭','৮','৯'],
-    as: ['০','১','২','৩','৪','৫','৬','৭','৮','৯'],
-    pa: ['੦','੧','੨','੩','੪','੫','੬','੭','੮','੯'],
-    gu: ['૦','૧','૨','૩','૪','૫','૬','૭','૮','૯'],
-    te: ['౦','౧','౨','౩','౪','౫','౬','౭','౮','౯'],
-    ta: ['௦','௧','௨','௩','௪','௫','௬','௭','௮','௯'],
-    kn: ['೦','೧','೨','೩','೪','೫','೬','೭','೮','೯'],
-    ml: ['൦','൧','൨','൩','൪','൫','൬','൭','൮','൯'],
-    or: ['୦','୧','୨','୩','୪','୫','୬','୭','୮','୯'],
-    ur: ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
-    sd: ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
-    ks: ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
-    mni: ['০','১','২','৩','৪','৫','৬','৭','৮','৯'],
-    sat: ['᱐','᱑','᱒','᱓','᱔','᱕','᱖','᱗','᱘','᱙']
+const YARDS = {
+    pune_main: { name: 'Pune Main Yard', capacityKey: 'kd_cap_pune_main', bookedKey: 'kd_booked_pune_main' },
+    nashik_grain: { name: 'Nashik Grain Yard', capacityKey: 'kd_cap_nashik_grain', bookedKey: 'kd_booked_nashik_grain' },
+    nagpur_cotton: { name: 'Nagpur Cotton Yard', capacityKey: 'kd_cap_nagpur_cotton', bookedKey: 'kd_booked_nagpur_cotton' },
+    amravati_grain: { name: 'Amravati Grain Yard', capacityKey: 'kd_cap_amravati_grain', bookedKey: 'kd_booked_amravati_grain' }
 };
 
-function localizeNumber(num, lang) {
-    const map = nativeDigitMaps[lang] || nativeDigitMaps.en;
-    return String(num).replace(/\d/g, digit => map[Number(digit)]);
-}
-
-let html5QrCodeScanner = null;
-let currentScannedData = null;
+let currentYardKey = 'pune_main';
 let gateEntries = [];
+let farmerBookings = [];
+let currentScannedData = null;
+let scanner = null;
 
 const translations = {
     en: {
-        officer_header:"KrishiDhara 2.0 • Yard Officer Portal",
-        officer_subtitle:"Gate Scanner & Live Procurement Queue Logging",
-        switch_role:"Switch Role",
-        gate_status_lbl:"Active Mandi Gate",
-        gate_name:"Pune Main Gate 01",
-        gate_open_badge:"Gate Open • Normal Flow",
-        vehicles_scanned_lbl:"Vehicles Processed Today",
-        vehicles_unit:"Vehicles",
-        verified_lbl:"Total Verified:",
-        tons_unit:"Tons",
-        admin_notice_title:"APMC Admin Notice",
-        admin_notice_msg:"Peak hours expected between 11:30 AM - 02:00 PM. Verify moisture content before weight scale entry.",
-        scan_pass_title:"Scan Entry QR Pass",
-        scanner_active:"Camera Ready",
-        scan_instruction:"Point the gate scanner camera at the farmer's QR token code or upload pass screenshot.",
-        start_cam_btn:"Start Live Gate Camera",
-        simulate_scan_btn:"Simulate Demo Pass Scan",
-        verification_title:"Pass Verification Details",
-        waiting_scan:"Awaiting Scan",
-        verified_badge:"VERIFIED PASS ✅",
-        no_scan_yet:"Scan a QR code to view farmer identity, token ID, commodity, and entry slot.",
-        token_lbl:"Token ID:",
-        farmer_lbl:"Farmer Name:",
-        mandi_lbl:"Destination Yard:",
-        commodity_lbl:"Commodity:",
-        vehicle_lbl:"Vehicle:",
-        slot_lbl:"Arrival Slot:",
-        weight_scale_lbl:"⚖️ Weighbridge Net Weight (Tons)",
-        vehicle_no_lbl:"🚛 Vehicle Registration No.",
-        quality_grade_lbl:"🌾 Quality Inspection / Moisture Grade",
-        grade_a:"Grade A (Premium Fair Average Quality - FAQ)",
-        grade_b:"Grade B (Standard Market Quality)",
-        grade_c:"Grade C (Slight Moisture / Needs Processing)",
-        approve_entry_btn:"Approve Gate Entry & Print Receipt ✅",
-        live_log_title:"Live Mandi Gate Entry Log",
-        live_log_desc:"Real-time record of all validated vehicles entering through Gate 01.",
-        export_log:"Export Log CSV 📥",
-        tbl_time:"Time",
-        tbl_token:"Token ID",
-        tbl_farmer:"Farmer Name",
-        tbl_commodity:"Commodity",
-        tbl_vehicle:"Vehicle No.",
-        tbl_weight:"Weight (Tons)",
-        tbl_grade:"Quality Grade",
-        tbl_status:"Gate Status",
-        crop_wheat:"Wheat",
-        grade_a_badge:"Grade A",
-        status_cleared:"ENTRY CLEARED",
-        footer_text:"KrishiDhara 2.0 • Gate Officer Verification Portal"
+        header: 'KrishiDhara 2.0 • Yard Officer Portal',
+        subtitle: 'Gate Scanner & Procurement Summary',
+        switch: 'Switch Role',
+        vehicles: 'Vehicles',
+        tons: 'Tons',
+        waiting: 'Awaiting Scan',
+        verified: 'VERIFIED PASS',
+        cleared: 'ENTRY CLEARED'
     },
     hi: {
-        officer_header:"कृषिधारा 2.0 • यार्ड ऑफिसर पोर्टल",
-        officer_subtitle:"गेट स्कैनर और लाइव प्रोक्योरमेंट कतार लॉगिंग",
-        switch_role:"भूमिका बदलें",
-        gate_status_lbl:"सक्रिय मंडी गेट",
-        gate_name:"पुणे मुख्य गेट 01",
-        gate_open_badge:"गेट खुला है",
-        vehicles_scanned_lbl:"आज संसाधित वाहन",
-        vehicles_unit:"वाहन",
-        verified_lbl:"कुल सत्यापित:",
-        tons_unit:"टन",
-        admin_notice_title:"एपीएमसी एडमिन सूचना",
-        admin_notice_msg:"सुबह 11:30 से दोपहर 02:00 बजे के बीच भीड़ की संभावना।",
-        scan_pass_title:"प्रवेश क्यूआर पास स्कैन करें",
-        scanner_active:"कैमरा तैयार है",
-        start_cam_btn:"लाइव गेट कैमरा शुरू करें",
-        simulate_scan_btn:"डेमो पास स्कैन सिमुलेट करें",
-        verification_title:"पास सत्यापन विवरण",
-        waiting_scan:"स्कैन की प्रतीक्षा है",
-        verified_badge:"सत्यापित पास ✅",
-        no_scan_yet:"विवरण देखने के लिए क्यूआर कोड स्कैन करें।",
-        token_lbl:"टोकन आईडी:",
-        farmer_lbl:"किसान का नाम:",
-        mandi_lbl:"गंतव्य यार्ड:",
-        commodity_lbl:"फसल:",
-        vehicle_lbl:"वाहन:",
-        slot_lbl:"आगमन स्लॉट:",
-        weight_scale_lbl:"⚖️ शुद्ध वजन (टन में)",
-        vehicle_no_lbl:"🚛 वाहन पंजीकरण संख्या",
-        quality_grade_lbl:"🌾 गुणवत्ता निरीक्षण",
-        grade_a:"ग्रेड ए",
-        grade_b:"ग्रेड बी",
-        grade_c:"ग्रेड सी",
-        approve_entry_btn:"गेट प्रवेश स्वीकृत करें ✅",
-        live_log_title:"लाइव मंडी गेट प्रवेश लॉग",
-        live_log_desc:"गेट 01 के सत्यापित वाहनों का रिकॉर्ड।",
-        export_log:"लॉग सीएसवी निर्यात करें 📥",
-        tbl_time:"समय",
-        tbl_token:"टोकन आईडी",
-        tbl_farmer:"किसान",
-        tbl_commodity:"फसल",
-        tbl_vehicle:"वाहन संख्या",
-        tbl_weight:"वजन (टन)",
-        tbl_grade:"ग्रेड",
-        tbl_status:"स्थिति",
-        crop_wheat:"गेहूँ",
-        grade_a_badge:"ग्रेड ए",
-        status_cleared:"प्रवेश स्वीकृत",
-        footer_text:"कृषिधारा 2.0"
+        header: 'कृषिधारा 2.0 • यार्ड ऑफिसर पोर्टल',
+        subtitle: 'गेट स्कैनर और खरीद सारांश',
+        switch: 'भूमिका बदलें',
+        vehicles: 'वाहन',
+        tons: 'टन',
+        waiting: 'स्कैन की प्रतीक्षा',
+        verified: 'सत्यापित पास',
+        cleared: 'प्रवेश स्वीकृत'
     },
     mr: {
-        officer_header:"कृषिधारा २.० • यार्ड ऑफिसर पोर्टल",
-        officer_subtitle:"गेट स्कॅनर आणि थेट रांग नोंदणी प्रणाली",
-        switch_role:"भूमिका बदला",
-        gate_status_lbl:"सक्रिय मंडी गेट",
-        gate_name:"पुणे मुख्य गेट ०१",
-        gate_open_badge:"गेट उघडे आहे",
-        vehicles_scanned_lbl:"आज नोंदवलेली वाहने",
-        vehicles_unit:"वाहने",
-        verified_lbl:"एकूण पडताळणी:",
-        tons_unit:"टन",
-        admin_notice_title:"एपीएमसी ॲडमिन सूचना",
-        admin_notice_msg:"सकाळी ११:३० ते दुपारी ०२:०० दरम्यान जास्त गर्दीची शक्यता.",
-        scan_pass_title:"प्रवेश QR पास स्कॅन करा",
-        scanner_active:"कॅमेरा तयार आहे",
-        start_cam_btn:"थेट गेट कॅमेरा सुरू करा",
-        simulate_scan_btn:"डेमो पास स्कॅन करा",
-        verification_title:"पास पडताळणी तपशील",
-        waiting_scan:"स्कॅनची वाट पाहत आहे",
-        verified_badge:"पडताळणी झालेला पास ✅",
-        no_scan_yet:"तपशील पाहण्यासाठी QR कोड स्कॅन करा.",
-        token_lbl:"टोकन आयडी:",
-        farmer_lbl:"शेतकऱ्याचे नाव:",
-        mandi_lbl:"मार्केट यार्ड:",
-        commodity_lbl:"शेतीमाल:",
-        vehicle_lbl:"वाहन:",
-        slot_lbl:"वेळ स्लॉट:",
-        weight_scale_lbl:"⚖️ शुद्ध वजन (टनामध्ये)",
-        vehicle_no_lbl:"🚛 वाहन नोंदणी क्रमांक",
-        quality_grade_lbl:"🌾 गुणवत्ता तपासणी",
-        grade_a:"ग्रेड ए",
-        grade_b:"ग्रेड बी",
-        grade_c:"ग्रेड सी",
-        approve_entry_btn:"गेट प्रवेश मंजूर करा ✅",
-        live_log_title:"थेट मंडी गेट प्रवेश नोंद वही",
-        live_log_desc:"गेट ०१ मधून प्रवेश करणाऱ्या वाहनांची थेट नोंद.",
-        export_log:"लॉग CSV डाउनलोड करा 📥",
-        tbl_time:"वेळ",
-        tbl_token:"टोकन आयडी",
-        tbl_farmer:"शेतकरी",
-        tbl_commodity:"शेतीमाल",
-        tbl_vehicle:"वाहन क्र.",
-        tbl_weight:"वजन (टन)",
-        tbl_grade:"प्रत",
-        tbl_status:"स्थिती",
-        crop_wheat:"गहू",
-        grade_a_badge:"ग्रेड ए",
-        status_cleared:"प्रवेश मंजूर",
-        footer_text:"कृषिधारा २.०"
+        header: 'कृषिधारा 2.0 • यार्ड ऑफिसर पोर्टल',
+        subtitle: 'गेट स्कॅनर आणि खरेदी सारांश',
+        switch: 'भूमिका बदला',
+        vehicles: 'वाहने',
+        tons: 'टन',
+        waiting: 'स्कॅनची प्रतीक्षा',
+        verified: 'पडताळलेला पास',
+        cleared: 'प्रवेश मंजूर'
     }
 };
-
-function getTranslation(lang, key) {
-    return translations[lang]?.[key] || translations.en[key] || key;
-}
-
-function applyLanguage(lang) {
-    document.querySelectorAll('[data-translate]').forEach(el => {
-        const key = el.getAttribute('data-translate');
-        el.textContent = getTranslation(lang, key);
-    });
-    updateSummary(lang);
-    renderGateLog(lang);
-}
-
-function updateSummary(lang = document.getElementById('langSelect').value || 'en') {
-    const vehicleCount = gateEntries.length;
-    const totalTons = gateEntries.reduce((sum, entry) => sum + (Number(entry.weight) || 0), 0);
-
-    document.getElementById('tonsVal').textContent = localizeNumber(totalTons.toFixed(1), lang);
-    document.getElementById('totalScannedCount').innerHTML =
-        `${localizeNumber(vehicleCount, lang)} <span>${escapeHtml(getTranslation(lang, 'vehicles_unit'))}</span>`;
-}
 
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -449,118 +282,193 @@ function escapeHtml(value) {
     }[ch]));
 }
 
-function renderGateLog(lang = document.getElementById('langSelect').value || 'en') {
-    const tbody = document.getElementById('entryLogTableBody');
+function readNonNegative(key, fallback) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (raw === null || raw.trim() === '') return fallback;
+        const value = Number(raw);
+        return Number.isFinite(value) && value >= 0 ? value : fallback;
+    } catch (_) {
+        return fallback;
+    }
+}
 
-    if (!gateEntries.length) {
-        tbody.innerHTML = '<tr id="emptyLogRow"><td colspan="8" class="p-8 text-center text-gray-500">No gate entries recorded yet.</td></tr>';
-        updateSummary(lang);
+function readJson(key, fallback) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+    } catch (_) {
+        return fallback;
+    }
+}
+
+function normalizeBooking(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+
+    const get = (keys, fallback = '') => {
+        for (const key of keys) {
+            const value = raw[key];
+            if (value !== undefined && value !== null && String(value).trim() !== '') {
+                return String(value).trim();
+            }
+        }
+        return fallback;
+    };
+
+    const tokenId = get(['tokenId', 'tokenID', 'token_id']);
+    if (!tokenId) return null;
+
+    return {
+        tokenId,
+        farmerName: get(['farmerName', 'farmer', 'name'], 'Unknown Farmer'),
+        mandi: get(['mandi', 'mandiName', 'yard', 'destination'], 'Not specified'),
+        mandiKey: get(['mandiKey', 'mandi_key', 'yardId', 'yardKey'], ''),
+        commodity: get(['commodity', 'crop'], 'Not specified'),
+        vehicle: get(['vehicle', 'vehicleType', 'vehicle_type', 'vehicleNumber'], 'Not specified'),
+        slot: get(['slot', 'arrivalSlot', 'timeSlot'], 'Not specified'),
+        quantity: Number(get(['quantity', 'tons', 'bookedTons'], '0')) || 0
+    };
+}
+
+function loadBookings() {
+    const raw = readJson(BOOKING_KEY, []);
+    const records = Array.isArray(raw) ? raw : [raw];
+    farmerBookings = records.map(normalizeBooking).filter(Boolean);
+}
+
+function loadGateEntries() {
+    const raw = readJson(GATE_KEY, []);
+    gateEntries = Array.isArray(raw) ? raw.filter(e => e && e.tokenId).map(e => ({
+        date: String(e.date || ''),
+        time: String(e.time || ''),
+        tokenId: String(e.tokenId || ''),
+        farmerName: String(e.farmerName || 'Unknown Farmer'),
+        mandi: String(e.mandi || 'Not specified'),
+        mandiKey: String(e.mandiKey || ''),
+        commodity: String(e.commodity || 'Not specified'),
+        vehicleNo: String(e.vehicleNo || ''),
+        weight: Number(e.weight) || 0,
+        grade: String(e.grade || 'Grade A'),
+        status: String(e.status || 'ENTRY CLEARED')
+    })) : [];
+}
+
+function getYardEntries() {
+    return gateEntries.filter(entry => !entry.mandiKey || entry.mandiKey === currentYardKey);
+}
+
+function getYardBookings() {
+    return farmerBookings.filter(booking => {
+        if (!booking.mandiKey) return currentYardKey === 'pune_main';
+        return booking.mandiKey === currentYardKey;
+    });
+}
+
+function updateCapacitySummary() {
+    const yard = YARDS[currentYardKey];
+    const capacity = readNonNegative(yard.capacityKey, DEFAULT_CAPACITY);
+    const booked = readNonNegative(yard.bookedKey, DEFAULT_BOOKED);
+    const remaining = Math.max(0, capacity - booked);
+    const percent = capacity > 0 ? Math.min(100, (booked / capacity) * 100) : 0;
+
+    document.getElementById('capacityValue').textContent = `${booked} / ${capacity} Tons`;
+    document.getElementById('remainingValue').textContent = `${remaining} tons remaining`;
+    document.getElementById('capacityBar').style.width = `${percent}%`;
+    document.getElementById('officerYardSelect').value = currentYardKey;
+
+    const yardEntries = getYardEntries();
+    const verifiedTons = yardEntries.reduce((sum, entry) => sum + entry.weight, 0);
+
+    document.getElementById('clearedVehicles').textContent = yardEntries.length;
+    document.getElementById('verifiedTonnage').textContent = `${verifiedTons.toFixed(1)} Tons`;
+    document.getElementById('farmerBookingCount').textContent = getYardBookings().length;
+
+    document.getElementById('syncMessage').textContent =
+        `${yard.name}: booked capacity is read from shared browser storage. Gate clearance totals come from recorded officer entries.`;
+}
+
+function renderFarmerSummary() {
+    const tbody = document.getElementById('farmerSummaryBody');
+    const bookings = getYardBookings();
+    const entries = getYardEntries();
+    const clearedTokens = new Set(entries.map(e => e.tokenId));
+
+    if (!bookings.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-gray-500">No saved farmer bookings found for this yard. The booking portal must save booking records to kd_farmer_booking.</td></tr>';
         return;
     }
 
-    tbody.innerHTML = gateEntries.map(entry => `
-        <tr class="hover:bg-emerald-50/50 transition font-medium border-b border-gray-100">
-            <td class="p-3.5 text-gray-500">${escapeHtml(entry.time)}</td>
-            <td class="p-3.5 font-mono font-bold text-emerald-800">${escapeHtml(entry.tokenId)}</td>
-            <td class="p-3.5 font-bold text-gray-800">${escapeHtml(entry.farmerName)}</td>
-            <td class="p-3.5">${escapeHtml(entry.commodity)}</td>
-            <td class="p-3.5 font-mono">${escapeHtml(entry.vehicleNo)}</td>
-            <td class="p-3.5 font-bold">${localizeNumber(Number(entry.weight).toFixed(1), lang)} ${escapeHtml(getTranslation(lang, 'tons_unit'))}</td>
-            <td class="p-3.5"><span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-bold">${escapeHtml(entry.grade)}</span></td>
-            <td class="p-3.5"><span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">${escapeHtml(getTranslation(lang, 'status_cleared'))}</span></td>
-        </tr>`).join('');
+    tbody.innerHTML = bookings.map(booking => {
+        const isCleared = clearedTokens.has(booking.tokenId);
+        const entry = entries.find(e => e.tokenId === booking.tokenId);
 
-    updateSummary(lang);
+        return `<tr class="border-b hover:bg-emerald-50">
+            <td class="p-3 font-bold">${escapeHtml(booking.farmerName)}</td>
+            <td class="p-3 font-mono">${escapeHtml(booking.tokenId)}</td>
+            <td class="p-3">${escapeHtml(booking.commodity)}</td>
+            <td class="p-3">${escapeHtml(entry?.vehicleNo || booking.vehicle)}</td>
+            <td class="p-3">${booking.quantity.toFixed(1)} tons</td>
+            <td class="p-3">${escapeHtml(booking.slot)}</td>
+            <td class="p-3"><span class="inline-block rounded-full px-3 py-1 text-xs font-bold ${isCleared ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${isCleared ? 'CLEARED' : 'BOOKED — NOT CLEARED'}</span></td>
+        </tr>`;
+    }).join('');
 }
 
-function saveGateEntries() {
-    localStorage.setItem(GATE_ENTRIES_KEY, JSON.stringify(gateEntries));
-}
+function renderGateLog() {
+    const tbody = document.getElementById('entryLogTableBody');
+    const entries = getYardEntries();
 
-function initGateLog() {
-    try {
-        const saved = JSON.parse(localStorage.getItem(GATE_ENTRIES_KEY) || '[]');
-
-        gateEntries = Array.isArray(saved) ? saved
-            .filter(entry => entry && entry.tokenId)
-            .map(entry => ({
-                time: String(entry.time || ''),
-                tokenId: String(entry.tokenId || ''),
-                farmerName: String(entry.farmerName || 'Unknown Farmer'),
-                commodity: String(entry.commodity || 'Unknown'),
-                vehicleNo: String(entry.vehicleNo || ''),
-                weight: Number(entry.weight) || 0,
-                grade: String(entry.grade || 'Grade A')
-            })) : [];
-    } catch (_) {
-        gateEntries = [];
+    if (!entries.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-gray-500">No gate entries recorded yet.</td></tr>';
+        return;
     }
 
+    tbody.innerHTML = entries.map(entry => `
+        <tr class="border-b hover:bg-emerald-50">
+            <td class="p-3">${escapeHtml(entry.date)} ${escapeHtml(entry.time)}</td>
+            <td class="p-3 font-mono">${escapeHtml(entry.tokenId)}</td>
+            <td class="p-3 font-bold">${escapeHtml(entry.farmerName)}</td>
+            <td class="p-3">${escapeHtml(entry.commodity)}</td>
+            <td class="p-3">${escapeHtml(entry.vehicleNo)}</td>
+            <td class="p-3">${entry.weight.toFixed(1)} tons</td>
+            <td class="p-3">${escapeHtml(entry.grade)}</td>
+            <td class="p-3"><span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 text-xs font-bold">${escapeHtml(entry.status)}</span></td>
+        </tr>`).join('');
+}
+
+function refreshAll() {
+    loadBookings();
+    loadGateEntries();
+    updateCapacitySummary();
+    renderFarmerSummary();
     renderGateLog();
+}
+
+function changeOfficerYard() {
+    currentYardKey = document.getElementById('officerYardSelect').value;
+    try {
+        localStorage.setItem('kd_selected_admin_yard', currentYardKey);
+    } catch (_) {}
+    refreshAll();
 }
 
 function changeLanguage() {
     const lang = document.getElementById('langSelect').value || 'en';
-    localStorage.setItem(STORAGE_KEY, lang);
-    applyLanguage(lang);
-    window.kdApplySelectedLanguage?.(lang);
-}
-
-function setScannerMessage(message) {
-    document.getElementById('scannerMessage').textContent = message;
-}
-
-/*
- * Reads the current saved farmer booking.
- * This is a browser-demo validation only: localStorage is not a secure database.
- */
-function getSavedBooking() {
-    try {
-        const raw = localStorage.getItem(FARMER_BOOKING_KEY);
-        if (!raw) return null;
-
-        const booking = JSON.parse(raw);
-        if (!booking || typeof booking !== 'object' || Array.isArray(booking)) return null;
-        if (!booking.tokenId) return null;
-
-        return booking;
-    } catch (_) {
-        return null;
-    }
-}
-
-function getBookingValue(booking, keys, fallback = '') {
-    for (const key of keys) {
-        const value = booking?.[key];
-        if (value !== undefined && value !== null && String(value).trim() !== '') {
-            return String(value).trim();
-        }
-    }
-    return fallback;
-}
-
-function normalizeBooking(booking) {
-    return {
-        tokenId: getBookingValue(booking, ['tokenId', 'tokenID', 'token_id']),
-        farmerName: getBookingValue(booking, ['farmerName', 'farmer', 'name'], 'Unknown Farmer'),
-        mandi: getBookingValue(booking, ['mandi', 'mandiName', 'yard', 'destination'], 'Not specified'),
-        mandiKey: getBookingValue(booking, ['mandiKey', 'mandi_key', 'yardId'], ''),
-        commodity: getBookingValue(booking, ['commodity', 'crop'], 'Not specified'),
-        vehicle: getBookingValue(booking, ['vehicle', 'vehicleType', 'vehicle_type'], 'Not specified'),
-        slot: getBookingValue(booking, ['slot', 'arrivalSlot', 'timeSlot'], 'Not specified'),
-        quantity: getBookingValue(booking, ['quantity', 'tons', 'bookedTons'], '')
-    };
+    localStorage.setItem(LANG_KEY, lang);
+    document.cookie = `googtrans=/en/${lang};path=/;SameSite=Lax`;
+    location.reload();
 }
 
 function startCameraScanner() {
     if (typeof Html5Qrcode === 'undefined') {
-        alert('The QR scanner library could not load. Check your internet connection.');
+        alert('QR scanner library could not load. Check your internet connection.');
         return;
     }
 
-    if (html5QrCodeScanner) {
-        html5QrCodeScanner.stop().catch(() => {}).finally(() => {
-            html5QrCodeScanner = null;
+    if (scanner) {
+        scanner.stop().catch(() => {}).finally(() => {
+            scanner = null;
             beginCameraScanner();
         });
         return;
@@ -570,144 +478,119 @@ function startCameraScanner() {
 }
 
 function beginCameraScanner() {
-    const readerDiv = document.getElementById('reader');
-    readerDiv.innerHTML = '';
-    setScannerMessage('Requesting camera access…');
+    document.getElementById('reader').innerHTML = '';
+    document.getElementById('scannerMessage').textContent = 'Requesting camera access…';
 
-    html5QrCodeScanner = new Html5Qrcode('reader');
-
-    html5QrCodeScanner.start(
+    scanner = new Html5Qrcode('reader');
+    scanner.start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 220, height: 220 } },
         async decodedText => {
-            const scanner = html5QrCodeScanner;
-            html5QrCodeScanner = null;
-
-            if (scanner) {
-                try { await scanner.stop(); } catch (_) {}
+            const activeScanner = scanner;
+            scanner = null;
+            if (activeScanner) {
+                try { await activeScanner.stop(); } catch (_) {}
             }
-
-            parseScannedQrPass(decodedText);
+            verifyScannedQr(decodedText);
         },
         () => {}
     ).catch(error => {
-        html5QrCodeScanner = null;
-        setScannerMessage('Camera could not start. Allow camera access and use HTTPS or localhost.');
-        console.error('QR camera error:', error);
+        scanner = null;
+        document.getElementById('scannerMessage').textContent =
+            'Camera could not start. Allow camera access and use HTTPS or localhost.';
+        console.error(error);
     });
 }
 
-function parseScannedQrPass(rawText) {
-    let scanned;
-
+function verifyScannedQr(rawText) {
+    let qr;
     try {
-        scanned = JSON.parse(String(rawText));
+        qr = JSON.parse(rawText);
     } catch (_) {
-        alert('This QR code is not a valid KrishiDhara booking QR. Please scan the QR generated by the booking page.');
+        alert('Invalid QR format. Scan the QR generated by the booking page.');
         return;
     }
 
-    if (!scanned || typeof scanned !== 'object' || !scanned.tokenId) {
-        alert('QR data is missing its booking token ID.');
+    const booking = farmerBookings.find(b => b.tokenId === String(qr?.tokenId || '').trim());
+
+    if (!booking) {
+        alert('This token does not match a saved farmer booking in this browser.');
         return;
     }
 
-    const savedBooking = getSavedBooking();
-
-    if (!savedBooking) {
-        alert('No saved farmer booking was found in this browser. Create a booking first, then scan its QR code.');
+    if (booking.mandiKey && booking.mandiKey !== currentYardKey) {
+        alert('This booking belongs to another yard. Select the correct yard before processing.');
         return;
     }
 
-    const booking = normalizeBooking(savedBooking);
-    const scannedToken = String(scanned.tokenId).trim();
-
-    if (!booking.tokenId || scannedToken !== booking.tokenId) {
-        alert('Booking verification failed. The scanned token does not match the saved farmer booking.');
-        return;
-    }
-
-    /*
-     * Use booking details stored on the booking page as the source of truth.
-     * QR fields are not allowed to overwrite the saved farmer or booking data.
-     */
-    currentScannedData = {
-        tokenId: booking.tokenId,
-        farmerName: booking.farmerName,
-        mandi: booking.mandi,
-        mandiKey: booking.mandiKey,
-        commodity: booking.commodity,
-        vehicle: booking.vehicle,
-        slot: booking.slot,
-        tons: booking.quantity
-    };
-
-    displayVerifiedPass(currentScannedData);
-    setScannerMessage('Token matches the saved booking in this browser. Confirm details before approving entry.');
+    showVerifiedPass(booking);
+    document.getElementById('scannerMessage').textContent =
+        'Token matches a saved booking in this browser. Confirm the weighbridge details before approving.';
 }
 
 function loadDemoPass() {
-    const savedBooking = getSavedBooking();
+    const bookings = getYardBookings();
 
-    if (!savedBooking) {
-        alert('No saved booking was found. Complete a farmer slot booking first. Demo scan does not create or verify a booking.');
+    if (!bookings.length) {
+        alert('No saved farmer booking is available for the selected yard. Complete a booking first.');
         return;
     }
 
-    const booking = normalizeBooking(savedBooking);
+    const booking = bookings.find(b => !getYardEntries().some(e => e.tokenId === b.tokenId));
 
-    currentScannedData = {
-        tokenId: booking.tokenId,
-        farmerName: booking.farmerName,
-        mandi: booking.mandi,
-        mandiKey: booking.mandiKey,
-        commodity: booking.commodity,
-        vehicle: booking.vehicle,
-        slot: booking.slot,
-        tons: booking.quantity
-    };
+    if (!booking) {
+        alert('All saved bookings for this yard already appear in the gate-entry log.');
+        return;
+    }
 
-    displayVerifiedPass(currentScannedData);
-    setScannerMessage('DEMO MODE: saved booking loaded without scanning a physical QR code. This is not real authentication.');
+    showVerifiedPass(booking);
+    document.getElementById('scannerMessage').textContent =
+        'DEMO MODE: booking details loaded without scanning a physical QR. This is not real authentication.';
 }
 
-function displayVerifiedPass(data) {
+function showVerifiedPass(booking) {
+    currentScannedData = booking;
+
     document.getElementById('emptyScanState').classList.add('hidden');
     document.getElementById('verifiedPassForm').classList.remove('hidden');
 
-    document.getElementById('scannedToken').textContent = data.tokenId;
-    document.getElementById('scannedFarmer').textContent = data.farmerName;
-    document.getElementById('scannedMandi').textContent = data.mandi;
-    document.getElementById('scannedCommodity').textContent = data.commodity;
-    document.getElementById('scannedVehicle').textContent = data.vehicle;
-    document.getElementById('scannedSlot').textContent = data.slot;
+    document.getElementById('scannedToken').textContent = booking.tokenId;
+    document.getElementById('scannedFarmer').textContent = booking.farmerName;
+    document.getElementById('scannedMandi').textContent = booking.mandi;
+    document.getElementById('scannedCommodity').textContent = booking.commodity;
+    document.getElementById('scannedVehicle').textContent = booking.vehicle;
+    document.getElementById('scannedSlot').textContent = booking.slot;
 
-    const quantity = Number(data.tons);
     document.getElementById('actualWeightInput').value =
-        Number.isFinite(quantity) && quantity > 0 ? quantity : '';
+        booking.quantity > 0 ? booking.quantity : '';
 
     document.getElementById('vehicleNumberInput').value = '';
 
-    const lang = document.getElementById('langSelect').value || 'en';
     const badge = document.getElementById('passStatusBadge');
-    badge.textContent = getTranslation(lang, 'verified_badge');
-    badge.className = 'text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full uppercase border border-emerald-300';
+    badge.textContent = 'VERIFIED BOOKING';
+    badge.className = 'text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full';
 }
 
 function processGateEntry(event) {
     event.preventDefault();
 
     if (!currentScannedData) {
-        alert('Scan a booking QR before approving entry.');
+        alert('Scan or load a saved booking before approving entry.');
         return;
     }
 
-    // Recheck the saved booking immediately before approving.
-    const savedBooking = getSavedBooking();
+    loadBookings();
 
-    if (!savedBooking || normalizeBooking(savedBooking).tokenId !== currentScannedData.tokenId) {
-        alert('The saved booking is missing or has changed. Scan the booking QR again.');
+    const stillExists = farmerBookings.some(b => b.tokenId === currentScannedData.tokenId);
+    if (!stillExists) {
+        alert('The saved booking no longer exists. Reload the booking and try again.');
         resetPassForm();
+        refreshAll();
+        return;
+    }
+
+    if (getYardEntries().some(e => e.tokenId === currentScannedData.tokenId)) {
+        alert('This token has already been cleared. Duplicate gate entry was blocked.');
         return;
     }
 
@@ -715,34 +598,20 @@ function processGateEntry(event) {
     const vehicleNo = document.getElementById('vehicleNumberInput').value.trim().toUpperCase();
     const grade = document.getElementById('qualityGradeSelect').value;
 
-    if (!Number.isFinite(weight) || weight <= 0) {
-        alert('Enter a valid weighbridge weight greater than zero.');
-        document.getElementById('actualWeightInput').focus();
-        return;
-    }
-
-    if (!vehicleNo) {
-        alert('Enter the vehicle registration number.');
-        document.getElementById('vehicleNumberInput').focus();
-        return;
-    }
-
-    if (gateEntries.some(entry => entry.tokenId === currentScannedData.tokenId)) {
-        alert('This token has already been processed. Duplicate gate entry was blocked.');
+    if (!Number.isFinite(weight) || weight <= 0 || !vehicleNo) {
+        alert('Enter a valid net weight and vehicle registration number.');
         return;
     }
 
     const now = new Date();
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const dateStr = now.toLocaleDateString();
 
     const entry = {
-        date: dateStr,
-        time: timeStr,
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         tokenId: currentScannedData.tokenId,
         farmerName: currentScannedData.farmerName,
         mandi: currentScannedData.mandi,
-        mandiKey: currentScannedData.mandiKey,
+        mandiKey: currentScannedData.mandiKey || currentYardKey,
         commodity: currentScannedData.commodity,
         vehicleNo,
         weight: Number(weight.toFixed(1)),
@@ -751,14 +620,15 @@ function processGateEntry(event) {
     };
 
     gateEntries.unshift(entry);
-    saveGateEntries();
 
-    const lang = document.getElementById('langSelect').value || 'en';
-    renderGateLog(lang);
+    try {
+        localStorage.setItem(GATE_KEY, JSON.stringify(gateEntries));
+    } catch (_) {
+        alert('Could not save the gate entry in browser storage.');
+        return;
+    }
 
-    alert('Gate entry recorded in this browser.');
-
-    // Print a simple gate receipt.
+    refreshAll();
     printReceipt(entry);
     resetPassForm();
 }
@@ -769,84 +639,68 @@ function resetPassForm() {
     document.getElementById('verifiedPassForm').classList.add('hidden');
     document.getElementById('emptyScanState').classList.remove('hidden');
 
-    const lang = document.getElementById('langSelect').value || 'en';
     const badge = document.getElementById('passStatusBadge');
-    badge.textContent = getTranslation(lang, 'waiting_scan');
-    badge.className = 'text-xs bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full uppercase';
+    badge.textContent = 'Awaiting Scan';
+    badge.className = 'text-xs bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full';
 }
 
 function printReceipt(entry) {
-    const receiptWindow = window.open('', '_blank', 'width=600,height=700');
+    const receipt = window.open('', '_blank', 'width=600,height=700');
 
-    if (!receiptWindow) {
-        alert('Entry was recorded, but the receipt popup was blocked. Allow popups to print the receipt.');
+    if (!receipt) {
+        alert('Gate entry saved, but the print popup was blocked. Allow popups to print the receipt.');
         return;
     }
 
-    const esc = escapeHtml;
-    receiptWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>KrishiDhara Gate Receipt</title>
-            <style>
-                body{font-family:Arial,sans-serif;padding:28px;color:#064e3b}
-                h1{font-size:22px;margin-bottom:4px}
-                .sub{color:#555;margin-bottom:24px}
-                table{border-collapse:collapse;width:100%}
-                td{padding:10px;border-bottom:1px solid #ddd}
-                td:first-child{font-weight:bold;width:42%}
-                .status{margin-top:20px;padding:12px;background:#d1fae5;font-weight:bold}
-                @media print{button{display:none}}
-            </style>
-        </head>
-        <body>
-            <h1>KrishiDhara 2.0</h1>
-            <div class="sub">Yard Officer Gate Entry Receipt</div>
-            <table>
-                <tr><td>Date</td><td>${esc(entry.date)}</td></tr>
-                <tr><td>Time</td><td>${esc(entry.time)}</td></tr>
-                <tr><td>Token ID</td><td>${esc(entry.tokenId)}</td></tr>
-                <tr><td>Farmer</td><td>${esc(entry.farmerName)}</td></tr>
-                <tr><td>Destination yard</td><td>${esc(entry.mandi)}</td></tr>
-                <tr><td>Commodity</td><td>${esc(entry.commodity)}</td></tr>
-                <tr><td>Vehicle registration</td><td>${esc(entry.vehicleNo)}</td></tr>
-                <tr><td>Net weight</td><td>${esc(entry.weight)} tons</td></tr>
-                <tr><td>Quality grade</td><td>${esc(entry.grade)}</td></tr>
-            </table>
-            <div class="status">ENTRY CLEARED — DEMO RECORD</div>
-            <p>This receipt was generated by the KrishiDhara browser prototype.</p>
-            <button onclick="window.print()">Print receipt</button>
-            <script>window.onload=()=>window.print();<\/script>
-        </body>
-        </html>
-    `);
-    receiptWindow.document.close();
+    receipt.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KrishiDhara Gate Receipt</title>
+<style>
+body{font-family:Arial,sans-serif;padding:28px;color:#064e3b}
+h1{font-size:24px}
+table{border-collapse:collapse;width:100%}
+td{padding:10px;border-bottom:1px solid #ddd}
+td:first-child{font-weight:bold;width:42%}
+.status{margin-top:20px;padding:12px;background:#d1fae5;font-weight:bold}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<h1>KrishiDhara 2.0</h1>
+<p>Yard Officer Gate Entry Receipt</p>
+<table>
+<tr><td>Date</td><td>${escapeHtml(entry.date)}</td></tr>
+<tr><td>Time</td><td>${escapeHtml(entry.time)}</td></tr>
+<tr><td>Token ID</td><td>${escapeHtml(entry.tokenId)}</td></tr>
+<tr><td>Farmer</td><td>${escapeHtml(entry.farmerName)}</td></tr>
+<tr><td>Destination Yard</td><td>${escapeHtml(entry.mandi)}</td></tr>
+<tr><td>Commodity</td><td>${escapeHtml(entry.commodity)}</td></tr>
+<tr><td>Vehicle Registration</td><td>${escapeHtml(entry.vehicleNo)}</td></tr>
+<tr><td>Net Weight</td><td>${escapeHtml(entry.weight)} tons</td></tr>
+<tr><td>Quality Grade</td><td>${escapeHtml(entry.grade)}</td></tr>
+</table>
+<div class="status">ENTRY CLEARED — BROWSER PROTOTYPE RECORD</div>
+<p>This receipt was generated by the KrishiDhara browser prototype.</p>
+<button onclick="window.print()">Print receipt</button>
+<script>window.onload=()=>window.print();<\/script>
+</body></html>`);
+    receipt.document.close();
 }
 
 function exportLogCSV() {
-    const headers = [
-        'Date', 'Time', 'Token ID', 'Farmer Name', 'Destination Yard',
-        'Commodity', 'Vehicle No', 'Weight (Tons)', 'Quality Grade', 'Status'
-    ];
+    const headers = ['Date','Time','Token ID','Farmer Name','Destination Yard','Commodity','Vehicle No','Weight (Tons)','Quality Grade','Status'];
+    const entries = getYardEntries();
 
-    const rows = gateEntries.map(entry => [
-        entry.date || '',
-        entry.time || '',
-        entry.tokenId || '',
-        entry.farmerName || '',
-        entry.mandi || '',
-        entry.commodity || '',
-        entry.vehicleNo || '',
-        Number(entry.weight || 0).toFixed(1),
-        entry.grade || '',
-        entry.status || 'ENTRY CLEARED'
+    const rows = entries.map(e => [
+        e.date, e.time, e.tokenId, e.farmerName, e.mandi,
+        e.commodity, e.vehicleNo, Number(e.weight || 0).toFixed(1),
+        e.grade, e.status
     ]);
 
     const csv = [headers, ...rows].map(row =>
         row.map(value => {
-            // Prevent spreadsheet formula injection in exported text.
             let text = String(value ?? '');
             if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
             return '"' + text.replace(/"/g, '""') + '"';
@@ -869,85 +723,56 @@ function switchRole() {
     window.location.href = '../index.html';
 }
 
+window.addEventListener('storage', event => {
+    if (
+        event.key === null ||
+        event.key === GATE_KEY ||
+        event.key === BOOKING_KEY ||
+        event.key === 'kd_selected_admin_yard' ||
+        event.key?.startsWith('kd_cap_') ||
+        event.key?.startsWith('kd_booked_')
+    ) {
+        refreshAll();
+    }
+});
+
 window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem(STORAGE_KEY) || 'en';
-    const dropdown = document.getElementById('langSelect');
+    const savedLang = localStorage.getItem(LANG_KEY) || 'en';
+    document.getElementById('langSelect').value = savedLang;
 
-    if (dropdown) dropdown.value = savedLang;
+    const savedYard = localStorage.getItem('kd_selected_admin_yard');
+    if (savedYard && YARDS[savedYard]) currentYardKey = savedYard;
 
-    initGateLog();
-    applyLanguage(savedLang);
+    refreshAll();
+
+    // Load Google Translate for the complete language selector.
+    if (!document.querySelector('script[data-kd-google-translate]')) {
+        window.googleTranslateElementInit = function () {
+            if (!window.google?.translate?.TranslateElement) return;
+
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            const combo = document.querySelector('.goog-te-combo');
+            if (combo && savedLang !== 'en') {
+                combo.value = savedLang;
+                combo.dispatchEvent(new Event('change'));
+            }
+        };
+
+        const script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        script.async = true;
+        script.setAttribute('data-kd-google-translate', 'true');
+        document.head.appendChild(script);
+    }
 });
 </script>
 
-<!-- Automatic translation support for all 22 language options. Internet access is required. -->
 <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-
-<script>
-(function () {
-    const STORAGE_KEY = 'kd_selected_lang';
-    const googleCodes = new Set([
-        'en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as',
-        'ur','sa','ne','sd','ks','doi','mni','sat','bho','raj'
-    ]);
-
-    function setTranslateCookie(lang) {
-        const target = googleCodes.has(lang) ? lang : 'en';
-        document.cookie = 'googtrans=/en/' + target + ';path=/;SameSite=Lax';
-
-        try {
-            localStorage.setItem(STORAGE_KEY, lang);
-        } catch (_) {}
-    }
-
-    window.googleTranslateElementInit = function () {
-        if (!window.google || !google.translate || !google.translate.TranslateElement) return;
-
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-            autoDisplay: false
-        }, 'google_translate_element');
-
-        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-        const combo = document.querySelector('.goog-te-combo');
-
-        if (combo && lang !== 'en' && Array.from(combo.options).some(option => option.value === lang)) {
-            combo.value = lang;
-            combo.dispatchEvent(new Event('change'));
-        }
-    };
-
-    window.kdApplySelectedLanguage = function (lang) {
-        setTranslateCookie(lang);
-        window.location.reload();
-    };
-
-    // Use the local dictionary immediately, then reload to apply Google Translate.
-    window.changeLanguage = function () {
-        const select = document.getElementById('langSelect');
-        if (!select) return;
-
-        setTranslateCookie(select.value);
-        window.location.reload();
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const select = document.getElementById('langSelect');
-        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-
-        if (select) select.value = lang;
-
-        if (!document.querySelector('script[data-kd-google-translate]')) {
-            const script = document.createElement('script');
-            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            script.async = true;
-            script.setAttribute('data-kd-google-translate', 'true');
-            document.head.appendChild(script);
-        }
-    });
-})();
-</script>
 
 </body>
 </html>
