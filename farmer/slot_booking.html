@@ -7,155 +7,241 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
+
 <body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
 
-    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
-        <div class="flex items-center space-x-3">
-            <span class="text-4xl">👨‍🌾</span>
-            <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
-        </div>
-        <div class="flex items-center gap-3">
-            <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-3 py-2.5 rounded-2xl border border-green-600 font-bold">
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-                <option value="mr">मराठी</option>
-                <option value="pa">ਪੰਜਾਬੀ</option>
-                <option value="gu">ગુજરાતી</option>
-                <option value="bn">বাংলা</option>
-                <option value="te">తెలుగు</option>
-                <option value="ta">தமிழ்</option>
-                <option value="kn">ಕನ್ನಡ</option>
-                <option value="ml">മലയാളം</option>
-                <option value="or">ଓଡ଼ିଆ</option>
-                <option value="as">অসমীয়া</option>
-                <option value="ur">اردو</option>
-                <option value="sa">संस्कृतम्</option>
-                <option value="ne">नेपाली</option>
-                <option value="sd">سنڌी</option>
-                <option value="ks">कॉशुर</option>
-                <option value="doi">डोगरी</option>
-                <option value="mni">মৈতৈলোন্</option>
-                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
-                <option value="bho">भोजपुरी</option>
-                <option value="raj">राजस्थानी</option>
-            </select>
-            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold cursor-pointer">Switch Role</button>
-        </div>
-    </header>
+<header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
+    <div class="flex items-center space-x-3">
+        <span class="text-4xl">👨‍🌾</span>
+        <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
+    </div>
 
-    <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
-        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <h2 class="text-xl md:text-2xl font-extrabold text-green-900">Step 2: Procurement Slot & QR Pass</h2>
-                <p class="text-sm text-gray-600">Select mandi, commodity, and time slot to secure your entry pass.</p>
-            </div>
-            <div class="bg-emerald-50 border-2 border-green-500 p-4 rounded-2xl shadow-sm w-full md:w-auto">
-                <div class="text-xs text-green-800 font-bold uppercase">Mandi Daily Capacity Intake</div>
-                <div id="capacityCount" class="text-2xl font-black text-green-900">14 Tons / 50 Tons</div>
-                <div class="w-full bg-green-200 rounded-full h-2.5 mt-2">
-                    <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 28%;"></div>
-                </div>
-            </div>
-        </div>
+    <div class="flex items-center gap-3">
+        <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-3 py-2.5 rounded-2xl border border-green-600 font-bold">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="bn">বাংলা</option>
+            <option value="te">తెలుగు</option>
+            <option value="ta">தமிழ்</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+            <option value="or">ଓଡ଼ିଆ</option>
+            <option value="as">অসমীয়া</option>
+            <option value="ur">اردو</option>
+            <option value="sa">संस्कृतम्</option>
+            <option value="ne">नेपाली</option>
+            <option value="sd">سنڌي</option>
+            <option value="ks">कॉशुर</option>
+            <option value="doi">डोगरी</option>
+            <option value="mni">মৈতৈলোন্</option>
+            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
+            <option value="bho">भोजपुरी</option>
+            <option value="raj">राजस्थानी</option>
+        </select>
 
-        <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
-            <h3 id="mapTitle" class="font-extrabold text-lg text-green-950">🗺️ APMC Mandi Geospatial Locator - <span id="currentMandiName" class="text-amber-600">Please select a Mandi from dropdown below</span></h3>
-            <div id="mapContainer" class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative flex items-center justify-center">
-                <div id="mapPlaceholder" class="text-center p-6">
-                    <p class="text-4xl mb-2">👇</p>
-                    <p class="font-bold text-gray-700">Please select APMC Mandi Yard from dropdown</p>
-                    <p class="text-sm text-gray-500">Map will show selected mandi location here</p>
-                </div>
-                <iframe id="googleMapFrame" class="hidden" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src=""></iframe>
-            </div>
+        <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold cursor-pointer">
+            Switch Role
+        </button>
+    </div>
+</header>
+
+<main class="w-full max-w-4xl mx-auto my-8 space-y-8">
+
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-extrabold text-green-900">
+                Step 2: Procurement Slot & QR Pass
+            </h2>
+            <p class="text-sm text-gray-600">
+                Select your mandi, commodity, vehicle, quantity, and time slot.
+            </p>
         </div>
 
-        <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
-            <div id="alertTitleText" class="text-xl font-black">EMERGENCY YARD LOCK OR CAPACITY FULL!</div>
-            <p id="alertMessageText" class="text-sm font-semibold">Bookings for this specific APMC yard are temporarily suspended. <b>Nearby alternative APMC mandis are now highlighted on the map above.</b></p>
-        </div>
-
-        <form id="slotForm" onsubmit="handleSlotBooking(event)" class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block font-bold text-gray-800">🏬 APMC Mandi Yard</label>
-                    <select id="mandiSelect" onchange="onMandiChange()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                        <option value="" disabled selected>Select APMC Mandi</option>
-                        <option value="pune_main">Pune Main APMC Market Yard</option>
-                        <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
-                        <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
-                        <option value="amravati_grain">Amravati Regional Procurement Center</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-800">🌾 Commodity / Crop Type</label>
-                    <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                        <option value="" disabled selected>Select commodity</option>
-                        <option value="wheat">Wheat</option>
-                        <option value="paddy">Paddy / Rice</option>
-                        <option value="soybean">Soybean</option>
-                        <option value="cotton">Cotton</option>
-                        <option value="onion">Onion</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-800">🚚 Vehicle Type</label>
-                    <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                        <option value="" disabled selected>Select vehicle type</option>
-                        <option value="tractor">Tractor Trolley (4-6 Tons)</option>
-                        <option value="small_truck">Light Commercial Truck (LCV)</option>
-                        <option value="heavy_truck">Heavy Commercial Truck (10+ Tons)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-800">⏰ Preferred Arrival Slot</label>
-                    <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                        <option value="" disabled selected>Select time slot</option>
-                        <option value="slot1" id="optSlot1">09:00 AM - 11:30 AM (Morning Slot)</option>
-                        <option value="slot2" id="optSlot2">11:30 AM - 02:00 PM (Mid-Day Slot)</option>
-                        <option value="slot3" id="optSlot3">02:00 PM - 04:30 PM (Afternoon Slot)</option>
-                        <option value="slot4" id="optSlot4">04:30 PM - 06:00 PM (Evening Slot)</option>
-                    </select>
-                </div>
+        <div class="bg-emerald-50 border-2 border-green-500 p-4 rounded-2xl shadow-sm w-full md:w-auto">
+            <div class="text-xs text-green-800 font-bold uppercase">
+                Mandi Daily Capacity Intake
             </div>
 
-            <div>
-                <label class="block font-bold text-gray-800">⚖️ Estimated Quantity (in Tons)</label>
-                <input type="number" id="quantityInput" min="1" max="50" required placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+            <div id="capacityCount" class="text-2xl font-black text-green-900">
+                14 Tons / 50 Tons
             </div>
 
-            <button type="submit" id="btnConfirmBooking" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer">
-                Confirm Slot & Generate QR Pass 🎫
-            </button>
-        </form>
-    </main>
-
-    <div id="qrModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 shadow-2xl text-center border-4 border-green-500">
-            <h3 class="text-xl font-black text-green-900">KrishiDhara Official Entry Pass</h3>
-            <div class="bg-green-50 p-6 rounded-2xl flex flex-col items-center justify-center border-2 border-green-300">
-                <div id="qrcode" style="width: 170px; height: 170px;" class="p-3 bg-white rounded-xl shadow-md border flex items-center justify-center"></div>
-                <p class="text-xs text-green-800 font-bold mt-3">Show at Gate Scanner (Offline Ready)</p>
-            </div>
-            <div class="text-left text-sm space-y-2 bg-gray-50 p-4 rounded-xl border">
-                <p><b>Farmer:</b> <span id="summaryName" class="text-green-800 font-bold">Ramesh Kumar</span></p>
-                <p><b>Mandi:</b> <span id="summaryMandi">-</span></p>
-                <p><b>Commodity:</b> <span id="summaryCommodity">-</span></p>
-                <p><b>Vehicle:</b> <span id="summaryVehicle">-</span></p>
-                <p><b>Quantity:</b> <span id="summaryQuantity">-</span> tons</p>
-                <p><b>Updated arrival slot:</b> <span id="summarySlot">-</span></p>
-                <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">-</span></p>
-            </div>
-            <div class="flex space-x-3">
-                <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">Print Pass 🖨️</button>
-                <button type="button" onclick="closeModal()" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl cursor-pointer">Close</button>
+            <div class="w-full bg-green-200 rounded-full h-2.5 mt-2">
+                <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width:28%"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        ;
-       function getMandiDefaultCapacity(mandiKey) {
+    <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
+        <h3 class="font-extrabold text-lg text-green-950">
+            🗺️ APMC Mandi Geospatial Locator -
+            <span id="currentMandiName" class="text-amber-600">
+                Please select a Mandi from dropdown below
+            </span>
+        </h3>
+
+        <div id="mapContainer" class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative flex items-center justify-center">
+            <div id="mapPlaceholder" class="text-center p-6">
+                <p class="text-4xl mb-2">👇</p>
+                <p class="font-bold text-gray-700">Please select APMC Mandi Yard from dropdown</p>
+                <p class="text-sm text-gray-500">Map will show selected mandi location here</p>
+            </div>
+
+            <iframe id="googleMapFrame" class="hidden" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" src=""></iframe>
+        </div>
+    </div>
+
+    <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
+        <div id="alertTitleText" class="text-xl font-black">
+            MANDI LOCKED OR CAPACITY FULL
+        </div>
+        <p id="alertMessageText" class="text-sm font-semibold">
+            Bookings for this mandi are temporarily suspended or its capacity is full.
+            Please select another mandi or contact the administrator.
+        </p>
+    </div>
+
+    <form id="slotForm" onsubmit="handleSlotBooking(event)" class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div>
+                <label for="mandiSelect" class="block font-bold text-gray-800">
+                    🏬 APMC Mandi Yard
+                </label>
+
+                <select id="mandiSelect" onchange="onMandiChange()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <option value="" disabled selected>Select APMC Mandi</option>
+                    <option value="pune_main">Pune Main APMC Market Yard</option>
+                    <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
+                    <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
+                    <option value="amravati_grain">Amravati Regional Procurement Center</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="commoditySelect" class="block font-bold text-gray-800">
+                    🌾 Commodity / Crop Type
+                </label>
+
+                <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <option value="" disabled selected>Select commodity</option>
+                    <option value="wheat">Wheat</option>
+                    <option value="paddy">Paddy / Rice</option>
+                    <option value="soybean">Soybean</option>
+                    <option value="cotton">Cotton</option>
+                    <option value="onion">Onion</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="vehicleSelect" class="block font-bold text-gray-800">
+                    🚚 Vehicle Type
+                </label>
+
+                <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <option value="" disabled selected>Select vehicle type</option>
+                    <option value="tractor">Tractor Trolley (4-6 Tons)</option>
+                    <option value="small_truck">Light Commercial Truck (LCV)</option>
+                    <option value="heavy_truck">Heavy Commercial Truck (10+ Tons)</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="slotSelect" class="block font-bold text-gray-800">
+                    ⏰ Preferred Arrival Slot
+                </label>
+
+                <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+                    <option value="" disabled selected>Select time slot</option>
+                    <option value="slot1" id="optSlot1">09:00 AM - 11:30 AM (Morning Slot)</option>
+                    <option value="slot2" id="optSlot2">11:30 AM - 02:00 PM (Mid-Day Slot)</option>
+                    <option value="slot3" id="optSlot3">02:00 PM - 04:30 PM (Afternoon Slot)</option>
+                    <option value="slot4" id="optSlot4">04:30 PM - 06:00 PM (Evening Slot)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div>
+            <label for="quantityInput" class="block font-bold text-gray-800">
+                ⚖️ Estimated Quantity (in Tons)
+            </label>
+
+            <input type="number" id="quantityInput" min="1" max="50" step="0.1" required placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+        </div>
+
+        <button type="submit" id="btnConfirmBooking" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer">
+            Confirm Slot & Generate QR Pass 🎫
+        </button>
+
+    </form>
+</main>
+
+<div id="qrModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 shadow-2xl text-center border-4 border-green-500">
+        <h3 class="text-xl font-black text-green-900">KrishiDhara Official Entry Pass</h3>
+
+        <div class="bg-green-50 p-6 rounded-2xl flex flex-col items-center justify-center border-2 border-green-300">
+            <div id="qrcode" style="width:170px;height:170px" class="p-3 bg-white rounded-xl shadow-md border flex items-center justify-center"></div>
+            <p class="text-xs text-green-800 font-bold mt-3">Show at Gate Scanner</p>
+        </div>
+
+        <div class="text-left text-sm space-y-2 bg-gray-50 p-4 rounded-xl border">
+            <p><b>Farmer:</b> <span id="summaryName" class="text-green-800 font-bold">Ramesh Kumar</span></p>
+            <p><b>Mandi:</b> <span id="summaryMandi">-</span></p>
+            <p><b>Commodity:</b> <span id="summaryCommodity">-</span></p>
+            <p><b>Vehicle:</b> <span id="summaryVehicle">-</span></p>
+            <p><b>Quantity:</b> <span id="summaryQuantity">-</span> tons</p>
+            <p><b>Updated arrival slot:</b> <span id="summarySlot">-</span></p>
+            <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">-</span></p>
+        </div>
+
+        <div class="flex space-x-3">
+            <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">
+                Print Pass 🖨️
+            </button>
+
+            <button type="button" onclick="closeModal()" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl cursor-pointer">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+'use strict';
+
+// ======================================================
+// CAPACITY DEFAULTS AND SHARED ADMIN STORAGE
+// ======================================================
+
+let maxTonsCapacity = 50;
+let bookedTons = 14;
+
+const mandiLocationsMap = {
+    pune_main: {
+        name: 'Pune Main APMC Market Yard',
+        query: 'Pune Main APMC Market Yard, Pune, Maharashtra'
+    },
+    nashik_grain: {
+        name: 'Nashik Grain & Vegetable Mandi',
+        query: 'Nashik APMC Market Yard, Nashik, Maharashtra'
+    },
+    nagpur_cotton: {
+        name: 'Nagpur Cotton & Grain Yard',
+        query: 'Nagpur APMC Market Yard, Nagpur, Maharashtra'
+    },
+    amravati_grain: {
+        name: 'Amravati Regional Procurement Center',
+        query: 'Amravati APMC Market Yard, Amravati, Maharashtra'
+    }
+};
+
+function getMandiDefaultCapacity(mandiKey) {
     const defaults = {
         pune_main: 50,
         nashik_grain: 60,
@@ -169,6 +255,7 @@
 function getMandiCapacity(mandiKey) {
     const saved = localStorage.getItem(`kd_cap_${mandiKey}`);
 
+    // A saved zero is a real value; do not replace it with a default.
     return saved === null
         ? getMandiDefaultCapacity(mandiKey)
         : Number(saved);
@@ -180,47 +267,77 @@ function getMandiBookedTons(mandiKey) {
     return saved === null ? 14 : Number(saved);
 }
 
+function isMandiLocked(mandiKey) {
+    return localStorage.getItem(`kd_lock_${mandiKey}`) === 'true';
+}
+
 function refreshMandiCapacity(mandiKey) {
+    if (!mandiKey) return;
+
     maxTonsCapacity = getMandiCapacity(mandiKey);
     bookedTons = getMandiBookedTons(mandiKey);
 
-    renderCapacityUI(
-        localStorage.getItem(`kd_lock_${mandiKey}`) === 'true',
-        mandiKey
-    );
+    renderCapacityUI(isMandiLocked(mandiKey), mandiKey);
 }
-    // Show the saved Admin buffer for the default mandi.
-    applyTimeBufferUI(currentMandi);
 
-    // Do not automatically reopen an old QR modal.
+// ======================================================
+// PAGE INITIALIZATION
+// CHANGE C: USE SHARED SAVED CAPACITY VALUES
+// ======================================================
+
+window.addEventListener('DOMContentLoaded', () => {
+    const langSelect = document.getElementById('langSelect');
+
+    if (langSelect) {
+        langSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
+    }
+
+    // Start with empty booking choices for a new booking.
+    document.getElementById('mandiSelect').selectedIndex = 0;
+    document.getElementById('commoditySelect').selectedIndex = 0;
+    document.getElementById('vehicleSelect').selectedIndex = 0;
+    document.getElementById('slotSelect').selectedIndex = 0;
+    document.getElementById('quantityInput').value = '';
+
+    // Do not automatically reopen a previous QR pass.
     document.getElementById('qrModal').classList.add('hidden');
 
-    // Update the form if Admin changes settings in another open tab.
+    // Read Admin's last selected mandi if the Admin portal saves it.
+    // This is only for the initial capacity display, not form selection.
+    const initialMandi =
+        localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
+
+    refreshMandiCapacity(initialMandi);
+    applyTimeBufferUI(initialMandi);
+
+    // Refresh values when Admin changes them in another tab/window
+    // on the same origin.
     window.addEventListener('storage', (event) => {
-        if (
-            event.key &&
-            (
-                event.key.startsWith('kd_delay_') ||
-                event.key.startsWith('kd_lock_') ||
-                event.key.startsWith('kd_cap_') ||
-                event.key.startsWith('kd_booked_')
-            )
-        ) {
-            const active = document.getElementById('mandiSelect').value;
+        if (!event.key) return;
 
-            if (active) {
-                applyTimeBufferUI(active);
+        const relevantKey =
+            event.key.startsWith('kd_cap_') ||
+            event.key.startsWith('kd_booked_') ||
+            event.key.startsWith('kd_lock_') ||
+            event.key.startsWith('kd_delay_');
 
-                renderCapacityUI(
-                    localStorage.getItem(`kd_lock_${active}`) === 'true',
-                    active
-                );
-            }
+        if (!relevantKey) return;
+
+        const selectedMandi =
+            document.getElementById('mandiSelect').value || initialMandi;
+
+        if (event.key.endsWith(selectedMandi)) {
+            refreshMandiCapacity(selectedMandi);
+            applyTimeBufferUI(selectedMandi);
         }
     });
 });
 
-       function onMandiChange() {
+// ======================================================
+// MANDI SELECTION AND MAP
+// ======================================================
+
+function onMandiChange() {
     const mandiKey = document.getElementById('mandiSelect').value;
 
     if (!mandiKey) return;
@@ -228,173 +345,442 @@ function refreshMandiCapacity(mandiKey) {
     refreshMandiCapacity(mandiKey);
     applyTimeBufferUI(mandiKey);
     showMapForMandi(mandiKey, false);
+
+    document.getElementById('quantityInput').max =
+        String(Math.max(1, maxTonsCapacity));
 }
-        function showMapForMandi(mandiKey, isFull) {
-            const mandiGeo = mandiLocationsMap[mandiKey];
-            if (!mandiGeo) return;
-            document.getElementById('mapPlaceholder').classList.add('hidden');
-            document.getElementById('googleMapFrame').classList.remove('hidden');
-            document.getElementById('currentMandiName').textContent = mandiGeo.name;
-            document.getElementById('currentMandiName').className = "text-green-700";
 
-            let query = mandiGeo.query;
-            document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=${isFull? 13 : 14}&ie=UTF8&iwloc=&output=embed`;
+function showMapForMandi(mandiKey, isFull) {
+    const mandi = mandiLocationsMap[mandiKey];
+    if (!mandi) return;
+
+    document.getElementById('mapPlaceholder').classList.add('hidden');
+    document.getElementById('googleMapFrame').classList.remove('hidden');
+
+    document.getElementById('currentMandiName').textContent = mandi.name;
+    document.getElementById('currentMandiName').className = 'text-green-700';
+
+    document.getElementById('googleMapFrame').src =
+        `https://maps.google.com/maps?q=${encodeURIComponent(mandi.query)}&z=${isFull ? 13 : 14}&output=embed`;
+}
+
+// ======================================================
+// ADMIN BUFFER TIME
+// Reads kd_delay_<mandiKey>, the shared Admin storage key.
+// ======================================================
+
+function applyTimeBufferUI(mandiKey) {
+    const storedDelay = localStorage.getItem(`kd_delay_${mandiKey}`);
+    const delayMins = storedDelay === null ? 0 : (parseInt(storedDelay, 10) || 0);
+
+    const formatTime = (totalMinutes) => {
+        const mins = ((totalMinutes % 1440) + 1440) % 1440;
+        const h24 = Math.floor(mins / 60);
+        const mm = mins % 60;
+        const suffix = h24 >= 12 ? 'PM' : 'AM';
+        const h12 = h24 % 12 || 12;
+
+        return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
+    };
+
+    const ranges = [
+        [540, 690],
+        [690, 840],
+        [840, 990],
+        [990, 1080]
+    ];
+
+    const labels = [
+        'Morning Slot',
+        'Mid-Day Slot',
+        'Afternoon Slot',
+        'Evening Slot'
+    ];
+
+    ranges.forEach((range, index) => {
+        const start = formatTime(range[0] + delayMins);
+        const end = formatTime(range[1] + delayMins);
+        const option = document.getElementById(`optSlot${index + 1}`);
+
+        if (option) {
+            option.textContent =
+                `${start} - ${end} (${labels[index]}` +
+                `${delayMins ? ` • Admin +${delayMins}m` : ''})`;
         }
+    });
+}
 
-        function applyTimeBufferUI(mandiKey) {
-            const delayMins = parseInt(localStorage.getItem(`kd_delay_${mandiKey}`), 10) || 0;
-            const fmt = (total) => {
-                const mins = ((total % 1440) + 1440) % 1440;
-                const h24 = Math.floor(mins / 60), mm = mins % 60;
-                const suffix = h24 >= 12 ? 'PM' : 'AM';
-                const h12 = h24 % 12 || 12;
-                return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
-            };
-            const ranges = [[540,690],[690,840],[840,990],[990,1080]];
-            const labels = ['Morning Slot','Mid-Day Slot','Afternoon Slot','Evening Slot'];
-            ranges.forEach((range, i) => {
-                const start = fmt(range[0] + delayMins), end = fmt(range[1] + delayMins);
-                document.getElementById(`optSlot${i+1}`).textContent = `${start} - ${end} (${labels[i]}${delayMins ? ` • Admin +${delayMins}m` : ''})`;
-            });
+// ======================================================
+// CAPACITY DISPLAY
+// ======================================================
+
+function renderCapacityUI(isLocked, currentMandiKey) {
+    const capacityCount = document.getElementById('capacityCount');
+    const capacityBar = document.getElementById('capacityBar');
+    const alertBanner = document.getElementById('fullCapacityAlert');
+    const submitButton = document.getElementById('btnConfirmBooking');
+
+    const capacity = Math.max(0, Number(maxTonsCapacity) || 0);
+    const booked = Math.max(0, Number(bookedTons) || 0);
+
+    capacityCount.textContent = `${booked} Tons / ${capacity} Tons`;
+
+    const percentage = capacity > 0
+        ? Math.min(100, Math.round((booked / capacity) * 100))
+        : 100;
+
+    capacityBar.style.width = `${percentage}%`;
+
+    const full = capacity <= 0 || booked >= capacity;
+
+    if (isLocked || full) {
+        alertBanner.classList.remove('hidden');
+
+        submitButton.disabled = true;
+        submitButton.className =
+            'w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed';
+
+        if (currentMandiKey) {
+            showMapForMandi(currentMandiKey, true);
         }
+    } else {
+        alertBanner.classList.add('hidden');
 
-        function renderCapacityUI(isLocked, currentMandiKey) {
-            document.getElementById('capacityCount').textContent = `${bookedTons} Tons / ${maxTonsCapacity} Tons`;
-            const percentage = Math.min(100, Math.round((bookedTons / maxTonsCapacity) * 100));
-            document.getElementById('capacityBar').style.width = percentage + '%';
+        submitButton.disabled = false;
+        submitButton.className =
+            'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer';
+    }
+}
 
-            const alertBanner = document.getElementById('fullCapacityAlert');
-            const submitBtn = document.getElementById('btnConfirmBooking');
+// ======================================================
+// SAVED BOOKING AND QR PASS
+// ======================================================
 
-            if (isLocked || bookedTons >= maxTonsCapacity) {
-                alertBanner.classList.remove('hidden');
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed";
-                if(currentMandiKey) {
-                    const mandiGeo = mandiLocationsMap[currentMandiKey];
-                    document.getElementById('googleMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(mandiGeo.query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-                    document.getElementById('mapPlaceholder').classList.add('hidden');
-                    document.getElementById('googleMapFrame').classList.remove('hidden');
-                }
-            } else {
-                alertBanner.classList.add('hidden');
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer";
-            }
-        }
+function getStoredBooking() {
+    try {
+        const saved = localStorage.getItem('kd_farmer_booking');
+        return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+        console.error('Unable to read saved booking:', error);
+        return null;
+    }
+}
 
-        function handleSlotBooking(e) {
-            e.preventDefault();
-            const selectedMandiKey = document.getElementById('mandiSelect').value;
-            if (!selectedMandiKey) { alert('Please select an APMC mandi.'); return; }
-            if (localStorage.getItem(`kd_lock_${selectedMandiKey}`) === 'true') { alert('This mandi is temporarily locked by the admin.'); return; }
-            const inputTons = parseFloat(document.getElementById('quantityInput').value);
-            const capacity = parseFloat(localStorage.getItem(`kd_cap_${selectedMandiKey}`)) || (selectedMandiKey === 'nashik_grain' ? 60 : selectedMandiKey === 'nagpur_cotton' ? 40 : selectedMandiKey === 'amravati_grain' ? 30 : 50);
-            const currentBooked = parseFloat(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || 14;
-            const existing = getStoredBooking();
-            const alreadyCountedForThisMandi = existing && existing.mandiKey === selectedMandiKey ? (Number(existing.quantity) || 0) : 0;
-            const effectiveBooked = Math.max(0, currentBooked - alreadyCountedForThisMandi);
-            if (!Number.isFinite(inputTons) || inputTons <= 0 || effectiveBooked + inputTons > capacity) {
-                alert('The requested quantity exceeds the available mandi capacity. Please reduce the quantity or choose another mandi.');
-                return;
-            }
-            const mandiSelect = document.getElementById('mandiSelect');
-            const mandi = mandiSelect.options[mandiSelect.selectedIndex].text;
-            const slotSelect = document.getElementById('slotSelect');
-            const slot = slotSelect.options[slotSelect.selectedIndex].text;
-            const tokenId = existing && existing.mandiKey === selectedMandiKey ? existing.tokenId : `KD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-            const booking = {
-                tokenId, farmerName: localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar',
-                mandiKey: selectedMandiKey, mandiName: mandi, commodity: document.getElementById('commoditySelect').value,
-                vehicle: document.getElementById('vehicleSelect').value, slotKey: slotSelect.value, slotLabel: slot,
-                quantity: inputTons, createdAt: (existing && existing.mandiKey === selectedMandiKey ? existing.createdAt : new Date().toISOString())
-            };
-            // Count the quantity only for a genuinely new booking; re-confirming updates the existing booking.
-            if (!existing || existing.mandiKey !== selectedMandiKey || existing.tokenId !== tokenId) {
-                localStorage.setItem(`kd_booked_${selectedMandiKey}`, String(currentBooked + inputTons));
-            } else if (Number(existing.quantity) !== inputTons) {
-                localStorage.setItem(`kd_booked_${selectedMandiKey}`, String(Math.max(0, currentBooked - Number(existing.quantity) + inputTons)));
-            }
-            localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
-            localStorage.setItem('kd_temp_mandi', selectedMandiKey);
-            localStorage.setItem('kd_temp_commodity', booking.commodity);
-            localStorage.setItem('kd_temp_vehicle', booking.vehicle);
-            localStorage.setItem('kd_temp_slot', booking.slotKey);
-            localStorage.setItem('kd_temp_quantity', String(inputTons));
-            renderSavedBooking(booking);
-            document.getElementById('qrModal').classList.remove('hidden');
-            maxTonsCapacity = capacity;
-            bookedTons = parseFloat(localStorage.getItem(`kd_booked_${selectedMandiKey}`)) || currentBooked;
-            renderCapacityUI(false, selectedMandiKey);
-        }
+function renderSavedBooking(booking) {
+    document.getElementById('summaryName').textContent =
+        booking.farmerName || 'Ramesh Kumar';
 
-        function closeModal() { document.getElementById('qrModal').classList.add('hidden'); }
+    document.getElementById('summaryMandi').textContent =
+        booking.mandiName || '-';
 
-        function switchRole() {
-            const selectedMandiKey = document.getElementById('mandiSelect').value;
-            if (selectedMandiKey) localStorage.setItem('kd_temp_mandi', selectedMandiKey);
-            localStorage.setItem('kd_temp_commodity', document.getElementById('commoditySelect').value);
-            localStorage.setItem('kd_temp_vehicle', document.getElementById('vehicleSelect').value);
-            localStorage.setItem('kd_temp_slot', document.getElementById('slotSelect').value);
-            localStorage.setItem('kd_temp_quantity', document.getElementById('quantityInput').value);
-            localStorage.setItem('kd_farmer_step', 'booking');
-            window.location.href = '../index.html';
-        }
-    </script>
-\n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
+    document.getElementById('summaryCommodity').textContent =
+        booking.commodity || '-';
+
+    document.getElementById('summaryVehicle').textContent =
+        booking.vehicle || '-';
+
+    document.getElementById('summaryQuantity').textContent =
+        booking.quantity ?? '-';
+
+    // Always calculate the pass arrival time from the latest Admin buffer.
+    const delayMins =
+        parseInt(localStorage.getItem(`kd_delay_${booking.mandiKey}`), 10) || 0;
+
+    const slotRanges = {
+        slot1: [540, 690],
+        slot2: [690, 840],
+        slot3: [840, 990],
+        slot4: [990, 1080]
+    };
+
+    const range = slotRanges[booking.slotKey];
+
+    if (range) {
+        const formatTime = (totalMinutes) => {
+            const mins = ((totalMinutes % 1440) + 1440) % 1440;
+            const h24 = Math.floor(mins / 60);
+            const mm = mins % 60;
+            const suffix = h24 >= 12 ? 'PM' : 'AM';
+            const h12 = h24 % 12 || 12;
+
+            return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
+        };
+
+        document.getElementById('summarySlot').textContent =
+            `${formatTime(range[0] + delayMins)} - ${formatTime(range[1] + delayMins)}`;
+    } else {
+        document.getElementById('summarySlot').textContent =
+            booking.slotLabel || '-';
+    }
+
+    document.getElementById('summaryToken').textContent =
+        booking.tokenId || '-';
+
+    const qrElement = document.getElementById('qrcode');
+    qrElement.innerHTML = '';
+
+    if (window.QRCode && booking.tokenId) {
+        new QRCode(qrElement, {
+            text: JSON.stringify({
+                tokenId: booking.tokenId,
+                farmer: booking.farmerName || 'Ramesh Kumar',
+                mandi: booking.mandiKey,
+                slot: booking.slotKey,
+                quantity: booking.quantity
+            }),
+            width: 150,
+            height: 150
+        });
+    }
+}
+
+// ======================================================
+// CONFIRM BOOKING
+// CHANGE D: SAME STORAGE VALUES FOR VALIDATION AND DISPLAY
+// ======================================================
+
+function handleSlotBooking(event) {
+    event.preventDefault();
+
+    const mandiKey = document.getElementById('mandiSelect').value;
+
+    if (!mandiKey) {
+        alert('Please select an APMC mandi.');
+        return;
+    }
+
+    if (isMandiLocked(mandiKey)) {
+        alert('This mandi is temporarily locked by the Admin.');
+        return;
+    }
+
+    const commodity = document.getElementById('commoditySelect').value;
+    const vehicle = document.getElementById('vehicleSelect').value;
+    const slotSelect = document.getElementById('slotSelect');
+    const slotKey = slotSelect.value;
+    const inputTons = Number(document.getElementById('quantityInput').value);
+
+    if (!commodity || !vehicle || !slotKey) {
+        alert('Please select commodity, vehicle, and arrival slot.');
+        return;
+    }
+
+    if (!Number.isFinite(inputTons) || inputTons <= 0) {
+        alert('Please enter a valid quantity in tons.');
+        return;
+    }
+
+    // CHANGE D:
+    // Use exactly the same keys and values as the Admin portal.
+    const capacity = getMandiCapacity(mandiKey);
+    const currentBooked = getMandiBookedTons(mandiKey);
+
+    const existing = getStoredBooking();
+
+    // If editing the existing booking at this same mandi,
+    // remove its current quantity before checking the new quantity.
+    const existingQuantityAtThisMandi =
+        existing && existing.mandiKey === mandiKey
+            ? (Number(existing.quantity) || 0)
+            : 0;
+
+    const effectiveBooked = Math.max(
+        0,
+        currentBooked - existingQuantityAtThisMandi
+    );
+
+    if (capacity <= 0 || effectiveBooked + inputTons > capacity) {
+        const available = Math.max(0, capacity - effectiveBooked);
+
+        alert(
+            `Requested quantity exceeds available capacity. Available: ${available} tons.`
+        );
+        return;
+    }
+
+    const mandiSelect = document.getElementById('mandiSelect');
+    const mandiName =
+        mandiSelect.options[mandiSelect.selectedIndex].text;
+
+    const tokenId =
+        existing && existing.mandiKey === mandiKey
+            ? existing.tokenId
+            : `KD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const booking = {
+        tokenId,
+        farmerName: localStorage.getItem('kd_farmer_name') || 'Ramesh Kumar',
+        mandiKey,
+        mandiName,
+        commodity,
+        vehicle,
+        slotKey,
+        slotLabel: slotSelect.options[slotSelect.selectedIndex].text,
+        quantity: inputTons,
+        createdAt:
+            existing && existing.mandiKey === mandiKey
+                ? existing.createdAt
+                : new Date().toISOString()
+    };
+
+    let updatedBooked;
+
+    if (existing && existing.mandiKey === mandiKey) {
+        // Update the existing booking quantity without counting it twice.
+        updatedBooked = Math.max(
+            0,
+            currentBooked - (Number(existing.quantity) || 0) + inputTons
+        );
+    } else {
+        // A new booking at this mandi.
+        updatedBooked = currentBooked + inputTons;
+    }
+
+    localStorage.setItem(`kd_booked_${mandiKey}`, String(updatedBooked));
+    localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
+
+    // Retain temporary values for other parts of the demo.
+    localStorage.setItem('kd_temp_mandi', mandiKey);
+    localStorage.setItem('kd_temp_commodity', commodity);
+    localStorage.setItem('kd_temp_vehicle', vehicle);
+    localStorage.setItem('kd_temp_slot', slotKey);
+    localStorage.setItem('kd_temp_quantity', String(inputTons));
+
+    renderSavedBooking(booking);
+    document.getElementById('qrModal').classList.remove('hidden');
+
+    // CHANGE D: re-read the stored totals after saving the booking.
+    refreshMandiCapacity(mandiKey);
+}
+
+function closeModal() {
+    document.getElementById('qrModal').classList.add('hidden');
+}
+
+// ======================================================
+// SWITCH ROLE
+// ======================================================
+
+function switchRole() {
+    const mandiKey = document.getElementById('mandiSelect').value;
+
+    if (mandiKey) {
+        localStorage.setItem('kd_temp_mandi', mandiKey);
+    }
+
+    localStorage.setItem(
+        'kd_temp_commodity',
+        document.getElementById('commoditySelect').value
+    );
+
+    localStorage.setItem(
+        'kd_temp_vehicle',
+        document.getElementById('vehicleSelect').value
+    );
+
+    localStorage.setItem(
+        'kd_temp_slot',
+        document.getElementById('slotSelect').value
+    );
+
+    localStorage.setItem(
+        'kd_temp_quantity',
+        document.getElementById('quantityInput').value
+    );
+
+    window.location.href = '../index.html';
+}
+</script>
+
+<!-- Optional automatic translation support; requires internet access. -->
 <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+
 <script>
 (function () {
-  const STORAGE_KEY = 'kd_selected_lang';
-  // Google Translate language codes. Unsupported codes remain selectable, but may not be translated by Google.
-  const googleCodes = new Set(['en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj']);
-  function setTranslateCookie(lang) {
-    const target = googleCodes.has(lang) ? lang : 'en';
-    const value = '/en/' + target;
-    document.cookie = 'googtrans=' + value + ';path=/;SameSite=Lax';
-    // GitHub Pages may use a subdomain; a host-only cookie is also set above.
-    try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
-  }
-  window.googleTranslateElementInit = function () {
-    if (!window.google || !google.translate || !google.translate.TranslateElement) return;
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-      autoDisplay: false
-    }, 'google_translate_element');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo && lang !== 'en' && Array.from(combo.options).some(o => o.value === lang)) {
-      combo.value = lang;
-      combo.dispatchEvent(new Event('change'));
+    const STORAGE_KEY = 'kd_selected_lang';
+
+    const googleCodes = new Set([
+        'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
+        'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
+        'bho', 'raj'
+    ]);
+
+    function setTranslateCookie(lang) {
+        const target = googleCodes.has(lang) ? lang : 'en';
+
+        document.cookie =
+            'googtrans=/en/' + target + ';path=/;SameSite=Lax';
+
+        try {
+            localStorage.setItem(STORAGE_KEY, lang);
+        } catch (error) {
+            console.warn('Unable to save language preference.', error);
+        }
     }
-  };
-  window.kdApplySelectedLanguage = function (lang) {
-    setTranslateCookie(lang);
-    // Reload lets Google Translate apply the saved language consistently to static and dynamic UI.
-    window.location.reload();
-  };
-  // Keep the existing language selector, but route its choice through the translation engine.
-  window.changeLanguage = function () {
-    const select = document.getElementById('langSelect');
-    if (select) window.kdApplySelectedLanguage(select.value);
-  };
-  document.addEventListener('DOMContentLoaded', function () {
-    const select = document.getElementById('langSelect');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    if (select) select.value = lang;
-    if (!document.querySelector('script[data-kd-google-translate]')) {
-      const script = document.createElement('script');
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      script.setAttribute('data-kd-google-translate', 'true');
-      document.head.appendChild(script);
-    }
-  });
+
+    window.googleTranslateElementInit = function () {
+        if (
+            !window.google ||
+            !google.translate ||
+            !google.translate.TranslateElement
+        ) {
+            return;
+        }
+
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages:
+                'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+        const combo = document.querySelector('.goog-te-combo');
+
+        if (
+            combo &&
+            lang !== 'en' &&
+            Array.from(combo.options).some(option => option.value === lang)
+        ) {
+            combo.value = lang;
+            combo.dispatchEvent(new Event('change'));
+        }
+    };
+
+    window.kdApplySelectedLanguage = function (lang) {
+        setTranslateCookie(lang);
+        window.location.reload();
+    };
+
+    window.changeLanguage = function () {
+        const select = document.getElementById('langSelect');
+
+        if (select) {
+            window.kdApplySelectedLanguage(select.value);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('langSelect');
+        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+        if (select) {
+            select.value = lang;
+        }
+
+        if (!document.querySelector('script[data-kd-google-translate]')) {
+            const script = document.createElement('script');
+
+            script.src =
+                'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+
+            script.async = true;
+            script.setAttribute('data-kd-google-translate', 'true');
+            document.head.appendChild(script);
+        }
+    });
 })();
 </script>
 
 </body>
 </html>
-
-Step 2 farmer/slot_booking.html
