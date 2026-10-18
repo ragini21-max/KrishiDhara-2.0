@@ -1,1650 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiDhara 2.0 • Farmer Portal</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    .portal-bg {
-      background:
-        radial-gradient(circle at top left, #dcfce7 0, transparent 35%),
-        linear-gradient(135deg, #f0fdf4, #f8fafc 55%, #ecfdf5);
-    }
-
-    .panel {
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-    }
-
-    .field {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 0.75rem;
-      padding: 0.75rem 0.9rem;
-      outline: none;
-      background: white;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .field:focus {
-      border-color: #16a34a;
-      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
-    }
-
-    .btn-primary {
-      background: #15803d;
-      color: white;
-      border-radius: 0.75rem;
-      padding: 0.75rem 1rem;
-      font-weight: 700;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: #166534;
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-      border-radius: 0.75rem;
-      padding: 0.7rem 1rem;
-      font-weight: 600;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .step-number {
-      display: inline-flex;
-      width: 2rem;
-      height: 2rem;
-      align-items: center;
-      justify-content: center;
-      border-radius: 9999px;
-      background: #dcfce7;
-      color: #166534;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .status-pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .status-complete {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .status-expired {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .hidden-section {
-      display: none !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrishiDhara 2.0 - Farmer Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="portal-bg min-h-screen text-slate-800">
+<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
 
-  <header class="border-b border-green-100 bg-white/90 backdrop-blur">
-    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-
-      <a href="../index.html" class="flex items-center gap-3">
-        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-green-700 text-2xl text-white">
-          🌾
+    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
+        <div class="flex items-center space-x-3">
+            <span class="text-4xl">👨‍🌾</span>
+            <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
         </div>
 
-        <div>
-          <h1 class="text-lg font-extrabold tracking-tight text-green-900"
-              data-i18n="app_title">KrishiDhara 2.0</h1>
-          <p class="text-sm text-slate-500" data-i18n="farmer_portal">
-            Farmer Portal
-          </p>
-        </div>
-      </a>
+        <div class="flex items-center space-x-3">
+            <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-4 py-2.5 rounded-2xl border border-green-600 font-bold focus:outline-none cursor-pointer">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="bn">বাংলা</option>
+                <option value="te">తెలుగు</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="or">ଓଡ଼ିଆ</option>
+                <option value="as">অসমীয়া</option>
+                <option value="ur">اردو</option>
+                <option value="sa">संस्कृतम्</option>
+                <option value="ne">नेपाली</option>
+                <option value="sd">سنڌी</option>
+                <option value="ks">कॉशुर</option>
+                <option value="doi">डोगरी</option>
+                <option value="mni">মৈতৈলোন্</option>
+                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
+                <option value="bho">भोजपुरी</option>
+                <option value="raj">राजस्थानी</option>
+            </select>
 
-      <div class="flex flex-wrap items-center gap-3">
-        <label for="languageSelect" class="text-sm font-semibold text-slate-600"
-               data-i18n="language_label">Language</label>
-
-        <select id="languageSelect"
-                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold outline-none focus:border-green-600">
-          <option value="en">English</option>
-          <option value="hi">हिन्दी</option>
-          <option value="mr">मराठी</option>
-          <option value="pa">ਪੰਜਾਬੀ</option>
-          <option value="gu">ગુજરાતી</option>
-          <option value="bn">বাংলা</option>
-          <option value="te">తెలుగు</option>
-          <option value="ta">தமிழ்</option>
-          <option value="kn">ಕನ್ನಡ</option>
-          <option value="ml">മലയാളം</option>
-          <option value="or">ଓଡ଼ିଆ</option>
-          <option value="as">অসমীয়া</option>
-          <option value="ur">اردو</option>
-          <option value="sa">संस्कृतम्</option>
-          <option value="ne">नेपाली</option>
-          <option value="sd">سنڌي</option>
-          <option value="ks">कॉशुर</option>
-          <option value="doi">डोगरी</option>
-          <option value="mni">মৈতৈলোন্</option>
-          <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
-          <option value="bho">भोजपुरी</option>
-          <option value="raj">राजस्थानी</option>
-        </select>
-
-        <button id="switchRoleBtn" type="button" class="btn-secondary text-sm"
-                data-i18n="switch_role">
-          Switch Role
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-
-    <div class="mb-7 text-center">
-      <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-sm font-bold text-green-800">
-        <span>🌱</span>
-        <span data-i18n="farmer_portal">Farmer Portal</span>
-      </div>
-
-      <h2 class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl"
-          data-i18n="page_heading">
-        Farmer Identity Verification
-      </h2>
-
-      <p class="mx-auto mt-3 max-w-2xl text-slate-600"
-         data-i18n="page_description">
-        Complete the verification demo before proceeding to procurement slot booking.
-      </p>
-    </div>
-
-    <section class="panel overflow-hidden rounded-3xl">
-
-      <div class="border-b border-slate-100 bg-white px-5 py-5 sm:px-8">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <span class="step-number">1</span>
-            <div>
-              <h3 class="text-lg font-extrabold text-slate-900"
-                  data-i18n="verification_heading">
-                Step 1: Identity &amp; Aadhaar Verification
-              </h3>
-              <p class="mt-1 text-sm text-slate-500"
-                 data-i18n="verification_subtitle">
-                Secure mobile and Aadhaar demo authentication.
-              </p>
-            </div>
-          </div>
-
-          <span id="verificationBadge"
-                class="status-pending rounded-full px-3 py-1.5 text-xs font-extrabold"
-                data-i18n="pending">
-            Pending
-          </span>
-        </div>
-      </div>
-
-      <div class="space-y-7 p-5 sm:p-8">
-
-        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-          <p class="font-extrabold" data-i18n="demo_notice_title">
-            Demo mode — please note
-          </p>
-          <p class="mt-1" data-i18n="demo_notice">
-            OTPs are simulated and displayed in browser alerts. No real SMS, Aadhaar authentication, or e-KYC request is performed.
-          </p>
-        </div>
-
-        <!-- Mobile verification -->
-        <section class="rounded-2xl border border-slate-200 p-4 sm:p-6">
-          <div class="mb-5 flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-xl">
-              📱
-            </div>
-            <div>
-              <h4 class="font-extrabold text-slate-900"
-                  data-i18n="mobile_heading">
-                Mobile Number Verification
-              </h4>
-              <p class="text-sm text-slate-500"
-                 data-i18n="mobile_description">
-                Enter your 10-digit Indian mobile number.
-              </p>
-            </div>
-          </div>
-
-          <label for="mobileNumber" class="mb-2 block text-sm font-bold text-slate-700"
-                 data-i18n="mobile_label">
-            Mobile Number
-          </label>
-
-          <div class="flex flex-col gap-3 sm:flex-row">
-            <input
-              id="mobileNumber"
-              type="tel"
-              inputmode="numeric"
-              autocomplete="tel-national"
-              maxlength="10"
-              class="field"
-              placeholder="Enter 10-digit mobile no."
-              data-i18n-placeholder="mobile_placeholder"
-              aria-describedby="mobileHelp">
-
-            <button id="sendMobileOtpBtn" type="button"
-                    class="btn-primary whitespace-nowrap"
-                    data-i18n="send_otp">
-              Send OTP
+            <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 transition shadow cursor-pointer font-bold">
+                Switch Role
             </button>
-          </div>
+        </div>
+    </header>
 
-          <p id="mobileHelp" class="mt-2 text-xs text-slate-500"
-             data-i18n="mobile_help">
-            Use a valid 10-digit Indian mobile number.
-          </p>
+    <main class="w-full max-w-4xl mx-auto my-8 space-y-8">
 
-          <div id="mobileOtpSection" class="mt-5 hidden-section">
-            <label for="mobileOtp" class="mb-2 block text-sm font-bold text-slate-700"
-                   data-i18n="mobile_otp_label">
-              Enter the 4-digit OTP sent to mobile
-            </label>
-
-            <div class="flex flex-col gap-3 sm:flex-row">
-              <input
-                id="mobileOtp"
-                type="text"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="4"
-                class="field"
-                placeholder="4-digit OTP"
-                data-i18n-placeholder="otp_placeholder">
-
-              <button id="verifyMobileOtpBtn" type="button"
-                      class="btn-primary whitespace-nowrap"
-                      data-i18n="verify_mobile">
-                Verify Mobile OTP ✅
-              </button>
-            </div>
-
-            <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm">
-              <p id="mobileOtpStatus" class="text-slate-500"
-                 aria-live="polite"></p>
-              <p id="mobileTimer" class="font-bold text-amber-700"
-                 aria-live="polite">60s</p>
-            </div>
-          </div>
-
-          <div id="mobileVerifiedMessage"
-               class="mt-4 hidden-section rounded-xl bg-green-50 p-3 text-sm font-semibold text-green-800"
-               aria-live="polite"
-               data-i18n="mobile_verified">
-            Mobile number verified in this demo session.
-          </div>
-        </section>
-
-        <!-- Aadhaar demo verification -->
-        <section class="rounded-2xl border border-slate-200 p-4 sm:p-6">
-          <div class="mb-5 flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-xl">
-              🪪
-            </div>
-            <div>
-              <h4 class="font-extrabold text-slate-900"
-                  data-i18n="aadhaar_heading">
-                Aadhaar e-KYC Demo
-              </h4>
-              <p class="text-sm text-slate-500"
-                 data-i18n="aadhaar_description">
-                Enter a 12-digit Aadhaar number for the demo flow.
-              </p>
-            </div>
-          </div>
-
-          <label for="aadhaarNumber" class="mb-2 block text-sm font-bold text-slate-700"
-                 data-i18n="aadhaar_label">
-            Aadhaar Number (12-Digit)
-          </label>
-
-          <div class="flex flex-col gap-3 sm:flex-row">
-            <input
-              id="aadhaarNumber"
-              type="password"
-              inputmode="numeric"
-              autocomplete="off"
-              maxlength="12"
-              class="field"
-              placeholder="XXXX XXXX XXXX"
-              data-i18n-placeholder="aadhaar_placeholder"
-              aria-describedby="aadhaarHelp">
-
-            <button id="sendAadhaarOtpBtn" type="button"
-                    class="btn-primary whitespace-nowrap"
-                    data-i18n="send_ekyc_otp">
-              Send e-KYC OTP
-            </button>
-          </div>
-
-          <p id="aadhaarHelp" class="mt-2 text-xs text-slate-500"
-             data-i18n="aadhaar_help">
-            This demo does not contact UIDAI or verify Aadhaar identity.
-          </p>
-
-          <div id="aadhaarOtpSection" class="mt-5 hidden-section">
-            <label for="aadhaarOtp" class="mb-2 block text-sm font-bold text-slate-700"
-                   data-i18n="aadhaar_otp_label">
-              Enter OTP sent to registered Aadhaar mobile
-            </label>
-
-            <div class="flex flex-col gap-3 sm:flex-row">
-              <input
-                id="aadhaarOtp"
-                type="text"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="4"
-                class="field"
-                placeholder="4-digit OTP"
-                data-i18n-placeholder="otp_placeholder">
-
-              <button id="verifyAadhaarOtpBtn" type="button"
-                      class="btn-primary whitespace-nowrap"
-                      data-i18n="verify_aadhaar">
-                Verify &amp; Fetch Profile 🔍
-              </button>
-            </div>
-
-            <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm">
-              <p id="aadhaarOtpStatus" class="text-slate-500"
-                 aria-live="polite"></p>
-              <p id="aadhaarTimer" class="font-bold text-amber-700"
-                 aria-live="polite">60s</p>
-            </div>
-          </div>
-
-          <div id="aadhaarVerifiedMessage"
-               class="mt-4 hidden-section rounded-xl bg-green-50 p-3 text-sm font-semibold text-green-800"
-               aria-live="polite"
-               data-i18n="aadhaar_verified">
-            Aadhaar demo step completed. Identity has not been independently verified.
-          </div>
-        </section>
-
-        <!-- Demo profile -->
-        <section id="profileSection"
-                 class="hidden-section rounded-2xl border border-green-200 bg-green-50/70 p-5 sm:p-6">
-          <div class="flex items-start gap-4">
-            <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-green-100 text-3xl">
-              👨‍🌾
-            </div>
-
-            <div class="min-w-0 flex-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <h4 class="text-lg font-extrabold text-green-950"
-                    data-i18n="profile_name">
-                  Ramesh Kumar
-                </h4>
-                <span class="rounded-full bg-green-200 px-2.5 py-1 text-xs font-bold text-green-900"
-                      data-i18n="demo_complete">
-                  Demo Complete ✓
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl md:text-2xl font-extrabold text-green-900">
+                    Step 1: Identity & Aadhaar Verification
+                </h2>
+                <span id="stepBadge" class="text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full">
+                    Pending
                 </span>
-              </div>
-
-              <p class="mt-1 text-sm text-green-900"
-                 data-i18n="profile_details">
-                Age: 42 | Gender: Male
-              </p>
-
-              <p class="mt-3 text-sm font-bold text-green-800"
-                 data-i18n="profile_status">
-                Demo verification completed
-              </p>
-
-              <p class="mt-2 text-sm leading-6 text-slate-600"
-                 data-i18n="profile_disclaimer">
-                Both demo OTP steps were completed. This browser demo does not independently verify Aadhaar identity.
-              </p>
             </div>
-          </div>
-        </section>
 
-        <div class="border-t border-slate-100 pt-6">
-          <button id="proceedBtn" type="button"
-                  class="btn-primary w-full py-4 text-base"
-                  disabled
-                  data-i18n="proceed">
-            Proceed to Slot Booking →
-          </button>
-
-          <p id="proceedHelp" class="mt-3 text-center text-sm text-slate-500"
-             data-i18n="proceed_help">
-            Complete both demo verification steps to continue.
-          </p>
+            <p class="text-sm md:text-base text-gray-600">
+                Secure mobile & Aadhaar authentication for procurement slot booking.
+            </p>
         </div>
 
-      </div>
-    </section>
+        <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-8">
 
-    <p class="mt-6 text-center text-xs leading-5 text-slate-500"
-       data-i18n="footer_note">
-      KrishiDhara 2.0 • Farmer Portal • Demonstration only
-    </p>
+            <!-- MOBILE VERIFICATION -->
+            <div id="mobileSection" class="space-y-4">
+                <label for="mobileInput" class="block text-base md:text-lg font-bold text-gray-800">
+                    📱 Mobile Number
+                </label>
 
-  </main>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        type="tel"
+                        id="mobileInput"
+                        maxlength="10"
+                        inputmode="numeric"
+                        autocomplete="tel-national"
+                        placeholder="Enter 10-digit mobile no."
+                        class="min-w-0 flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
 
-  <script>
-    "use strict";
+                    <button
+                        type="button"
+                        onclick="sendMobileOTP()"
+                        id="btnSendMobileOTP"
+                        class="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">
+                        Send OTP
+                    </button>
+                </div>
 
-    /*
-     * Local translations.
-     * Language switching updates the page immediately without a reload
-     * or an external translation service.
-     */
+                <div id="mobileOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
+                    <div class="flex justify-between items-center text-sm md:text-base">
+                        <span class="text-gray-700 font-semibold">
+                            Enter 4-digit OTP sent to mobile
+                        </span>
+                        <span id="mobileTimer" class="text-red-600 font-bold text-base">60s</span>
+                    </div>
 
-    const translationKeys = [
-      "app_title",
-      "farmer_portal",
-      "language_label",
-      "switch_role",
-      "page_heading",
-      "page_description",
-      "verification_heading",
-      "verification_subtitle",
-      "pending",
-      "demo_notice_title",
-      "demo_notice",
-      "mobile_heading",
-      "mobile_description",
-      "mobile_label",
-      "mobile_placeholder",
-      "send_otp",
-      "mobile_help",
-      "mobile_otp_label",
-      "otp_placeholder",
-      "verify_mobile",
-      "mobile_verified",
-      "aadhaar_heading",
-      "aadhaar_description",
-      "aadhaar_label",
-      "aadhaar_placeholder",
-      "send_ekyc_otp",
-      "aadhaar_help",
-      "aadhaar_otp_label",
-      "verify_aadhaar",
-      "aadhaar_verified",
-      "profile_name",
-      "profile_details",
-      "demo_complete",
-      "profile_status",
-      "profile_disclaimer",
-      "proceed",
-      "proceed_help",
-      "footer_note",
-      "expired",
-      "otp_expired",
-      "mobile_already_verified",
-      "invalid_mobile",
-      "mobile_demo_alert",
-      "simulated_sms",
-      "enter_mobile_otp",
-      "incorrect_mobile_otp",
-      "mobile_otp_success",
-      "mobile_otp_success_alert",
-      "verify_mobile_first",
-      "aadhaar_already_complete",
-      "invalid_aadhaar",
-      "aadhaar_demo_alert",
-      "simulated_ekyc",
-      "both_steps_complete",
-      "complete_both_steps",
-      "mobile_changed",
-      "mobile_changed_request",
-      "aadhaar_changed_request",
-      "otp_sent",
-      "aadhaar_otp_success",
-      "aadhaar_otp_success_alert",
-      "language_updated"
-    ];
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input
+                            type="text"
+                            id="mobileOtpInput"
+                            maxlength="4"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="••••"
+                            class="w-full sm:w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
 
-    const translations = {
-      en: [
-        "KrishiDhara 2.0", "Farmer Portal", "Language", "Switch Role",
-        "Farmer Identity Verification",
-        "Complete the verification demo before proceeding to procurement slot booking.",
-        "Step 1: Identity & Aadhaar Verification",
-        "Secure mobile and Aadhaar demo authentication.", "Pending",
-        "Demo mode — please note",
-        "OTPs are simulated and displayed in browser alerts. No real SMS, Aadhaar authentication, or e-KYC request is performed.",
-        "Mobile Number Verification",
-        "Enter your 10-digit Indian mobile number.", "Mobile Number",
-        "Enter 10-digit mobile no.", "Send OTP",
-        "Use a valid 10-digit Indian mobile number.",
-        "Enter the 4-digit OTP sent to mobile", "4-digit OTP",
-        "Verify Mobile OTP ✅",
-        "Mobile number verified in this demo session.",
-        "Aadhaar e-KYC Demo",
-        "Enter a 12-digit Aadhaar number for the demo flow.",
-        "Aadhaar Number (12-Digit)", "XXXX XXXX XXXX",
-        "Send e-KYC OTP",
-        "This demo does not contact UIDAI or verify Aadhaar identity.",
-        "Enter OTP sent to registered Aadhaar mobile",
-        "Verify & Fetch Profile 🔍",
-        "Aadhaar demo step completed. Identity has not been independently verified.",
-        "Ramesh Kumar", "Age: 42 | Gender: Male", "Demo Complete ✓",
-        "Demo verification completed",
-        "Both demo OTP steps were completed. This browser demo does not independently verify Aadhaar identity.",
-        "Proceed to Slot Booking →",
-        "Complete both demo verification steps to continue.",
-        "KrishiDhara 2.0 • Farmer Portal • Demonstration only",
-        "Expired", "OTP expired. Please request a new OTP.",
-        "This mobile number has already been verified in this session.",
-        "Please enter a valid 10-digit Indian mobile number.",
-        "Demo mode: the OTP is displayed in an alert, not sent by SMS.",
-        "[SIMULATED SMS — DEMO ONLY]\n\nYour KrishiDhara OTP is: {otp}\n\nThis is not a real SMS.",
-        "Enter the 4-digit OTP.", "Incorrect OTP. Please try again.",
-        "Mobile OTP verified in this demo session.",
-        "Mobile OTP verified successfully!",
-        "Please verify your mobile number first.",
-        "The Aadhaar demo step is already complete.",
-        "Please enter a valid 12-digit Aadhaar number.",
-        "Demo mode: no real Aadhaar OTP or e-KYC request is made.",
-        "[SIMULATED e-KYC SMS — DEMO ONLY]\n\nVerification OTP is: {otp}\n\nThis is not a real Aadhaar OTP.",
-        "Both demo OTP steps are complete. Aadhaar identity has not been independently verified.",
-        "Please complete both verification steps first.",
-        "Mobile number changed. Please verify it again.",
-        "Mobile number changed. Request a new OTP.",
-        "Aadhaar number changed. Request a new OTP.",
-        "Demo OTP generated. Check the browser alert.",
-        "Aadhaar demo OTP step completed.",
-        "Aadhaar demo step completed successfully!",
-        "Language updated."
-      ],
+                        <button
+                            type="button"
+                            onclick="verifyMobileOTP()"
+                            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">
+                            Verify Mobile OTP ✅
+                        </button>
+                    </div>
+                </div>
 
-      hi: [
-        "कृषिधारा 2.0", "किसान पोर्टल", "भाषा", "भूमिका बदलें",
-        "किसान पहचान सत्यापन",
-        "खरीद स्लॉट बुक करने से पहले सत्यापन डेमो पूरा करें।",
-        "चरण 1: पहचान और आधार सत्यापन",
-        "मोबाइल और आधार का सुरक्षित डेमो सत्यापन।", "लंबित",
-        "डेमो मोड — कृपया ध्यान दें",
-        "OTP केवल डेमो के लिए हैं और ब्राउज़र अलर्ट में दिखाए जाते हैं। कोई वास्तविक SMS, आधार प्रमाणीकरण या e-KYC अनुरोध नहीं किया जाता।",
-        "मोबाइल नंबर सत्यापन",
-        "अपना 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।", "मोबाइल नंबर",
-        "10 अंकों का मोबाइल नंबर दर्ज करें", "OTP भेजें",
-        "मान्य 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।",
-        "मोबाइल पर भेजा गया 4 अंकों का OTP दर्ज करें", "4 अंकों का OTP",
-        "मोबाइल OTP सत्यापित करें ✅",
-        "इस डेमो सत्र में मोबाइल नंबर सत्यापित है।",
-        "आधार e-KYC डेमो",
-        "डेमो के लिए 12 अंकों का आधार नंबर दर्ज करें।",
-        "आधार नंबर (12 अंक)", "XXXX XXXX XXXX",
-        "e-KYC OTP भेजें",
-        "यह डेमो UIDAI से संपर्क नहीं करता और आधार पहचान सत्यापित नहीं करता।",
-        "आधार से जुड़े मोबाइल पर आया OTP दर्ज करें",
-        "सत्यापित करें और प्रोफ़ाइल देखें 🔍",
-        "आधार डेमो चरण पूरा हुआ। पहचान का स्वतंत्र सत्यापन नहीं हुआ है।",
-        "रमेश कुमार", "आयु: 42 | लिंग: पुरुष", "डेमो पूरा ✓",
-        "डेमो सत्यापन पूरा हुआ",
-        "दोनों डेमो OTP चरण पूरे हुए। यह ब्राउज़र डेमो आधार पहचान का स्वतंत्र सत्यापन नहीं करता।",
-        "स्लॉट बुकिंग पर जाएँ →",
-        "आगे बढ़ने के लिए दोनों डेमो सत्यापन चरण पूरे करें।",
-        "कृषिधारा 2.0 • किसान पोर्टल • केवल प्रदर्शन हेतु",
-        "समय समाप्त", "OTP समाप्त हो गया। कृपया नया OTP माँगें।",
-        "इस सत्र में यह मोबाइल नंबर पहले ही सत्यापित हो चुका है।",
-        "कृपया मान्य 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।",
-        "डेमो मोड: OTP अलर्ट में दिखेगा, SMS से नहीं भेजा जाएगा।",
-        "[सिम्युलेटेड SMS — केवल डेमो]\n\nआपका कृषिधारा OTP है: {otp}\n\nयह वास्तविक SMS नहीं है।",
-        "4 अंकों का OTP दर्ज करें।", "गलत OTP। कृपया फिर प्रयास करें।",
-        "इस डेमो सत्र में मोबाइल OTP सत्यापित है।",
-        "मोबाइल OTP सफलतापूर्वक सत्यापित हुआ!",
-        "पहले अपना मोबाइल नंबर सत्यापित करें।",
-        "आधार डेमो चरण पहले ही पूरा हो चुका है।",
-        "कृपया मान्य 12 अंकों का आधार नंबर दर्ज करें।",
-        "डेमो मोड: कोई वास्तविक आधार OTP या e-KYC अनुरोध नहीं किया जाता।",
-        "[सिम्युलेटेड e-KYC SMS — केवल डेमो]\n\nसत्यापन OTP है: {otp}\n\nयह वास्तविक आधार OTP नहीं है।",
-        "दोनों डेमो OTP चरण पूरे हैं। आधार पहचान का स्वतंत्र सत्यापन नहीं हुआ है।",
-        "कृपया पहले दोनों सत्यापन चरण पूरे करें।",
-        "मोबाइल नंबर बदल गया। कृपया फिर सत्यापित करें।",
-        "मोबाइल नंबर बदल गया। नया OTP माँगें।",
-        "आधार नंबर बदल गया। नया OTP माँगें।",
-        "डेमो OTP बनाया गया। ब्राउज़र अलर्ट देखें।",
-        "आधार डेमो OTP चरण पूरा हुआ।",
-        "आधार डेमो चरण सफलतापूर्वक पूरा हुआ!",
-        "भाषा बदल दी गई है।"
-      ],
+                <p id="mobileStatus" class="text-sm font-semibold" aria-live="polite"></p>
+            </div>
 
-      mr: [
-        "कृषिधारा 2.0", "शेतकरी पोर्टल", "भाषा", "भूमिका बदला",
-        "शेतकरी ओळख पडताळणी",
-        "खरेदी स्लॉट बुक करण्यापूर्वी पडताळणी डेमो पूर्ण करा.",
-        "टप्पा 1: ओळख आणि आधार पडताळणी",
-        "मोबाइल आणि आधारचे सुरक्षित डेमो प्रमाणीकरण.", "प्रलंबित",
-        "डेमो मोड — कृपया लक्षात घ्या",
-        "OTP डेमोसाठी आहेत आणि ब्राउझर अलर्टमध्ये दाखवले जातात. वास्तविक SMS, आधार प्रमाणीकरण किंवा e-KYC विनंती केली जात नाही.",
-        "मोबाइल क्रमांक पडताळणी",
-        "तुमचा 10 अंकी भारतीय मोबाइल क्रमांक टाका.", "मोबाइल क्रमांक",
-        "10 अंकी मोबाइल क्रमांक टाका", "OTP पाठवा",
-        "वैध 10 अंकी भारतीय मोबाइल क्रमांक टाका.",
-        "मोबाइलवर आलेला 4 अंकी OTP टाका", "4 अंकी OTP",
-        "मोबाइल OTP पडताळा ✅",
-        "या डेमो सत्रात मोबाइल क्रमांक पडताळला आहे.",
-        "आधार e-KYC डेमो",
-        "डेमोसाठी 12 अंकी आधार क्रमांक टाका.",
-        "आधार क्रमांक (12 अंक)", "XXXX XXXX XXXX",
-        "e-KYC OTP पाठवा",
-        "हा डेमो UIDAI शी संपर्क साधत नाही किंवा आधार ओळख पडताळत नाही.",
-        "आधारशी जोडलेल्या मोबाइलवर आलेला OTP टाका",
-        "पडताळा आणि प्रोफाइल मिळवा 🔍",
-        "आधार डेमो टप्पा पूर्ण झाला. ओळखीची स्वतंत्र पडताळणी झालेली नाही.",
-        "रमेश कुमार", "वय: 42 | लिंग: पुरुष", "डेमो पूर्ण ✓",
-        "डेमो पडताळणी पूर्ण झाली",
-        "दोन्ही डेमो OTP टप्पे पूर्ण झाले. हा ब्राउझर डेमो आधार ओळखीची स्वतंत्र पडताळणी करत नाही.",
-        "स्लॉट बुकिंगकडे जा →",
-        "पुढे जाण्यासाठी दोन्ही डेमो पडताळणी टप्पे पूर्ण करा.",
-        "कृषिधारा 2.0 • शेतकरी पोर्टल • केवळ प्रात्यक्षिक",
-        "कालबाह्य", "OTP कालबाह्य झाला. कृपया नवीन OTP मागवा.",
-        "या सत्रात हा मोबाइल क्रमांक आधीच पडताळला आहे.",
-        "कृपया वैध 10 अंकी भारतीय मोबाइल क्रमांक टाका.",
-        "डेमो मोड: OTP अलर्टमध्ये दिसेल; SMS पाठवला जाणार नाही.",
-        "[नमुना SMS — केवळ डेमो]\n\nतुमचा कृषिधारा OTP: {otp}\n\nहा वास्तविक SMS नाही.",
-        "4 अंकी OTP टाका.", "चुकीचा OTP. कृपया पुन्हा प्रयत्न करा.",
-        "या डेमो सत्रात मोबाइल OTP पडताळला आहे.",
-        "मोबाइल OTP यशस्वीरीत्या पडताळला!",
-        "प्रथम मोबाइल क्रमांक पडताळा.",
-        "आधार डेमो टप्पा आधीच पूर्ण झाला आहे.",
-        "कृपया वैध 12 अंकी आधार क्रमांक टाका.",
-        "डेमो मोड: वास्तविक आधार OTP किंवा e-KYC विनंती केली जात नाही.",
-        "[नमुना e-KYC SMS — केवळ डेमो]\n\nपडताळणी OTP: {otp}\n\nहा वास्तविक आधार OTP नाही.",
-        "दोन्ही डेमो OTP टप्पे पूर्ण आहेत. आधार ओळखीची स्वतंत्र पडताळणी झालेली नाही.",
-        "कृपया प्रथम दोन्ही पडताळणी टप्पे पूर्ण करा.",
-        "मोबाइल क्रमांक बदलला. पुन्हा पडताळा.",
-        "मोबाइल क्रमांक बदलला. नवीन OTP मागवा.",
-        "आधार क्रमांक बदलला. नवीन OTP मागवा.",
-        "डेमो OTP तयार केला. ब्राउझर अलर्ट पाहा.",
-        "आधार डेमो OTP टप्पा पूर्ण झाला.",
-        "आधार डेमो टप्पा यशस्वीरीत्या पूर्ण झाला!",
-        "भाषा बदलली आहे."
-      ],
+            <!-- AADHAAR VERIFICATION: LOCKED UNTIL MOBILE IS VERIFIED -->
+            <div id="aadhaarSection" class="space-y-4 pt-6 border-t-2 border-gray-200 opacity-50 pointer-events-none transition-all">
+                <label for="aadhaarInput" class="block text-base md:text-lg font-bold text-gray-800">
+                    🆔 Aadhaar Number (12-Digit)
+                </label>
 
-      pa: [
-        "ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0", "ਕਿਸਾਨ ਪੋਰਟਲ", "ਭਾਸ਼ਾ", "ਭੂਮਿਕਾ ਬਦਲੋ",
-        "ਕਿਸਾਨ ਪਛਾਣ ਦੀ ਪੁਸ਼ਟੀ",
-        "ਖਰੀਦ ਸਲਾਟ ਬੁੱਕ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਪੁਸ਼ਟੀ ਡੈਮੋ ਪੂਰਾ ਕਰੋ।",
-        "ਕਦਮ 1: ਪਛਾਣ ਅਤੇ ਆਧਾਰ ਦੀ ਪੁਸ਼ਟੀ",
-        "ਮੋਬਾਈਲ ਅਤੇ ਆਧਾਰ ਦੀ ਸੁਰੱਖਿਅਤ ਡੈਮੋ ਪੁਸ਼ਟੀ।", "ਬਾਕੀ",
-        "ਡੈਮੋ ਮੋਡ — ਕਿਰਪਾ ਕਰਕੇ ਧਿਆਨ ਦਿਓ",
-        "OTP ਸਿਰਫ਼ ਡੈਮੋ ਲਈ ਹਨ ਅਤੇ ਬ੍ਰਾਊਜ਼ਰ ਅਲਰਟ ਵਿੱਚ ਦਿਖਾਏ ਜਾਂਦੇ ਹਨ। ਕੋਈ ਅਸਲੀ SMS, ਆਧਾਰ ਪ੍ਰਮਾਣੀਕਰਨ ਜਾਂ e-KYC ਬੇਨਤੀ ਨਹੀਂ ਹੁੰਦੀ।",
-        "ਮੋਬਾਈਲ ਨੰਬਰ ਦੀ ਪੁਸ਼ਟੀ",
-        "ਆਪਣਾ 10 ਅੰਕਾਂ ਦਾ ਭਾਰਤੀ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।", "ਮੋਬਾਈਲ ਨੰਬਰ",
-        "10 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ", "OTP ਭੇਜੋ",
-        "ਵੈਧ 10 ਅੰਕਾਂ ਦਾ ਭਾਰਤੀ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
-        "ਮੋਬਾਈਲ 'ਤੇ ਆਇਆ 4 ਅੰਕਾਂ ਦਾ OTP ਦਰਜ ਕਰੋ", "4 ਅੰਕਾਂ ਦਾ OTP",
-        "ਮੋਬਾਈਲ OTP ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ ✅",
-        "ਇਸ ਡੈਮੋ ਸੈਸ਼ਨ ਵਿੱਚ ਮੋਬਾਈਲ ਨੰਬਰ ਦੀ ਪੁਸ਼ਟੀ ਹੋ ਗਈ ਹੈ।",
-        "ਆਧਾਰ e-KYC ਡੈਮੋ",
-        "ਡੈਮੋ ਲਈ 12 ਅੰਕਾਂ ਦਾ ਆਧਾਰ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
-        "ਆਧਾਰ ਨੰਬਰ (12 ਅੰਕ)", "XXXX XXXX XXXX",
-        "e-KYC OTP ਭੇਜੋ",
-        "ਇਹ ਡੈਮੋ UIDAI ਨਾਲ ਸੰਪਰਕ ਨਹੀਂ ਕਰਦਾ ਅਤੇ ਆਧਾਰ ਪਛਾਣ ਦੀ ਪੁਸ਼ਟੀ ਨਹੀਂ ਕਰਦਾ।",
-        "ਆਧਾਰ ਨਾਲ ਜੁੜੇ ਮੋਬਾਈਲ 'ਤੇ ਆਇਆ OTP ਦਰਜ ਕਰੋ",
-        "ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਪ੍ਰੋਫ਼ਾਈਲ ਪ੍ਰਾਪਤ ਕਰੋ 🔍",
-        "ਆਧਾਰ ਡੈਮੋ ਪੜਾਅ ਪੂਰਾ ਹੋਇਆ। ਪਛਾਣ ਦੀ ਸੁਤੰਤਰ ਪੁਸ਼ਟੀ ਨਹੀਂ ਹੋਈ।",
-        "ਰਮੇਸ਼ ਕੁਮਾਰ", "ਉਮਰ: 42 | ਲਿੰਗ: ਪੁਰਸ਼", "ਡੈਮੋ ਪੂਰਾ ✓",
-        "ਡੈਮੋ ਪੁਸ਼ਟੀ ਪੂਰੀ ਹੋਈ",
-        "ਦੋਵੇਂ ਡੈਮੋ OTP ਪੜਾਅ ਪੂਰੇ ਹੋਏ। ਇਹ ਬ੍ਰਾਊਜ਼ਰ ਡੈਮੋ ਆਧਾਰ ਪਛਾਣ ਦੀ ਸੁਤੰਤਰ ਪੁਸ਼ਟੀ ਨਹੀਂ ਕਰਦਾ।",
-        "ਸਲਾਟ ਬੁਕਿੰਗ 'ਤੇ ਜਾਓ →",
-        "ਅੱਗੇ ਵਧਣ ਲਈ ਦੋਵੇਂ ਡੈਮੋ ਪੁਸ਼ਟੀ ਪੜਾਅ ਪੂਰੇ ਕਰੋ।",
-        "ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਕਿਸਾਨ ਪੋਰਟਲ • ਸਿਰਫ਼ ਡੈਮੋ",
-        "ਮਿਆਦ ਪੁੱਗ ਗਈ", "OTP ਦੀ ਮਿਆਦ ਪੁੱਗ ਗਈ। ਨਵਾਂ OTP ਮੰਗੋ।",
-        "ਇਸ ਸੈਸ਼ਨ ਵਿੱਚ ਇਹ ਮੋਬਾਈਲ ਨੰਬਰ ਪਹਿਲਾਂ ਹੀ ਤਸਦੀਕ ਹੋ ਚੁੱਕਾ ਹੈ।",
-        "ਵੈਧ 10 ਅੰਕਾਂ ਦਾ ਭਾਰਤੀ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
-        "ਡੈਮੋ ਮੋਡ: OTP ਅਲਰਟ ਵਿੱਚ ਦਿਖੇਗਾ, SMS ਰਾਹੀਂ ਨਹੀਂ ਭੇਜਿਆ ਜਾਵੇਗਾ।",
-        "[ਨਕਲੀ SMS — ਸਿਰਫ਼ ਡੈਮੋ]\n\nਤੁਹਾਡਾ ਕ੍ਰਿਸ਼ੀਧਾਰਾ OTP: {otp}\n\nਇਹ ਅਸਲੀ SMS ਨਹੀਂ ਹੈ।",
-        "4 ਅੰਕਾਂ ਦਾ OTP ਦਰਜ ਕਰੋ।", "ਗਲਤ OTP। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-        "ਇਸ ਡੈਮੋ ਸੈਸ਼ਨ ਵਿੱਚ ਮੋਬਾਈਲ OTP ਦੀ ਪੁਸ਼ਟੀ ਹੋ ਗਈ ਹੈ।",
-        "ਮੋਬਾਈਲ OTP ਦੀ ਸਫਲਤਾਪੂਰਵਕ ਪੁਸ਼ਟੀ ਹੋ ਗਈ!",
-        "ਪਹਿਲਾਂ ਆਪਣੇ ਮੋਬਾਈਲ ਨੰਬਰ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ।",
-        "ਆਧਾਰ ਡੈਮੋ ਪੜਾਅ ਪਹਿਲਾਂ ਹੀ ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ।",
-        "ਵੈਧ 12 ਅੰਕਾਂ ਦਾ ਆਧਾਰ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
-        "ਡੈਮੋ ਮੋਡ: ਕੋਈ ਅਸਲੀ ਆਧਾਰ OTP ਜਾਂ e-KYC ਬੇਨਤੀ ਨਹੀਂ ਹੁੰਦੀ।",
-        "[ਨਕਲੀ e-KYC SMS — ਸਿਰਫ਼ ਡੈਮੋ]\n\nਪੁਸ਼ਟੀ OTP: {otp}\n\nਇਹ ਅਸਲੀ ਆਧਾਰ OTP ਨਹੀਂ ਹੈ।",
-        "ਦੋਵੇਂ ਡੈਮੋ OTP ਪੜਾਅ ਪੂਰੇ ਹਨ। ਆਧਾਰ ਪਛਾਣ ਦੀ ਸੁਤੰਤਰ ਪੁਸ਼ਟੀ ਨਹੀਂ ਹੋਈ।",
-        "ਪਹਿਲਾਂ ਦੋਵੇਂ ਪੁਸ਼ਟੀ ਪੜਾਅ ਪੂਰੇ ਕਰੋ।",
-        "ਮੋਬਾਈਲ ਨੰਬਰ ਬਦਲ ਗਿਆ। ਦੁਬਾਰਾ ਪੁਸ਼ਟੀ ਕਰੋ।",
-        "ਮੋਬਾਈਲ ਨੰਬਰ ਬਦਲ ਗਿਆ। ਨਵਾਂ OTP ਮੰਗੋ।",
-        "ਆਧਾਰ ਨੰਬਰ ਬਦਲ ਗਿਆ। ਨਵਾਂ OTP ਮੰਗੋ।",
-        "ਡੈਮੋ OTP ਬਣਾਇਆ ਗਿਆ। ਬ੍ਰਾਊਜ਼ਰ ਅਲਰਟ ਵੇਖੋ।",
-        "ਆਧਾਰ ਡੈਮੋ OTP ਪੜਾਅ ਪੂਰਾ ਹੋਇਆ।",
-        "ਆਧਾਰ ਡੈਮੋ ਪੜਾਅ ਸਫਲਤਾਪੂਰਵਕ ਪੂਰਾ ਹੋਇਆ!",
-        "ਭਾਸ਼ਾ ਬਦਲ ਦਿੱਤੀ ਗਈ ਹੈ।"
-      ],
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        type="password"
+                        id="aadhaarInput"
+                        maxlength="12"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        placeholder="XXXX XXXX XXXX"
+                        class="min-w-0 flex-1 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-base md:text-lg focus:outline-none focus:border-green-600 font-medium">
 
-      gu: [
-        "કૃષિધારા 2.0", "ખેડૂત પોર્ટલ", "ભાષા", "ભૂમિકા બદલો",
-        "ખેડૂત ઓળખ ચકાસણી",
-        "ખરીદીનો સ્લોટ બુક કરતા પહેલાં ચકાસણી ડેમો પૂર્ણ કરો.",
-        "પગલું 1: ઓળખ અને આધાર ચકાસણી",
-        "મોબાઇલ અને આધારની સુરક્ષિત ડેમો ચકાસણી.", "બાકી",
-        "ડેમો મોડ — કૃપા કરીને ધ્યાન આપો",
-        "OTP ડેમો માટે છે અને બ્રાઉઝર એલર્ટમાં બતાવવામાં આવે છે. કોઈ વાસ્તવિક SMS, આધાર પ્રમાણીકરણ અથવા e-KYC વિનંતી થતી નથી.",
-        "મોબાઇલ નંબરની ચકાસણી",
-        "તમારો 10 અંકનો ભારતીય મોબાઇલ નંબર દાખલ કરો.", "મોબાઇલ નંબર",
-        "10 અંકનો મોબાઇલ નંબર દાખલ કરો", "OTP મોકલો",
-        "માન્ય 10 અંકનો ભારતીય મોબાઇલ નંબર દાખલ કરો.",
-        "મોબાઇલ પર આવેલો 4 અંકનો OTP દાખલ કરો", "4 અંકનો OTP",
-        "મોબાઇલ OTP ચકાસો ✅",
-        "આ ડેમો સત્રમાં મોબાઇલ નંબર ચકાસાયો છે.",
-        "આધાર e-KYC ડેમો",
-        "ડેમો માટે 12 અંકનો આધાર નંબર દાખલ કરો.",
-        "આધાર નંબર (12 અંક)", "XXXX XXXX XXXX",
-        "e-KYC OTP મોકલો",
-        "આ ડેમો UIDAI સાથે સંપર્ક કરતો નથી અને આધાર ઓળખ ચકાસતો નથી.",
-        "આધાર સાથે જોડાયેલા મોબાઇલ પર આવેલો OTP દાખલ કરો",
-        "ચકાસો અને પ્રોફાઇલ મેળવો 🔍",
-        "આધાર ડેમો પગલું પૂર્ણ થયું. ઓળખની સ્વતંત્ર ચકાસણી થઈ નથી.",
-        "રમેશ કુમાર", "ઉંમર: 42 | લિંગ: પુરુષ", "ડેમો પૂર્ણ ✓",
-        "ડેમો ચકાસણી પૂર્ણ થઈ",
-        "બંને ડેમો OTP પગલાં પૂર્ણ થયાં. આ બ્રાઉઝર ડેમો આધાર ઓળખની સ્વતંત્ર ચકાસણી કરતો નથી.",
-        "સ્લોટ બુકિંગ પર જાઓ →",
-        "આગળ વધવા માટે બંને ડેમો ચકાસણી પગલાં પૂર્ણ કરો.",
-        "કૃષિધારા 2.0 • ખેડૂત પોર્ટલ • માત્ર ડેમો",
-        "સમય સમાપ્ત", "OTP સમાપ્ત થયો. કૃપા કરીને નવો OTP માગો.",
-        "આ સત્રમાં આ મોબાઇલ નંબર પહેલેથી ચકાસાઈ ગયો છે.",
-        "માન્ય 10 અંકનો ભારતીય મોબાઇલ નંબર દાખલ કરો.",
-        "ડેમો મોડ: OTP એલર્ટમાં દેખાશે, SMS દ્વારા મોકલાશે નહીં.",
-        "[નકલી SMS — માત્ર ડેમો]\n\nતમારો કૃષિધારા OTP: {otp}\n\nઆ વાસ્તવિક SMS નથી.",
-        "4 અંકનો OTP દાખલ કરો.", "ખોટો OTP. ફરી પ્રયાસ કરો.",
-        "આ ડેમો સત્રમાં મોબાઇલ OTP ચકાસાયો છે.",
-        "મોબાઇલ OTP સફળતાપૂર્વક ચકાસાયો!",
-        "પહેલાં તમારો મોબાઇલ નંબર ચકાસો.",
-        "આધાર ડેમો પગલું પહેલેથી પૂર્ણ છે.",
-        "માન્ય 12 અંકનો આધાર નંબર દાખલ કરો.",
-        "ડેમો મોડ: કોઈ વાસ્તવિક આધાર OTP અથવા e-KYC વિનંતી થતી નથી.",
-        "[નકલી e-KYC SMS — માત્ર ડેમો]\n\nચકાસણી OTP: {otp}\n\nઆ વાસ્તવિક આધાર OTP નથી.",
-        "બંને ડેમો OTP પગલાં પૂર્ણ છે. આધાર ઓળખની સ્વતંત્ર ચકાસણી થઈ નથી.",
-        "કૃપા કરીને પહેલાં બંને ચકાસણી પગલાં પૂર્ણ કરો.",
-        "મોબાઇલ નંબર બદલાયો. ફરી ચકાસો.",
-        "મોબાઇલ નંબર બદલાયો. નવો OTP માગો.",
-        "આધાર નંબર બદલાયો. નવો OTP માગો.",
-        "ડેમો OTP બનાવાયો. બ્રાઉઝર એલર્ટ જુઓ.",
-        "આધાર ડેમો OTP પગલું પૂર્ણ થયું.",
-        "આધાર ડેમો પગલું સફળતાપૂર્વક પૂર્ણ થયું!",
-        "ભાષા બદલી છે."
-      ]
-    };
+                    <button
+                        type="button"
+                        onclick="sendAadhaarOTP()"
+                        id="btnSendAadhaarOTP"
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold px-8 py-4 rounded-2xl transition shadow cursor-pointer">
+                        Send e-KYC OTP
+                    </button>
+                </div>
 
-    /*
-     * Additional languages are supplied as phrase sets.
-     * The interface falls back to English for any untranslated entry.
-     * This keeps the app functional even when a phrase needs refinement.
-     */
-    const additionalTranslations = {
-      bn: {
-        farmer_portal: "কৃষক পোর্টাল", language_label: "ভাষা",
-        switch_role: "ভূমিকা বদলান", page_heading: "কৃষকের পরিচয় যাচাই",
-        page_description: "ক্রয় স্লট বুক করার আগে যাচাইকরণ ডেমো সম্পূর্ণ করুন।",
-        verification_heading: "ধাপ ১: পরিচয় ও আধার যাচাই",
-        verification_subtitle: "মোবাইল ও আধারের নিরাপদ ডেমো যাচাইকরণ।",
-        pending: "বাকি", demo_notice_title: "ডেমো মোড — অনুগ্রহ করে লক্ষ্য করুন",
-        demo_notice: "OTP শুধুমাত্র ডেমোর জন্য। এগুলি ব্রাউজার সতর্কবার্তায় দেখানো হয়। কোনও আসল SMS, আধার প্রমাণীকরণ বা e-KYC অনুরোধ করা হয় না।",
-        mobile_heading: "মোবাইল নম্বর যাচাই", mobile_description: "আপনার ১০ সংখ্যার ভারতীয় মোবাইল নম্বর লিখুন।",
-        mobile_label: "মোবাইল নম্বর", mobile_placeholder: "১০ সংখ্যার মোবাইল নম্বর লিখুন",
-        send_otp: "OTP পাঠান", mobile_help: "একটি বৈধ ১০ সংখ্যার ভারতীয় মোবাইল নম্বর লিখুন।",
-        mobile_otp_label: "মোবাইলে পাঠানো ৪ সংখ্যার OTP লিখুন",
-        otp_placeholder: "৪ সংখ্যার OTP", verify_mobile: "মোবাইল OTP যাচাই করুন ✅",
-        mobile_verified: "এই ডেমো সেশনে মোবাইল নম্বর যাচাই হয়েছে।",
-        aadhaar_heading: "আধার e-KYC ডেমো",
-        aadhaar_description: "ডেমোর জন্য ১২ সংখ্যার আধার নম্বর লিখুন।",
-        aadhaar_label: "আধার নম্বর (১২ সংখ্যা)", send_ekyc_otp: "e-KYC OTP পাঠান",
-        aadhaar_help: "এই ডেমো UIDAI-তে যোগাযোগ করে না এবং পরিচয় যাচাই করে না।",
-        aadhaar_otp_label: "আধারের সঙ্গে যুক্ত মোবাইলে আসা OTP লিখুন",
-        verify_aadhaar: "যাচাই করুন ও প্রোফাইল দেখুন 🔍",
-        aadhaar_verified: "আধার ডেমো ধাপ সম্পূর্ণ। পরিচয় স্বাধীনভাবে যাচাই করা হয়নি।",
-        demo_complete: "ডেমো সম্পূর্ণ ✓", profile_status: "ডেমো যাচাইকরণ সম্পূর্ণ",
-        proceed: "স্লট বুকিংয়ে এগিয়ে যান →",
-        proceed_help: "এগিয়ে যেতে দুটি ডেমো যাচাইকরণ ধাপ সম্পূর্ণ করুন।",
-        expired: "মেয়াদ শেষ", otp_expired: "OTP-র মেয়াদ শেষ। নতুন OTP চান।",
-        invalid_mobile: "একটি বৈধ ১০ সংখ্যার ভারতীয় মোবাইল নম্বর লিখুন।",
-        invalid_aadhaar: "একটি বৈধ ১২ সংখ্যার আধার নম্বর লিখুন।",
-        complete_both_steps: "প্রথমে দুটি যাচাইকরণ ধাপ সম্পূর্ণ করুন।"
-      },
+                <div id="aadhaarOtpBox" class="hidden space-y-4 pt-5 border-t border-gray-200">
+                    <div class="flex justify-between items-center text-sm md:text-base">
+                        <span class="text-gray-700 font-semibold">
+                            Enter OTP sent to registered Aadhaar mobile
+                        </span>
+                        <span id="aadhaarTimer" class="text-red-600 font-bold text-base">60s</span>
+                    </div>
 
-      te: {
-        farmer_portal: "రైతు పోర్టల్", language_label: "భాష",
-        switch_role: "పాత్ర మార్చండి", page_heading: "రైతు గుర్తింపు ధృవీకరణ",
-        page_description: "కొనుగోలు స్లాట్ బుకింగ్‌కు ముందు డెమో ధృవీకరణ పూర్తి చేయండి.",
-        verification_heading: "దశ 1: గుర్తింపు మరియు ఆధార్ ధృవీకరణ",
-        verification_subtitle: "మొబైల్ మరియు ఆధార్ డెమో ధృవీకరణ.",
-        pending: "పెండింగ్", demo_notice_title: "డెమో మోడ్ — గమనించండి",
-        demo_notice: "OTPలు డెమో కోసం మాత్రమే. అవి బ్రౌజర్ అలర్ట్‌లో కనిపిస్తాయి. నిజమైన SMS, ఆధార్ ప్రమాణీకరణ లేదా e-KYC అభ్యర్థన జరగదు.",
-        mobile_heading: "మొబైల్ నంబర్ ధృవీకరణ",
-        mobile_description: "మీ 10 అంకెల భారతీయ మొబైల్ నంబర్ నమోదు చేయండి.",
-        mobile_label: "మొబైల్ నంబర్", mobile_placeholder: "10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి",
-        send_otp: "OTP పంపండి", verify_mobile: "మొబైల్ OTP ధృవీకరించండి ✅",
-        aadhaar_heading: "ఆధార్ e-KYC డెమో",
-        aadhaar_description: "డెమో కోసం 12 అంకెల ఆధార్ నంబర్ నమోదు చేయండి.",
-        aadhaar_label: "ఆధార్ నంబర్ (12 అంకెలు)", send_ekyc_otp: "e-KYC OTP పంపండి",
-        verify_aadhaar: "ధృవీకరించి ప్రొఫైల్ పొందండి 🔍",
-        proceed: "స్లాట్ బుకింగ్‌కు వెళ్లండి →",
-        expired: "గడువు ముగిసింది",
-        otp_expired: "OTP గడువు ముగిసింది. కొత్త OTP కోరండి.",
-        invalid_mobile: "చెల్లుబాటు అయ్యే 10 అంకెల భారతీయ మొబైల్ నంబర్ నమోదు చేయండి.",
-        invalid_aadhaar: "చెల్లుబాటు అయ్యే 12 అంకెల ఆధార్ నంబర్ నమోదు చేయండి."
-      },
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input
+                            type="text"
+                            id="aadhaarOtpInput"
+                            maxlength="4"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="••••"
+                            class="w-full sm:w-40 bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 text-center text-xl font-extrabold tracking-widest focus:outline-none focus:border-green-600">
 
-      ta: {
-        farmer_portal: "விவசாயி தளம்", language_label: "மொழி",
-        switch_role: "பங்கை மாற்று", page_heading: "விவசாயி அடையாளச் சரிபார்ப்பு",
-        page_description: "கொள்முதல் நேர முன்பதிவுக்கு முன் சரிபார்ப்பு டெமோவை முடிக்கவும்.",
-        verification_heading: "படி 1: அடையாளம் மற்றும் ஆதார் சரிபார்ப்பு",
-        verification_subtitle: "மொபைல் மற்றும் ஆதாருக்கான டெமோ சரிபார்ப்பு.",
-        pending: "நிலுவையில்", demo_notice_title: "டெமோ முறை — கவனிக்கவும்",
-        demo_notice: "OTP-கள் டெமோவுக்காக மட்டுமே. அவை உலாவி எச்சரிக்கையில் காட்டப்படும். உண்மையான SMS, ஆதார் அங்கீகாரம் அல்லது e-KYC கோரிக்கை செய்யப்படாது.",
-        mobile_heading: "மொபைல் எண் சரிபார்ப்பு",
-        mobile_description: "உங்கள் 10 இலக்க இந்திய மொபைல் எண்ணை உள்ளிடவும்.",
-        mobile_label: "மொபைல் எண்", mobile_placeholder: "10 இலக்க மொபைல் எண்ணை உள்ளிடவும்",
-        send_otp: "OTP அனுப்பு", verify_mobile: "மொபைல் OTP சரிபார் ✅",
-        aadhaar_heading: "ஆதார் e-KYC டெமோ",
-        aadhaar_description: "டெமோவுக்காக 12 இலக்க ஆதார் எண்ணை உள்ளிடவும்.",
-        aadhaar_label: "ஆதார் எண் (12 இலக்கங்கள்)", send_ekyc_otp: "e-KYC OTP அனுப்பு",
-        verify_aadhaar: "சரிபார்த்து சுயவிவரத்தைப் பெறு 🔍",
-        proceed: "நேர முன்பதிவுக்குச் செல் →",
-        expired: "காலாவதியானது",
-        otp_expired: "OTP காலாவதியானது. புதிய OTP கோரவும்.",
-        invalid_mobile: "சரியான 10 இலக்க இந்திய மொபைல் எண்ணை உள்ளிடவும்.",
-        invalid_aadhaar: "சரியான 12 இலக்க ஆதார் எண்ணை உள்ளிடவும்."
-      },
+                        <button
+                            type="button"
+                            onclick="verifyAadhaarOTP()"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-bold py-4 rounded-2xl transition shadow cursor-pointer">
+                            Verify & Fetch Profile 🔍
+                        </button>
+                    </div>
+                </div>
 
-      kn: {
-        farmer_portal: "ರೈತ ಪೋರ್ಟಲ್", language_label: "ಭಾಷೆ",
-        switch_role: "ಪಾತ್ರ ಬದಲಿಸಿ", page_heading: "ರೈತರ ಗುರುತು ಪರಿಶೀಲನೆ",
-        page_description: "ಖರೀದಿ ಸ್ಲಾಟ್ ಬುಕ್ಕಿಂಗ್‌ಗೆ ಮೊದಲು ಡೆಮೋ ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಳಿಸಿ.",
-        verification_heading: "ಹಂತ 1: ಗುರುತು ಮತ್ತು ಆಧಾರ್ ಪರಿಶೀಲನೆ",
-        verification_subtitle: "ಮೊಬೈಲ್ ಮತ್ತು ಆಧಾರ್ ಡೆಮೋ ಪರಿಶೀಲನೆ.",
-        pending: "ಬಾಕಿ", demo_notice_title: "ಡೆಮೋ ಮೋಡ್ — ಗಮನಿಸಿ",
-        demo_notice: "OTPಗಳು ಡೆಮೋಗಾಗಿ ಮಾತ್ರ. ಅವು ಬ್ರೌಸರ್ ಎಚ್ಚರಿಕೆಯಲ್ಲಿ ತೋರಿಸಲಾಗುತ್ತವೆ. ನಿಜವಾದ SMS, ಆಧಾರ್ ದೃಢೀಕರಣ ಅಥವಾ e-KYC ವಿನಂತಿ ನಡೆಯುವುದಿಲ್ಲ.",
-        mobile_heading: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಪರಿಶೀಲನೆ",
-        mobile_description: "ನಿಮ್ಮ 10 ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
-        mobile_label: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", mobile_placeholder: "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ",
-        send_otp: "OTP ಕಳುಹಿಸಿ", verify_mobile: "ಮೊಬೈಲ್ OTP ಪರಿಶೀಲಿಸಿ ✅",
-        aadhaar_heading: "ಆಧಾರ್ e-KYC ಡೆಮೋ",
-        aadhaar_description: "ಡೆಮೋಗಾಗಿ 12 ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
-        aadhaar_label: "ಆಧಾರ್ ಸಂಖ್ಯೆ (12 ಅಂಕಿಗಳು)", send_ekyc_otp: "e-KYC OTP ಕಳುಹಿಸಿ",
-        verify_aadhaar: "ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಪ್ರೊಫೈಲ್ ಪಡೆಯಿರಿ 🔍",
-        proceed: "ಸ್ಲಾಟ್ ಬುಕ್ಕಿಂಗ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ →",
-        expired: "ಅವಧಿ ಮುಗಿದಿದೆ",
-        otp_expired: "OTP ಅವಧಿ ಮುಗಿದಿದೆ. ಹೊಸ OTP ಕೇಳಿ.",
-        invalid_mobile: "ಮಾನ್ಯವಾದ 10 ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
-        invalid_aadhaar: "ಮಾನ್ಯವಾದ 12 ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ."
-      },
+                <p id="aadhaarStatus" class="text-sm font-semibold" aria-live="polite"></p>
+            </div>
 
-      ml: {
-        farmer_portal: "കർഷക പോർട്ടൽ", language_label: "ഭാഷ",
-        switch_role: "റോൾ മാറ്റുക", page_heading: "കർഷക തിരിച്ചറിയൽ പരിശോധന",
-        page_description: "വാങ്ങൽ സ്ലോട്ട് ബുക്ക് ചെയ്യുന്നതിന് മുമ്പ് ഡെമോ പരിശോധന പൂർത്തിയാക്കുക.",
-        verification_heading: "ഘട്ടം 1: തിരിച്ചറിയൽ, ആധാർ പരിശോധന",
-        verification_subtitle: "മൊബൈൽ, ആധാർ ഡെമോ പരിശോധന.",
-        pending: "ബാക്കി", demo_notice_title: "ഡെമോ മോഡ് — ശ്രദ്ധിക്കുക",
-        demo_notice: "OTPകൾ ഡെമോയ്ക്കു മാത്രമാണ്. അവ ബ്രൗസർ അലേർട്ടിൽ കാണിക്കും. യഥാർത്ഥ SMS, ആധാർ സ്ഥിരീകരണം, e-KYC അഭ്യർത്ഥന എന്നിവ നടത്തില്ല.",
-        mobile_heading: "മൊബൈൽ നമ്പർ പരിശോധന",
-        mobile_description: "10 അക്കമുള്ള ഇന്ത്യൻ മൊബൈൽ നമ്പർ നൽകുക.",
-        mobile_label: "മൊബൈൽ നമ്പർ", mobile_placeholder: "10 അക്ക മൊബൈൽ നമ്പർ നൽകുക",
-        send_otp: "OTP അയയ്ക്കുക", verify_mobile: "മൊബൈൽ OTP പരിശോധിക്കുക ✅",
-        aadhaar_heading: "ആധാർ e-KYC ഡെമോ",
-        aadhaar_description: "ഡെമോയ്ക്കായി 12 അക്ക ആധാർ നമ്പർ നൽകുക.",
-        aadhaar_label: "ആധാർ നമ്പർ (12 അക്കങ്ങൾ)", send_ekyc_otp: "e-KYC OTP അയയ്ക്കുക",
-        verify_aadhaar: "പരിശോധിച്ച് പ്രൊഫൈൽ നേടുക 🔍",
-        proceed: "സ്ലോട്ട് ബുക്കിംഗിലേക്ക് പോകുക →",
-        expired: "കാലാവധി കഴിഞ്ഞു",
-        otp_expired: "OTP കാലാവധി കഴിഞ്ഞു. പുതിയ OTP ആവശ്യപ്പെടുക.",
-        invalid_mobile: "സാധുവായ 10 അക്ക ഇന്ത്യൻ മൊബൈൽ നമ്പർ നൽകുക.",
-        invalid_aadhaar: "സാധുവായ 12 അക്ക ആധാർ നമ്പർ നൽകുക."
-      },
+            <!-- PROFILE IS SHOWN ONLY AFTER BOTH DEMO STEPS PASS -->
+            <div id="profileCard" class="hidden p-6 bg-green-50 border-2 border-green-500 rounded-2xl space-y-4 shadow-inner">
+                <div class="flex items-center space-x-5">
+                    <div class="w-20 h-20 bg-green-200 rounded-full flex items-center justify-center text-4xl shadow-inner border border-green-300 flex-shrink-0">
+                        🧑‍🌾
+                    </div>
 
-      or: {
-        farmer_portal: "ଚାଷୀ ପୋର୍ଟାଲ", language_label: "ଭାଷା",
-        switch_role: "ଭୂମିକା ବଦଳାନ୍ତୁ",
-        page_heading: "ଚାଷୀ ପରିଚୟ ଯାଞ୍ଚ",
-        page_description: "କ୍ରୟ ସ୍ଲଟ୍ ବୁକିଂ ପୂର୍ବରୁ ଡେମୋ ଯାଞ୍ଚ ସମ୍ପୂର୍ଣ୍ଣ କରନ୍ତୁ।",
-        verification_heading: "ପଦକ୍ଷେପ 1: ପରିଚୟ ଓ ଆଧାର ଯାଞ୍ଚ",
-        pending: "ବାକି", demo_notice_title: "ଡେମୋ ମୋଡ୍ — ଧ୍ୟାନ ଦିଅନ୍ତୁ",
-        demo_notice: "OTP କେବଳ ଡେମୋ ପାଇଁ। ଏହା ବ୍ରାଉଜର୍ ଆଲର୍ଟରେ ଦେଖାଯାଏ। ପ୍ରକୃତ SMS, ଆଧାର ପ୍ରମାଣୀକରଣ କିମ୍ବା e-KYC ଅନୁରୋଧ ହୁଏ ନାହିଁ।",
-        mobile_heading: "ମୋବାଇଲ୍ ନମ୍ବର ଯାଞ୍ଚ",
-        mobile_label: "ମୋବାଇଲ୍ ନମ୍ବର", send_otp: "OTP ପଠାନ୍ତୁ",
-        aadhaar_heading: "ଆଧାର e-KYC ଡେମୋ",
-        aadhaar_label: "ଆଧାର ନମ୍ବର (12 ଅଙ୍କ)", send_ekyc_otp: "e-KYC OTP ପଠାନ୍ତୁ",
-        verify_aadhaar: "ଯାଞ୍ଚ କରି ପ୍ରୋଫାଇଲ୍ ପାଆନ୍ତୁ 🔍",
-        proceed: "ସ୍ଲଟ୍ ବୁକିଂକୁ ଯାଆନ୍ତୁ →",
-        expired: "ସମୟ ସମାପ୍ତ",
-        otp_expired: "OTP ର ସମୟ ସମାପ୍ତ। ନୂଆ OTP ମାଗନ୍ତୁ।",
-        invalid_mobile: "ଏକ ବୈଧ 10 ଅଙ୍କର ଭାରତୀୟ ମୋବାଇଲ୍ ନମ୍ବର ଦିଅନ୍ତୁ।",
-        invalid_aadhaar: "ଏକ ବୈଧ 12 ଅଙ୍କର ଆଧାର ନମ୍ବର ଦିଅନ୍ତୁ।"
-      },
+                    <div>
+                        <h3 id="profileName" class="text-lg md:text-xl font-extrabold text-green-900">
+                            Ramesh Kumar
+                        </h3>
+                        <p class="text-sm md:text-base text-gray-700 font-medium">Age: 42 | Gender: Male</p>
+                        <p class="text-sm text-green-700 font-bold mt-1">
+                            Demo verification completed
+                        </p>
+                    </div>
+                </div>
 
-      ne: {
-        farmer_portal: "किसान पोर्टल", language_label: "भाषा",
-        switch_role: "भूमिका बदल्नुहोस्", page_heading: "किसान पहिचान प्रमाणीकरण",
-        page_description: "खरिदको समय बुक गर्नुअघि डेमो प्रमाणीकरण पूरा गर्नुहोस्।",
-        verification_heading: "चरण १: पहिचान र आधार प्रमाणीकरण",
-        verification_subtitle: "मोबाइल र आधारको डेमो प्रमाणीकरण।",
-        pending: "बाँकी", demo_notice_title: "डेमो मोड — ध्यान दिनुहोस्",
-        demo_notice: "OTP डेमोका लागि मात्र हुन् र ब्राउजर अलर्टमा देखाइन्छन्। वास्तविक SMS, आधार प्रमाणीकरण वा e-KYC अनुरोध गरिँदैन।",
-        mobile_heading: "मोबाइल नम्बर प्रमाणीकरण",
-        mobile_description: "आफ्नो १० अङ्कको भारतीय मोबाइल नम्बर राख्नुहोस्।",
-        mobile_label: "मोबाइल नम्बर", mobile_placeholder: "१० अङ्कको मोबाइल नम्बर राख्नुहोस्",
-        send_otp: "OTP पठाउनुहोस्", verify_mobile: "मोबाइल OTP प्रमाणित गर्नुहोस् ✅",
-        aadhaar_heading: "आधार e-KYC डेमो",
-        aadhaar_description: "डेमोका लागि १२ अङ्कको आधार नम्बर राख्नुहोस्।",
-        aadhaar_label: "आधार नम्बर (१२ अङ्क)", send_ekyc_otp: "e-KYC OTP पठाउनुहोस्",
-        verify_aadhaar: "प्रमाणित गरी प्रोफाइल प्राप्त गर्नुहोस् 🔍",
-        proceed: "स्लट बुकिङमा जानुहोस् →",
-        expired: "समय सकियो", otp_expired: "OTP को समय सकियो। नयाँ OTP माग्नुहोस्।",
-        invalid_mobile: "वैध १० अङ्कको भारतीय मोबाइल नम्बर राख्नुहोस्।",
-        invalid_aadhaar: "वैध १२ अङ्कको आधार नम्बर राख्नुहोस्।"
-      },
+                <div class="text-sm bg-white p-4 rounded-xl border border-green-200 text-green-800 font-medium">
+                    ✅ Both demo OTP steps were completed. This browser demo does not independently verify Aadhaar identity.
+                </div>
+            </div>
+        </div>
 
-      ur: {
-        farmer_portal: "کسان پورٹل", language_label: "زبان",
-        switch_role: "کردار تبدیل کریں", page_heading: "کسان کی شناخت کی تصدیق",
-        page_description: "خریداری کا سلاٹ بک کرنے سے پہلے ڈیمو تصدیق مکمل کریں۔",
-        verification_heading: "مرحلہ 1: شناخت اور آدھار کی تصدیق",
-        verification_subtitle: "موبائل اور آدھار کی ڈیمو تصدیق۔",
-        pending: "زیرِ التوا", demo_notice_title: "ڈیمو موڈ — براہ کرم نوٹ کریں",
-        demo_notice: "OTP صرف ڈیمو کے لیے ہیں اور براؤزر الرٹ میں دکھائے جاتے ہیں۔ کوئی حقیقی SMS، آدھار تصدیق یا e-KYC درخواست نہیں کی جاتی۔",
-        mobile_heading: "موبائل نمبر کی تصدیق",
-        mobile_description: "اپنا 10 ہندسوں کا بھارتی موبائل نمبر درج کریں۔",
-        mobile_label: "موبائل نمبر", mobile_placeholder: "10 ہندسوں کا موبائل نمبر درج کریں",
-        send_otp: "OTP بھیجیں", verify_mobile: "موبائل OTP کی تصدیق کریں ✅",
-        aadhaar_heading: "آدھار e-KYC ڈیمو",
-        aadhaar_description: "ڈیمو کے لیے 12 ہندسوں کا آدھار نمبر درج کریں۔",
-        aadhaar_label: "آدھار نمبر (12 ہندسے)", send_ekyc_otp: "e-KYC OTP بھیجیں",
-        verify_aadhaar: "تصدیق کریں اور پروفائل حاصل کریں 🔍",
-        proceed: "سلاٹ بکنگ پر جائیں →",
-        expired: "میعاد ختم", otp_expired: "OTP کی میعاد ختم ہو گئی۔ نیا OTP طلب کریں۔",
-        invalid_mobile: "درست 10 ہندسوں کا بھارتی موبائل نمبر درج کریں۔",
-        invalid_aadhaar: "درست 12 ہندسوں کا آدھار نمبر درج کریں۔"
-      },
+        <button
+            type="button"
+            id="btnProceedSlot"
+            onclick="proceedToSlotBooking()"
+            disabled
+            class="w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed">
+            Proceed to Slot Booking →
+        </button>
 
-      as: {
-        farmer_portal: "কৃষক প'ৰ্টেল", language_label: "ভাষা",
-        switch_role: "ভূমিকা সলনি কৰক",
-        page_heading: "কৃষকৰ পৰিচয় পৰীক্ষা",
-        page_description: "ক্ৰয়ৰ সময় বুক কৰাৰ আগতে ডেমো পৰীক্ষা সম্পূৰ্ণ কৰক।",
-        verification_heading: "পদক্ষেপ ১: পৰিচয় আৰু আধাৰ পৰীক্ষা",
-        pending: "বাকী", demo_notice_title: "ডেমো মোড — মন কৰিব",
-        demo_notice: "OTP কেৱল ডেমোৰ বাবে আৰু ব্ৰাউজাৰ এলাৰ্টত দেখুওৱা হয়। কোনো প্ৰকৃত SMS, আধাৰ প্ৰমাণীকৰণ বা e-KYC অনুৰোধ কৰা নহয়।",
-        mobile_heading: "মোবাইল নম্বৰ পৰীক্ষা",
-        mobile_label: "মোবাইল নম্বৰ", send_otp: "OTP পঠিয়াওক",
-        aadhaar_heading: "আধাৰ e-KYC ডেমো",
-        aadhaar_label: "আধাৰ নম্বৰ (১২টা অংক)", send_ekyc_otp: "e-KYC OTP পঠিয়াওক",
-        verify_aadhaar: "পৰীক্ষা কৰি প্ৰফাইল লাভ কৰক 🔍",
-        proceed: "স্লট বুকিঙলৈ যাওক →",
-        expired: "সময় শেষ", otp_expired: "OTP-ৰ সময় শেষ। নতুন OTP বিচাৰক।",
-        invalid_mobile: "বৈধ ১০টা অংকৰ ভাৰতীয় মোবাইল নম্বৰ দিয়ক।",
-        invalid_aadhaar: "বৈধ ১২টা অংকৰ আধাৰ নম্বৰ দিয়ক।"
-      },
+    </main>
 
-      sa: {
-        farmer_portal: "कृषक-पटलम्", language_label: "भाषा",
-        switch_role: "भूमिकां परिवर्तयतु", page_heading: "कृषकस्य परिचय-सत्यापनम्",
-        page_description: "क्रय-स्थानस्य आरक्षणात् पूर्वं प्रदर्शन-सत्यापनं पूरयतु।",
-        verification_heading: "प्रथमं चरणम्: परिचयस्य आधारस्य च सत्यापनम्",
-        pending: "अपूर्णम्", demo_notice_title: "प्रदर्शन-विधिः — अवधानम्",
-        demo_notice: "OTP केवलं प्रदर्शनार्थम् अस्ति। वास्तविकः SMS, आधार-प्रमाणीकरणं वा e-KYC-अनुरोधः न क्रियते।",
-        mobile_heading: "दूरवाणी-सङ्ख्या सत्यापनम्",
-        mobile_label: "दूरवाणी-सङ्ख्या", send_otp: "OTP प्रेषयतु",
-        aadhaar_heading: "आधार e-KYC प्रदर्शनम्",
-        aadhaar_label: "आधार-सङ्ख्या (१२ अङ्काः)",
-        send_ekyc_otp: "e-KYC OTP प्रेषयतु",
-        verify_aadhaar: "सत्यापयतु, परिचयपत्रं च प्राप्नोतु 🔍",
-        proceed: "आरक्षणाय अग्रे गच्छतु →",
-        expired: "कालः समाप्तः",
-        otp_expired: "OTP-कालः समाप्तः। नवीनं OTP याचताम्।",
-        invalid_mobile: "वैधां दशाङ्कीयां भारतीय-दूरवाणी-सङ्ख्यां लिखतु।",
-        invalid_aadhaar: "वैधां द्वादशाङ्कीयाम् आधार-सङ्ख्यां लिखतु।"
-      },
+    <script>
+        /*
+         * DEMO ONLY:
+         * OTPs are generated and displayed in browser alerts.
+         * This is not a secure OTP service or real Aadhaar e-KYC.
+         */
 
-      sd: {
-        farmer_portal: "هاري پورٽل", language_label: "ٻولي",
-        switch_role: "ڪردار بدلايو", page_heading: "هاري جي سڃاڻپ جي تصديق",
-        page_description: "خريداري جو سلاٽ بُڪ ڪرڻ کان اڳ ڊيمو تصديق مڪمل ڪريو.",
-        verification_heading: "قدم 1: سڃاڻپ ۽ آڌار جي تصديق",
-        pending: "باقي", demo_notice_title: "ڊيمو موڊ — ڌيان ڏيو",
-        demo_notice: "OTP صرف ڊيمو لاءِ آهن ۽ برائوزر الرٽ ۾ ڏيکاريا وڃن ٿا. حقيقي SMS، آڌار جي تصديق يا e-KYC درخواست نٿي ٿئي.",
-        mobile_heading: "موبائل نمبر جي تصديق",
-        mobile_label: "موبائل نمبر", send_otp: "OTP موڪليو",
-        aadhaar_heading: "آڌار e-KYC ڊيمو",
-        aadhaar_label: "آڌار نمبر (12 انگ)", send_ekyc_otp: "e-KYC OTP موڪليو",
-        verify_aadhaar: "تصديق ڪري پروفائل حاصل ڪريو 🔍",
-        proceed: "سلاٽ بُڪنگ ڏانهن وڃو →",
-        expired: "مدو ختم", otp_expired: "OTP جو مدو ختم ٿيو. نئون OTP گهرو.",
-        invalid_mobile: "صحيح 10 انگن وارو ڀارتي موبائل نمبر داخل ڪريو.",
-        invalid_aadhaar: "صحيح 12 انگن وارو آڌار نمبر داخل ڪريو."
-      },
+        let generatedMobileOTP = "";
+        let generatedAadhaarOTP = "";
 
-      bho: {
-        farmer_portal: "किसान पोर्टल", language_label: "भाषा",
-        switch_role: "भूमिका बदलीं", page_heading: "किसान के पहचान के जाँच",
-        page_description: "खरीद के स्लॉट बुक करे से पहिले डेमो जाँच पूरा करीं।",
-        verification_heading: "चरण 1: पहचान आ आधार के जाँच",
-        pending: "बाकी बा", demo_notice_title: "डेमो मोड — धियान दीं",
-        demo_notice: "OTP खाली डेमो खातिर बा आ ब्राउजर अलर्ट में देखावल जाला। असली SMS, आधार प्रमाणीकरण भा e-KYC अनुरोध ना होला।",
-        mobile_heading: "मोबाइल नंबर के जाँच",
-        mobile_description: "अपना 10 अंक के भारतीय मोबाइल नंबर डालीं।",
-        mobile_label: "मोबाइल नंबर", send_otp: "OTP भेजीं",
-        aadhaar_heading: "आधार e-KYC डेमो",
-        aadhaar_label: "आधार नंबर (12 अंक)", send_ekyc_otp: "e-KYC OTP भेजीं",
-        verify_aadhaar: "जाँच करीं आ प्रोफाइल लीं 🔍",
-        proceed: "स्लॉट बुकिंग पर जाईं →",
-        expired: "समय खतम", otp_expired: "OTP के समय खतम हो गइल। नया OTP मँगाईं।",
-        invalid_mobile: "सही 10 अंक के भारतीय मोबाइल नंबर डालीं।",
-        invalid_aadhaar: "सही 12 अंक के आधार नंबर डालीं।"
-      },
+        let mobileTimerInterval = null;
+        let aadhaarTimerInterval = null;
 
-      raj: {
-        farmer_portal: "किसान पोर्टल", language_label: "भासा",
-        switch_role: "भूमिका बदलो", page_heading: "किसान री पहचान जाँच",
-        page_description: "खरीद रो स्लॉट बुक करबा सूं पहल्या डेमो जाँच पूरी करो।",
-        verification_heading: "चरण 1: पहचान अर आधार जाँच",
-        pending: "बाकी", demo_notice_title: "डेमो मोड — ध्यान देवो",
-        demo_notice: "OTP केवल डेमो खातर है अर ब्राउजर अलर्ट में दिखाया जावै है। असली SMS, आधार प्रमाणीकरण अथवा e-KYC अरजी कोनी होवै।",
-        mobile_heading: "मोबाइल नंबर जाँच",
-        mobile_label: "मोबाइल नंबर", send_otp: "OTP भेजो",
-        aadhaar_heading: "आधार e-KYC डेमो",
-        aadhaar_label: "आधार नंबर (12 अंक)", send_ekyc_otp: "e-KYC OTP भेजो",
-        verify_aadhaar: "जाँच करो अर प्रोफाइल लो 🔍",
-        proceed: "स्लॉट बुकिंग पर जावो →",
-        expired: "समय पूरा", otp_expired: "OTP रो समय पूरो हो गयो। नयो OTP मँगावो।",
-        invalid_mobile: "सही 10 अंक रो भारतीय मोबाइल नंबर लिखो।",
-        invalid_aadhaar: "सही 12 अंक रो आधार नंबर लिखो।"
-      }
-    };
+        let mobileVerified = false;
+        let aadhaarVerified = false;
+        let verificationComplete = false;
 
-    /*
-     * Construct dictionary objects from the aligned English and Hindi
-     * phrase arrays. Additional language objects override English values.
-     */
-    const dictionary = {};
+        let mobileOtpExpiresAt = 0;
+        let aadhaarOtpExpiresAt = 0;
 
-    function buildDictionary(code, values) {
-      const result = {};
-      translationKeys.forEach((key, index) => {
-        if (values && values[index] !== undefined) {
-          result[key] = values[index];
-        }
-      });
-      return result;
-    }
-
-    dictionary.en = buildDictionary("en", translations.en);
-    dictionary.hi = buildDictionary("hi", translations.hi);
-    dictionary.mr = buildDictionary("mr", translations.mr);
-    dictionary.pa = buildDictionary("pa", translations.pa);
-    dictionary.gu = buildDictionary("gu", translations.gu);
-
-    Object.keys(additionalTranslations).forEach(code => {
-      dictionary[code] = {
-        ...dictionary.en,
-        ...additionalTranslations[code]
-      };
-    });
-
-    /*
-     * Complete remaining languages with localized key phrases where
-     * available and English fallback for untranslated entries.
-     */
-    const extraPhraseSets = {
-      kn: additionalTranslations.kn,
-      ml: additionalTranslations.ml,
-      or: additionalTranslations.or,
-      ne: additionalTranslations.ne,
-      ur: additionalTranslations.ur,
-      as: additionalTranslations.as,
-      sa: additionalTranslations.sa,
-      sd: additionalTranslations.sd,
-      bho: additionalTranslations.bho,
-      raj: additionalTranslations.raj
-    };
-
-    const localizedCodes = [
-      "en", "hi", "mr", "pa", "gu", "bn", "te", "ta", "kn", "ml",
-      "or", "as", "ur", "sa", "ne", "sd", "ks", "doi", "mni",
-      "sat", "bho", "raj"
-    ];
-
-    localizedCodes.forEach(code => {
-      if (!dictionary[code]) {
-        dictionary[code] = { ...dictionary.en };
-      }
-
-      if (extraPhraseSets[code]) {
-        Object.assign(dictionary[code], extraPhraseSets[code]);
-      }
-    });
-
-    /*
-     * Apply shared labels and dynamic strings.
-     */
-    let currentLanguage = "en";
-
-    function t(key, variables = {}) {
-      const language = dictionary[currentLanguage] || dictionary.en;
-      let value = language[key] || dictionary.en[key] || key;
-
-      Object.keys(variables).forEach(name => {
-        value = value.replaceAll("{" + name + "}", String(variables[name]));
-      });
-
-      return value;
-    }
-
-    function applyTranslations() {
-      document.documentElement.lang = currentLanguage;
-
-      document.querySelectorAll("[data-i18n]").forEach(element => {
-        const key = element.getAttribute("data-i18n");
-        const translated = t(key);
-
-        if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-          return;
+        function getElement(id) {
+            return document.getElementById(id);
         }
 
-        element.textContent = translated;
-      });
-
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
-        element.placeholder = t(element.getAttribute("data-i18n-placeholder"));
-      });
-
-      updateBadge();
-      updateTimers();
-    }
-
-    function changeLanguage(language) {
-      if (!localizedCodes.includes(language)) {
-        language = "en";
-      }
-
-      currentLanguage = language;
-
-      try {
-        localStorage.setItem("kd_selected_lang", language);
-      } catch (error) {
-        // The interface still works when storage is unavailable.
-      }
-
-      applyTranslations();
-    }
-
-    /*
-     * Verification state.
-     * OTP values are simulated in this browser only.
-     */
-    const state = {
-      mobileVerified: false,
-      aadhaarVerified: false,
-      mobileOtp: null,
-      aadhaarOtp: null,
-      mobileExpiresAt: 0,
-      aadhaarExpiresAt: 0,
-      mobileTimerId: null,
-      aadhaarTimerId: null,
-      mobileExpired: false,
-      aadhaarExpired: false,
-      verifiedMobileValue: "",
-      verifiedAadhaarValue: "",
-      verifiedMobileOtp: null,
-      verifiedAadhaarOtp: null
-    };
-
-    const OTP_LIFETIME_SECONDS = 60;
-
-    const $ = id => document.getElementById(id);
-
-    const languageSelect = $("languageSelect");
-    const mobileInput = $("mobileNumber");
-    const mobileOtpInput = $("mobileOtp");
-    const aadhaarInput = $("aadhaarNumber");
-    const aadhaarOtpInput = $("aadhaarOtp");
-
-    const sendMobileOtpBtn = $("sendMobileOtpBtn");
-    const verifyMobileOtpBtn = $("verifyMobileOtpBtn");
-    const sendAadhaarOtpBtn = $("sendAadhaarOtpBtn");
-    const verifyAadhaarOtpBtn = $("verifyAadhaarOtpBtn");
-    const proceedBtn = $("proceedBtn");
-
-    function updateBadge() {
-      const badge = $("verificationBadge");
-
-      if (state.mobileVerified && state.aadhaarVerified) {
-        badge.textContent = t("demo_complete");
-        badge.className =
-          "status-complete rounded-full px-3 py-1.5 text-xs font-extrabold";
-      } else {
-        badge.textContent = t("pending");
-        badge.className =
-          "status-pending rounded-full px-3 py-1.5 text-xs font-extrabold";
-      }
-    }
-
-    function updateUI() {
-      $("mobileVerifiedMessage").classList.toggle(
-        "hidden-section", !state.mobileVerified
-      );
-
-      $("aadhaarVerifiedMessage").classList.toggle(
-        "hidden-section", !state.aadhaarVerified
-      );
-
-      $("profileSection").classList.toggle(
-        "hidden-section",
-        !(state.mobileVerified && state.aadhaarVerified)
-      );
-
-      proceedBtn.disabled = !(state.mobileVerified && state.aadhaarVerified);
-
-      updateBadge();
-      updateTimers();
-    }
-
-    function updateTimers() {
-      const now = Date.now();
-
-      const mobileRemaining = state.mobileOtp
-        ? Math.max(0, Math.ceil((state.mobileExpiresAt - now) / 1000))
-        : 0;
-
-      const aadhaarRemaining = state.aadhaarOtp
-        ? Math.max(0, Math.ceil((state.aadhaarExpiresAt - now) / 1000))
-        : 0;
-
-      if (state.mobileOtp && !state.mobileVerified) {
-        $("mobileTimer").textContent = mobileRemaining > 0
-          ? mobileRemaining + "s"
-          : t("expired");
-      }
-
-      if (state.aadhaarOtp && !state.aadhaarVerified) {
-        $("aadhaarTimer").textContent = aadhaarRemaining > 0
-          ? aadhaarRemaining + "s"
-          : t("expired");
-      }
-    }
-
-    function stopTimer(timerName) {
-      const key = timerName + "TimerId";
-
-      if (state[key]) {
-        clearInterval(state[key]);
-        state[key] = null;
-      }
-    }
-
-    function clearMobileOtp() {
-      stopTimer("mobile");
-      state.mobileOtp = null;
-      state.mobileExpiresAt = 0;
-      state.mobileExpired = false;
-      mobileOtpInput.value = "";
-      $("mobileOtpSection").classList.add("hidden-section");
-      $("mobileTimer").textContent = OTP_LIFETIME_SECONDS + "s";
-      $("mobileOtpStatus").textContent = "";
-    }
-
-    function clearAadhaarOtp() {
-      stopTimer("aadhaar");
-      state.aadhaarOtp = null;
-      state.aadhaarExpiresAt = 0;
-      state.aadhaarExpired = false;
-      aadhaarOtpInput.value = "";
-      $("aadhaarOtpSection").classList.add("hidden-section");
-      $("aadhaarTimer").textContent = OTP_LIFETIME_SECONDS + "s";
-      $("aadhaarOtpStatus").textContent = "";
-    }
-
-    function resetMobileVerification() {
-      state.mobileVerified = false;
-      state.verifiedMobileValue = "";
-      state.verifiedMobileOtp = null;
-      clearMobileOtp();
-      updateUI();
-    }
-
-    function resetAadhaarVerification() {
-      state.aadhaarVerified = false;
-      state.verifiedAadhaarValue = "";
-      state.verifiedAadhaarOtp = null;
-      clearAadhaarOtp();
-      updateUI();
-    }
-
-    function generateOtp() {
-      return String(Math.floor(1000 + Math.random() * 9000));
-    }
-
-    function startCountdown(type) {
-      const expiresKey = type + "ExpiresAt";
-      const expiredKey = type + "Expired";
-      const timerIdKey = type + "TimerId";
-      const timerElement = $(type + "Timer");
-      const otpKey = type + "Otp";
-
-      stopTimer(type);
-
-      state[expiresKey] = Date.now() + OTP_LIFETIME_SECONDS * 1000;
-      state[expiredKey] = false;
-
-      function tick() {
-        const remaining = Math.max(
-          0,
-          Math.ceil((state[expiresKey] - Date.now()) / 1000)
-        );
-
-        timerElement.textContent = remaining > 0
-          ? remaining + "s"
-          : t("expired");
-
-        if (remaining <= 0) {
-          stopTimer(type);
-          state[expiredKey] = true;
-          state[otpKey] = null;
-
-          if (type === "mobile") {
-            $("mobileOtpStatus").textContent = t("otp_expired");
-          } else {
-            $("aadhaarOtpStatus").textContent = t("otp_expired");
-          }
-
-          updateUI();
-        }
-      }
-
-      tick();
-      state[timerIdKey] = setInterval(tick, 1000);
-    }
-
-    function showOtpAlert(message) {
-      window.alert(message);
-    }
-
-    /*
-     * Mobile OTP demo.
-     */
-    sendMobileOtpBtn.addEventListener("click", () => {
-      if (state.mobileVerified &&
-          mobileInput.value === state.verifiedMobileValue) {
-        showOtpAlert(t("mobile_already_verified"));
-        return;
-      }
-
-      const mobile = mobileInput.value.trim();
-
-      if (!/^[6-9]\d{9}$/.test(mobile)) {
-        showOtpAlert(t("invalid_mobile"));
-        mobileInput.focus();
-        return;
-      }
-
-      resetMobileVerification();
-
-      state.mobileOtp = generateOtp();
-      $("mobileOtpSection").classList.remove("hidden-section");
-      $("mobileOtpStatus").textContent = t("otp_sent");
-
-      startCountdown("mobile");
-
-      showOtpAlert(
-        t("mobile_demo_alert") + "\n\n" +
-        t("simulated_sms", { otp: state.mobileOtp })
-      );
-    });
-
-    verifyMobileOtpBtn.addEventListener("click", () => {
-      if (!state.mobileOtp || state.mobileExpired ||
-          Date.now() >= state.mobileExpiresAt) {
-        state.mobileOtp = null;
-        state.mobileExpired = true;
-        $("mobileOtpStatus").textContent = t("otp_expired");
-        updateUI();
-        return;
-      }
-
-      const enteredOtp = mobileOtpInput.value.trim();
-
-      if (!/^\d{4}$/.test(enteredOtp)) {
-        showOtpAlert(t("enter_mobile_otp"));
-        return;
-      }
-
-      if (enteredOtp !== state.mobileOtp) {
-        showOtpAlert(t("incorrect_mobile_otp"));
-        return;
-      }
-
-      stopTimer("mobile");
-
-      state.mobileVerified = true;
-      state.verifiedMobileValue = mobileInput.value.trim();
-      state.verifiedMobileOtp = enteredOtp;
-
-      $("mobileOtpStatus").textContent = t("mobile_otp_success");
-      mobileOtpInput.value = "";
-      state.mobileOtp = null;
-
-      showOtpAlert(t("mobile_otp_success_alert"));
-      updateUI();
-    });
-
-    /*
-     * Aadhaar e-KYC demo.
-     * This only simulates a second OTP step; it does not verify identity.
-     */
-    sendAadhaarOtpBtn.addEventListener("click", () => {
-      if (!state.mobileVerified) {
-        showOtpAlert(t("verify_mobile_first"));
-        return;
-      }
-
-      if (state.aadhaarVerified) {
-        showOtpAlert(t("aadhaar_already_complete"));
-        return;
-      }
-
-      const aadhaar = aadhaarInput.value.replace(/\s/g, "");
-
-      if (!/^\d{12}$/.test(aadhaar)) {
-        showOtpAlert(t("invalid_aadhaar"));
-        aadhaarInput.focus();
-        return;
-      }
-
-      resetAadhaarVerification();
-
-      state.aadhaarOtp = generateOtp();
-      $("aadhaarOtpSection").classList.remove("hidden-section");
-      $("aadhaarOtpStatus").textContent = t("otp_sent");
-
-      startCountdown("aadhaar");
-
-      showOtpAlert(
-        t("aadhaar_demo_alert") + "\n\n" +
-        t("simulated_ekyc", { otp: state.aadhaarOtp })
-      );
-    });
-
-    verifyAadhaarOtpBtn.addEventListener("click", () => {
-      if (!state.mobileVerified) {
-        showOtpAlert(t("verify_mobile_first"));
-        return;
-      }
-
-      if (!state.aadhaarOtp || state.aadhaarExpired ||
-          Date.now() >= state.aadhaarExpiresAt) {
-        state.aadhaarOtp = null;
-        state.aadhaarExpired = true;
-        $("aadhaarOtpStatus").textContent = t("otp_expired");
-        updateUI();
-        return;
-      }
-
-      const enteredOtp = aadhaarOtpInput.value.trim();
-
-      if (!/^\d{4}$/.test(enteredOtp)) {
-        showOtpAlert(t("enter_mobile_otp"));
-        return;
-      }
-
-      if (enteredOtp !== state.aadhaarOtp) {
-        showOtpAlert(t("incorrect_mobile_otp"));
-        return;
-      }
-
-      stopTimer("aadhaar");
-
-      state.aadhaarVerified = true;
-      state.verifiedAadhaarValue = aadhaarInput.value.replace(/\s/g, "");
-      state.verifiedAadhaarOtp = enteredOtp;
-
-      $("aadhaarOtpStatus").textContent = t("aadhaar_otp_success");
-      aadhaarOtpInput.value = "";
-      state.aadhaarOtp = null;
-
-      /*
-       * Do not retain the Aadhaar number in the input or localStorage.
-       * The demo profile below is static and is not retrieved from UIDAI.
-       */
-      aadhaarInput.value = "";
-
-      try {
-        localStorage.setItem("kd_farmer_verified", "true");
-        localStorage.setItem("kd_farmer_name", "Ramesh Kumar");
-        localStorage.setItem("kd_farmer_step", "verified");
-      } catch (error) {
-        // Continue if browser storage is unavailable.
-      }
-
-      showOtpAlert(t("aadhaar_otp_success_alert"));
-      showOtpAlert(t("both_steps_complete"));
-
-      updateUI();
-    });
-
-    /*
-     * Reset verification if the underlying mobile or Aadhaar input changes.
-     */
-    mobileInput.addEventListener("input", () => {
-      if (state.mobileVerified &&
-          mobileInput.value.trim() !== state.verifiedMobileValue) {
-        resetMobileVerification();
-        resetAadhaarVerification();
-
-        try {
-          localStorage.removeItem("kd_farmer_verified");
-          localStorage.removeItem("kd_farmer_step");
-        } catch (error) {}
-
-        showOtpAlert(t("mobile_changed"));
-      } else if (state.mobileOtp &&
-                 mobileInput.value.trim() !== state.verifiedMobileValue &&
-                 !/^[6-9]\d{9}$/.test(mobileInput.value.trim())) {
-        clearMobileOtp();
-      }
-
-      updateUI();
-    });
-
-    aadhaarInput.addEventListener("input", () => {
-      if (state.aadhaarVerified) {
-        resetAadhaarVerification();
-
-        try {
-          localStorage.removeItem("kd_farmer_verified");
-          localStorage.removeItem("kd_farmer_step");
-        } catch (error) {}
-
-        showOtpAlert(t("aadhaar_changed_request"));
-      }
-    });
-
-    /*
-     * Navigate only when both demo steps are complete.
-     */
-    proceedBtn.addEventListener("click", () => {
-      if (!state.mobileVerified || !state.aadhaarVerified) {
-        showOtpAlert(t("complete_both_steps"));
-        return;
-      }
-
-      try {
-        localStorage.setItem("kd_farmer_verified", "true");
-        localStorage.setItem("kd_farmer_name", "Ramesh Kumar");
-        localStorage.setItem("kd_farmer_step", "verified");
-      } catch (error) {}
-
-      window.location.href = "slot_booking.html";
-    });
-
-    $("switchRoleBtn").addEventListener("click", () => {
-      window.location.href = "../index.html";
-    });
-
-    languageSelect.addEventListener("change", event => {
-      changeLanguage(event.target.value);
-    });
-
-    /*
-     * Initialization: start every new page load in an unverified state.
-     * An old verification flag must never unlock the page by itself.
-     */
-    document.addEventListener("DOMContentLoaded", () => {
-      try {
-        const savedLanguage = localStorage.getItem("kd_selected_lang");
-
-        if (savedLanguage && localizedCodes.includes(savedLanguage)) {
-          currentLanguage = savedLanguage;
-          languageSelect.value = savedLanguage;
+        function setStatus(id, message, success = false) {
+            const element = getElement(id);
+            if (!element) return;
+
+            element.textContent = message;
+            element.className = success
+                ? "text-sm font-semibold text-green-700"
+                : "text-sm font-semibold text-red-600";
         }
 
-        localStorage.removeItem("kd_farmer_verified");
-        localStorage.removeItem("kd_farmer_step");
-      } catch (error) {
-        // Defaults remain available without localStorage.
-      }
+        function stopTimer(type) {
+            if (type === "mobile" && mobileTimerInterval) {
+                clearInterval(mobileTimerInterval);
+                mobileTimerInterval = null;
+            }
 
-      state.mobileVerified = false;
-      state.aadhaarVerified = false;
+            if (type === "aadhaar" && aadhaarTimerInterval) {
+                clearInterval(aadhaarTimerInterval);
+                aadhaarTimerInterval = null;
+            }
+        }
 
-      updateUI();
-      applyTranslations();
-    });
+        function startTimer(duration, displayElementId, type) {
+            stopTimer(type);
 
-    /*
-     * Apply translations immediately, including if this script runs after
-     * DOMContentLoaded.
-     */
-    languageSelect.value = currentLanguage;
-    applyTranslations();
-  </script>
+            let remaining = duration;
+            const display = getElement(displayElementId);
+
+            if (display) {
+                display.textContent = remaining + "s";
+            }
+
+            const interval = setInterval(function () {
+                remaining--;
+
+                const elem = getElement(displayElementId);
+
+                if (remaining <= 0) {
+                    clearInterval(interval);
+
+                    if (type === "mobile") {
+                        mobileTimerInterval = null;
+                        generatedMobileOTP = "";
+                        mobileOtpExpiresAt = 0;
+                    } else {
+                        aadhaarTimerInterval = null;
+                        generatedAadhaarOTP = "";
+                        aadhaarOtpExpiresAt = 0;
+                    }
+
+                    if (elem) elem.textContent = "Expired";
+
+                    setStatus(
+                        type === "mobile" ? "mobileStatus" : "aadhaarStatus",
+                        "OTP expired. Please request a new OTP."
+                    );
+
+                    return;
+                }
+
+                if (elem) {
+                    elem.textContent = remaining + "s";
+                }
+            }, 1000);
+
+            if (type === "mobile") {
+                mobileTimerInterval = interval;
+            } else {
+                aadhaarTimerInterval = interval;
+            }
+        }
+
+        function resetAadhaarStep() {
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP = "";
+            aadhaarOtpExpiresAt = 0;
+            aadhaarVerified = false;
+            verificationComplete = false;
+
+            getElement("aadhaarOtpBox").classList.add("hidden");
+            getElement("aadhaarOtpInput").value = "";
+            getElement("aadhaarTimer").textContent = "60s";
+            getElement("profileCard").classList.add("hidden");
+            getElement("aadhaarInput").disabled = false;
+
+            setStatus("aadhaarStatus", "");
+
+            const badge = getElement("stepBadge");
+            badge.textContent = "Pending";
+            badge.className =
+                "text-sm bg-amber-100 text-amber-800 font-bold px-4 py-1.5 rounded-full";
+
+            const button = getElement("btnProceedSlot");
+            button.disabled = true;
+            button.className =
+                "w-full bg-gray-300 text-gray-600 font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-not-allowed";
+        }
+
+        function sendMobileOTP() {
+            if (mobileVerified) {
+                alert("This mobile number has already been verified in this session.");
+                return;
+            }
+
+            const mobile = getElement("mobileInput").value.trim();
+
+            if (!/^[6-9]\d{9}$/.test(mobile)) {
+                alert("Please enter a valid 10-digit Indian mobile number.");
+                return;
+            }
+
+            stopTimer("mobile");
+            resetAadhaarStep();
+
+            generatedMobileOTP =
+                Math.floor(1000 + Math.random() * 9000).toString();
+
+            mobileOtpExpiresAt = Date.now() + 60000;
+
+            getElement("mobileOtpInput").value = "";
+            getElement("mobileOtpBox").classList.remove("hidden");
+
+            setStatus(
+                "mobileStatus",
+                "Demo mode: the OTP is displayed in an alert, not sent by SMS."
+            );
+
+            alert(
+                "[SIMULATED SMS — DEMO ONLY]\n\n" +
+                "Your KrishiDhara OTP is: " + generatedMobileOTP +
+                "\n\nThis is not a real SMS."
+            );
+
+            startTimer(60, "mobileTimer", "mobile");
+        }
+
+        function verifyMobileOTP() {
+            if (mobileVerified) {
+                return;
+            }
+
+            if (
+                !generatedMobileOTP ||
+                Date.now() >= mobileOtpExpiresAt
+            ) {
+                generatedMobileOTP = "";
+                setStatus(
+                    "mobileStatus",
+                    "OTP expired. Please request a new OTP."
+                );
+                return;
+            }
+
+            const entered = getElement("mobileOtpInput").value.trim();
+
+            if (!/^\d{4}$/.test(entered)) {
+                setStatus("mobileStatus", "Enter the 4-digit OTP.");
+                return;
+            }
+
+            if (entered !== generatedMobileOTP) {
+                setStatus("mobileStatus", "Incorrect OTP. Please try again.");
+                return;
+            }
+
+            stopTimer("mobile");
+
+            generatedMobileOTP = "";
+            mobileOtpExpiresAt = 0;
+            mobileVerified = true;
+
+            getElement("mobileOtpBox").classList.add("hidden");
+            getElement("mobileInput").disabled = true;
+
+            getElement("aadhaarSection").classList.remove(
+                "opacity-50",
+                "pointer-events-none"
+            );
+
+            setStatus(
+                "mobileStatus",
+                "Mobile OTP verified in this demo session.",
+                true
+            );
+
+            alert("Mobile OTP verified successfully!");
+        }
+
+        function sendAadhaarOTP() {
+            if (!mobileVerified) {
+                alert("Please verify your mobile number first.");
+                return;
+            }
+
+            if (aadhaarVerified) {
+                alert("The Aadhaar demo step is already complete.");
+                return;
+            }
+
+            const aadhaar = getElement("aadhaarInput").value.trim();
+
+            if (!/^\d{12}$/.test(aadhaar)) {
+                alert("Please enter a valid 12-digit Aadhaar number.");
+                return;
+            }
+
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP =
+                Math.floor(1000 + Math.random() * 9000).toString();
+
+            aadhaarOtpExpiresAt = Date.now() + 60000;
+
+            getElement("aadhaarOtpInput").value = "";
+            getElement("aadhaarOtpBox").classList.remove("hidden");
+
+            setStatus(
+                "aadhaarStatus",
+                "Demo mode: no real Aadhaar OTP or e-KYC request is made."
+            );
+
+            alert(
+                "[SIMULATED e-KYC SMS — DEMO ONLY]\n\n" +
+                "Verification OTP is: " + generatedAadhaarOTP +
+                "\n\nThis is not a real Aadhaar OTP."
+            );
+
+            startTimer(60, "aadhaarTimer", "aadhaar");
+        }
+
+        function verifyAadhaarOTP() {
+            if (!mobileVerified) {
+                alert("Please verify your mobile number first.");
+                return;
+            }
+
+            if (
+                !generatedAadhaarOTP ||
+                Date.now() >= aadhaarOtpExpiresAt
+            ) {
+                generatedAadhaarOTP = "";
+                setStatus(
+                    "aadhaarStatus",
+                    "OTP expired. Please request a new OTP."
+                );
+                return;
+            }
+
+            const entered = getElement("aadhaarOtpInput").value.trim();
+
+            if (!/^\d{4}$/.test(entered)) {
+                setStatus("aadhaarStatus", "Enter the 4-digit OTP.");
+                return;
+            }
+
+            if (entered !== generatedAadhaarOTP) {
+                setStatus("aadhaarStatus", "Incorrect OTP. Please try again.");
+                return;
+            }
+
+            stopTimer("aadhaar");
+
+            generatedAadhaarOTP = "";
+            aadhaarOtpExpiresAt = 0;
+            aadhaarVerified = true;
+            verificationComplete = mobileVerified && aadhaarVerified;
+
+            getElement("aadhaarOtpBox").classList.add("hidden");
+            getElement("aadhaarInput").disabled = true;
+            getElement("profileCard").classList.remove("hidden");
+
+            // Do not retain the Aadhaar number in localStorage.
+            getElement("aadhaarInput").value = "";
+
+            setStatus(
+                "aadhaarStatus",
+                "Both demo OTP steps are complete. Aadhaar identity has not been independently verified.",
+                true
+            );
+
+            const badge = getElement("stepBadge");
+            badge.textContent = "Demo Complete ✓";
+            badge.className =
+                "text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full";
+
+            const button = getElement("btnProceedSlot");
+            button.disabled = false;
+            button.className =
+                "w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer";
+        }
+
+        function proceedToSlotBooking() {
+            if (
+                !verificationComplete ||
+                !mobileVerified ||
+                !aadhaarVerified
+            ) {
+                alert("Please complete both verification steps first.");
+                return;
+            }
+
+            // This flag is for prototype navigation only, not real authentication.
+            localStorage.setItem("kd_farmer_verified", "true");
+            localStorage.setItem("kd_farmer_name", "Ramesh Kumar");
+            localStorage.setItem("kd_farmer_step", "booking");
+
+            window.location.href = "slot_booking.html";
+        }
+
+        function switchRole() {
+            // Clear the prototype verification flag when leaving the portal.
+            localStorage.removeItem("kd_farmer_verified");
+            localStorage.setItem("kd_farmer_step", "identity");
+
+            window.location.href = "../index.html";
+        }
+
+        // If the mobile number changes, its previous verification is invalid.
+        getElement("mobileInput").addEventListener("input", function () {
+            if (mobileVerified) {
+                mobileVerified = false;
+                verificationComplete = false;
+
+                getElement("mobileInput").disabled = false;
+                getElement("mobileOtpBox").classList.remove("hidden");
+
+                getElement("aadhaarSection").classList.add(
+                    "opacity-50",
+                    "pointer-events-none"
+                );
+
+                resetAadhaarStep();
+
+                localStorage.removeItem("kd_farmer_verified");
+                setStatus(
+                    "mobileStatus",
+                    "Mobile number changed. Please verify it again."
+                );
+            } else if (generatedMobileOTP) {
+                stopTimer("mobile");
+                generatedMobileOTP = "";
+                mobileOtpExpiresAt = 0;
+                getElement("mobileOtpBox").classList.add("hidden");
+
+                setStatus(
+                    "mobileStatus",
+                    "Mobile number changed. Request a new OTP."
+                );
+            }
+        });
+
+        // If the Aadhaar number changes, its previous OTP is invalidated.
+        getElement("aadhaarInput").addEventListener("input", function () {
+            if (aadhaarVerified) {
+                getElement("aadhaarInput").disabled = false;
+                resetAadhaarStep();
+
+                localStorage.removeItem("kd_farmer_verified");
+
+                setStatus(
+                    "aadhaarStatus",
+                    "Aadhaar number changed. Request a new OTP."
+                );
+            } else if (generatedAadhaarOTP) {
+                stopTimer("aadhaar");
+                generatedAadhaarOTP = "";
+                aadhaarOtpExpiresAt = 0;
+                getElement("aadhaarOtpBox").classList.add("hidden");
+
+                setStatus(
+                    "aadhaarStatus",
+                    "Aadhaar number changed. Request a new OTP."
+                );
+            }
+        });
+
+        // Load the chosen language without skipping verification.
+        window.addEventListener("DOMContentLoaded", function () {
+            const savedLang = localStorage.getItem("kd_selected_lang") || "en";
+            const langSelect = getElement("langSelect");
+
+            if (langSelect) {
+                langSelect.value = savedLang;
+            }
+
+            // Never trust an old localStorage flag to unlock this page.
+            localStorage.removeItem("kd_farmer_verified");
+
+            mobileVerified = false;
+            aadhaarVerified = false;
+            verificationComplete = false;
+
+            getElement("profileCard").classList.add("hidden");
+
+            const proceedButton = getElement("btnProceedSlot");
+            proceedButton.disabled = true;
+        });
+    </script>
+
+    <!-- Automatic translation support for languages without a local dictionary.
+         Requires internet access. The original 22-language selector is preserved. -->
+
+    <div
+        id="google_translate_element"
+        aria-hidden="true"
+        style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden">
+    </div>
+
+    <script>
+    (function () {
+        const STORAGE_KEY = "kd_selected_lang";
+
+        // Original 22 language choices are retained.
+        const googleCodes = new Set([
+            "en", "hi", "mr", "pa", "gu", "bn", "te", "ta", "kn", "ml",
+            "or", "as", "ur", "sa", "ne", "sd", "ks", "doi", "mni",
+            "sat", "bho", "raj"
+        ]);
+
+        function setTranslateCookie(lang) {
+            const target = googleCodes.has(lang) ? lang : "en";
+            const value = "/en/" + target;
+
+            document.cookie =
+                "googtrans=" + value + ";path=/;SameSite=Lax";
+
+            try {
+                localStorage.setItem(STORAGE_KEY, lang);
+            } catch (error) {
+                // Translation can still be attempted using the cookie.
+            }
+        }
+
+        window.googleTranslateElementInit = function () {
+            if (
+                !window.google ||
+                !google.translate ||
+                !google.translate.TranslateElement
+            ) {
+                return;
+            }
+
+            new google.translate.TranslateElement({
+                pageLanguage: "en",
+                includedLanguages:
+                    "en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
+                autoDisplay: false
+            }, "google_translate_element");
+
+            const lang = localStorage.getItem(STORAGE_KEY) || "en";
+            const combo = document.querySelector(".goog-te-combo");
+
+            if (
+                combo &&
+                lang !== "en" &&
+                Array.from(combo.options).some(function (option) {
+                    return option.value === lang;
+                })
+            ) {
+                combo.value = lang;
+                combo.dispatchEvent(new Event("change"));
+            }
+        };
+
+        window.kdApplySelectedLanguage = function (lang) {
+            setTranslateCookie(lang);
+            window.location.reload();
+        };
+
+        // Keep the original selector and translation behavior.
+        window.changeLanguage = function () {
+            const select = document.getElementById("langSelect");
+
+            if (select) {
+                window.kdApplySelectedLanguage(select.value);
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("langSelect");
+            const lang = localStorage.getItem(STORAGE_KEY) || "en";
+
+            if (select) {
+                select.value = lang;
+            }
+
+            if (!document.querySelector("script[data-kd-google-translate]")) {
+                const script = document.createElement("script");
+                script.src =
+                    "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+                script.async = true;
+                script.setAttribute("data-kd-google-translate", "true");
+
+                document.head.appendChild(script);
+            }
+        });
+    })();
+    </script>
 
 </body>
 </html>
