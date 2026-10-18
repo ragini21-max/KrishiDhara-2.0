@@ -10,7 +10,7 @@
 
     <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
         <div class="flex items-center space-x-4">
-            <span class="text-4xl">🌾</span>
+            <span class="text-4xl" aria-hidden="true">🌾</span>
             <div>
                 <h1 class="text-xl md:text-2xl font-black tracking-wide" data-translate="app_title">KrishiDhara 2.0</h1>
                 <p class="text-sm text-green-200 font-medium" data-translate="app_subtitle">Smart Procurement & Queue Management System</p>
@@ -18,7 +18,7 @@
         </div>
 
         <div class="flex items-center space-x-3 bg-green-800 px-4 py-2.5 rounded-2xl border border-green-600 shadow-inner">
-            <span class="text-lg">🌐</span>
+            <span class="text-lg" aria-hidden="true">🌐</span>
             <select id="langSelect" onchange="changeLanguage()" aria-label="Select language" class="bg-transparent text-white text-sm md:text-base font-bold focus:outline-none cursor-pointer">
                 <option value="en" class="text-black">English</option>
                 <option value="hi" class="text-black">हिन्दी (Hindi)</option>
@@ -55,37 +55,37 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div onclick="selectRole('farmer')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('farmer')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-green-200 hover:border-green-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
                 <div class="space-y-4">
-                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">👨‍🌾</div>
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition" aria-hidden="true">👨‍🌾</div>
                     <h3 class="text-xl md:text-2xl font-extrabold text-green-900" data-translate="farmer_title">Farmer Portal</h3>
                     <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="farmer_desc">Book a procurement slot, enter crop details, complete Aadhaar verification, and generate an offline QR token.</p>
                 </div>
                 <div class="text-sm md:text-base font-bold text-green-700 flex items-center space-x-2">
                     <span data-translate="enter_portal">Open Portal</span>
-                    <span class="text-lg">→</span>
+                    <span class="text-lg" aria-hidden="true">→</span>
                 </div>
             </div>
 
             <div onclick="selectRole('officer')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('officer')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 hover:border-emerald-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
                 <div class="space-y-4">
-                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">🛡️</div>
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition" aria-hidden="true">🛡️</div>
                     <h3 class="text-xl md:text-2xl font-extrabold text-emerald-900" data-translate="officer_title">Yard Officer Portal</h3>
                     <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="officer_desc">Manage gate entry, scan QR codes, record arrivals, and verify crop and weight details.</p>
                 </div>
                 <div class="text-sm md:text-base font-bold text-emerald-700 flex items-center space-x-2">
                     <span data-translate="enter_portal">Open Portal</span>
-                    <span class="text-lg">→</span>
+                    <span class="text-lg" aria-hidden="true">→</span>
                 </div>
             </div>
 
             <div onclick="selectRole('admin')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('admin')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 hover:border-teal-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
                 <div class="space-y-4">
-                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">📊</div>
+                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition" aria-hidden="true">📊</div>
                     <h3 class="text-xl md:text-2xl font-extrabold text-teal-900" data-translate="admin_title">APMC Admin Portal</h3>
                     <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="admin_desc">Manage mandi capacity, stop operations in emergencies, monitor traffic, and redirect arrivals when needed.</p>
                 </div>
                 <div class="text-sm md:text-base font-bold text-teal-700 flex items-center space-x-2">
                     <span data-translate="enter_portal">Open Portal</span>
-                    <span class="text-lg">→</span>
+                    <span class="text-lg" aria-hidden="true">→</span>
                 </div>
             </div>
         </div>
@@ -96,13 +96,10 @@
     </footer>
 
     <script>
+        'use strict';
+
         const STORAGE_KEY = 'kd_selected_lang';
 
-        /*
-         * Keep the keys in this order.
-         * Each language below supplies one complete, contextual phrase
-         * for each key rather than translating individual words.
-         */
         const translationKeys = [
             'app_title',
             'app_subtitle',
@@ -133,7 +130,6 @@
                 'Open Portal',
                 'KrishiDhara 2.0 • Live Demonstration Build'
             ],
-
             hi: [
                 'कृषिधारा 2.0',
                 'स्मार्ट कृषि उपज खरीद और कतार प्रबंधन प्रणाली',
@@ -148,7 +144,6 @@
                 'पोर्टल खोलें',
                 'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
             ],
-
             mr: [
                 'कृषिधारा २.०',
                 'स्मार्ट कृषिमाल खरेदी आणि रांग व्यवस्थापन प्रणाली',
@@ -163,7 +158,6 @@
                 'पोर्टल उघडा',
                 'कृषिधारा २.० • थेट प्रात्यक्षिक आवृत्ती'
             ],
-
             pa: [
                 'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0',
                 'ਸਮਾਰਟ ਖੇਤੀ ਉਪਜ ਖਰੀਦ ਅਤੇ ਕਤਾਰ ਪ੍ਰਬੰਧਨ ਪ੍ਰਣਾਲੀ',
@@ -178,7 +172,6 @@
                 'ਪੋਰਟਲ ਖੋਲ੍ਹੋ',
                 'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਲਾਈਵ ਪ੍ਰਦਰਸ਼ਨ ਸੰਸਕਰਣ'
             ],
-
             gu: [
                 'કૃષિધારા 2.0',
                 'સ્માર્ટ કૃષિ પેદાશ ખરીદી અને કતાર વ્યવસ્થાપન પ્રણાલી',
@@ -193,7 +186,6 @@
                 'પોર્ટલ ખોલો',
                 'કૃષિધારા 2.0 • લાઇવ પ્રદર્શન આવૃત્તિ'
             ],
-
             bn: [
                 'কৃষিধারা 2.0',
                 'স্মার্ট কৃষিপণ্য সংগ্রহ ও সারি ব্যবস্থাপনা ব্যবস্থা',
@@ -208,7 +200,6 @@
                 'পোর্টাল খুলুন',
                 'কৃষিধারা 2.0 • সরাসরি প্রদর্শনী সংস্করণ'
             ],
-
             te: [
                 'కృషిధారా 2.0',
                 'స్మార్ట్ వ్యవసాయ ఉత్పత్తుల కొనుగోలు మరియు క్యూ నిర్వహణ వ్యవస్థ',
@@ -223,7 +214,6 @@
                 'పోర్టల్ తెరవండి',
                 'కృషిధారా 2.0 • ప్రత్యక్ష ప్రదర్శన సంచిక'
             ],
-
             ta: [
                 'கிருஷிதாரா 2.0',
                 'ஸ்மார்ட் வேளாண் விளைபொருள் கொள்முதல் மற்றும் வரிசை மேலாண்மை அமைப்பு',
@@ -238,7 +228,6 @@
                 'தளத்தைத் திறக்கவும்',
                 'கிருஷிதாரா 2.0 • நேரடி செயல்விளக்கப் பதிப்பு'
             ],
-
             kn: [
                 'ಕೃಷಿಧಾರಾ 2.0',
                 'ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಉತ್ಪನ್ನ ಖರೀದಿ ಮತ್ತು ಸರದಿ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆ',
@@ -253,7 +242,6 @@
                 'ಪೋರ್ಟಲ್ ತೆರೆಯಿರಿ',
                 'ಕೃಷಿಧಾರಾ 2.0 • ನೇರ ಪ್ರದರ್ಶನ ಆವೃತ್ತಿ'
             ],
-
             ml: [
                 'കൃഷിധാര 2.0',
                 'സ്മാർട്ട് കാർഷിക ഉൽപ്പന്ന സംഭരണവും ക്യൂ മാനേജ്മെന്റ് സംവിധാനവും',
@@ -268,7 +256,6 @@
                 'പോർട്ടൽ തുറക്കുക',
                 'കൃഷിധാര 2.0 • തത്സമയ പ്രദർശന പതിപ്പ്'
             ],
-
             or: [
                 'କୃଷିଧାରା 2.0',
                 'ସ୍ମାର୍ଟ କୃଷି ଉତ୍ପାଦ କ୍ରୟ ଓ ଧାଡ଼ି ପରିଚାଳନା ବ୍ୟବସ୍ଥା',
@@ -283,7 +270,6 @@
                 'ପୋର୍ଟାଲ୍ ଖୋଲନ୍ତୁ',
                 'କୃଷିଧାରା 2.0 • ସିଧାସଳଖ ପ୍ରଦର୍ଶନ ସଂସ୍କରଣ'
             ],
-
             as: [
                 'কৃষিধাৰা 2.0',
                 'স্মাৰ্ট কৃষিজাত সামগ্ৰী ক্ৰয় আৰু শাৰী ব্যৱস্থাপনা ব্যৱস্থা',
@@ -298,7 +284,6 @@
                 'প’ৰ্টেল খোলক',
                 'কৃষিধাৰা 2.0 • পোনপটীয়া প্ৰদৰ্শন সংস্কৰণ'
             ],
-
             ur: [
                 'کرشی دھارا 2.0',
                 'زرعی پیداوار کی خریداری اور قطار کے انتظام کا اسمارٹ نظام',
@@ -313,7 +298,6 @@
                 'پورٹل کھولیں',
                 'کرشی دھارا 2.0 • براہِ راست مظاہرے کا نسخہ'
             ],
-
             sa: [
                 'कृषिधारा 2.0',
                 'कृष्युत्पन्नक्रयस्य पङ्क्तिप्रबन्धनस्य च बुद्धिमत् तन्त्रम्',
@@ -328,7 +312,6 @@
                 'पोर्टलं उद्घाटयत',
                 'कृषिधारा 2.0 • प्रत्यक्षप्रदर्शनसंस्करणम्'
             ],
-
             ne: [
                 'कृषिधारा 2.0',
                 'स्मार्ट कृषि उपज खरिद तथा लाम व्यवस्थापन प्रणाली',
@@ -343,7 +326,6 @@
                 'पोर्टल खोल्नुहोस्',
                 'कृषिधारा 2.0 • प्रत्यक्ष प्रदर्शन संस्करण'
             ],
-
             sd: [
                 'ڪرشي ڌارا 2.0',
                 'زرعي پيداوار جي خريداري ۽ قطار جي انتظام جو ذهين نظام',
@@ -358,7 +340,6 @@
                 'پورٽل کوليو',
                 'ڪرشي ڌارا 2.0 • سڌي نمائش وارو نسخو'
             ],
-
             ks: [
                 'کٔرِشی دھارا 2.0',
                 'زرعی پیداوار خریدن تہ قطار انتظام کرنُک سمارٹ نظام',
@@ -373,7 +354,6 @@
                 'پورٹل کھولِو',
                 'کٔرِشی دھارا 2.0 • براہِ راست مظاہرے ہُند نسخہ'
             ],
-
             doi: [
                 'कृषिधारा 2.0',
                 'खेती-बाड़ी दी फसल खरीद ते कतार प्रबंधन प्रणाली',
@@ -388,7 +368,6 @@
                 'पोर्टल खोलो',
                 'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
             ],
-
             mni: [
                 'কৃষিধারা 2.0',
                 'স্মার্ট কৃষি পণ্য লৌথোকপা অমসু কিউ মেনেজমেন্ট সিস্টেম',
@@ -403,7 +382,6 @@
                 'পোর্টেল হাংদোকউ',
                 'কৃষিধারা 2.0 • লাইভ ডেমোনস্ট্রেশন ভার্সন'
             ],
-
             sat: [
                 'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0',
                 'ᱥᱢᱟᱨᱴ ᱯᱟᱦᱴᱟ ᱠᱤᱱᱟᱹᱣ ᱟᱨ ᱞᱟᱹᱭᱱ ᱵᱮᱵᱚᱥᱛᱷᱟ',
@@ -418,7 +396,6 @@
                 'ᱯᱚᱨᱴᱟᱞ ᱡᱷᱤᱡ ᱢᱮ',
                 'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 • ᱡᱤᱣᱤᱛ ᱫᱮᱠᱷᱟᱣ ᱵᱷᱟᱨᱥᱟ'
             ],
-
             bho: [
                 'कृषिधारा 2.0',
                 'खेती के उपज खरीद आ कतार प्रबंधन के स्मार्ट सिस्टम',
@@ -433,7 +410,6 @@
                 'पोर्टल खोलीं',
                 'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
             ],
-
             raj: [
                 'कृषिधारा 2.0',
                 'खेती री उपज खरीद अर कतार प्रबंधन रो स्मार्ट सिस्टम',
@@ -451,16 +427,46 @@
         };
 
         const translations = Object.fromEntries(
-            Object.entries(translationRows).map(([lang, values]) => [
-                lang,
-                Object.fromEntries(
-                    translationKeys.map((key, index) => [key, values[index]])
-                )
-            ])
+            Object.entries(translationRows).map(([lang, values]) => {
+                if (values.length !== translationKeys.length) {
+                    console.error(`Translation count mismatch for language: ${lang}`);
+                }
+
+                return [
+                    lang,
+                    Object.fromEntries(
+                        translationKeys.map((key, index) => [
+                            key,
+                            values[index] ?? translationRows.en[index]
+                        ])
+                    )
+                ];
+            })
         );
 
         function getTranslation(lang, key) {
-            return translations[lang]?.[key] ?? translations.en[key] ?? key;
+            return translations[lang]?.[key]
+                ?? translations.en[key]
+                ?? key;
+        }
+
+        function safelySaveLanguage(lang) {
+            try {
+                localStorage.setItem(STORAGE_KEY, lang);
+                return true;
+            } catch (error) {
+                console.warn('Could not save the selected language.', error);
+                return false;
+            }
+        }
+
+        function safelyReadLanguage() {
+            try {
+                return localStorage.getItem(STORAGE_KEY) || 'en';
+            } catch (error) {
+                console.warn('Could not read the saved language.', error);
+                return 'en';
+            }
         }
 
         function applyLanguage(lang) {
@@ -472,6 +478,11 @@
                 const key = element.getAttribute('data-translate');
                 element.textContent = getTranslation(chosenLang, key);
             });
+
+            const dropdown = document.getElementById('langSelect');
+            if (dropdown && dropdown.value !== chosenLang) {
+                dropdown.value = chosenLang;
+            }
         }
 
         function changeLanguage() {
@@ -480,42 +491,39 @@
 
             const lang = translations[dropdown.value] ? dropdown.value : 'en';
 
-            try {
-                localStorage.setItem(STORAGE_KEY, lang);
-            } catch (error) {
-                console.warn('Could not save the selected language.', error);
-            }
-
+            safelySaveLanguage(lang);
             applyLanguage(lang);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            let savedLang = 'en';
-
-            try {
-                savedLang = localStorage.getItem(STORAGE_KEY) || 'en';
-            } catch (error) {
-                console.warn('Could not read the saved language.', error);
-            }
-
-            if (!translations[savedLang]) savedLang = 'en';
+            const savedLang = safelyReadLanguage();
+            const validLang = translations[savedLang] ? savedLang : 'en';
 
             const dropdown = document.getElementById('langSelect');
-            if (dropdown) dropdown.value = savedLang;
+            if (dropdown) dropdown.value = validLang;
 
-            applyLanguage(savedLang);
+            applyLanguage(validLang);
         });
 
         function selectRole(role) {
-            localStorage.setItem('kd_user_role', role);
+            const destinations = {
+                farmer: './farmer/index.html',
+                officer: './officer/index.html',
+                admin: './admin/index.html'
+            };
 
-            if (role === 'farmer') {
-                window.location.href = './farmer/index.html';
-            } else if (role === 'officer') {
-                window.location.href = './officer/index.html';
-            } else if (role === 'admin') {
-                window.location.href = './admin/index.html';
+            if (!Object.prototype.hasOwnProperty.call(destinations, role)) {
+                console.warn('Invalid portal selection.');
+                return;
             }
+
+            try {
+                localStorage.setItem('kd_user_role', role);
+            } catch (error) {
+                console.warn('Could not save the selected role.', error);
+            }
+
+            window.location.href = destinations[role];
         }
 
         function switchRole() {
