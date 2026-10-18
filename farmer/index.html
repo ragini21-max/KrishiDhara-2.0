@@ -219,9 +219,13 @@
         langSelect.value = savedLang;
     }
 
+    // Never automatically skip Step 1.
     const verified = localStorage.getItem('kd_farmer_verified') === 'true';
 
-    // Always display Step 1. Never skip directly to Step 2.
+    const profileCard = document.getElementById('profileCard');
+    const stepBadge = document.getElementById('stepBadge');
+    const proceedButton = document.getElementById('btnProceedSlot');
+
     if (verified) {
         document.getElementById('mobileInput').disabled = true;
         document.getElementById('aadhaarInput').disabled = true;
@@ -229,17 +233,17 @@
         document.getElementById('aadhaarSection')
             .classList.remove('opacity-50', 'pointer-events-none');
 
-        document.getElementById('profileCard')
-            .classList.remove('hidden');
-
-        document.getElementById('stepBadge').textContent = 'Verified ✓';
-        document.getElementById('stepBadge').className =
+        profileCard.classList.remove('hidden');
+        stepBadge.textContent = 'Verified ✓';
+        stepBadge.className =
             'text-sm bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full';
 
-        const btn = document.getElementById('btnProceedSlot');
-        btn.disabled = false;
-        btn.className =
+        proceedButton.disabled = false;
+        proceedButton.className =
             'w-full bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg py-5 rounded-2xl transition shadow cursor-pointer';
+    } else {
+        profileCard.classList.add('hidden');
+        proceedButton.disabled = true;
     }
 });
     </script>
