@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,11 +67,11 @@
             </div>
 
             <div id="capacityCount" class="text-2xl font-black text-green-900">
-                14 Tons / 50 Tons
+                0 Tons / 0 Tons
             </div>
 
             <div class="w-full bg-green-200 rounded-full h-2.5 mt-2">
-                <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width:28%"></div>
+                <div id="capacityBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width:0%"></div>
             </div>
         </div>
     </div>
@@ -163,7 +164,6 @@
                     <option value="slot4" id="optSlot4">04:30 PM - 06:00 PM (Evening Slot)</option>
                 </select>
             </div>
-
         </div>
 
         <div>
@@ -171,10 +171,10 @@
                 ⚖️ Estimated Quantity (in Tons)
             </label>
 
-            <input type="number" id="quantityInput" min="1" max="50" step="0.1" required placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+            <input type="number" id="quantityInput" min="0.1" max="50" step="0.1" required placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
         </div>
 
-        <button type="submit" id="btnConfirmBooking" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer">
+        <button type="submit" id="btnConfirmBooking" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed">
             Confirm Slot & Generate QR Pass 🎫
         </button>
 
@@ -216,11 +216,13 @@
 'use strict';
 
 // ======================================================
-// CAPACITY DEFAULTS AND SHARED ADMIN STORAGE
+// CAPACITY DEFAULTS
+// Every mandi starts at ZERO unless Admin has saved a value.
+// A saved zero is retained and never replaced by a fallback.
 // ======================================================
 
-let maxTonsCapacity = 50;
-let bookedTons = 14;
+let maxTonsCapacity = 0;
+let bookedTons = 0;
 
 const mandiLocationsMap = {
     pune_main: {
@@ -242,37 +244,42 @@ const mandiLocationsMap = {
 };
 
 function getMandiDefaultCapacity(mandiKey) {
-    const defaults = {
-        pune_main: 50,
-        nashik_grain: 60,
-        nagpur_cotton: 40,
-        amravati_grain: 30
-    };
-
-    return defaults[mandiKey] ?? 50;
+    // Requested initial capacity: zero for every mandi.
+    return 0;
 }
 
 function getMandiCapacity(mandiKey) {
     const saved = localStorage.getItem(`kd_cap_${mandiKey}`);
 
-    // A saved zero is a real value; do not replace it with a default.
     return saved === null
         ? getMandiDefaultCapacity(mandiKey)
-        : Number(saved);
+        : Math.max(0, Number(saved) || 0);
 }
 
 function getMandiBookedTons(mandiKey) {
     const saved = localStorage.getItem(`kd_booked_${mandiKey}`);
 
-    return saved === null ? 14 : Number(saved);
+    return saved === null
+        ? 0
+        : Math.max(0, Number(saved) || 0);
 }
 
 function isMandiLocked(mandiKey) {
     return localStorage.getItem(`kd_lock_${mandiKey}`) === 'true';
 }
 
+function getMandiDelay(mandiKey) {
+    const saved = localStorage.getItem(`kd_delay_${mandiKey}`);
+    return saved === null ? 0 : Math.max(0, parseInt(saved, 10) || 0);
+}
+
 function refreshMandiCapacity(mandiKey) {
-    if (!mandiKey) return;
+    if (!mandiKey) {
+        maxTonsCapacity = 0;
+        bookedTons = 0;
+        renderCapacityUI(false, '');
+        return;
+    }
 
     maxTonsCapacity = getMandiCapacity(mandiKey);
     bookedTons = getMandiBookedTons(mandiKey);
@@ -282,37 +289,28 @@ function refreshMandiCapacity(mandiKey) {
 
 // ======================================================
 // PAGE INITIALIZATION
-// CHANGE C: USE SHARED SAVED CAPACITY VALUES
 // ======================================================
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function () {
     const langSelect = document.getElementById('langSelect');
 
     if (langSelect) {
         langSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
     }
 
-    // Start with empty booking choices for a new booking.
     document.getElementById('mandiSelect').selectedIndex = 0;
     document.getElementById('commoditySelect').selectedIndex = 0;
     document.getElementById('vehicleSelect').selectedIndex = 0;
     document.getElementById('slotSelect').selectedIndex = 0;
     document.getElementById('quantityInput').value = '';
 
-    // Do not automatically reopen a previous QR pass.
     document.getElementById('qrModal').classList.add('hidden');
 
-    // Read Admin's last selected mandi if the Admin portal saves it.
-    // This is only for the initial capacity display, not form selection.
-    const initialMandi =
-        localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
+    // Show zero initially; the farmer must select a mandi.
+    refreshMandiCapacity('');
 
-    refreshMandiCapacity(initialMandi);
-    applyTimeBufferUI(initialMandi);
-
-    // Refresh values when Admin changes them in another tab/window
-    // on the same origin.
-    window.addEventListener('storage', (event) => {
+    // Update the page if Admin changes settings in another tab.
+    window.addEventListener('storage', function (event) {
         if (!event.key) return;
 
         const relevantKey =
@@ -323,12 +321,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (!relevantKey) return;
 
-        const selectedMandi =
-            document.getElementById('mandiSelect').value || initialMandi;
+        const selectedMandi = document.getElementById('mandiSelect').value;
 
-        if (event.key.endsWith(selectedMandi)) {
+        if (selectedMandi && event.key.endsWith(selectedMandi)) {
             refreshMandiCapacity(selectedMandi);
             applyTimeBufferUI(selectedMandi);
+        } else if (!selectedMandi) {
+            refreshMandiCapacity('');
         }
     });
 });
@@ -340,17 +339,20 @@ window.addEventListener('DOMContentLoaded', () => {
 function onMandiChange() {
     const mandiKey = document.getElementById('mandiSelect').value;
 
-    if (!mandiKey) return;
+    if (!mandiKey) {
+        refreshMandiCapacity('');
+        return;
+    }
 
     refreshMandiCapacity(mandiKey);
     applyTimeBufferUI(mandiKey);
-    showMapForMandi(mandiKey, false);
+    showMapForMandi(mandiKey);
 
-    document.getElementById('quantityInput').max =
-        String(Math.max(1, maxTonsCapacity));
+    const capacity = getMandiCapacity(mandiKey);
+    document.getElementById('quantityInput').max = String(capacity);
 }
 
-function showMapForMandi(mandiKey, isFull) {
+function showMapForMandi(mandiKey) {
     const mandi = mandiLocationsMap[mandiKey];
     if (!mandi) return;
 
@@ -361,27 +363,26 @@ function showMapForMandi(mandiKey, isFull) {
     document.getElementById('currentMandiName').className = 'text-green-700';
 
     document.getElementById('googleMapFrame').src =
-        `https://maps.google.com/maps?q=${encodeURIComponent(mandi.query)}&z=${isFull ? 13 : 14}&output=embed`;
+        `https://maps.google.com/maps?q=${encodeURIComponent(mandi.query)}&z=14&output=embed`;
 }
 
 // ======================================================
-// ADMIN BUFFER TIME
-// Reads kd_delay_<mandiKey>, the shared Admin storage key.
+// ADMIN DELAY BUFFER
+// Reads kd_delay_<mandiKey> from shared localStorage.
 // ======================================================
 
+function formatTime(totalMinutes) {
+    const mins = ((totalMinutes % 1440) + 1440) % 1440;
+    const h24 = Math.floor(mins / 60);
+    const mm = mins % 60;
+    const suffix = h24 >= 12 ? 'PM' : 'AM';
+    const h12 = h24 % 12 || 12;
+
+    return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
+}
+
 function applyTimeBufferUI(mandiKey) {
-    const storedDelay = localStorage.getItem(`kd_delay_${mandiKey}`);
-    const delayMins = storedDelay === null ? 0 : (parseInt(storedDelay, 10) || 0);
-
-    const formatTime = (totalMinutes) => {
-        const mins = ((totalMinutes % 1440) + 1440) % 1440;
-        const h24 = Math.floor(mins / 60);
-        const mm = mins % 60;
-        const suffix = h24 >= 12 ? 'PM' : 'AM';
-        const h12 = h24 % 12 || 12;
-
-        return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
-    };
+    const delayMins = getMandiDelay(mandiKey);
 
     const ranges = [
         [540, 690],
@@ -397,7 +398,7 @@ function applyTimeBufferUI(mandiKey) {
         'Evening Slot'
     ];
 
-    ranges.forEach((range, index) => {
+    ranges.forEach(function (range, index) {
         const start = formatTime(range[0] + delayMins);
         const end = formatTime(range[1] + delayMins);
         const option = document.getElementById(`optSlot${index + 1}`);
@@ -411,13 +412,15 @@ function applyTimeBufferUI(mandiKey) {
 }
 
 // ======================================================
-// CAPACITY DISPLAY
+// CAPACITY DISPLAY AND VALIDATION
 // ======================================================
 
 function renderCapacityUI(isLocked, currentMandiKey) {
     const capacityCount = document.getElementById('capacityCount');
     const capacityBar = document.getElementById('capacityBar');
     const alertBanner = document.getElementById('fullCapacityAlert');
+    const alertTitle = document.getElementById('alertTitleText');
+    const alertMessage = document.getElementById('alertMessageText');
     const submitButton = document.getElementById('btnConfirmBooking');
 
     const capacity = Math.max(0, Number(maxTonsCapacity) || 0);
@@ -426,23 +429,43 @@ function renderCapacityUI(isLocked, currentMandiKey) {
     capacityCount.textContent = `${booked} Tons / ${capacity} Tons`;
 
     const percentage = capacity > 0
-        ? Math.min(100, Math.round((booked / capacity) * 100))
-        : 100;
+        ? Math.min(100, (booked / capacity) * 100)
+        : 0;
 
     capacityBar.style.width = `${percentage}%`;
 
-    const full = capacity <= 0 || booked >= capacity;
+    const noMandiSelected = !currentMandiKey;
+    const zeroCapacity = capacity <= 0;
+    const full = capacity > 0 && booked >= capacity;
 
-    if (isLocked || full) {
+    if (noMandiSelected) {
+        alertBanner.classList.add('hidden');
+        submitButton.disabled = true;
+        submitButton.className =
+            'w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed';
+        return;
+    }
+
+    if (isLocked || zeroCapacity || full) {
         alertBanner.classList.remove('hidden');
+
+        if (isLocked) {
+            alertTitle.textContent = 'MANDI TEMPORARILY LOCKED';
+            alertMessage.textContent =
+                'The Admin has locked this mandi. Please contact the administrator.';
+        } else if (zeroCapacity) {
+            alertTitle.textContent = 'CAPACITY NOT CONFIGURED';
+            alertMessage.textContent =
+                'This mandi currently has zero capacity. Booking will open after the Admin sets a positive capacity.';
+        } else {
+            alertTitle.textContent = 'MANDI CAPACITY FULL';
+            alertMessage.textContent =
+                'The daily capacity has been reached. Please select another mandi or contact the administrator.';
+        }
 
         submitButton.disabled = true;
         submitButton.className =
             'w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed';
-
-        if (currentMandiKey) {
-            showMapForMandi(currentMandiKey, true);
-        }
     } else {
         alertBanner.classList.add('hidden');
 
@@ -482,9 +505,7 @@ function renderSavedBooking(booking) {
     document.getElementById('summaryQuantity').textContent =
         booking.quantity ?? '-';
 
-    // Always calculate the pass arrival time from the latest Admin buffer.
-    const delayMins =
-        parseInt(localStorage.getItem(`kd_delay_${booking.mandiKey}`), 10) || 0;
+    const delayMins = getMandiDelay(booking.mandiKey);
 
     const slotRanges = {
         slot1: [540, 690],
@@ -496,16 +517,6 @@ function renderSavedBooking(booking) {
     const range = slotRanges[booking.slotKey];
 
     if (range) {
-        const formatTime = (totalMinutes) => {
-            const mins = ((totalMinutes % 1440) + 1440) % 1440;
-            const h24 = Math.floor(mins / 60);
-            const mm = mins % 60;
-            const suffix = h24 >= 12 ? 'PM' : 'AM';
-            const h12 = h24 % 12 || 12;
-
-            return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
-        };
-
         document.getElementById('summarySlot').textContent =
             `${formatTime(range[0] + delayMins)} - ${formatTime(range[1] + delayMins)}`;
     } else {
@@ -519,24 +530,28 @@ function renderSavedBooking(booking) {
     const qrElement = document.getElementById('qrcode');
     qrElement.innerHTML = '';
 
-    if (window.QRCode && booking.tokenId) {
-        new QRCode(qrElement, {
-            text: JSON.stringify({
-                tokenId: booking.tokenId,
-                farmer: booking.farmerName || 'Ramesh Kumar',
-                mandi: booking.mandiKey,
-                slot: booking.slotKey,
-                quantity: booking.quantity
-            }),
-            width: 150,
-            height: 150
-        });
+    if (!window.QRCode || !booking.tokenId) {
+        qrElement.textContent = 'QR library unavailable';
+        return;
     }
+
+    const qrPayload = {
+        tokenId: booking.tokenId,
+        farmer: booking.farmerName || 'Ramesh Kumar',
+        mandi: booking.mandiKey,
+        slot: booking.slotKey,
+        quantity: booking.quantity
+    };
+
+    new QRCode(qrElement, {
+        text: JSON.stringify(qrPayload),
+        width: 150,
+        height: 150
+    });
 }
 
 // ======================================================
 // CONFIRM BOOKING
-// CHANGE D: SAME STORAGE VALUES FOR VALIDATION AND DISPLAY
 // ======================================================
 
 function handleSlotBooking(event) {
@@ -546,6 +561,13 @@ function handleSlotBooking(event) {
 
     if (!mandiKey) {
         alert('Please select an APMC mandi.');
+        return;
+    }
+
+    // This is a browser-only prototype flag, not secure authentication.
+    if (localStorage.getItem('kd_farmer_verified') !== 'true') {
+        alert('Please complete the Farmer Portal verification steps first.');
+        window.location.href = 'index.html';
         return;
     }
 
@@ -570,18 +592,19 @@ function handleSlotBooking(event) {
         return;
     }
 
-    // CHANGE D:
-    // Use exactly the same keys and values as the Admin portal.
     const capacity = getMandiCapacity(mandiKey);
     const currentBooked = getMandiBookedTons(mandiKey);
-
     const existing = getStoredBooking();
 
-    // If editing the existing booking at this same mandi,
-    // remove its current quantity before checking the new quantity.
+    if (capacity <= 0) {
+        alert('This mandi has zero capacity. The Admin must set a positive capacity before booking.');
+        return;
+    }
+
+    // Exclude the existing reservation only when it belongs to this mandi.
     const existingQuantityAtThisMandi =
         existing && existing.mandiKey === mandiKey
-            ? (Number(existing.quantity) || 0)
+            ? Math.max(0, Number(existing.quantity) || 0)
             : 0;
 
     const effectiveBooked = Math.max(
@@ -589,12 +612,9 @@ function handleSlotBooking(event) {
         currentBooked - existingQuantityAtThisMandi
     );
 
-    if (capacity <= 0 || effectiveBooked + inputTons > capacity) {
+    if (effectiveBooked + inputTons > capacity) {
         const available = Math.max(0, capacity - effectiveBooked);
-
-        alert(
-            `Requested quantity exceeds available capacity. Available: ${available} tons.`
-        );
+        alert(`Requested quantity exceeds available capacity. Available: ${available} tons.`);
         return;
     }
 
@@ -602,10 +622,11 @@ function handleSlotBooking(event) {
     const mandiName =
         mandiSelect.options[mandiSelect.selectedIndex].text;
 
-    const tokenId =
-        existing && existing.mandiKey === mandiKey
-            ? existing.tokenId
-            : `KD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const sameMandiBooking = existing && existing.mandiKey === mandiKey;
+
+    const tokenId = sameMandiBooking
+        ? existing.tokenId
+        : `KD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const booking = {
         tokenId,
@@ -617,29 +638,32 @@ function handleSlotBooking(event) {
         slotKey,
         slotLabel: slotSelect.options[slotSelect.selectedIndex].text,
         quantity: inputTons,
-        createdAt:
-            existing && existing.mandiKey === mandiKey
-                ? existing.createdAt
-                : new Date().toISOString()
+        createdAt: sameMandiBooking && existing.createdAt
+            ? existing.createdAt
+            : new Date().toISOString()
     };
 
-    let updatedBooked;
+    // Update the previous mandi total if the farmer moves the booking.
+    // This prevents the old reservation from remaining counted there.
+    if (existing && existing.mandiKey && existing.mandiKey !== mandiKey) {
+        const oldMandiKey = existing.mandiKey;
+        const oldBooked = getMandiBookedTons(oldMandiKey);
+        const oldQuantity = Math.max(0, Number(existing.quantity) || 0);
 
-    if (existing && existing.mandiKey === mandiKey) {
-        // Update the existing booking quantity without counting it twice.
-        updatedBooked = Math.max(
-            0,
-            currentBooked - (Number(existing.quantity) || 0) + inputTons
+        localStorage.setItem(
+            `kd_booked_${oldMandiKey}`,
+            String(Math.max(0, oldBooked - oldQuantity))
         );
-    } else {
-        // A new booking at this mandi.
-        updatedBooked = currentBooked + inputTons;
     }
 
+    const updatedBooked = sameMandiBooking
+        ? Math.max(0, currentBooked - existingQuantityAtThisMandi + inputTons)
+        : currentBooked + inputTons;
+
+    // Save reservation totals and booking details.
     localStorage.setItem(`kd_booked_${mandiKey}`, String(updatedBooked));
     localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
 
-    // Retain temporary values for other parts of the demo.
     localStorage.setItem('kd_temp_mandi', mandiKey);
     localStorage.setItem('kd_temp_commodity', commodity);
     localStorage.setItem('kd_temp_vehicle', vehicle);
@@ -649,7 +673,6 @@ function handleSlotBooking(event) {
     renderSavedBooking(booking);
     document.getElementById('qrModal').classList.remove('hidden');
 
-    // CHANGE D: re-read the stored totals after saving the booking.
     refreshMandiCapacity(mandiKey);
 }
 
@@ -692,7 +715,9 @@ function switchRole() {
 }
 </script>
 
-<!-- Optional automatic translation support; requires internet access. -->
+<!-- Automatic translation support for the existing 22-language selector.
+     Requires internet access. -->
+
 <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
 
 <script>
