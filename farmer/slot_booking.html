@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,11 +13,12 @@
 <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-4xl w-full mx-auto gap-4">
     <div class="flex items-center space-x-3">
         <span class="text-4xl">👨‍🌾</span>
-        <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • Farmer Portal</h1>
+        <h1 class="text-lg md:text-xl font-bold" data-i18n="pageTitle">KrishiDhara 2.0 • Farmer Portal</h1>
     </div>
 
     <div class="flex items-center gap-3">
-        <select id="langSelect" onchange="changeLanguage()" class="bg-green-800 text-white text-sm px-3 py-2.5 rounded-2xl border border-green-600 font-bold">
+        <select id="langSelect" onchange="changeLanguage()" aria-label="Select language"
+            class="bg-green-800 text-white text-sm px-3 py-2.5 rounded-2xl border border-green-600 font-bold">
             <option value="en">English</option>
             <option value="hi">हिन्दी</option>
             <option value="mr">मराठी</option>
@@ -43,7 +43,8 @@
             <option value="raj">राजस्थानी</option>
         </select>
 
-        <button type="button" onclick="switchRole()" class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold cursor-pointer">
+        <button type="button" onclick="switchRole()" data-i18n="switchRole"
+            class="bg-green-800 text-sm px-4 py-2.5 rounded-2xl hover:bg-green-900 border border-green-600 font-bold cursor-pointer">
             Switch Role
         </button>
     </div>
@@ -53,16 +54,16 @@
 
     <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-2 border-green-200 flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
-            <h2 class="text-xl md:text-2xl font-extrabold text-green-900">
+            <h2 class="text-xl md:text-2xl font-extrabold text-green-900" data-i18n="stepTitle">
                 Step 2: Procurement Slot & QR Pass
             </h2>
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600" data-i18n="stepDescription">
                 Select your mandi, commodity, vehicle, quantity, and time slot.
             </p>
         </div>
 
         <div class="bg-emerald-50 border-2 border-green-500 p-4 rounded-2xl shadow-sm w-full md:w-auto">
-            <div class="text-xs text-green-800 font-bold uppercase">
+            <div class="text-xs text-green-800 font-bold uppercase" data-i18n="capacityLabel">
                 Mandi Daily Capacity Intake
             </div>
 
@@ -78,8 +79,8 @@
 
     <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-green-200 space-y-4">
         <h3 class="font-extrabold text-lg text-green-950">
-            🗺️ APMC Mandi Geospatial Locator -
-            <span id="currentMandiName" class="text-amber-600">
+            <span data-i18n="mapTitle">🗺️ APMC Mandi Geospatial Locator -</span>
+            <span id="currentMandiName" class="text-amber-600" data-i18n="selectMandiPrompt">
                 Please select a Mandi from dropdown below
             </span>
         </h3>
@@ -87,35 +88,34 @@
         <div id="mapContainer" class="w-full h-64 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-inner bg-gray-100 relative flex items-center justify-center">
             <div id="mapPlaceholder" class="text-center p-6">
                 <p class="text-4xl mb-2">👇</p>
-                <p class="font-bold text-gray-700">Please select APMC Mandi Yard from dropdown</p>
-                <p class="text-sm text-gray-500">Map will show selected mandi location here</p>
+                <p class="font-bold text-gray-700" data-i18n="mapPlaceholderTitle">Please select APMC Mandi Yard from dropdown</p>
+                <p class="text-sm text-gray-500" data-i18n="mapPlaceholderDescription">Map will show selected mandi location here</p>
             </div>
 
-            <iframe id="googleMapFrame" class="hidden" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" src=""></iframe>
+            <iframe id="googleMapFrame" title="Selected mandi map" class="hidden" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" src=""></iframe>
         </div>
     </div>
 
     <div id="fullCapacityAlert" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-6 rounded-2xl shadow-md text-center space-y-3">
-        <div id="alertTitleText" class="text-xl font-black">
+        <div id="alertTitleText" class="text-xl font-black" data-i18n="alertDefaultTitle">
             MANDI LOCKED OR CAPACITY FULL
         </div>
-        <p id="alertMessageText" class="text-sm font-semibold">
+        <p id="alertMessageText" class="text-sm font-semibold" data-i18n="alertDefaultMessage">
             Bookings for this mandi are temporarily suspended or its capacity is full.
             Please select another mandi or contact the administrator.
         </p>
     </div>
 
     <form id="slotForm" onsubmit="handleSlotBooking(event)" class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-green-200 space-y-6">
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <div>
-                <label for="mandiSelect" class="block font-bold text-gray-800">
+                <label for="mandiSelect" class="block font-bold text-gray-800" data-i18n="mandiLabel">
                     🏬 APMC Mandi Yard
                 </label>
 
                 <select id="mandiSelect" onchange="onMandiChange()" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                    <option value="" disabled selected>Select APMC Mandi</option>
+                    <option value="" disabled selected data-i18n="selectMandi">Select APMC Mandi</option>
                     <option value="pune_main">Pune Main APMC Market Yard</option>
                     <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
                     <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
@@ -124,88 +124,88 @@
             </div>
 
             <div>
-                <label for="commoditySelect" class="block font-bold text-gray-800">
+                <label for="commoditySelect" class="block font-bold text-gray-800" data-i18n="commodityLabel">
                     🌾 Commodity / Crop Type
                 </label>
 
                 <select id="commoditySelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                    <option value="" disabled selected>Select commodity</option>
-                    <option value="wheat">Wheat</option>
-                    <option value="paddy">Paddy / Rice</option>
-                    <option value="soybean">Soybean</option>
-                    <option value="cotton">Cotton</option>
-                    <option value="onion">Onion</option>
+                    <option value="" disabled selected data-i18n="selectCommodity">Select commodity</option>
+                    <option value="wheat" data-i18n="wheat">Wheat</option>
+                    <option value="paddy" data-i18n="paddy">Paddy / Rice</option>
+                    <option value="soybean" data-i18n="soybean">Soybean</option>
+                    <option value="cotton" data-i18n="cotton">Cotton</option>
+                    <option value="onion" data-i18n="onion">Onion</option>
                 </select>
             </div>
 
             <div>
-                <label for="vehicleSelect" class="block font-bold text-gray-800">
+                <label for="vehicleSelect" class="block font-bold text-gray-800" data-i18n="vehicleLabel">
                     🚚 Vehicle Type
                 </label>
 
                 <select id="vehicleSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                    <option value="" disabled selected>Select vehicle type</option>
-                    <option value="tractor">Tractor Trolley (4-6 Tons)</option>
-                    <option value="small_truck">Light Commercial Truck (LCV)</option>
-                    <option value="heavy_truck">Heavy Commercial Truck (10+ Tons)</option>
+                    <option value="" disabled selected data-i18n="selectVehicle">Select vehicle type</option>
+                    <option value="tractor" data-i18n="tractor">Tractor Trolley (4-6 Tons)</option>
+                    <option value="small_truck" data-i18n="smallTruck">Light Commercial Truck (LCV)</option>
+                    <option value="heavy_truck" data-i18n="heavyTruck">Heavy Commercial Truck (10+ Tons)</option>
                 </select>
             </div>
 
             <div>
-                <label for="slotSelect" class="block font-bold text-gray-800">
+                <label for="slotSelect" class="block font-bold text-gray-800" data-i18n="slotLabel">
                     ⏰ Preferred Arrival Slot
                 </label>
 
                 <select id="slotSelect" required class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
-                    <option value="" disabled selected>Select time slot</option>
-                    <option value="slot1" id="optSlot1">09:00 AM - 11:30 AM (Morning Slot)</option>
-                    <option value="slot2" id="optSlot2">11:30 AM - 02:00 PM (Mid-Day Slot)</option>
-                    <option value="slot3" id="optSlot3">02:00 PM - 04:30 PM (Afternoon Slot)</option>
-                    <option value="slot4" id="optSlot4">04:30 PM - 06:00 PM (Evening Slot)</option>
+                    <option value="" disabled selected data-i18n="selectSlot">Select time slot</option>
+                    <option value="slot1" id="optSlot1"></option>
+                    <option value="slot2" id="optSlot2"></option>
+                    <option value="slot3" id="optSlot3"></option>
+                    <option value="slot4" id="optSlot4"></option>
                 </select>
             </div>
         </div>
 
         <div>
-            <label for="quantityInput" class="block font-bold text-gray-800">
+            <label for="quantityInput" class="block font-bold text-gray-800" data-i18n="quantityLabel">
                 ⚖️ Estimated Quantity (in Tons)
             </label>
 
-            <input type="number" id="quantityInput" min="0.1" max="50" step="0.1" required placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
+            <input type="number" id="quantityInput" min="0.1" max="50" step="0.1" required data-i18n-placeholder="quantityPlaceholder" placeholder="Enter tons (e.g. 5)" class="w-full bg-gray-50 border-2 border-gray-300 rounded-2xl px-5 py-4 font-medium">
         </div>
 
-        <button type="submit" id="btnConfirmBooking" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed">
+        <button type="submit" id="btnConfirmBooking" disabled data-i18n="confirmBooking"
+            class="w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed">
             Confirm Slot & Generate QR Pass 🎫
         </button>
-
     </form>
 </main>
 
 <div id="qrModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 shadow-2xl text-center border-4 border-green-500">
-        <h3 class="text-xl font-black text-green-900">KrishiDhara Official Entry Pass</h3>
+        <h3 class="text-xl font-black text-green-900" data-i18n="passTitle">KrishiDhara Official Entry Pass</h3>
 
         <div class="bg-green-50 p-6 rounded-2xl flex flex-col items-center justify-center border-2 border-green-300">
             <div id="qrcode" style="width:170px;height:170px" class="p-3 bg-white rounded-xl shadow-md border flex items-center justify-center"></div>
-            <p class="text-xs text-green-800 font-bold mt-3">Show at Gate Scanner</p>
+            <p class="text-xs text-green-800 font-bold mt-3" data-i18n="showAtGate">Show at Gate Scanner</p>
         </div>
 
         <div class="text-left text-sm space-y-2 bg-gray-50 p-4 rounded-xl border">
-            <p><b>Farmer:</b> <span id="summaryName" class="text-green-800 font-bold">Ramesh Kumar</span></p>
-            <p><b>Mandi:</b> <span id="summaryMandi">-</span></p>
-            <p><b>Commodity:</b> <span id="summaryCommodity">-</span></p>
-            <p><b>Vehicle:</b> <span id="summaryVehicle">-</span></p>
-            <p><b>Quantity:</b> <span id="summaryQuantity">-</span> tons</p>
-            <p><b>Updated arrival slot:</b> <span id="summarySlot">-</span></p>
-            <p><b>Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">-</span></p>
+            <p><b data-i18n="farmerLabel">Farmer:</b> <span id="summaryName" class="text-green-800 font-bold">Ramesh Kumar</span></p>
+            <p><b data-i18n="mandiSummary">Mandi:</b> <span id="summaryMandi">-</span></p>
+            <p><b data-i18n="commoditySummary">Commodity:</b> <span id="summaryCommodity">-</span></p>
+            <p><b data-i18n="vehicleSummary">Vehicle:</b> <span id="summaryVehicle">-</span></p>
+            <p><b data-i18n="quantitySummary">Quantity:</b> <span id="summaryQuantity">-</span> <span data-i18n="tons">tons</span></p>
+            <p><b data-i18n="arrivalSummary">Updated arrival slot:</b> <span id="summarySlot">-</span></p>
+            <p><b data-i18n="tokenSummary">Token ID:</b> <span id="summaryToken" class="font-mono text-emerald-700 font-bold">-</span></p>
         </div>
 
         <div class="flex space-x-3">
-            <button type="button" onclick="window.print()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">
+            <button type="button" onclick="window.print()" data-i18n="printPass" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl cursor-pointer">
                 Print Pass 🖨️
             </button>
 
-            <button type="button" onclick="closeModal()" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl cursor-pointer">
+            <button type="button" onclick="closeModal()" data-i18n="close" class="bg-gray-200 text-gray-800 font-bold px-5 py-3 rounded-xl cursor-pointer">
                 Close
             </button>
         </div>
@@ -214,6 +214,695 @@
 
 <script>
 'use strict';
+
+const STORAGE_KEY = 'kd_selected_lang';
+const SUPPORTED_LANGUAGES = [
+    'en','hi','mr','pa','gu','bn','te','ta','kn','ml','or',
+    'as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj'
+];
+
+const translations = {
+en: {
+pageTitle:'KrishiDhara 2.0 • Farmer Portal',switchRole:'Switch Role',
+stepTitle:'Step 2: Procurement Slot & QR Pass',stepDescription:'Select your mandi, commodity, vehicle, quantity, and time slot.',
+capacityLabel:'Mandi Daily Capacity Intake',mapTitle:'🗺️ APMC Mandi Geospatial Locator -',
+selectMandiPrompt:'Please select a Mandi from dropdown below',mapPlaceholderTitle:'Please select APMC Mandi Yard from dropdown',
+mapPlaceholderDescription:'Map will show selected mandi location here',alertDefaultTitle:'MANDI LOCKED OR CAPACITY FULL',
+alertDefaultMessage:'Bookings for this mandi are temporarily suspended or its capacity is full. Please select another mandi or contact the administrator.',
+mandiLabel:'🏬 APMC Mandi Yard',selectMandi:'Select APMC Mandi',commodityLabel:'🌾 Commodity / Crop Type',
+selectCommodity:'Select commodity',wheat:'Wheat',paddy:'Paddy / Rice',soybean:'Soybean',cotton:'Cotton',onion:'Onion',
+vehicleLabel:'🚚 Vehicle Type',selectVehicle:'Select vehicle type',tractor:'Tractor Trolley (4-6 Tons)',
+smallTruck:'Light Commercial Truck (LCV)',heavyTruck:'Heavy Commercial Truck (10+ Tons)',
+slotLabel:'⏰ Preferred Arrival Slot',selectSlot:'Select time slot',quantityLabel:'⚖️ Estimated Quantity (in Tons)',
+quantityPlaceholder:'Enter tons (e.g. 5)',confirmBooking:'Confirm Slot & Generate QR Pass 🎫',
+passTitle:'KrishiDhara Official Entry Pass',showAtGate:'Show at Gate Scanner',farmerLabel:'Farmer:',
+mandiSummary:'Mandi:',commoditySummary:'Commodity:',vehicleSummary:'Vehicle:',quantitySummary:'Quantity:',
+tons:'tons',arrivalSummary:'Updated arrival slot:',tokenSummary:'Token ID:',printPass:'Print Pass 🖨️',close:'Close',
+morning:'Morning Slot',midday:'Mid-Day Slot',afternoon:'Afternoon Slot',evening:'Evening Slot',
+lockedTitle:'MANDI TEMPORARILY LOCKED',lockedMessage:'The Admin has locked this mandi. Please contact the administrator.',
+zeroTitle:'CAPACITY NOT CONFIGURED',zeroMessage:'This mandi currently has zero capacity. Booking will open after the Admin sets a positive capacity.',
+fullTitle:'MANDI CAPACITY FULL',fullMessage:'The daily capacity has been reached. Please select another mandi or contact the administrator.',
+tonsUnit:'Tons',capacityText:'{booked} Tons / {capacity} Tons',
+errSelectMandi:'Please select an APMC mandi.',errVerification:'Please complete the Farmer Portal verification steps first.',
+errLocked:'This mandi is temporarily locked by the Admin.',errSelections:'Please select commodity, vehicle, and arrival slot.',
+errQuantity:'Please enter a valid quantity in tons.',errZeroCapacity:'This mandi has zero capacity. The Admin must set a positive capacity before booking.',
+errCapacity:'Requested quantity exceeds available capacity. Available: {available} tons.',
+errQR:'QR library unavailable'
+},
+hi: {
+pageTitle:'कृषिधारा 2.0 • किसान पोर्टल',switchRole:'भूमिका बदलें',
+stepTitle:'चरण 2: खरीद स्लॉट और QR पास',stepDescription:'अपनी मंडी, फसल, वाहन, मात्रा और समय स्लॉट चुनें।',
+capacityLabel:'मंडी की दैनिक क्षमता',mapTitle:'🗺️ APMC मंडी स्थान मानचित्र -',
+selectMandiPrompt:'नीचे की सूची से मंडी चुनें',mapPlaceholderTitle:'सूची से APMC मंडी यार्ड चुनें',
+mapPlaceholderDescription:'चुनी गई मंडी का नक्शा यहाँ दिखेगा',alertDefaultTitle:'मंडी बंद है या क्षमता पूरी है',
+alertDefaultMessage:'इस मंडी की बुकिंग अस्थायी रूप से बंद है या इसकी क्षमता पूरी हो गई है। दूसरी मंडी चुनें या प्रशासक से संपर्क करें।',
+mandiLabel:'🏬 APMC मंडी यार्ड',selectMandi:'APMC मंडी चुनें',commodityLabel:'🌾 फसल का प्रकार',
+selectCommodity:'फसल चुनें',wheat:'गेहूँ',paddy:'धान / चावल',soybean:'सोयाबीन',cotton:'कपास',onion:'प्याज़',
+vehicleLabel:'🚚 वाहन का प्रकार',selectVehicle:'वाहन चुनें',tractor:'ट्रैक्टर ट्रॉली (4-6 टन)',
+smallTruck:'हल्का व्यावसायिक ट्रक (LCV)',heavyTruck:'भारी व्यावसायिक ट्रक (10+ टन)',
+slotLabel:'⏰ आने का पसंदीदा समय',selectSlot:'समय स्लॉट चुनें',quantityLabel:'⚖️ अनुमानित मात्रा (टन में)',
+quantityPlaceholder:'टन दर्ज करें (जैसे 5)',confirmBooking:'स्लॉट की पुष्टि करें और QR पास बनाएँ 🎫',
+passTitle:'कृषिधारा आधिकारिक प्रवेश पास',showAtGate:'गेट स्कैनर पर दिखाएँ',farmerLabel:'किसान:',
+mandiSummary:'मंडी:',commoditySummary:'फसल:',vehicleSummary:'वाहन:',quantitySummary:'मात्रा:',
+tons:'टन',arrivalSummary:'संशोधित आगमन स्लॉट:',tokenSummary:'टोकन ID:',printPass:'पास प्रिंट करें 🖨️',close:'बंद करें',
+morning:'सुबह का स्लॉट',midday:'दोपहर का स्लॉट',afternoon:'दोपहर बाद का स्लॉट',evening:'शाम का स्लॉट',
+lockedTitle:'मंडी अस्थायी रूप से बंद है',lockedMessage:'प्रशासक ने इस मंडी को लॉक किया है। कृपया उनसे संपर्क करें।',
+zeroTitle:'क्षमता निर्धारित नहीं है',zeroMessage:'इस मंडी की क्षमता अभी शून्य है। प्रशासक द्वारा सकारात्मक क्षमता निर्धारित करने के बाद बुकिंग शुरू होगी।',
+fullTitle:'मंडी की क्षमता पूरी है',fullMessage:'दैनिक क्षमता पूरी हो गई है। दूसरी मंडी चुनें या प्रशासक से संपर्क करें।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC मंडी चुनें।',errVerification:'पहले किसान पोर्टल पर सत्यापन पूरा करें।',
+errLocked:'यह मंडी प्रशासक द्वारा अस्थायी रूप से लॉक की गई है।',errSelections:'कृपया फसल, वाहन और आगमन स्लॉट चुनें।',
+errQuantity:'कृपया टन में सही मात्रा दर्ज करें।',errZeroCapacity:'इस मंडी की क्षमता शून्य है। बुकिंग से पहले प्रशासक को सकारात्मक क्षमता निर्धारित करनी होगी।',
+errCapacity:'माँगी गई मात्रा उपलब्ध क्षमता से अधिक है। उपलब्ध मात्रा: {available} टन.',
+errQR:'QR लाइब्रेरी उपलब्ध नहीं है'
+},
+mr: {
+pageTitle:'कृषिधारा 2.0 • शेतकरी पोर्टल',switchRole:'भूमिका बदला',
+stepTitle:'टप्पा 2: खरेदी स्लॉट आणि QR पास',stepDescription:'तुमची बाजार समिती, पीक, वाहन, प्रमाण आणि वेळ निवडा.',
+capacityLabel:'बाजार समितीची दैनिक क्षमता',mapTitle:'🗺️ APMC बाजार समिती स्थान नकाशा -',
+selectMandiPrompt:'खालील यादीतून बाजार समिती निवडा',mapPlaceholderTitle:'यादीतून APMC बाजार समिती निवडा',
+mapPlaceholderDescription:'निवडलेल्या बाजार समितीचा नकाशा येथे दिसेल',alertDefaultTitle:'बाजार समिती बंद किंवा क्षमता पूर्ण',
+alertDefaultMessage:'या बाजार समितीतील बुकिंग तात्पुरते बंद आहे किंवा क्षमता पूर्ण झाली आहे. दुसरी बाजार समिती निवडा किंवा प्रशासकाशी संपर्क साधा.',
+mandiLabel:'🏬 APMC बाजार समिती',selectMandi:'APMC बाजार समिती निवडा',commodityLabel:'🌾 पीक प्रकार',
+selectCommodity:'पीक निवडा',wheat:'गहू',paddy:'भात / तांदूळ',soybean:'सोयाबीन',cotton:'कापूस',onion:'कांदा',
+vehicleLabel:'🚚 वाहनाचा प्रकार',selectVehicle:'वाहन निवडा',tractor:'ट्रॅक्टर ट्रॉली (4-6 टन)',
+smallTruck:'हलका व्यावसायिक ट्रक (LCV)',heavyTruck:'जड व्यावसायिक ट्रक (10+ टन)',
+slotLabel:'⏰ पसंतीची आगमन वेळ',selectSlot:'वेळ निवडा',quantityLabel:'⚖️ अंदाजे प्रमाण (टनमध्ये)',
+quantityPlaceholder:'टनमध्ये प्रमाण भरा (उदा. 5)',confirmBooking:'स्लॉट निश्चित करा आणि QR पास तयार करा 🎫',
+passTitle:'कृषिधारा अधिकृत प्रवेश पास',showAtGate:'प्रवेशद्वारावरील स्कॅनरला दाखवा',farmerLabel:'शेतकरी:',
+mandiSummary:'बाजार समिती:',commoditySummary:'पीक:',vehicleSummary:'वाहन:',quantitySummary:'प्रमाण:',
+tons:'टन',arrivalSummary:'बदललेला आगमन स्लॉट:',tokenSummary:'टोकन ID:',printPass:'पास प्रिंट करा 🖨️',close:'बंद करा',
+morning:'सकाळचा स्लॉट',midday:'दुपारचा स्लॉट',afternoon:'दुपारनंतरचा स्लॉट',evening:'संध्याकाळचा स्लॉट',
+lockedTitle:'बाजार समिती तात्पुरती बंद',lockedMessage:'प्रशासकाने ही बाजार समिती लॉक केली आहे. कृपया संपर्क साधा.',
+zeroTitle:'क्षमता निश्चित केलेली नाही',zeroMessage:'या बाजार समितीची क्षमता सध्या शून्य आहे. प्रशासकाने सकारात्मक क्षमता निश्चित केल्यानंतर बुकिंग सुरू होईल.',
+fullTitle:'बाजार समितीची क्षमता पूर्ण',fullMessage:'दैनिक क्षमता पूर्ण झाली आहे. दुसरी बाजार समिती निवडा किंवा प्रशासकाशी संपर्क साधा.',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC बाजार समिती निवडा.',errVerification:'प्रथम शेतकरी पोर्टलवरील पडताळणी पूर्ण करा.',
+errLocked:'ही बाजार समिती प्रशासकाने तात्पुरती लॉक केली आहे.',errSelections:'कृपया पीक, वाहन आणि आगमन स्लॉट निवडा.',
+errQuantity:'कृपया टनमध्ये योग्य प्रमाण भरा.',errZeroCapacity:'या बाजार समितीची क्षमता शून्य आहे. बुकिंगपूर्वी प्रशासकाने सकारात्मक क्षमता निश्चित करावी.',
+errCapacity:'मागितलेले प्रमाण उपलब्ध क्षमतेपेक्षा जास्त आहे. उपलब्ध: {available} टन.',
+errQR:'QR लायब्ररी उपलब्ध नाही'
+},
+pa: {
+pageTitle:'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਕਿਸਾਨ ਪੋਰਟਲ',switchRole:'ਭੂਮਿਕਾ ਬਦਲੋ',
+stepTitle:'ਕਦਮ 2: ਖਰੀਦ ਸਲਾਟ ਅਤੇ QR ਪਾਸ',stepDescription:'ਆਪਣੀ ਮੰਡੀ, ਫ਼ਸਲ, ਵਾਹਨ, ਮਾਤਰਾ ਅਤੇ ਸਮਾਂ ਚੁਣੋ।',
+capacityLabel:'ਮੰਡੀ ਦੀ ਰੋਜ਼ਾਨਾ ਸਮਰੱਥਾ',mapTitle:'🗺️ APMC ਮੰਡੀ ਸਥਾਨ ਨਕਸ਼ਾ -',
+selectMandiPrompt:'ਹੇਠਾਂ ਦਿੱਤੀ ਸੂਚੀ ਵਿੱਚੋਂ ਮੰਡੀ ਚੁਣੋ',mapPlaceholderTitle:'ਸੂਚੀ ਵਿੱਚੋਂ APMC ਮੰਡੀ ਚੁਣੋ',
+mapPlaceholderDescription:'ਚੁਣੀ ਮੰਡੀ ਦਾ ਨਕਸ਼ਾ ਇੱਥੇ ਦਿਖੇਗਾ',alertDefaultTitle:'ਮੰਡੀ ਬੰਦ ਹੈ ਜਾਂ ਸਮਰੱਥਾ ਪੂਰੀ ਹੈ',
+alertDefaultMessage:'ਇਸ ਮੰਡੀ ਦੀ ਬੁਕਿੰਗ ਅਸਥਾਈ ਤੌਰ ਤੇ ਬੰਦ ਹੈ ਜਾਂ ਸਮਰੱਥਾ ਪੂਰੀ ਹੈ। ਹੋਰ ਮੰਡੀ ਚੁਣੋ ਜਾਂ ਪ੍ਰਸ਼ਾਸਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।',
+mandiLabel:'🏬 APMC ਮੰਡੀ',selectMandi:'APMC ਮੰਡੀ ਚੁਣੋ',commodityLabel:'🌾 ਫ਼ਸਲ ਦੀ ਕਿਸਮ',
+selectCommodity:'ਫ਼ਸਲ ਚੁਣੋ',wheat:'ਕਣਕ',paddy:'ਝੋਨਾ / ਚੌਲ',soybean:'ਸੋਇਆਬੀਨ',cotton:'ਕਪਾਹ',onion:'ਪਿਆਜ਼',
+vehicleLabel:'🚚 ਵਾਹਨ ਦੀ ਕਿਸਮ',selectVehicle:'ਵਾਹਨ ਚੁਣੋ',tractor:'ਟਰੈਕਟਰ ਟਰਾਲੀ (4-6 ਟਨ)',
+smallTruck:'ਹਲਕਾ ਵਪਾਰਕ ਟਰੱਕ (LCV)',heavyTruck:'ਭਾਰੀ ਵਪਾਰਕ ਟਰੱਕ (10+ ਟਨ)',
+slotLabel:'⏰ ਪਹੁੰਚਣ ਦਾ ਪਸੰਦੀਦਾ ਸਮਾਂ',selectSlot:'ਸਮਾਂ ਚੁਣੋ',quantityLabel:'⚖️ ਅੰਦਾਜ਼ਨ ਮਾਤਰਾ (ਟਨ ਵਿੱਚ)',
+quantityPlaceholder:'ਟਨ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ 5)',confirmBooking:'ਸਮਾਂ ਪੱਕਾ ਕਰੋ ਅਤੇ QR ਪਾਸ ਬਣਾਓ 🎫',
+passTitle:'ਕ੍ਰਿਸ਼ੀਧਾਰਾ ਅਧਿਕਾਰਤ ਦਾਖਲਾ ਪਾਸ',showAtGate:'ਗੇਟ ਸਕੈਨਰ ਤੇ ਦਿਖਾਓ',farmerLabel:'ਕਿਸਾਨ:',
+mandiSummary:'ਮੰਡੀ:',commoditySummary:'ਫ਼ਸਲ:',vehicleSummary:'ਵਾਹਨ:',quantitySummary:'ਮਾਤਰਾ:',
+tons:'ਟਨ',arrivalSummary:'ਬਦਲਿਆ ਹੋਇਆ ਸਮਾਂ:',tokenSummary:'ਟੋਕਨ ID:',printPass:'ਪਾਸ ਪ੍ਰਿੰਟ ਕਰੋ 🖨️',close:'ਬੰਦ ਕਰੋ',
+morning:'ਸਵੇਰ ਦਾ ਸਮਾਂ',midday:'ਦੁਪਹਿਰ ਦਾ ਸਮਾਂ',afternoon:'ਬਾਅਦ ਦੁਪਹਿਰ ਦਾ ਸਮਾਂ',evening:'ਸ਼ਾਮ ਦਾ ਸਮਾਂ',
+lockedTitle:'ਮੰਡੀ ਅਸਥਾਈ ਤੌਰ ਤੇ ਬੰਦ',lockedMessage:'ਪ੍ਰਸ਼ਾਸਕ ਨੇ ਇਹ ਮੰਡੀ ਬੰਦ ਕੀਤੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਸੰਪਰਕ ਕਰੋ।',
+zeroTitle:'ਸਮਰੱਥਾ ਨਿਰਧਾਰਤ ਨਹੀਂ',zeroMessage:'ਇਸ ਮੰਡੀ ਦੀ ਸਮਰੱਥਾ ਇਸ ਵੇਲੇ ਜ਼ੀਰੋ ਹੈ। ਪ੍ਰਸ਼ਾਸਕ ਵੱਲੋਂ ਸਮਰੱਥਾ ਨਿਰਧਾਰਤ ਹੋਣ ਤੋਂ ਬਾਅਦ ਬੁਕਿੰਗ ਖੁੱਲ੍ਹੇਗੀ।',
+fullTitle:'ਮੰਡੀ ਦੀ ਸਮਰੱਥਾ ਪੂਰੀ',fullMessage:'ਰੋਜ਼ਾਨਾ ਸਮਰੱਥਾ ਪੂਰੀ ਹੋ ਗਈ ਹੈ। ਹੋਰ ਮੰਡੀ ਚੁਣੋ ਜਾਂ ਪ੍ਰਸ਼ਾਸਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।',
+tonsUnit:'ਟਨ',capacityText:'{booked} ਟਨ / {capacity} ਟਨ',
+errSelectMandi:'ਕਿਰਪਾ ਕਰਕੇ APMC ਮੰਡੀ ਚੁਣੋ।',errVerification:'ਪਹਿਲਾਂ ਕਿਸਾਨ ਪੋਰਟਲ ਦੀ ਤਸਦੀਕ ਪੂਰੀ ਕਰੋ।',
+errLocked:'ਇਹ ਮੰਡੀ ਪ੍ਰਸ਼ਾਸਕ ਵੱਲੋਂ ਅਸਥਾਈ ਤੌਰ ਤੇ ਬੰਦ ਹੈ।',errSelections:'ਕਿਰਪਾ ਕਰਕੇ ਫ਼ਸਲ, ਵਾਹਨ ਅਤੇ ਸਮਾਂ ਚੁਣੋ।',
+errQuantity:'ਕਿਰਪਾ ਕਰਕੇ ਟਨ ਵਿੱਚ ਸਹੀ ਮਾਤਰਾ ਦਰਜ ਕਰੋ।',errZeroCapacity:'ਇਸ ਮੰਡੀ ਦੀ ਸਮਰੱਥਾ ਜ਼ੀਰੋ ਹੈ। ਬੁਕਿੰਗ ਤੋਂ ਪਹਿਲਾਂ ਪ੍ਰਸ਼ਾਸਕ ਨੂੰ ਸਮਰੱਥਾ ਨਿਰਧਾਰਤ ਕਰਨੀ ਪਵੇਗੀ।',
+errCapacity:'ਮੰਗੀ ਮਾਤਰਾ ਉਪਲਬਧ ਸਮਰੱਥਾ ਤੋਂ ਵੱਧ ਹੈ। ਉਪਲਬਧ: {available} ਟਨ.',
+errQR:'QR ਲਾਇਬ੍ਰੇਰੀ ਉਪਲਬਧ ਨਹੀਂ ਹੈ'
+},
+gu: {
+pageTitle:'કૃષિધારા 2.0 • ખેડૂત પોર્ટલ',switchRole:'ભૂમિકા બદલો',
+stepTitle:'પગલું 2: ખરીદી સ્લોટ અને QR પાસ',stepDescription:'તમારી મંડી, પાક, વાહન, જથ્થો અને સમય પસંદ કરો.',
+capacityLabel:'મંડીની દૈનિક ક્ષમતા',mapTitle:'🗺️ APMC મંડી સ્થાન નકશો -',
+selectMandiPrompt:'નીચેની યાદીમાંથી મંડી પસંદ કરો',mapPlaceholderTitle:'યાદીમાંથી APMC મંડી પસંદ કરો',
+mapPlaceholderDescription:'પસંદ કરેલી મંડીનો નકશો અહીં દેખાશે',alertDefaultTitle:'મંડી બંધ છે અથવા ક્ષમતા પૂર્ણ છે',
+alertDefaultMessage:'આ મંડીનું બુકિંગ અસ્થાયી રીતે બંધ છે અથવા તેની ક્ષમતા પૂર્ણ થઈ છે. બીજી મંડી પસંદ કરો અથવા સંચાલકનો સંપર્ક કરો.',
+mandiLabel:'🏬 APMC મંડી',selectMandi:'APMC મંડી પસંદ કરો',commodityLabel:'🌾 પાકનો પ્રકાર',
+selectCommodity:'પાક પસંદ કરો',wheat:'ઘઉં',paddy:'ડાંગર / ચોખા',soybean:'સોયાબીન',cotton:'કપાસ',onion:'ડુંગળી',
+vehicleLabel:'🚚 વાહનનો પ્રકાર',selectVehicle:'વાહન પસંદ કરો',tractor:'ટ્રેક્ટર ટ્રોલી (4-6 ટન)',
+smallTruck:'હળવો વ્યાપારી ટ્રક (LCV)',heavyTruck:'ભારે વ્યાપારી ટ્રક (10+ ટન)',
+slotLabel:'⏰ આગમનનો પસંદગીનો સમય',selectSlot:'સમય પસંદ કરો',quantityLabel:'⚖️ અંદાજિત જથ્થો (ટનમાં)',
+quantityPlaceholder:'ટન દાખલ કરો (જેમ કે 5)',confirmBooking:'સ્લોટ નક્કી કરો અને QR પાસ બનાવો 🎫',
+passTitle:'કૃષિધારા સત્તાવાર પ્રવેશ પાસ',showAtGate:'ગેટ સ્કેનર પર બતાવો',farmerLabel:'ખેડૂત:',
+mandiSummary:'મંડી:',commoditySummary:'પાક:',vehicleSummary:'વાહન:',quantitySummary:'જથ્થો:',
+tons:'ટન',arrivalSummary:'સુધારેલો આગમન સમય:',tokenSummary:'ટોકન ID:',printPass:'પાસ પ્રિન્ટ કરો 🖨️',close:'બંધ કરો',
+morning:'સવારનો સ્લોટ',midday:'બપોરનો સ્લોટ',afternoon:'બપોર પછીનો સ્લોટ',evening:'સાંજનો સ્લોટ',
+lockedTitle:'મંડી અસ્થાયી રીતે બંધ',lockedMessage:'સંચાલકે આ મંડી લોક કરી છે. કૃપા કરીને તેમનો સંપર્ક કરો.',
+zeroTitle:'ક્ષમતા નક્કી નથી',zeroMessage:'આ મંડીની ક્ષમતા હાલમાં શૂન્ય છે. સંચાલક સકારાત્મક ક્ષમતા નક્કી કરે પછી બુકિંગ શરૂ થશે.',
+fullTitle:'મંડીની ક્ષમતા પૂર્ણ',fullMessage:'દૈનિક ક્ષમતા પૂર્ણ થઈ ગઈ છે. બીજી મંડી પસંદ કરો અથવા સંચાલકનો સંપર્ક કરો.',
+tonsUnit:'ટન',capacityText:'{booked} ટન / {capacity} ટન',
+errSelectMandi:'કૃપા કરીને APMC મંડી પસંદ કરો.',errVerification:'પહેલાં ખેડૂત પોર્ટલની ચકાસણી પૂર્ણ કરો.',
+errLocked:'આ મંડી સંચાલક દ્વારા અસ્થાયી રીતે લોક કરાઈ છે.',errSelections:'કૃપા કરીને પાક, વાહન અને આગમન સમય પસંદ કરો.',
+errQuantity:'કૃપા કરીને ટનમાં યોગ્ય જથ્થો દાખલ કરો.',errZeroCapacity:'આ મંડીની ક્ષમતા શૂન્ય છે. બુકિંગ પહેલાં સંચાલકે સકારાત્મક ક્ષમતા નક્કી કરવી પડશે.',
+errCapacity:'માગેલો જથ્થો ઉપલબ્ધ ક્ષમતા કરતાં વધુ છે. ઉપલબ્ધ: {available} ટન.',
+errQR:'QR લાઇબ્રેરી ઉપલબ્ધ નથી'
+},
+bn: {
+pageTitle:'কৃষিধারা ২.০ • কৃষক পোর্টাল',switchRole:'ভূমিকা পরিবর্তন',
+stepTitle:'ধাপ ২: সংগ্রহের সময় ও QR পাস',stepDescription:'আপনার মান্ডি, ফসল, যানবাহন, পরিমাণ ও সময় বেছে নিন।',
+capacityLabel:'মান্ডির দৈনিক ধারণক্ষমতা',mapTitle:'🗺️ APMC মান্ডির অবস্থান মানচিত্র -',
+selectMandiPrompt:'নিচের তালিকা থেকে মান্ডি বেছে নিন',mapPlaceholderTitle:'তালিকা থেকে APMC মান্ডি বেছে নিন',
+mapPlaceholderDescription:'নির্বাচিত মান্ডির মানচিত্র এখানে দেখা যাবে',alertDefaultTitle:'মান্ডি বন্ধ অথবা ধারণক্ষমতা পূর্ণ',
+alertDefaultMessage:'এই মান্ডিতে বুকিং সাময়িকভাবে বন্ধ অথবা ধারণক্ষমতা পূর্ণ। অন্য মান্ডি বেছে নিন বা প্রশাসকের সঙ্গে যোগাযোগ করুন।',
+mandiLabel:'🏬 APMC মান্ডি',selectMandi:'APMC মান্ডি বেছে নিন',commodityLabel:'🌾 ফসলের ধরন',
+selectCommodity:'ফসল বেছে নিন',wheat:'গম',paddy:'ধান / চাল',soybean:'সয়াবিন',cotton:'তুলা',onion:'পেঁয়াজ',
+vehicleLabel:'🚚 যানবাহনের ধরন',selectVehicle:'যানবাহন বেছে নিন',tractor:'ট্র্যাক্টর ট্রলি (4-6 টন)',
+smallTruck:'হালকা বাণিজ্যিক ট্রাক (LCV)',heavyTruck:'ভারী বাণিজ্যিক ট্রাক (10+ টন)',
+slotLabel:'⏰ পছন্দের আগমনের সময়',selectSlot:'সময় বেছে নিন',quantityLabel:'⚖️ আনুমানিক পরিমাণ (টনে)',
+quantityPlaceholder:'টনের পরিমাণ লিখুন (যেমন 5)',confirmBooking:'সময় নিশ্চিত করে QR পাস তৈরি করুন 🎫',
+passTitle:'কৃষিধারা সরকারি প্রবেশ পাস',showAtGate:'গেট স্ক্যানারে দেখান',farmerLabel:'কৃষক:',
+mandiSummary:'মান্ডি:',commoditySummary:'ফসল:',vehicleSummary:'যানবাহন:',quantitySummary:'পরিমাণ:',
+tons:'টন',arrivalSummary:'পরিবর্তিত আগমনের সময়:',tokenSummary:'টোকেন ID:',printPass:'পাস প্রিন্ট করুন 🖨️',close:'বন্ধ করুন',
+morning:'সকালের সময়',midday:'দুপুরের সময়',afternoon:'বিকেলের সময়',evening:'সন্ধ্যার সময়',
+lockedTitle:'মান্ডি সাময়িকভাবে বন্ধ',lockedMessage:'প্রশাসক এই মান্ডি লক করেছেন। অনুগ্রহ করে যোগাযোগ করুন।',
+zeroTitle:'ধারণক্ষমতা নির্ধারিত নয়',zeroMessage:'এই মান্ডির ধারণক্ষমতা এখন শূন্য। প্রশাসক ইতিবাচক ধারণক্ষমতা নির্ধারণ করলে বুকিং শুরু হবে।',
+fullTitle:'মান্ডির ধারণক্ষমতা পূর্ণ',fullMessage:'দৈনিক ধারণক্ষমতা পূর্ণ হয়েছে। অন্য মান্ডি বেছে নিন বা প্রশাসকের সঙ্গে যোগাযোগ করুন।',
+tonsUnit:'টন',capacityText:'{booked} টন / {capacity} টন',
+errSelectMandi:'অনুগ্রহ করে APMC মান্ডি বেছে নিন।',errVerification:'আগে কৃষক পোর্টালের যাচাইকরণ সম্পন্ন করুন।',
+errLocked:'প্রশাসক এই মান্ডি সাময়িকভাবে লক করেছেন।',errSelections:'অনুগ্রহ করে ফসল, যানবাহন ও আগমনের সময় বেছে নিন।',
+errQuantity:'অনুগ্রহ করে টনে সঠিক পরিমাণ লিখুন।',errZeroCapacity:'এই মান্ডির ধারণক্ষমতা শূন্য। বুকিংয়ের আগে প্রশাসককে ইতিবাচক ধারণক্ষমতা নির্ধারণ করতে হবে।',
+errCapacity:'চাওয়া পরিমাণ উপলব্ধ ধারণক্ষমতার চেয়ে বেশি। উপলব্ধ: {available} টন.',
+errQR:'QR লাইব্রেরি পাওয়া যায়নি'
+},
+te: {
+pageTitle:'కృషిధార 2.0 • రైతు పోర్టల్',switchRole:'పాత్ర మార్చండి',
+stepTitle:'దశ 2: కొనుగోలు స్లాట్ & QR పాస్',stepDescription:'మీ మండీ, పంట, వాహనం, పరిమాణం, సమయాన్ని ఎంచుకోండి.',
+capacityLabel:'మండీ రోజువారీ సామర్థ్యం',mapTitle:'🗺️ APMC మండీ స్థాన పటం -',
+selectMandiPrompt:'క్రింది జాబితా నుంచి మండీని ఎంచుకోండి',mapPlaceholderTitle:'జాబితా నుంచి APMC మండీని ఎంచుకోండి',
+mapPlaceholderDescription:'ఎంచుకున్న మండీ పటం ఇక్కడ కనిపిస్తుంది',alertDefaultTitle:'మండీ మూసివేయబడింది లేదా సామర్థ్యం నిండింది',
+alertDefaultMessage:'ఈ మండీలో బుకింగ్ తాత్కాలికంగా నిలిపివేయబడింది లేదా సామర్థ్యం నిండింది. మరో మండీని ఎంచుకోండి లేదా నిర్వాహకుడిని సంప్రదించండి.',
+mandiLabel:'🏬 APMC మండీ',selectMandi:'APMC మండీని ఎంచుకోండి',commodityLabel:'🌾 పంట రకం',
+selectCommodity:'పంటను ఎంచుకోండి',wheat:'గోధుమ',paddy:'వరి / బియ్యం',soybean:'సోయాబీన్',cotton:'పత్తి',onion:'ఉల్లిపాయ',
+vehicleLabel:'🚚 వాహన రకం',selectVehicle:'వాహనాన్ని ఎంచుకోండి',tractor:'ట్రాక్టర్ ట్రాలీ (4-6 టన్నులు)',
+smallTruck:'తేలికపాటి వాణిజ్య ట్రక్ (LCV)',heavyTruck:'భారీ వాణిజ్య ట్రక్ (10+ టన్నులు)',
+slotLabel:'⏰ ఇష్టమైన రాక సమయం',selectSlot:'సమయాన్ని ఎంచుకోండి',quantityLabel:'⚖️ అంచనా పరిమాణం (టన్నుల్లో)',
+quantityPlaceholder:'టన్నులు నమోదు చేయండి (ఉదా. 5)',confirmBooking:'స్లాట్ నిర్ధారించి QR పాస్ రూపొందించండి 🎫',
+passTitle:'కృషిధార అధికారిక ప్రవేశ పాస్',showAtGate:'గేట్ స్కానర్ వద్ద చూపండి',farmerLabel:'రైతు:',
+mandiSummary:'మండీ:',commoditySummary:'పంట:',vehicleSummary:'వాహనం:',quantitySummary:'పరిమాణం:',
+tons:'టన్నులు',arrivalSummary:'నవీకరించిన రాక సమయం:',tokenSummary:'టోకెన్ ID:',printPass:'పాస్ ముద్రించండి 🖨️',close:'మూసివేయండి',
+morning:'ఉదయం స్లాట్',midday:'మధ్యాహ్న స్లాట్',afternoon:'మధ్యాహ్నం తర్వాత స్లాట్',evening:'సాయంత్రం స్లాట్',
+lockedTitle:'మండీ తాత్కాలికంగా లాక్ చేయబడింది',lockedMessage:'నిర్వాహకుడు ఈ మండీని లాక్ చేశారు. దయచేసి సంప్రదించండి.',
+zeroTitle:'సామర్థ్యం సెట్ కాలేదు',zeroMessage:'ఈ మండీ సామర్థ్యం ప్రస్తుతం సున్నా. నిర్వాహకుడు సానుకూల సామర్థ్యాన్ని సెట్ చేసిన తర్వాత బుకింగ్ ప్రారంభమవుతుంది.',
+fullTitle:'మండీ సామర్థ్యం నిండింది',fullMessage:'రోజువారీ సామర్థ్యం పూర్తయింది. మరో మండీని ఎంచుకోండి లేదా నిర్వాహకుడిని సంప్రదించండి.',
+tonsUnit:'టన్నులు',capacityText:'{booked} టన్నులు / {capacity} టన్నులు',
+errSelectMandi:'దయచేసి APMC మండీని ఎంచుకోండి.',errVerification:'ముందుగా రైతు పోర్టల్ ధృవీకరణను పూర్తి చేయండి.',
+errLocked:'ఈ మండీని నిర్వాహకుడు తాత్కాలికంగా లాక్ చేశారు.',errSelections:'దయచేసి పంట, వాహనం, రాక సమయాన్ని ఎంచుకోండి.',
+errQuantity:'దయచేసి టన్నుల్లో సరైన పరిమాణాన్ని నమోదు చేయండి.',errZeroCapacity:'ఈ మండీ సామర్థ్యం సున్నా. బుకింగ్‌కు ముందు నిర్వాహకుడు సానుకూల సామర్థ్యాన్ని సెట్ చేయాలి.',
+errCapacity:'కోరిన పరిమాణం అందుబాటులో ఉన్న సామర్థ్యాన్ని మించింది. అందుబాటులో ఉంది: {available} టన్నులు.',
+errQR:'QR లైబ్రరీ అందుబాటులో లేదు'
+},
+ta: {
+pageTitle:'கிருஷிதாரா 2.0 • விவசாயி தளம்',switchRole:'பங்கை மாற்று',
+stepTitle:'படி 2: கொள்முதல் நேரம் மற்றும் QR அனுமதி',stepDescription:'உங்கள் மண்டி, பயிர், வாகனம், அளவு மற்றும் நேரத்தைத் தேர்ந்தெடுக்கவும்.',
+capacityLabel:'மண்டியின் தினசரி கொள்ளளவு',mapTitle:'🗺️ APMC மண்டி இட வரைபடம் -',
+selectMandiPrompt:'கீழே உள்ள பட்டியலில் இருந்து மண்டியைத் தேர்ந்தெடுக்கவும்',mapPlaceholderTitle:'பட்டியலில் இருந்து APMC மண்டியைத் தேர்ந்தெடுக்கவும்',
+mapPlaceholderDescription:'தேர்ந்தெடுத்த மண்டியின் வரைபடம் இங்கே காட்டப்படும்',alertDefaultTitle:'மண்டி பூட்டப்பட்டுள்ளது அல்லது கொள்ளளவு நிரம்பியுள்ளது',
+alertDefaultMessage:'இந்த மண்டியில் முன்பதிவு தற்காலிகமாக நிறுத்தப்பட்டுள்ளது அல்லது கொள்ளளவு நிரம்பியுள்ளது. வேறு மண்டியைத் தேர்ந்தெடுக்கவும் அல்லது நிர்வாகியைத் தொடர்புகொள்ளவும்.',
+mandiLabel:'🏬 APMC மண்டி',selectMandi:'APMC மண்டியைத் தேர்ந்தெடுக்கவும்',commodityLabel:'🌾 பயிர் வகை',
+selectCommodity:'பயிரைத் தேர்ந்தெடுக்கவும்',wheat:'கோதுமை',paddy:'நெல் / அரிசி',soybean:'சோயாபீன்',cotton:'பருத்தி',onion:'வெங்காயம்',
+vehicleLabel:'🚚 வாகன வகை',selectVehicle:'வாகனத்தைத் தேர்ந்தெடுக்கவும்',tractor:'டிராக்டர் டிராலி (4-6 டன்)',
+smallTruck:'இலகு வணிக லாரி (LCV)',heavyTruck:'கனரக வணிக லாரி (10+ டன்)',
+slotLabel:'⏰ விருப்பமான வருகை நேரம்',selectSlot:'நேரத்தைத் தேர்ந்தெடுக்கவும்',quantityLabel:'⚖️ மதிப்பிடப்பட்ட அளவு (டன்களில்)',
+quantityPlaceholder:'டன்களில் உள்ளிடவும் (எ.கா. 5)',confirmBooking:'நேரத்தை உறுதிசெய்து QR அனுமதியை உருவாக்கவும் 🎫',
+passTitle:'கிருஷிதாரா அதிகாரப்பூர்வ நுழைவு அனுமதி',showAtGate:'நுழைவாயில் ஸ்கேனரில் காட்டவும்',farmerLabel:'விவசாயி:',
+mandiSummary:'மண்டி:',commoditySummary:'பயிர்:',vehicleSummary:'வாகனம்:',quantitySummary:'அளவு:',
+tons:'டன்',arrivalSummary:'புதுப்பிக்கப்பட்ட வருகை நேரம்:',tokenSummary:'டோக்கன் ID:',printPass:'அனுமதியை அச்சிடவும் 🖨️',close:'மூடு',
+morning:'காலை நேரம்',midday:'நண்பகல் நேரம்',afternoon:'பிற்பகல் நேரம்',evening:'மாலை நேரம்',
+lockedTitle:'மண்டி தற்காலிகமாக பூட்டப்பட்டுள்ளது',lockedMessage:'நிர்வாகி இந்த மண்டியைப் பூட்டியுள்ளார். தொடர்புகொள்ளவும்.',
+zeroTitle:'கொள்ளளவு அமைக்கப்படவில்லை',zeroMessage:'இந்த மண்டியின் கொள்ளளவு தற்போது பூஜ்ஜியம். நிர்வாகி நேர்மறையான கொள்ளளவை அமைத்த பிறகு முன்பதிவு தொடங்கும்.',
+fullTitle:'மண்டியின் கொள்ளளவு நிரம்பியுள்ளது',fullMessage:'தினசரி கொள்ளளவு எட்டப்பட்டுள்ளது. வேறு மண்டியைத் தேர்ந்தெடுக்கவும் அல்லது நிர்வாகியைத் தொடர்புகொள்ளவும்.',
+tonsUnit:'டன்',capacityText:'{booked} டன் / {capacity} டன்',
+errSelectMandi:'APMC மண்டியைத் தேர்ந்தெடுக்கவும்.',errVerification:'முதலில் விவசாயி தள சரிபார்ப்பை முடிக்கவும்.',
+errLocked:'இந்த மண்டி நிர்வாகியால் தற்காலிகமாகப் பூட்டப்பட்டுள்ளது.',errSelections:'பயிர், வாகனம் மற்றும் வருகை நேரத்தைத் தேர்ந்தெடுக்கவும்.',
+errQuantity:'டன்களில் சரியான அளவை உள்ளிடவும்.',errZeroCapacity:'இந்த மண்டியின் கொள்ளளவு பூஜ்ஜியம். முன்பதிவுக்கு முன் நிர்வாகி கொள்ளளவை அமைக்க வேண்டும்.',
+errCapacity:'கோரிய அளவு கிடைக்கும் கொள்ளளவை விட அதிகம். கிடைப்பது: {available} டன்.',
+errQR:'QR நூலகம் கிடைக்கவில்லை'
+},
+kn: {
+pageTitle:'ಕೃಷಿಧಾರಾ 2.0 • ರೈತ ಪೋರ್ಟಲ್',switchRole:'ಪಾತ್ರ ಬದಲಿಸಿ',
+stepTitle:'ಹಂತ 2: ಖರೀದಿ ಸಮಯ ಮತ್ತು QR ಪಾಸ್',stepDescription:'ನಿಮ್ಮ ಮಂಡಿ, ಬೆಳೆ, ವಾಹನ, ಪ್ರಮಾಣ ಮತ್ತು ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+capacityLabel:'ಮಂಡಿಯ ದೈನಂದಿನ ಸಾಮರ್ಥ್ಯ',mapTitle:'🗺️ APMC ಮಂಡಿ ಸ್ಥಳ ನಕ್ಷೆ -',
+selectMandiPrompt:'ಕೆಳಗಿನ ಪಟ್ಟಿಯಿಂದ ಮಂಡಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',mapPlaceholderTitle:'ಪಟ್ಟಿಯಿಂದ APMC ಮಂಡಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+mapPlaceholderDescription:'ಆಯ್ಕೆ ಮಾಡಿದ ಮಂಡಿಯ ನಕ್ಷೆ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',alertDefaultTitle:'ಮಂಡಿ ಲಾಕ್ ಆಗಿದೆ ಅಥವಾ ಸಾಮರ್ಥ್ಯ ತುಂಬಿದೆ',
+alertDefaultMessage:'ಈ ಮಂಡಿಯ ಬುಕಿಂಗ್ ತಾತ್ಕಾಲಿಕವಾಗಿ ಸ್ಥಗಿತಗೊಂಡಿದೆ ಅಥವಾ ಸಾಮರ್ಥ್ಯ ತುಂಬಿದೆ. ಬೇರೆ ಮಂಡಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+mandiLabel:'🏬 APMC ಮಂಡಿ',selectMandi:'APMC ಮಂಡಿ ಆಯ್ಕೆಮಾಡಿ',commodityLabel:'🌾 ಬೆಳೆ ಪ್ರಕಾರ',
+selectCommodity:'ಬೆಳೆ ಆಯ್ಕೆಮಾಡಿ',wheat:'ಗೋಧಿ',paddy:'ಭತ್ತ / ಅಕ್ಕಿ',soybean:'ಸೋಯಾಬೀನ್',cotton:'ಹತ್ತಿ',onion:'ಈರುಳ್ಳಿ',
+vehicleLabel:'🚚 ವಾಹನದ ಪ್ರಕಾರ',selectVehicle:'ವಾಹನ ಆಯ್ಕೆಮಾಡಿ',tractor:'ಟ್ರಾಕ್ಟರ್ ಟ್ರಾಲಿ (4-6 ಟನ್)',
+smallTruck:'ಲಘು ವಾಣಿಜ್ಯ ಟ್ರಕ್ (LCV)',heavyTruck:'ಭಾರೀ ವಾಣಿಜ್ಯ ಟ್ರಕ್ (10+ ಟನ್)',
+slotLabel:'⏰ ಇಷ್ಟದ ಆಗಮನ ಸಮಯ',selectSlot:'ಸಮಯ ಆಯ್ಕೆಮಾಡಿ',quantityLabel:'⚖️ ಅಂದಾಜು ಪ್ರಮಾಣ (ಟನ್‌ಗಳಲ್ಲಿ)',
+quantityPlaceholder:'ಟನ್‌ಗಳಲ್ಲಿ ನಮೂದಿಸಿ (ಉದಾ. 5)',confirmBooking:'ಸಮಯ ದೃಢೀಕರಿಸಿ QR ಪಾಸ್ ರಚಿಸಿ 🎫',
+passTitle:'ಕೃಷಿಧಾರಾ ಅಧಿಕೃತ ಪ್ರವೇಶ ಪಾಸ್',showAtGate:'ಗೇಟ್ ಸ್ಕ್ಯಾನರ್‌ನಲ್ಲಿ ತೋರಿಸಿ',farmerLabel:'ರೈತ:',
+mandiSummary:'ಮಂಡಿ:',commoditySummary:'ಬೆಳೆ:',vehicleSummary:'ವಾಹನ:',quantitySummary:'ಪ್ರಮಾಣ:',
+tons:'ಟನ್',arrivalSummary:'ನವೀಕರಿಸಿದ ಆಗಮನ ಸಮಯ:',tokenSummary:'ಟೋಕನ್ ID:',printPass:'ಪಾಸ್ ಮುದ್ರಿಸಿ 🖨️',close:'ಮುಚ್ಚಿ',
+morning:'ಬೆಳಗಿನ ಸಮಯ',midday:'ಮಧ್ಯಾಹ್ನದ ಸಮಯ',afternoon:'ಮಧ್ಯಾಹ್ನದ ನಂತರದ ಸಮಯ',evening:'ಸಂಜೆಯ ಸಮಯ',
+lockedTitle:'ಮಂಡಿ ತಾತ್ಕಾಲಿಕವಾಗಿ ಲಾಕ್ ಆಗಿದೆ',lockedMessage:'ನಿರ್ವಾಹಕರು ಈ ಮಂಡಿಯನ್ನು ಲಾಕ್ ಮಾಡಿದ್ದಾರೆ. ದಯವಿಟ್ಟು ಸಂಪರ್ಕಿಸಿ.',
+zeroTitle:'ಸಾಮರ್ಥ್ಯ ಹೊಂದಿಸಲಾಗಿಲ್ಲ',zeroMessage:'ಈ ಮಂಡಿಯ ಸಾಮರ್ಥ್ಯ ಈಗ ಶೂನ್ಯವಾಗಿದೆ. ನಿರ್ವಾಹಕರು ಸಾಮರ್ಥ್ಯ ಹೊಂದಿಸಿದ ನಂತರ ಬುಕಿಂಗ್ ಆರಂಭವಾಗುತ್ತದೆ.',
+fullTitle:'ಮಂಡಿಯ ಸಾಮರ್ಥ್ಯ ತುಂಬಿದೆ',fullMessage:'ದೈನಂದಿನ ಸಾಮರ್ಥ್ಯ ಪೂರ್ಣವಾಗಿದೆ. ಬೇರೆ ಮಂಡಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+tonsUnit:'ಟನ್',capacityText:'{booked} ಟನ್ / {capacity} ಟನ್',
+errSelectMandi:'ದಯವಿಟ್ಟು APMC ಮಂಡಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.',errVerification:'ಮೊದಲು ರೈತ ಪೋರ್ಟಲ್ ಪರಿಶೀಲನೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ.',
+errLocked:'ಈ ಮಂಡಿಯನ್ನು ನಿರ್ವಾಹಕರು ತಾತ್ಕಾಲಿಕವಾಗಿ ಲಾಕ್ ಮಾಡಿದ್ದಾರೆ.',errSelections:'ಬೆಳೆ, ವಾಹನ ಮತ್ತು ಆಗಮನ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+errQuantity:'ಟನ್‌ಗಳಲ್ಲಿ ಸರಿಯಾದ ಪ್ರಮಾಣವನ್ನು ನಮೂದಿಸಿ.',errZeroCapacity:'ಈ ಮಂಡಿಯ ಸಾಮರ್ಥ್ಯ ಶೂನ್ಯ. ಬುಕಿಂಗ್‌ಗೂ ಮೊದಲು ನಿರ್ವಾಹಕರು ಸಾಮರ್ಥ್ಯ ಹೊಂದಿಸಬೇಕು.',
+errCapacity:'ಕೋರಿದ ಪ್ರಮಾಣ ಲಭ್ಯ ಸಾಮರ್ಥ್ಯಕ್ಕಿಂತ ಹೆಚ್ಚಾಗಿದೆ. ಲಭ್ಯವಿದೆ: {available} ಟನ್.',
+errQR:'QR ಲೈಬ್ರರಿ ಲಭ್ಯವಿಲ್ಲ'
+},
+ml: {
+pageTitle:'കൃഷിധാര 2.0 • കർഷക പോർട്ടൽ',switchRole:'റോൾ മാറ്റുക',
+stepTitle:'ഘട്ടം 2: സംഭരണ സമയവും QR പാസും',stepDescription:'മണ്ടി, വിള, വാഹനം, അളവ്, സമയം എന്നിവ തിരഞ്ഞെടുക്കുക.',
+capacityLabel:'മണ്ടിയുടെ പ്രതിദിന ശേഷി',mapTitle:'🗺️ APMC മണ്ടി ലൊക്കേഷൻ മാപ്പ് -',
+selectMandiPrompt:'താഴെയുള്ള പട്ടികയിൽ നിന്ന് മണ്ടി തിരഞ്ഞെടുക്കുക',mapPlaceholderTitle:'പട്ടികയിൽ നിന്ന് APMC മണ്ടി തിരഞ്ഞെടുക്കുക',
+mapPlaceholderDescription:'തിരഞ്ഞെടുത്ത മണ്ടിയുടെ മാപ്പ് ഇവിടെ കാണിക്കും',alertDefaultTitle:'മണ്ടി പൂട്ടിയിരിക്കുന്നു അല്ലെങ്കിൽ ശേഷി നിറഞ്ഞു',
+alertDefaultMessage:'ഈ മണ്ടിയിലെ ബുക്കിംഗ് താൽക്കാലികമായി നിർത്തിയിരിക്കുന്നു അല്ലെങ്കിൽ ശേഷി നിറഞ്ഞു. മറ്റൊരു മണ്ടി തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ അഡ്മിനുമായി ബന്ധപ്പെടുക.',
+mandiLabel:'🏬 APMC മണ്ടി',selectMandi:'APMC മണ്ടി തിരഞ്ഞെടുക്കുക',commodityLabel:'🌾 വിളയുടെ തരം',
+selectCommodity:'വിള തിരഞ്ഞെടുക്കുക',wheat:'ഗോതമ്പ്',paddy:'നെല്ല് / അരി',soybean:'സോയാബീൻ',cotton:'പരുത്തി',onion:'ഉള്ളി',
+vehicleLabel:'🚚 വാഹനത്തിന്റെ തരം',selectVehicle:'വാഹനം തിരഞ്ഞെടുക്കുക',tractor:'ട്രാക്ടർ ട്രോളി (4-6 ടൺ)',
+smallTruck:'ലൈറ്റ് കൊമേഴ്‌സ്യൽ ട്രക്ക് (LCV)',heavyTruck:'ഹെവി കൊമേഴ്‌സ്യൽ ട്രക്ക് (10+ ടൺ)',
+slotLabel:'⏰ ഇഷ്ടപ്പെട്ട എത്തിച്ചേരൽ സമയം',selectSlot:'സമയം തിരഞ്ഞെടുക്കുക',quantityLabel:'⚖️ കണക്കാക്കിയ അളവ് (ടണ്ണിൽ)',
+quantityPlaceholder:'ടണ്ണിൽ നൽകുക (ഉദാ. 5)',confirmBooking:'സമയം ഉറപ്പാക്കി QR പാസ് സൃഷ്ടിക്കുക 🎫',
+passTitle:'കൃഷിധാര ഔദ്യോഗിക പ്രവേശന പാസ്',showAtGate:'ഗേറ്റ് സ്കാനറിൽ കാണിക്കുക',farmerLabel:'കർഷകൻ:',
+mandiSummary:'മണ്ടി:',commoditySummary:'വിള:',vehicleSummary:'വാഹനം:',quantitySummary:'അളവ്:',
+tons:'ടൺ',arrivalSummary:'പുതുക്കിയ എത്തിച്ചേരൽ സമയം:',tokenSummary:'ടോക്കൺ ID:',printPass:'പാസ് പ്രിന്റ് ചെയ്യുക 🖨️',close:'അടയ്ക്കുക',
+morning:'രാവിലെ',midday:'ഉച്ചസമയം',afternoon:'ഉച്ചകഴിഞ്ഞ്',evening:'വൈകുന്നേരം',
+lockedTitle:'മണ്ടി താൽക്കാലികമായി പൂട്ടിയിരിക്കുന്നു',lockedMessage:'അഡ്മിൻ ഈ മണ്ടി പൂട്ടിയിട്ടുണ്ട്. ദയവായി ബന്ധപ്പെടുക.',
+zeroTitle:'ശേഷി ക്രമീകരിച്ചിട്ടില്ല',zeroMessage:'ഈ മണ്ടിയുടെ ശേഷി ഇപ്പോൾ പൂജ്യമാണ്. അഡ്മിൻ ശേഷി ക്രമീകരിച്ചശേഷം ബുക്കിംഗ് തുറക്കും.',
+fullTitle:'മണ്ടിയുടെ ശേഷി നിറഞ്ഞു',fullMessage:'പ്രതിദിന ശേഷി പൂർത്തിയായി. മറ്റൊരു മണ്ടി തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ അഡ്മിനുമായി ബന്ധപ്പെടുക.',
+tonsUnit:'ടൺ',capacityText:'{booked} ടൺ / {capacity} ടൺ',
+errSelectMandi:'ദയവായി APMC മണ്ടി തിരഞ്ഞെടുക്കുക.',errVerification:'ആദ്യം കർഷക പോർട്ടൽ പരിശോധന പൂർത്തിയാക്കുക.',
+errLocked:'ഈ മണ്ടി അഡ്മിൻ താൽക്കാലികമായി പൂട്ടിയിരിക്കുന്നു.',errSelections:'വിള, വാഹനം, എത്തിച്ചേരൽ സമയം എന്നിവ തിരഞ്ഞെടുക്കുക.',
+errQuantity:'ടണ്ണിൽ ശരിയായ അളവ് നൽകുക.',errZeroCapacity:'ഈ മണ്ടിയുടെ ശേഷി പൂജ്യമാണ്. ബുക്കിംഗിന് മുമ്പ് അഡ്മിൻ ശേഷി ക്രമീകരിക്കണം.',
+errCapacity:'ആവശ്യപ്പെട്ട അളവ് ലഭ്യമായ ശേഷിയെക്കാൾ കൂടുതലാണ്. ലഭ്യമായത്: {available} ടൺ.',
+errQR:'QR ലൈബ്രറി ലഭ്യമല്ല'
+},
+or: {
+pageTitle:'କୃଷିଧାରା 2.0 • କୃଷକ ପୋର୍ଟାଲ',switchRole:'ଭୂମିକା ବଦଳାନ୍ତୁ',
+stepTitle:'ପଦକ୍ଷେପ 2: କ୍ରୟ ସମୟ ଓ QR ପାସ୍',stepDescription:'ଆପଣଙ୍କ ମଣ୍ଡି, ଫସଲ, ଗାଡ଼ି, ପରିମାଣ ଓ ସମୟ ବାଛନ୍ତୁ।',
+capacityLabel:'ମଣ୍ଡିର ଦୈନିକ କ୍ଷମତା',mapTitle:'🗺️ APMC ମଣ୍ଡି ଅବସ୍ଥାନ ମାନଚିତ୍ର -',
+selectMandiPrompt:'ନିମ୍ନ ତାଲିକାରୁ ମଣ୍ଡି ବାଛନ୍ତୁ',mapPlaceholderTitle:'ତାଲିକାରୁ APMC ମଣ୍ଡି ବାଛନ୍ତୁ',
+mapPlaceholderDescription:'ବାଛିଥିବା ମଣ୍ଡିର ମାନଚିତ୍ର ଏଠାରେ ଦେଖାଯିବ',alertDefaultTitle:'ମଣ୍ଡି ବନ୍ଦ କିମ୍ବା କ୍ଷମତା ପୂର୍ଣ୍ଣ',
+alertDefaultMessage:'ଏହି ମଣ୍ଡିର ବୁକିଂ ଅସ୍ଥାୟୀ ଭାବେ ବନ୍ଦ କିମ୍ବା କ୍ଷମତା ପୂର୍ଣ୍ଣ ହୋଇଛି। ଅନ୍ୟ ମଣ୍ଡି ବାଛନ୍ତୁ କିମ୍ବା ପ୍ରଶାସକଙ୍କୁ ଯୋଗାଯୋଗ କରନ୍ତୁ।',
+mandiLabel:'🏬 APMC ମଣ୍ଡି',selectMandi:'APMC ମଣ୍ଡି ବାଛନ୍ତୁ',commodityLabel:'🌾 ଫସଲ ପ୍ରକାର',
+selectCommodity:'ଫସଲ ବାଛନ୍ତୁ',wheat:'ଗହମ',paddy:'ଧାନ / ଚାଉଳ',soybean:'ସୋୟାବିନ୍',cotton:'କପା',onion:'ପିଆଜ',
+vehicleLabel:'🚚 ଗାଡ଼ି ପ୍ରକାର',selectVehicle:'ଗାଡ଼ି ବାଛନ୍ତୁ',tractor:'ଟ୍ରାକ୍ଟର ଟ୍ରଲି (4-6 ଟନ୍)',
+smallTruck:'ହାଲୁକା ବାଣିଜ୍ୟିକ ଟ୍ରକ୍ (LCV)',heavyTruck:'ଭାରୀ ବାଣିଜ୍ୟିକ ଟ୍ରକ୍ (10+ ଟନ୍)',
+slotLabel:'⏰ ପସନ୍ଦର ଆଗମନ ସମୟ',selectSlot:'ସମୟ ବାଛନ୍ତୁ',quantityLabel:'⚖️ ଆନୁମାନିକ ପରିମାଣ (ଟନ୍‌ରେ)',
+quantityPlaceholder:'ଟନ୍‌ରେ ଲେଖନ୍ତୁ (ଯଥା 5)',confirmBooking:'ସମୟ ନିଶ୍ଚିତ କରି QR ପାସ୍ ତିଆରି କରନ୍ତୁ 🎫',
+passTitle:'କୃଷିଧାରା ଅଧିକାରିକ ପ୍ରବେଶ ପାସ୍',showAtGate:'ଗେଟ୍ ସ୍କାନରରେ ଦେଖାନ୍ତୁ',farmerLabel:'କୃଷକ:',
+mandiSummary:'ମଣ୍ଡି:',commoditySummary:'ଫସଲ:',vehicleSummary:'ଗାଡ଼ି:',quantitySummary:'ପରିମାଣ:',
+tons:'ଟନ୍',arrivalSummary:'ସଂଶୋଧିତ ଆଗମନ ସମୟ:',tokenSummary:'ଟୋକେନ୍ ID:',printPass:'ପାସ୍ ପ୍ରିଣ୍ଟ କରନ୍ତୁ 🖨️',close:'ବନ୍ଦ କରନ୍ତୁ',
+morning:'ସକାଳ ସମୟ',midday:'ମଧ୍ୟାହ୍ନ ସମୟ',afternoon:'ଅପରାହ୍ନ ସମୟ',evening:'ସନ୍ଧ୍ୟା ସମୟ',
+lockedTitle:'ମଣ୍ଡି ଅସ୍ଥାୟୀ ଭାବେ ବନ୍ଦ',lockedMessage:'ପ୍ରଶାସକ ଏହି ମଣ୍ଡିକୁ ଲକ୍ କରିଛନ୍ତି। ଯୋଗାଯୋଗ କରନ୍ତୁ।',
+zeroTitle:'କ୍ଷମତା ସ୍ଥିର ହୋଇନାହିଁ',zeroMessage:'ଏହି ମଣ୍ଡିର କ୍ଷମତା ବର୍ତ୍ତମାନ ଶୂନ୍ୟ। ପ୍ରଶାସକ କ୍ଷମତା ସ୍ଥିର କଲେ ବୁକିଂ ଆରମ୍ଭ ହେବ।',
+fullTitle:'ମଣ୍ଡିର କ୍ଷମତା ପୂର୍ଣ୍ଣ',fullMessage:'ଦୈନିକ କ୍ଷମତା ପୂର୍ଣ୍ଣ ହୋଇଛି। ଅନ୍ୟ ମଣ୍ଡି ବାଛନ୍ତୁ କିମ୍ବା ପ୍ରଶାସକଙ୍କୁ ଯୋଗାଯୋଗ କରନ୍ତୁ।',
+tonsUnit:'ଟନ୍',capacityText:'{booked} ଟନ୍ / {capacity} ଟନ୍',
+errSelectMandi:'ଦୟାକରି APMC ମଣ୍ଡି ବାଛନ୍ତୁ।',errVerification:'ପ୍ରଥମେ କୃଷକ ପୋର୍ଟାଲ୍ ଯାଞ୍ଚ ସମ୍ପୂର୍ଣ୍ଣ କରନ୍ତୁ।',
+errLocked:'ଏହି ମଣ୍ଡି ପ୍ରଶାସକଙ୍କ ଦ୍ୱାରା ଅସ୍ଥାୟୀ ଭାବେ ଲକ୍ ହୋଇଛି।',errSelections:'ଫସଲ, ଗାଡ଼ି ଓ ଆଗମନ ସମୟ ବାଛନ୍ତୁ।',
+errQuantity:'ଦୟାକରି ଟନ୍‌ରେ ସଠିକ୍ ପରିମାଣ ଲେଖନ୍ତୁ।',errZeroCapacity:'ଏହି ମଣ୍ଡିର କ୍ଷମତା ଶୂନ୍ୟ। ବୁକିଂ ପୂର୍ବରୁ ପ୍ରଶାସକ କ୍ଷମତା ସ୍ଥିର କରିବା ଆବଶ୍ୟକ।',
+errCapacity:'ଚାହିଁଥିବା ପରିମାଣ ଉପଲବ୍ଧ କ୍ଷମତାଠାରୁ ଅଧିକ। ଉପଲବ୍ଧ: {available} ଟନ୍.',
+errQR:'QR ଲାଇବ୍ରେରୀ ଉପଲବ୍ଧ ନାହିଁ'
+},
+as: {
+pageTitle:'কৃষিধাৰা ২.০ • কৃষক পৰ্টেল',switchRole:'ভূমিকা সলনি কৰক',
+stepTitle:'পদক্ষেপ ২: ক্ৰয়ৰ সময় আৰু QR পাছ',stepDescription:'আপোনাৰ মণ্ডী, শস্য, বাহন, পৰিমাণ আৰু সময় বাছনি কৰক।',
+capacityLabel:'মণ্ডীৰ দৈনিক ক্ষমতা',mapTitle:'🗺️ APMC মণ্ডীৰ অৱস্থানৰ মানচিত্ৰ -',
+selectMandiPrompt:'তলৰ তালিকাৰ পৰা মণ্ডী বাছনি কৰক',mapPlaceholderTitle:'তালিকাৰ পৰা APMC মণ্ডী বাছনি কৰক',
+mapPlaceholderDescription:'বাছনি কৰা মণ্ডীৰ মানচিত্ৰ ইয়াত দেখা যাব',alertDefaultTitle:'মণ্ডী বন্ধ বা ক্ষমতা পূৰ্ণ',
+alertDefaultMessage:'এই মণ্ডীৰ বুকিং সাময়িকভাৱে বন্ধ বা ইয়াৰ ক্ষমতা পূৰ্ণ হৈছে। আন মণ্ডী বাছনি কৰক বা প্ৰশাসকৰ সৈতে যোগাযোগ কৰক।',
+mandiLabel:'🏬 APMC মণ্ডী',selectMandi:'APMC মণ্ডী বাছনি কৰক',commodityLabel:'🌾 শস্যৰ প্ৰকাৰ',
+selectCommodity:'শস্য বাছনি কৰক',wheat:'ঘেঁহু',paddy:'ধান / চাউল',soybean:'ছয়াবিন',cotton:'কপাহ',onion:'পিয়াঁজ',
+vehicleLabel:'🚚 বাহনৰ প্ৰকাৰ',selectVehicle:'বাহন বাছনি কৰক',tractor:'ট্ৰেক্টৰ ট্ৰলী (4-6 টন)',
+smallTruck:'পাতল বাণিজ্যিক ট্ৰাক (LCV)',heavyTruck:'গধুৰ বাণিজ্যিক ট্ৰাক (10+ টন)',
+slotLabel:'⏰ পছন্দৰ আগমনৰ সময়',selectSlot:'সময় বাছনি কৰক',quantityLabel:'⚖️ আনুমানিক পৰিমাণ (টনত)',
+quantityPlaceholder:'টনত লিখক (যেনে 5)',confirmBooking:'সময় নিশ্চিত কৰি QR পাছ তৈয়াৰ কৰক 🎫',
+passTitle:'কৃষিধাৰা চৰকাৰী প্ৰৱেশ পাছ',showAtGate:'গেট স্কেনাৰত দেখুৱাওক',farmerLabel:'কৃষক:',
+mandiSummary:'মণ্ডী:',commoditySummary:'শস্য:',vehicleSummary:'বাহন:',quantitySummary:'পৰিমাণ:',
+tons:'টন',arrivalSummary:'সংশোধিত আগমনৰ সময়:',tokenSummary:'টোকেন ID:',printPass:'পাছ প্ৰিণ্ট কৰক 🖨️',close:'বন্ধ কৰক',
+morning:'পুৱাৰ সময়',midday:'দুপৰীয়াৰ সময়',afternoon:'বিয়লিৰ সময়',evening:'সন্ধিয়াৰ সময়',
+lockedTitle:'মণ্ডী সাময়িকভাৱে বন্ধ',lockedMessage:'প্ৰশাসকে এই মণ্ডী লক কৰিছে। অনুগ্ৰহ কৰি যোগাযোগ কৰক।',
+zeroTitle:'ক্ষমতা নিৰ্ধাৰণ কৰা হোৱা নাই',zeroMessage:'এই মণ্ডীৰ ক্ষমতা বৰ্তমান শূন্য। প্ৰশাসকে ইতিবাচক ক্ষমতা নিৰ্ধাৰণ কৰাৰ পিছত বুকিং আৰম্ভ হ’ব।',
+fullTitle:'মণ্ডীৰ ক্ষমতা পূৰ্ণ',fullMessage:'দৈনিক ক্ষমতা পূৰ্ণ হৈছে। আন মণ্ডী বাছনি কৰক বা প্ৰশাসকৰ সৈতে যোগাযোগ কৰক।',
+tonsUnit:'টন',capacityText:'{booked} টন / {capacity} টন',
+errSelectMandi:'অনুগ্ৰহ কৰি APMC মণ্ডী বাছনি কৰক।',errVerification:'প্ৰথমে কৃষক পৰ্টেলৰ পৰীক্ষণ সম্পূৰ্ণ কৰক।',
+errLocked:'এই মণ্ডী প্ৰশাসকে সাময়িকভাৱে লক কৰিছে।',errSelections:'শস্য, বাহন আৰু আগমনৰ সময় বাছনি কৰক।',
+errQuantity:'অনুগ্ৰহ কৰি টনত সঠিক পৰিমাণ লিখক।',errZeroCapacity:'এই মণ্ডীৰ ক্ষমতা শূন্য। বুকিঙৰ আগতে প্ৰশাসকে ইতিবাচক ক্ষমতা নিৰ্ধাৰণ কৰিব লাগিব।',
+errCapacity:'অনুৰোধ কৰা পৰিমাণ উপলব্ধ ক্ষমতাতকৈ বেছি। উপলব্ধ: {available} টন.',
+errQR:'QR লাইব্ৰেৰী উপলব্ধ নহয়'
+},
+ur: {
+pageTitle:'کرشی دھارا 2.0 • کسان پورٹل',switchRole:'کردار تبدیل کریں',
+stepTitle:'مرحلہ 2: خریداری کا وقت اور QR پاس',stepDescription:'اپنی منڈی، فصل، گاڑی، مقدار اور وقت منتخب کریں۔',
+capacityLabel:'منڈی کی روزانہ گنجائش',mapTitle:'🗺️ APMC منڈی کا مقام -',
+selectMandiPrompt:'نیچے دی گئی فہرست سے منڈی منتخب کریں',mapPlaceholderTitle:'فہرست سے APMC منڈی منتخب کریں',
+mapPlaceholderDescription:'منتخب منڈی کا نقشہ یہاں دکھایا جائے گا',alertDefaultTitle:'منڈی بند ہے یا گنجائش پوری ہے',
+alertDefaultMessage:'اس منڈی کی بکنگ عارضی طور پر بند ہے یا گنجائش پوری ہو گئی ہے۔ دوسری منڈی منتخب کریں یا منتظم سے رابطہ کریں۔',
+mandiLabel:'🏬 APMC منڈی',selectMandi:'APMC منڈی منتخب کریں',commodityLabel:'🌾 فصل کی قسم',
+selectCommodity:'فصل منتخب کریں',wheat:'گندم',paddy:'دھان / چاول',soybean:'سویا بین',cotton:'کپاس',onion:'پیاز',
+vehicleLabel:'🚚 گاڑی کی قسم',selectVehicle:'گاڑی منتخب کریں',tractor:'ٹریکٹر ٹرالی (4-6 ٹن)',
+smallTruck:'ہلکا تجارتی ٹرک (LCV)',heavyTruck:'بھاری تجارتی ٹرک (10+ ٹن)',
+slotLabel:'⏰ آمد کا پسندیدہ وقت',selectSlot:'وقت منتخب کریں',quantityLabel:'⚖️ اندازاً مقدار (ٹن میں)',
+quantityPlaceholder:'ٹن میں مقدار درج کریں (مثلاً 5)',confirmBooking:'وقت کی تصدیق کریں اور QR پاس بنائیں 🎫',
+passTitle:'کرشی دھارا سرکاری داخلہ پاس',showAtGate:'گیٹ اسکینر پر دکھائیں',farmerLabel:'کسان:',
+mandiSummary:'منڈی:',commoditySummary:'فصل:',vehicleSummary:'گاڑی:',quantitySummary:'مقدار:',
+tons:'ٹن',arrivalSummary:'تبدیل شدہ آمد کا وقت:',tokenSummary:'ٹوکن ID:',printPass:'پاس پرنٹ کریں 🖨️',close:'بند کریں',
+morning:'صبح کا وقت',midday:'دوپہر کا وقت',afternoon:'بعد دوپہر کا وقت',evening:'شام کا وقت',
+lockedTitle:'منڈی عارضی طور پر بند ہے',lockedMessage:'منتظم نے اس منڈی کو لاک کیا ہے۔ براہ کرم رابطہ کریں۔',
+zeroTitle:'گنجائش مقرر نہیں',zeroMessage:'اس منڈی کی گنجائش فی الحال صفر ہے۔ منتظم کی جانب سے گنجائش مقرر ہونے کے بعد بکنگ شروع ہوگی۔',
+fullTitle:'منڈی کی گنجائش پوری ہے',fullMessage:'روزانہ کی گنجائش پوری ہو گئی ہے۔ دوسری منڈی منتخب کریں یا منتظم سے رابطہ کریں۔',
+tonsUnit:'ٹن',capacityText:'{booked} ٹن / {capacity} ٹن',
+errSelectMandi:'براہ کرم APMC منڈی منتخب کریں۔',errVerification:'پہلے کسان پورٹل کی تصدیق مکمل کریں۔',
+errLocked:'منتظم نے اس منڈی کو عارضی طور پر لاک کیا ہے۔',errSelections:'براہ کرم فصل، گاڑی اور آمد کا وقت منتخب کریں۔',
+errQuantity:'براہ کرم ٹن میں درست مقدار درج کریں۔',errZeroCapacity:'اس منڈی کی گنجائش صفر ہے۔ بکنگ سے پہلے منتظم کو گنجائش مقرر کرنا ہوگی۔',
+errCapacity:'درخواست کردہ مقدار دستیاب گنجائش سے زیادہ ہے۔ دستیاب: {available} ٹن.',
+errQR:'QR لائبریری دستیاب نہیں'
+},
+sa: {
+pageTitle:'कृषिधारा २.० • कृषक-पटलम्',switchRole:'भूमिकां परिवर्तयतु',
+stepTitle:'चरणम् २: क्रयकालः QR-पत्रं च',stepDescription:'मण्डीं, सस्यं, वाहनं, परिमाणं, समयं च चिनुत।',
+capacityLabel:'मण्ड्याः दैनिकक्षमता',mapTitle:'🗺️ APMC मण्डीस्थानमानचित्रम् -',
+selectMandiPrompt:'अधस्तनसूचीतः मण्डीं चिनुत',mapPlaceholderTitle:'सूचीतः APMC मण्डीं चिनुत',
+mapPlaceholderDescription:'चयनितमण्ड्याः मानचित्रम् अत्र दृश्यते',alertDefaultTitle:'मण्डी निरुद्धा अथवा क्षमता पूर्णा',
+alertDefaultMessage:'अस्याः मण्ड्याः आरक्षणं स्थगितम् अथवा क्षमता पूर्णा। अन्यां मण्डीं चिनुत अथवा प्रशासकेन सह सम्पर्कं कुरुत।',
+mandiLabel:'🏬 APMC मण्डी',selectMandi:'APMC मण्डीं चिनुत',commodityLabel:'🌾 सस्यप्रकारः',
+selectCommodity:'सस्यं चिनुत',wheat:'गोधूमः',paddy:'धान्यम् / तण्डुलाः',soybean:'सोयाबीनम्',cotton:'कार्पासः',onion:'पलाण्डुः',
+vehicleLabel:'🚚 वाहनप्रकारः',selectVehicle:'वाहनं चिनुत',tractor:'ट्रैक्टरयानम् (4-6 टन)',
+smallTruck:'लघुवाणिज्यिकयानम् (LCV)',heavyTruck:'गुरुवाणिज्यिकयानम् (10+ टन)',
+slotLabel:'⏰ आगमनस्य इच्छितः समयः',selectSlot:'समयं चिनुत',quantityLabel:'⚖️ अनुमानितं परिमाणम् (टनेषु)',
+quantityPlaceholder:'टनेषु लिखतु (यथा 5)',confirmBooking:'समयं निश्चित्य QR-पत्रं निर्मातु 🎫',
+passTitle:'कृषिधारा आधिकारिकप्रवेशपत्रम्',showAtGate:'द्वारस्य स्कैनरे दर्शयतु',farmerLabel:'कृषकः:',
+mandiSummary:'मण्डी:',commoditySummary:'सस्यम्:',vehicleSummary:'वाहनम्:',quantitySummary:'परिमाणम्:',
+tons:'टन',arrivalSummary:'परिवर्तितागमनसमयः:',tokenSummary:'टोकन ID:',printPass:'पत्रं मुद्रयतु 🖨️',close:'पिधानम्',
+morning:'प्रातःकालः',midday:'मध्याह्नः',afternoon:'अपराह्णः',evening:'सायंकालः',
+lockedTitle:'मण्डी अस्थायिरूपेण निरुद्धा',lockedMessage:'प्रशासकेन मण्डी निरुद्धा। कृपया सम्पर्कं कुरुत।',
+zeroTitle:'क्षमता निर्धारिता नास्ति',zeroMessage:'अस्याः मण्ड्याः क्षमता शून्या। प्रशासकेन क्षमता निर्धारिते सति आरक्षणम् आरभ्यते।',
+fullTitle:'मण्ड्याः क्षमता पूर्णा',fullMessage:'दैनिकक्षमता पूर्णा। अन्यां मण्डीं चिनुत अथवा प्रशासकेन सह सम्पर्कं कुरुत।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC मण्डीं चिनुत।',errVerification:'प्रथमं कृषक-पटलस्य सत्यापनं पूर्णं कुरुत।',
+errLocked:'एषा मण्डी प्रशासकेन अस्थायिरूपेण निरुद्धा।',errSelections:'सस्यं, वाहनं, आगमनसमयं च चिनुत।',
+errQuantity:'कृपया टनेषु सम्यक् परिमाणं लिखतु।',errZeroCapacity:'अस्याः मण्ड्याः क्षमता शून्या। आरक्षणात् पूर्वं प्रशासकेन क्षमता निर्धारणीया।',
+errCapacity:'याचितं परिमाणम् उपलब्धक्षमताम् अतिक्रामति। उपलब्धम्: {available} टन.',
+errQR:'QR पुस्तकालयः अनुपलब्धः'
+},
+ne: {
+pageTitle:'कृषिधारा २.० • किसान पोर्टल',switchRole:'भूमिका बदल्नुहोस्',
+stepTitle:'चरण २: खरिद समय र QR पास',stepDescription:'आफ्नो मण्डी, बाली, सवारी, परिमाण र समय छान्नुहोस्।',
+capacityLabel:'मण्डीको दैनिक क्षमता',mapTitle:'🗺️ APMC मण्डी स्थान नक्सा -',
+selectMandiPrompt:'तलको सूचीबाट मण्डी छान्नुहोस्',mapPlaceholderTitle:'सूचीबाट APMC मण्डी छान्नुहोस्',
+mapPlaceholderDescription:'छानिएको मण्डीको नक्सा यहाँ देखिनेछ',alertDefaultTitle:'मण्डी बन्द छ वा क्षमता पूरा भयो',
+alertDefaultMessage:'यस मण्डीको बुकिङ अस्थायी रूपमा रोकिएको छ वा क्षमता पूरा भएको छ। अर्को मण्डी छान्नुहोस् वा प्रशासकलाई सम्पर्क गर्नुहोस्।',
+mandiLabel:'🏬 APMC मण्डी',selectMandi:'APMC मण्डी छान्नुहोस्',commodityLabel:'🌾 बालीको प्रकार',
+selectCommodity:'बाली छान्नुहोस्',wheat:'गहुँ',paddy:'धान / चामल',soybean:'सोयाबिन',cotton:'कपास',onion:'प्याज',
+vehicleLabel:'🚚 सवारीको प्रकार',selectVehicle:'सवारी छान्नुहोस्',tractor:'ट्र्याक्टर ट्रली (4-6 टन)',
+smallTruck:'हल्का व्यावसायिक ट्रक (LCV)',heavyTruck:'भारी व्यावसायिक ट्रक (10+ टन)',
+slotLabel:'⏰ मनपर्ने आगमन समय',selectSlot:'समय छान्नुहोस्',quantityLabel:'⚖️ अनुमानित परिमाण (टनमा)',
+quantityPlaceholder:'टनमा लेख्नुहोस् (जस्तै 5)',confirmBooking:'समय निश्चित गरी QR पास बनाउनुहोस् 🎫',
+passTitle:'कृषिधारा आधिकारिक प्रवेश पास',showAtGate:'गेट स्क्यानरमा देखाउनुहोस्',farmerLabel:'किसान:',
+mandiSummary:'मण्डी:',commoditySummary:'बाली:',vehicleSummary:'सवारी:',quantitySummary:'परिमाण:',
+tons:'टन',arrivalSummary:'परिमार्जित आगमन समय:',tokenSummary:'टोकन ID:',printPass:'पास प्रिन्ट गर्नुहोस् 🖨️',close:'बन्द गर्नुहोस्',
+morning:'बिहानको समय',midday:'मध्याह्नको समय',afternoon:'अपराह्नको समय',evening:'साँझको समय',
+lockedTitle:'मण्डी अस्थायी रूपमा बन्द',lockedMessage:'प्रशासकले यो मण्डी बन्द गर्नुभएको छ। कृपया सम्पर्क गर्नुहोस्।',
+zeroTitle:'क्षमता तोकिएको छैन',zeroMessage:'यस मण्डीको क्षमता अहिले शून्य छ। प्रशासकले क्षमता तोकेपछि बुकिङ खुल्नेछ।',
+fullTitle:'मण्डीको क्षमता पूरा भयो',fullMessage:'दैनिक क्षमता पूरा भयो। अर्को मण्डी छान्नुहोस् वा प्रशासकलाई सम्पर्क गर्नुहोस्।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC मण्डी छान्नुहोस्।',errVerification:'पहिले किसान पोर्टलको प्रमाणीकरण पूरा गर्नुहोस्।',
+errLocked:'यो मण्डी प्रशासकले अस्थायी रूपमा बन्द गर्नुभएको छ।',errSelections:'कृपया बाली, सवारी र आगमन समय छान्नुहोस्।',
+errQuantity:'कृपया टनमा सही परिमाण लेख्नुहोस्।',errZeroCapacity:'यस मण्डीको क्षमता शून्य छ। बुकिङअघि प्रशासकले क्षमता तोक्नुपर्छ।',
+errCapacity:'मागिएको परिमाण उपलब्ध क्षमताभन्दा बढी छ। उपलब्ध: {available} टन.',
+errQR:'QR लाइब्रेरी उपलब्ध छैन'
+},
+sd: {
+pageTitle:'ڪرشي ڌارا 2.0 • هاري پورٽل',switchRole:'ڪردار بدلايو',
+stepTitle:'قدم 2: خريداري جو وقت ۽ QR پاس',stepDescription:'پنهنجي منڊي، فصل، گاڏي، مقدار ۽ وقت چونڊيو.',
+capacityLabel:'منڊي جي روزاني گنجائش',mapTitle:'🗺️ APMC منڊي جي جڳهه جو نقشو -',
+selectMandiPrompt:'هيٺ ڏنل فهرست مان منڊي چونڊيو',mapPlaceholderTitle:'فهرست مان APMC منڊي چونڊيو',
+mapPlaceholderDescription:'چونڊيل منڊي جو نقشو هتي ڏيکاربو',alertDefaultTitle:'منڊي بند يا گنجائش پوري',
+alertDefaultMessage:'هن منڊي جي بکنگ عارضي طور بند آهي يا گنجائش پوري آهي. ٻي منڊي چونڊيو يا منتظم سان رابطو ڪريو.',
+mandiLabel:'🏬 APMC منڊي',selectMandi:'APMC منڊي چونڊيو',commodityLabel:'🌾 فصل جو قسم',
+selectCommodity:'فصل چونڊيو',wheat:'ڪڻڪ',paddy:'چانور',soybean:'سويابين',cotton:'ڪپهه',onion:'بصر',
+vehicleLabel:'🚚 گاڏي جو قسم',selectVehicle:'گاڏي چونڊيو',tractor:'ٽريڪٽر ٽرالي (4-6 ٽن)',
+smallTruck:'هلڪو واپاري ٽرڪ (LCV)',heavyTruck:'ڳرو واپاري ٽرڪ (10+ ٽن)',
+slotLabel:'⏰ اچڻ جو پسنديده وقت',selectSlot:'وقت چونڊيو',quantityLabel:'⚖️ اندازي وارو مقدار (ٽن ۾)',
+quantityPlaceholder:'ٽن ۾ مقدار لکو (مثال 5)',confirmBooking:'وقت پڪو ڪريو ۽ QR پاس ٺاهيو 🎫',
+passTitle:'ڪرشي ڌارا سرڪاري داخلا پاس',showAtGate:'گيٽ اسڪينر تي ڏيکاريو',farmerLabel:'هاري:',
+mandiSummary:'منڊي:',commoditySummary:'فصل:',vehicleSummary:'گاڏي:',quantitySummary:'مقدار:',
+tons:'ٽن',arrivalSummary:'تبديل ٿيل اچڻ جو وقت:',tokenSummary:'ٽوڪن ID:',printPass:'پاس پرنٽ ڪريو 🖨️',close:'بند ڪريو',
+morning:'صبح جو وقت',midday:'منجهند جو وقت',afternoon:'منجهند کان پوءِ',evening:'شام جو وقت',
+lockedTitle:'منڊي عارضي طور بند',lockedMessage:'منتظم هن منڊي کي بند ڪيو آهي. مهرباني ڪري رابطو ڪريو.',
+zeroTitle:'گنجائش مقرر ناهي',zeroMessage:'هن منڊي جي گنجائش هن وقت صفر آهي. منتظم گنجائش مقرر ڪندو ته بکنگ شروع ٿيندي.',
+fullTitle:'منڊي جي گنجائش پوري',fullMessage:'روزاني گنجائش پوري ٿي وئي آهي. ٻي منڊي چونڊيو يا منتظم سان رابطو ڪريو.',
+tonsUnit:'ٽن',capacityText:'{booked} ٽن / {capacity} ٽن',
+errSelectMandi:'مهرباني ڪري APMC منڊي چونڊيو.',errVerification:'پهريان هاري پورٽل جي تصديق مڪمل ڪريو.',
+errLocked:'هي منڊي منتظم عارضي طور بند ڪئي آهي.',errSelections:'فصل، گاڏي ۽ اچڻ جو وقت چونڊيو.',
+errQuantity:'مهرباني ڪري ٽن ۾ صحيح مقدار لکو.',errZeroCapacity:'هن منڊي جي گنجائش صفر آهي. بکنگ کان اڳ منتظم کي گنجائش مقرر ڪرڻي پوندي.',
+errCapacity:'گهربل مقدار موجود گنجائش کان وڌيڪ آهي. موجود: {available} ٽن.',
+errQR:'QR لائبريري موجود ناهي'
+},
+ks: {
+pageTitle:'کٔرشی دھارا 2.0 • کسان پورٹل',switchRole:'رول بدلاو',
+stepTitle:'مرحلہ 2: خریداری وقت تہٕ QR پاس',stepDescription:'پنُن منڈی، فصل، گاڑی، مقدار تہٕ وقت ژأریو۔',
+capacityLabel:'منڈی ہُند روزانہ گنجائش',mapTitle:'🗺️ APMC منڈی مقام نقشہ -',
+selectMandiPrompt:'تَتھ فہرستہٕ منڈی ژأریو',mapPlaceholderTitle:'فہرستہٕ APMC منڈی ژأریو',
+mapPlaceholderDescription:'ژأریوٗ منڈی ہُند نقشہ اَتھ دِکھاوُن',alertDefaultTitle:'منڈی بند یا گنجائش مکمل',
+alertDefaultMessage:'یِتھ منڈی ہُند بکنگ عارضی طور بند چھُ یا گنجائش مکمل۔ بیٚیہِ منڈی ژأریو یا منتظمس رابطہ کریو۔',
+mandiLabel:'🏬 APMC منڈی',selectMandi:'APMC منڈی ژأریو',commodityLabel:'🌾 فصل ہُند قسم',
+selectCommodity:'فصل ژأریو',wheat:'گندم',paddy:'دھان / چاول',soybean:'سویابین',cotton:'کپاس',onion:'پیاز',
+vehicleLabel:'🚚 گاڑی ہُند قسم',selectVehicle:'گاڑی ژأریو',tractor:'ٹریکٹر ٹرالی (4-6 ٹن)',
+smallTruck:'ہلکی تجارتی ٹرک (LCV)',heavyTruck:'بھاری تجارتی ٹرک (10+ ٹن)',
+slotLabel:'⏰ آمد ہُند پسندیدہ وقت',selectSlot:'وقت ژأریو',quantityLabel:'⚖️ اندازاً مقدار (ٹنن منز)',
+quantityPlaceholder:'ٹنن منز مقدار لیکھیو (مثلاً 5)',confirmBooking:'وقت تصدیق کریو تہٕ QR پاس بناویو 🎫',
+passTitle:'کٔرشی دھارا سرکاری داخلہ پاس',showAtGate:'گیٹ سکینر پٮ۪ٹھ دِکھأیو',farmerLabel:'کسان:',
+mandiSummary:'منڈی:',commoditySummary:'فصل:',vehicleSummary:'گاڑی:',quantitySummary:'مقدار:',
+tons:'ٹن',arrivalSummary:'تبدیل شدہ آمد وقت:',tokenSummary:'ٹوکن ID:',printPass:'پاس پرنٹ کریو 🖨️',close:'بند کریو',
+morning:'صبح وقت',midday:'دوپہر وقت',afternoon:'دوپہر بعد وقت',evening:'شام وقت',
+lockedTitle:'منڈی عارضی طور بند',lockedMessage:'منتظمَن یِہ منڈی لاک کٔرمژ۔ مہربانی کٔرتھ رابطہ کریو۔',
+zeroTitle:'گنجائش مقرر چھِ نہٕ',zeroMessage:'یِتھ منڈی ہُند گنجائش وُنہِ صفر چھُ۔ منتظم گنجائش مقرر کٔرِتھ بکنگ شروع گژھِ۔',
+fullTitle:'منڈی ہُند گنجائش مکمل',fullMessage:'روزانہ گنجائش مکمل گٔی۔ بیٚیہِ منڈی ژأریو یا منتظمس رابطہ کریو۔',
+tonsUnit:'ٹن',capacityText:'{booked} ٹن / {capacity} ٹن',
+errSelectMandi:'مہربانی کٔرتھ APMC منڈی ژأریو۔',errVerification:'پہلے کسان پورٹل تصدیق مکمل کریو۔',
+errLocked:'یِہ منڈی منتظمَن عارضی طور لاک کٔرمژ۔',errSelections:'فصل، گاڑی تہٕ آمد وقت ژأریو۔',
+errQuantity:'مہربانی کٔرتھ ٹنن منز صحیح مقدار لیکھیو۔',errZeroCapacity:'یِتھ منڈی ہُند گنجائش صفر چھُ۔ بکنگ برونہہ منتظمس گنجائش مقرر کرُن چھُ۔',
+errCapacity:'درخواست شدہ مقدار دستیاب گنجائش پٮ۪ٹھ زیادہ چھِ۔ دستیاب: {available} ٹن.',
+errQR:'QR لائبریری دستیاب چھِ نہٕ'
+},
+doi: {
+pageTitle:'कृषिधारा 2.0 • किसान पोर्टल',switchRole:'भूमिका बदलो',
+stepTitle:'चरण 2: खरीद स्लॉट ते QR पास',stepDescription:'अपनी मंडी, फसल, गड्डी, मात्रा ते समां चुनो।',
+capacityLabel:'मंडी दी रोज़ाना क्षमता',mapTitle:'🗺️ APMC मंडी थाह् दा नक्शा -',
+selectMandiPrompt:'थल्ले दी सूची थमां मंडी चुनो',mapPlaceholderTitle:'सूची थमां APMC मंडी चुनो',
+mapPlaceholderDescription:'चुनी दी मंडी दा नक्शा इत्थें दस्सेआ जाग',alertDefaultTitle:'मंडी बंद ऐ जां क्षमता पूरी ऐ',
+alertDefaultMessage:'इस मंडी दी बुकिंग थोड़े समें आस्तै बंद ऐ जां क्षमता पूरी होई गेई ऐ। दूई मंडी चुनो जां प्रशासक कन्नै राबता करो।',
+mandiLabel:'🏬 APMC मंडी',selectMandi:'APMC मंडी चुनो',commodityLabel:'🌾 फसल दी किस्म',
+selectCommodity:'फसल चुनो',wheat:'कणक',paddy:'धान / चावल',soybean:'सोयाबीन',cotton:'कपास',onion:'गांठा',
+vehicleLabel:'🚚 गड्डी दी किस्म',selectVehicle:'गड्डी चुनो',tractor:'ट्रैक्टर ट्रॉली (4-6 टन)',
+smallTruck:'हल्की व्यापारिक गड्डी (LCV)',heavyTruck:'भारी व्यापारिक गड्डी (10+ टन)',
+slotLabel:'⏰ औने दा पसंदीदा समां',selectSlot:'समां चुनो',quantityLabel:'⚖️ अंदाज़े दी मात्रा (टन च)',
+quantityPlaceholder:'टन च मात्रा लिखो (जियां 5)',confirmBooking:'स्लॉट पक्का करो ते QR पास बनाओ 🎫',
+passTitle:'कृषिधारा सरकारी दाखला पास',showAtGate:'गेट स्कैनर पर दस्सो',farmerLabel:'किसान:',
+mandiSummary:'मंडी:',commoditySummary:'फसल:',vehicleSummary:'गड्डी:',quantitySummary:'मात्रा:',
+tons:'टन',arrivalSummary:'बदले दा औने दा समां:',tokenSummary:'टोकन ID:',printPass:'पास प्रिंट करो 🖨️',close:'बंद करो',
+morning:'बडलै दा स्लॉट',midday:'दपैहर दा स्लॉट',afternoon:'दपैहर बाद दा स्लॉट',evening:'शामीं दा स्लॉट',
+lockedTitle:'मंडी थोड़े समें आस्तै बंद',lockedMessage:'प्रशासक ने इस मंडी गी लॉक कीता ऐ। राबता करो।',
+zeroTitle:'क्षमता तय नेईं',zeroMessage:'इस मंडी दी क्षमता इसलै जीरो ऐ। प्रशासक क्षमता तय करग तां बुकिंग शुरू होग।',
+fullTitle:'मंडी दी क्षमता पूरी',fullMessage:'रोज़ाना दी क्षमता पूरी होई गेई ऐ। दूई मंडी चुनो जां प्रशासक कन्नै राबता करो।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपा करियै APMC मंडी चुनो।',errVerification:'पहले किसान पोर्टल दी तस्दीक पूरी करो।',
+errLocked:'इस मंडी गी प्रशासक ने थोड़े समें आस्तै लॉक कीता ऐ।',errSelections:'फसल, गड्डी ते औने दा समां चुनो।',
+errQuantity:'टन च सही मात्रा लिखो।',errZeroCapacity:'इस मंडी दी क्षमता जीरो ऐ। बुकिंग थमां पहले प्रशासक क्षमता तय करे।',
+errCapacity:'मंगी गेई मात्रा उपलब्ध क्षमता थमां बद्ध ऐ। उपलब्ध: {available} टन.',
+errQR:'QR लाइब्रेरी उपलब्ध नेईं'
+},
+mni: {
+pageTitle:'কৃষিধারা 2.0 • কৃষক পোর্টেল',switchRole:'রোল হোংদোকউ',
+stepTitle:'ধাপ 2: খরিদ স্লট অমসুং QR পাস',stepDescription:'নহাক্কী মান্দি, ফসল, গাড়ি, মশিং অমসুং মতম খল্লু।',
+capacityLabel:'মান্দিগী নুমিৎগী ক্ষমতা',mapTitle:'🗺️ APMC মান্দিগী মফম নকশা -',
+selectMandiPrompt:'মখাদা পীজরিবা লিস্টদগী মান্দি খল্লু',mapPlaceholderTitle:'লিস্টদগী APMC মান্দি খল্লু',
+mapPlaceholderDescription:'খল্লবা মান্দিগী নকশা মসিদা উত্থোক্কনি',alertDefaultTitle:'মান্দি থিংদোক্লে নত্রগা ক্ষমতা লেপ্লে',
+alertDefaultMessage:'মসিগী মান্দিদা বুকিং খরা মতমগী ওইনা থিংজিলে নত্রগা ক্ষমতা লেপ্লে। অতোপ্পা মান্দি খল্লু নত্রগা এডমিনগা ৱারী শান্নৌ।',
+mandiLabel:'🏬 APMC মান্দি',selectMandi:'APMC মান্দি খল্লু',commodityLabel:'🌾 ফসলগী মখল',
+selectCommodity:'ফসল খল্লু',wheat:'গম',paddy:'চাউ / চাল',soybean:'সোয়াবিন',cotton:'কাপাস',onion:'পিয়াজ',
+vehicleLabel:'🚚 গাড়িগী মখল',selectVehicle:'গাড়ি খল্লু',tractor:'ট্রেক্টর ট্রলি (4-6 টন)',
+smallTruck:'লাইট কমার্শিয়েল ট্রাক (LCV)',heavyTruck:'হেভি কমার্শিয়েল ট্রাক (10+ টন)',
+slotLabel:'⏰ চৎনবগী পাম্বা মতম',selectSlot:'মতম খল্লু',quantityLabel:'⚖️ অচৌবা মশিং (টনদা)',
+quantityPlaceholder:'টনদা মশিং লিখৌ (মশম 5)',confirmBooking:'স্লট পকথোকউ অমসুং QR পাস শেম্বিয়ু 🎫',
+passTitle:'কৃষিধারা অফিশিয়েল এন্ট্রি পাস',showAtGate:'গেট স্কেনরদা উত্থোকউ',farmerLabel:'কৃষক:',
+mandiSummary:'মান্দি:',commoditySummary:'ফসল:',vehicleSummary:'গাড়ি:',quantitySummary:'মশিং:',
+tons:'টন',arrivalSummary:'অহোংবা চৎনবগী মতম:',tokenSummary:'টোকেন ID:',printPass:'পাস প্রিন্ট তৌ 🖨️',close:'লোইশিনবা',
+morning:'ঙান্থক স্লট',midday:'নুমিদাং স্লট',afternoon:'নুমিদাংগী মতুংদা স্লট',evening:'নুংথিল স্লট',
+lockedTitle:'মান্দি খরা মতমগী থিংজিলে',lockedMessage:'এডমিননা মান্দি অসি লক তৌরে। ৱারী শান্নৌ।',
+zeroTitle:'ক্ষমতা সেট তৌদ্রে',zeroMessage:'মান্দিগী ক্ষমতা অসি হৌজিক শূন্যনি। এডমিননা ক্ষমতা সেট তৌরবা মতুং বুকিং হৌগনি।',
+fullTitle:'মান্দিগী ক্ষমতা লেপ্লে',fullMessage:'নুমিৎগী ক্ষমতা লেপ্লে। অতোপ্পা মান্দি খল্লু নত্রগা এডমিনগা ৱারী শান্নৌ।',
+tonsUnit:'টন',capacityText:'{booked} টন / {capacity} টন',
+errSelectMandi:'APMC মান্দি খল্লু।',errVerification:'অহানবদা কৃষক পোর্টেল ভেরিফিকেশন লোইশিনবিয়ু।',
+errLocked:'এডমিননা মান্দি অসি খরা মতমগী লক তৌরে।',errSelections:'ফসল, গাড়ি অমসুং চৎনবগী মতম খল্লু।',
+errQuantity:'টনদা অচুম্বা মশিং লিখৌ।',errZeroCapacity:'মান্দিগী ক্ষমতা শূন্যনি। বুকিংগী মমাংদা এডমিননা ক্ষমতা সেট তৌগদবনি।',
+errCapacity:'পাম্বা মশিং অসি লৈবা ক্ষমতাগী মথক্তা লৈ। লৈবা: {available} টন.',
+errQR:'QR লাইব্রেরি ফংদ্রে'
+},
+sat: {
+pageTitle:'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 • ᱠᱤᱥᱟᱹᱱ ᱯᱳᱨᱴᱟᱞ',switchRole:'ᱵᱷᱩᱢᱤᱠᱟ ᱵᱚᱫᱚᱞ',
+stepTitle:'ᱫᱷᱟᱯ 2: ᱠᱤᱱᱟᱹᱢ ᱚᱠᱛᱚ ᱟᱨ QR ᱯᱟᱥ',stepDescription:'ᱟᱢᱟᱜ ᱢᱟᱱᱰᱤ, ᱯᱟᱦᱴᱟ, ᱜᱟᱹᱰᱤ, ᱯᱚᱨᱤᱢᱟᱱ ᱟᱨ ᱚᱠᱛᱚ ᱵᱟᱪᱷᱟᱣ ᱢᱮ।',
+capacityLabel:'ᱢᱟᱱᱰᱤ ᱫᱤᱱ ᱨᱮᱭᱟᱜ ᱠᱷᱟᱹᱢᱛᱟ',mapTitle:'🗺️ APMC ᱢᱟᱱᱰᱤ ᱴᱷᱟᱶ ᱱᱚᱠᱥᱟ -',
+selectMandiPrompt:'ᱞᱟᱛᱟᱨ ᱛᱟᱞᱠᱟ ᱠᱷᱚᱱ ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ',mapPlaceholderTitle:'ᱛᱟᱞᱠᱟ ᱠᱷᱚᱱ APMC ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ',
+mapPlaceholderDescription:'ᱵᱟᱪᱷᱟᱣ ᱢᱟᱱᱰᱤ ᱱᱚᱠᱥᱟ ᱱᱚᱰᱮ ᱧᱮᱞᱚᱜᱼᱟ',alertDefaultTitle:'ᱢᱟᱱᱰᱤ ᱵᱚᱱᱫᱚ ᱟᱨᱵᱟᱝ ᱠᱷᱟᱹᱢᱛᱟ ᱯᱩᱨᱟᱹ',
+alertDefaultMessage:'ᱱᱚᱶᱟ ᱢᱟᱱᱰᱤ ᱨᱮ ᱵᱩᱠᱤᱝ ᱛᱟᱹᱨᱚᱢ ᱵᱚᱱᱫᱚ ᱟᱨᱵᱟᱝ ᱠᱷᱟᱹᱢᱛᱟ ᱯᱩᱨᱟᱹ। ᱮᱴᱟᱜ ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ ᱟᱨᱵᱟᱝ ᱯᱨᱚᱥᱟᱥᱚᱠ ᱥᱟᱶ ᱡᱚᱯᱲᱟᱣ ᱢᱮ।',
+mandiLabel:'🏬 APMC ᱢᱟᱱᱰᱤ',selectMandi:'APMC ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ',commodityLabel:'🌾 ᱯᱟᱦᱴᱟ ᱞᱮᱠᱟ',
+selectCommodity:'ᱯᱟᱦᱴᱟ ᱵᱟᱪᱷᱟᱣ',wheat:'ᱜᱚᱦᱩᱢ',paddy:'ᱫᱷᱟᱱ / ᱪᱟᱣᱞ',soybean:'ᱥᱚᱭᱟᱵᱤᱱ',cotton:'ᱠᱟᱹᱯᱟᱥ',onion:'ᱯᱤᱭᱟᱡᱽ',
+vehicleLabel:'🚚 ᱜᱟᱹᱰᱤ ᱞᱮᱠᱟ',selectVehicle:'ᱜᱟᱹᱰᱤ ᱵᱟᱪᱷᱟᱣ',tractor:'ᱴᱨᱮᱠᱴᱚᱨ ᱴᱨᱚᱞᱤ (4-6 ᱴᱚᱱ)',
+smallTruck:'ᱦᱩᱰᱤᱧ ᱵᱮᱯᱟᱨ ᱴᱨᱟᱠ (LCV)',heavyTruck:'ᱢᱟᱨᱟᱝ ᱵᱮᱯᱟᱨ ᱴᱨᱟᱠ (10+ ᱴᱚᱱ)',
+slotLabel:'⏰ ᱠᱷᱩᱥᱤ ᱟᱜᱚᱢ ᱚᱠᱛᱚ',selectSlot:'ᱚᱠᱛᱚ ᱵᱟᱪᱷᱟᱣ',quantityLabel:'⚖️ ᱟᱱᱩᱢᱟᱱ ᱯᱚᱨᱤᱢᱟᱱ (ᱴᱚᱱ ᱨᱮ)',
+quantityPlaceholder:'ᱴᱚᱱ ᱨᱮ ᱚᱞ ᱢᱮ (ᱡᱮᱞᱮᱠᱟ 5)',confirmBooking:'ᱚᱠᱛᱚ ᱯᱟᱹᱠᱟ ᱟᱨ QR ᱯᱟᱥ ᱵᱮᱱᱟᱣ ᱢᱮ 🎫',
+passTitle:'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ ᱥᱚᱨᱠᱟᱨᱤ ᱵᱚᱞᱚ ᱯᱟᱥ',showAtGate:'ᱜᱮᱴ ᱥᱠᱮᱱᱟᱨ ᱨᱮ ᱩᱫᱩᱜ ᱢᱮ',farmerLabel:'ᱠᱤᱥᱟᱹᱱ:',
+mandiSummary:'ᱢᱟᱱᱰᱤ:',commoditySummary:'ᱯᱟᱦᱴᱟ:',vehicleSummary:'ᱜᱟᱹᱰᱤ:',quantitySummary:'ᱯᱚᱨᱤᱢᱟᱱ:',
+tons:'ᱴᱚᱱ',arrivalSummary:'ᱱᱟᱶᱟ ᱟᱜᱚᱢ ᱚᱠᱛᱚ:',tokenSummary:'ᱴᱚᱠᱮᱱ ID:',printPass:'ᱯᱟᱥ ᱪᱷᱟᱯᱟ ᱢᱮ 🖨️',close:'ᱵᱚᱱᱫᱚ',
+morning:'ᱥᱮᱛᱟᱜ ᱚᱠᱛᱚ',midday:'ᱛᱤᱠᱤᱱ ᱚᱠᱛᱚ',afternoon:'ᱛᱤᱠᱤᱱ ᱛᱟᱭᱚᱢ',evening:'ᱟᱭᱩᱵ ᱚᱠᱛᱚ',
+lockedTitle:'ᱢᱟᱱᱰᱤ ᱛᱟᱹᱨᱚᱢ ᱵᱚᱱᱫᱚ',lockedMessage:'ᱯᱨᱚᱥᱟᱥᱚᱠ ᱱᱚᱶᱟ ᱢᱟᱱᱰᱤ ᱞᱚᱠ ᱟᱠᱟᱫᱟ। ᱡᱚᱯᱲᱟᱣ ᱢᱮ।',
+zeroTitle:'ᱠᱷᱟᱹᱢᱛᱟ ᱥᱮᱴ ᱵᱟᱝ',zeroMessage:'ᱱᱚᱶᱟ ᱢᱟᱱᱰᱤ ᱨᱮ ᱠᱷᱟᱹᱢᱛᱟ ᱥᱩᱱᱭᱚ। ᱯᱨᱚᱥᱟᱥᱚᱠ ᱠᱷᱟᱹᱢᱛᱟ ᱥᱮᱴ ᱠᱟᱛᱮ ᱵᱩᱠᱤᱝ ᱦᱩᱭᱩᱜᱼᱟ।',
+fullTitle:'ᱢᱟᱱᱰᱤ ᱠᱷᱟᱹᱢᱛᱟ ᱯᱩᱨᱟᱹ',fullMessage:'ᱫᱤᱱ ᱨᱮᱭᱟᱜ ᱠᱷᱟᱹᱢᱛᱟ ᱯᱩᱨᱟᱹ। ᱮᱴᱟᱜ ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ ᱟᱨᱵᱟᱝ ᱯᱨᱚᱥᱟᱥᱚᱠ ᱥᱟᱶ ᱡᱚᱯᱲᱟᱣ ᱢᱮ।',
+tonsUnit:'ᱴᱚᱱ',capacityText:'{booked} ᱴᱚᱱ / {capacity} ᱴᱚᱱ',
+errSelectMandi:'APMC ᱢᱟᱱᱰᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ।',errVerification:'ᱢᱟᱲᱟᱝ ᱠᱤᱥᱟᱹᱱ ᱯᱳᱨᱴᱟᱞ ᱥᱟᱹᱨᱤ ᱢᱮ।',
+errLocked:'ᱱᱚᱶᱟ ᱢᱟᱱᱰᱤ ᱯᱨᱚᱥᱟᱥᱚᱠ ᱛᱟᱹᱨᱚᱢ ᱞᱚᱠ ᱟᱠᱟᱫᱟ।',errSelections:'ᱯᱟᱦᱴᱟ, ᱜᱟᱹᱰᱤ ᱟᱨ ᱟᱜᱚᱢ ᱚᱠᱛᱚ ᱵᱟᱪᱷᱟᱣ ᱢᱮ।',
+errQuantity:'ᱴᱚᱱ ᱨᱮ ᱴᱷᱤᱠ ᱯᱚᱨᱤᱢᱟᱱ ᱚᱞ ᱢᱮ।',errZeroCapacity:'ᱱᱚᱶᱟ ᱢᱟᱱᱰᱤ ᱨᱮ ᱠᱷᱟᱹᱢᱛᱟ ᱥᱩᱱᱭᱚ। ᱵᱩᱠᱤᱝ ᱢᱟᱲᱟᱝ ᱯᱨᱚᱥᱟᱥᱚᱠ ᱠᱷᱟᱹᱢᱛᱟ ᱥᱮᱴ ᱢᱮ।',
+errCapacity:'ᱢᱟᱝᱜᱟ ᱯᱚᱨᱤᱢᱟᱱ ᱠᱷᱟᱹᱢᱛᱟ ᱠᱷᱚᱱ ᱟᱹᱰᱤᱠ। ᱞᱮᱠᱟ: {available} ᱴᱚᱱ.',
+errQR:'QR ᱞᱟᱭᱵᱨᱮᱨᱤ ᱵᱟᱝ ᱧᱟᱢᱟ'
+},
+bho: {
+pageTitle:'कृषिधारा 2.0 • किसान पोर्टल',switchRole:'भूमिका बदलीं',
+stepTitle:'चरण 2: खरीद स्लॉट आ QR पास',stepDescription:'अपना मंडी, फसल, गाड़ी, मात्रा आ समय चुनीं।',
+capacityLabel:'मंडी के रोजाना क्षमता',mapTitle:'🗺️ APMC मंडी के जगह के नक्शा -',
+selectMandiPrompt:'नीचे के सूची से मंडी चुनीं',mapPlaceholderTitle:'सूची से APMC मंडी चुनीं',
+mapPlaceholderDescription:'चुनल मंडी के नक्शा इहाँ देखाई',alertDefaultTitle:'मंडी बंद बा भा क्षमता पूरा बा',
+alertDefaultMessage:'एह मंडी के बुकिंग कुछ समय खातिर बंद बा भा क्षमता पूरा हो गइल बा। दोसरा मंडी चुनीं भा प्रशासक से बात करीं।',
+mandiLabel:'🏬 APMC मंडी',selectMandi:'APMC मंडी चुनीं',commodityLabel:'🌾 फसल के किसिम',
+selectCommodity:'फसल चुनीं',wheat:'गेहूँ',paddy:'धान / चावल',soybean:'सोयाबीन',cotton:'कपास',onion:'पियाज',
+vehicleLabel:'🚚 गाड़ी के किसिम',selectVehicle:'गाड़ी चुनीं',tractor:'ट्रैक्टर ट्रॉली (4-6 टन)',
+smallTruck:'हल्का व्यापारिक ट्रक (LCV)',heavyTruck:'भारी व्यापारिक ट्रक (10+ टन)',
+slotLabel:'⏰ आवे के पसंदीदा समय',selectSlot:'समय चुनीं',quantityLabel:'⚖️ अनुमानित मात्रा (टन में)',
+quantityPlaceholder:'टन में लिखीं (जइसे 5)',confirmBooking:'समय पक्का करीं आ QR पास बनाईं 🎫',
+passTitle:'कृषिधारा सरकारी प्रवेश पास',showAtGate:'गेट स्कैनर पर देखाईं',farmerLabel:'किसान:',
+mandiSummary:'मंडी:',commoditySummary:'फसल:',vehicleSummary:'गाड़ी:',quantitySummary:'मात्रा:',
+tons:'टन',arrivalSummary:'बदलल आवे के समय:',tokenSummary:'टोकन ID:',printPass:'पास प्रिंट करीं 🖨️',close:'बंद करीं',
+morning:'भोर के स्लॉट',midday:'दुपहर के स्लॉट',afternoon:'दुपहर बाद के स्लॉट',evening:'साँझ के स्लॉट',
+lockedTitle:'मंडी कुछ समय खातिर बंद बा',lockedMessage:'प्रशासक एह मंडी के लॉक कइले बा। कृपया संपर्क करीं।',
+zeroTitle:'क्षमता तय नइखे',zeroMessage:'एह मंडी के क्षमता अभी शून्य बा। प्रशासक क्षमता तय करी तब बुकिंग शुरू होई।',
+fullTitle:'मंडी के क्षमता पूरा बा',fullMessage:'रोजाना के क्षमता पूरा हो गइल बा। दोसरा मंडी चुनीं भा प्रशासक से संपर्क करीं।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC मंडी चुनीं।',errVerification:'पहिले किसान पोर्टल के जाँच पूरा करीं।',
+errLocked:'एह मंडी के प्रशासक कुछ समय खातिर लॉक कइले बा।',errSelections:'फसल, गाड़ी आ आवे के समय चुनीं।',
+errQuantity:'कृपया टन में सही मात्रा लिखीं।',errZeroCapacity:'एह मंडी के क्षमता शून्य बा। बुकिंग से पहिले प्रशासक के क्षमता तय करे के पड़ी।',
+errCapacity:'मांगल मात्रा उपलब्ध क्षमता से बेसी बा। उपलब्ध: {available} टन.',
+errQR:'QR लाइब्रेरी उपलब्ध नइखे'
+},
+raj: {
+pageTitle:'कृषिधारा 2.0 • किसान पोर्टल',switchRole:'भूमिका बदलो',
+stepTitle:'चरण 2: खरीद स्लॉट अर QR पास',stepDescription:'अपणी मंडी, फसल, गाड़ी, मात्रा अर टैम चुणो।',
+capacityLabel:'मंडी री रोज़ री क्षमता',mapTitle:'🗺️ APMC मंडी ठिकाणो नक्शो -',
+selectMandiPrompt:'नीचे री सूची सूं मंडी चुणो',mapPlaceholderTitle:'सूची सूं APMC मंडी चुणो',
+mapPlaceholderDescription:'चुणी हुई मंडी रो नक्शो इठै दिखसी',alertDefaultTitle:'मंडी बंद है या क्षमता पूरी है',
+alertDefaultMessage:'इण मंडी री बुकिंग थोड़े टैम खातर बंद है या क्षमता पूरी हो गई है। दूजी मंडी चुणो या प्रशासक सूं संपर्क करो।',
+mandiLabel:'🏬 APMC मंडी',selectMandi:'APMC मंडी चुणो',commodityLabel:'🌾 फसल रो प्रकार',
+selectCommodity:'फसल चुणो',wheat:'गेहूं',paddy:'धान / चावल',soybean:'सोयाबीन',cotton:'कपास',onion:'कांदो',
+vehicleLabel:'🚚 गाड़ी रो प्रकार',selectVehicle:'गाड़ी चुणो',tractor:'ट्रैक्टर ट्रॉली (4-6 टन)',
+smallTruck:'हलको व्यापारिक ट्रक (LCV)',heavyTruck:'भारी व्यापारिक ट्रक (10+ टन)',
+slotLabel:'⏰ आवण रो पसंदीदा टैम',selectSlot:'टैम चुणो',quantityLabel:'⚖️ अंदाजे री मात्रा (टन में)',
+quantityPlaceholder:'टन में लिखो (ज्यूं 5)',confirmBooking:'स्लॉट पक्को करो अर QR पास बनाओ 🎫',
+passTitle:'कृषिधारा सरकारी प्रवेश पास',showAtGate:'गेट स्कैनर पर दिखाओ',farmerLabel:'किसान:',
+mandiSummary:'मंडी:',commoditySummary:'फसल:',vehicleSummary:'गाड़ी:',quantitySummary:'मात्रा:',
+tons:'टन',arrivalSummary:'बदली हुई आवण री घड़ी:',tokenSummary:'टोकन ID:',printPass:'पास प्रिंट करो 🖨️',close:'बंद करो',
+morning:'सवेर रो स्लॉट',midday:'दुपहर रो स्लॉट',afternoon:'दुपहर पाछै रो स्लॉट',evening:'सांझ रो स्लॉट',
+lockedTitle:'मंडी थोड़े टैम खातर बंद है',lockedMessage:'प्रशासक इण मंडी नै लॉक करी है। संपर्क करो।',
+zeroTitle:'क्षमता तय कोनी',zeroMessage:'इण मंडी री क्षमता अभी शून्य है। प्रशासक क्षमता तय करसी तद बुकिंग चालू होसी।',
+fullTitle:'मंडी री क्षमता पूरी',fullMessage:'रोज़ री क्षमता पूरी हो गई है। दूजी मंडी चुणो या प्रशासक सूं संपर्क करो।',
+tonsUnit:'टन',capacityText:'{booked} टन / {capacity} टन',
+errSelectMandi:'कृपया APMC मंडी चुणो।',errVerification:'पहले किसान पोर्टल री जाँच पूरी करो।',
+errLocked:'इण मंडी नै प्रशासक थोड़े टैम खातर लॉक करी है।',errSelections:'फसल, गाड़ी अर आवण रो टैम चुणो।',
+errQuantity:'कृपया टन में सही मात्रा लिखो।',errZeroCapacity:'इण मंडी री क्षमता शून्य है। बुकिंग सूं पहले प्रशासक नै क्षमता तय करनी पड़सी।',
+errCapacity:'मांगी गई मात्रा उपलब्ध क्षमता सूं ज्यादा है। उपलब्ध: {available} टन.',
+errQR:'QR लाइब्रेरी उपलब्ध कोनी'
+}
+};
+
+// Best-effort language coverage: less commonly standardized language varieties
+// use the closest available regional phrasing where a full translation is not
+// readily available. Every language selector entry has a dictionary below or
+// a complete fallback to English for any missing key.
+const languageFallbacks = {
+    en: 'en', hi: 'hi', mr: 'mr', pa: 'pa', gu: 'gu', bn: 'bn',
+    te: 'te', ta: 'ta', kn: 'kn', ml: 'ml', or: 'or', as: 'as',
+    ur: 'ur', sa: 'sa', ne: 'ne', sd: 'sd', ks: 'ks', doi: 'doi',
+    mni: 'mni', sat: 'sat', bho: 'bho', raj: 'raj'
+};
+
+let currentLanguage = 'en';
+
+function t(key, vars = {}) {
+    const dictionary = translations[currentLanguage] || translations.en;
+    let value = dictionary[key] || translations.en[key] || key;
+
+    Object.keys(vars).forEach(function (name) {
+        value = value.replaceAll(`{${name}}`, String(vars[name]));
+    });
+
+    return value;
+}
+
+function changeLanguage() {
+    const select = document.getElementById('langSelect');
+    const selected = select && select.value;
+    currentLanguage = SUPPORTED_LANGUAGES.includes(selected) ? selected : 'en';
+
+    try {
+        localStorage.setItem(STORAGE_KEY, currentLanguage);
+    } catch (error) {
+        console.warn('Unable to save language preference.', error);
+    }
+
+    document.documentElement.lang = currentLanguage;
+    applyTranslations();
+    refreshSlotLabels();
+
+    const mandiKey = document.getElementById('mandiSelect').value;
+    if (mandiKey) {
+        renderCapacityUI(isMandiLocked(mandiKey), mandiKey);
+    } else {
+        renderCapacityUI(false, '');
+    }
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(function (element) {
+        const key = element.dataset.i18n;
+        if (key) element.textContent = t(key);
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (element) {
+        const key = element.dataset.i18nPlaceholder;
+        if (key) element.placeholder = t(key);
+    });
+
+    const mandiKey = document.getElementById('mandiSelect').value;
+    if (mandiKey && mandiLocationsMap[mandiKey]) {
+        const name = mandiLocationsMap[mandiKey].name;
+        document.getElementById('currentMandiName').textContent = name;
+        document.getElementById('currentMandiName').className = 'text-green-700';
+    }
+}
+
+function refreshSlotLabels() {
+    const ranges = [[540,690],[690,840],[840,990],[990,1080]];
+    const keys = ['morning','midday','afternoon','evening'];
+    const mandiKey = document.getElementById('mandiSelect').value;
+    const delayMins = mandiKey ? getMandiDelay(mandiKey) : 0;
+
+    ranges.forEach(function (range, index) {
+        const option = document.getElementById(`optSlot${index + 1}`);
+        if (!option) return;
+
+        const start = formatTime(range[0] + delayMins);
+        const end = formatTime(range[1] + delayMins);
+        const delayLabel = delayMins
+            ? ` • ${t('adminDelay')} +${delayMins}m`
+            : '';
+
+        option.textContent = `${start} - ${end} (${t(keys[index])}${delayLabel})`;
+    });
+}
 
 // ======================================================
 // CAPACITY DEFAULTS
@@ -243,14 +932,12 @@ const mandiLocationsMap = {
     }
 };
 
-function getMandiDefaultCapacity(mandiKey) {
-    // Requested initial capacity: zero for every mandi.
+function getMandiDefaultCapacity() {
     return 0;
 }
 
 function getMandiCapacity(mandiKey) {
     const saved = localStorage.getItem(`kd_cap_${mandiKey}`);
-
     return saved === null
         ? getMandiDefaultCapacity(mandiKey)
         : Math.max(0, Number(saved) || 0);
@@ -258,10 +945,7 @@ function getMandiCapacity(mandiKey) {
 
 function getMandiBookedTons(mandiKey) {
     const saved = localStorage.getItem(`kd_booked_${mandiKey}`);
-
-    return saved === null
-        ? 0
-        : Math.max(0, Number(saved) || 0);
+    return saved === null ? 0 : Math.max(0, Number(saved) || 0);
 }
 
 function isMandiLocked(mandiKey) {
@@ -283,7 +967,6 @@ function refreshMandiCapacity(mandiKey) {
 
     maxTonsCapacity = getMandiCapacity(mandiKey);
     bookedTons = getMandiBookedTons(mandiKey);
-
     renderCapacityUI(isMandiLocked(mandiKey), mandiKey);
 }
 
@@ -293,23 +976,31 @@ function refreshMandiCapacity(mandiKey) {
 
 window.addEventListener('DOMContentLoaded', function () {
     const langSelect = document.getElementById('langSelect');
+    let savedLanguage = 'en';
 
-    if (langSelect) {
-        langSelect.value = localStorage.getItem('kd_selected_lang') || 'en';
+    try {
+        savedLanguage = localStorage.getItem(STORAGE_KEY) || 'en';
+    } catch (error) {
+        console.warn('Unable to read language preference.', error);
     }
+
+    currentLanguage = SUPPORTED_LANGUAGES.includes(savedLanguage) ? savedLanguage : 'en';
+
+    if (langSelect) langSelect.value = currentLanguage;
+
+    document.documentElement.lang = currentLanguage;
 
     document.getElementById('mandiSelect').selectedIndex = 0;
     document.getElementById('commoditySelect').selectedIndex = 0;
     document.getElementById('vehicleSelect').selectedIndex = 0;
     document.getElementById('slotSelect').selectedIndex = 0;
     document.getElementById('quantityInput').value = '';
-
     document.getElementById('qrModal').classList.add('hidden');
 
-    // Show zero initially; the farmer must select a mandi.
+    applyTranslations();
+    refreshSlotLabels();
     refreshMandiCapacity('');
 
-    // Update the page if Admin changes settings in another tab.
     window.addEventListener('storage', function (event) {
         if (!event.key) return;
 
@@ -358,7 +1049,6 @@ function showMapForMandi(mandiKey) {
 
     document.getElementById('mapPlaceholder').classList.add('hidden');
     document.getElementById('googleMapFrame').classList.remove('hidden');
-
     document.getElementById('currentMandiName').textContent = mandi.name;
     document.getElementById('currentMandiName').className = 'text-green-700';
 
@@ -368,7 +1058,6 @@ function showMapForMandi(mandiKey) {
 
 // ======================================================
 // ADMIN DELAY BUFFER
-// Reads kd_delay_<mandiKey> from shared localStorage.
 // ======================================================
 
 function formatTime(totalMinutes) {
@@ -377,38 +1066,11 @@ function formatTime(totalMinutes) {
     const mm = mins % 60;
     const suffix = h24 >= 12 ? 'PM' : 'AM';
     const h12 = h24 % 12 || 12;
-
     return `${String(h12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${suffix}`;
 }
 
 function applyTimeBufferUI(mandiKey) {
-    const delayMins = getMandiDelay(mandiKey);
-
-    const ranges = [
-        [540, 690],
-        [690, 840],
-        [840, 990],
-        [990, 1080]
-    ];
-
-    const labels = [
-        'Morning Slot',
-        'Mid-Day Slot',
-        'Afternoon Slot',
-        'Evening Slot'
-    ];
-
-    ranges.forEach(function (range, index) {
-        const start = formatTime(range[0] + delayMins);
-        const end = formatTime(range[1] + delayMins);
-        const option = document.getElementById(`optSlot${index + 1}`);
-
-        if (option) {
-            option.textContent =
-                `${start} - ${end} (${labels[index]}` +
-                `${delayMins ? ` • Admin +${delayMins}m` : ''})`;
-        }
-    });
+    refreshSlotLabels();
 }
 
 // ======================================================
@@ -426,7 +1088,7 @@ function renderCapacityUI(isLocked, currentMandiKey) {
     const capacity = Math.max(0, Number(maxTonsCapacity) || 0);
     const booked = Math.max(0, Number(bookedTons) || 0);
 
-    capacityCount.textContent = `${booked} Tons / ${capacity} Tons`;
+    capacityCount.textContent = t('capacityText', {booked, capacity});
 
     const percentage = capacity > 0
         ? Math.min(100, (booked / capacity) * 100)
@@ -434,11 +1096,7 @@ function renderCapacityUI(isLocked, currentMandiKey) {
 
     capacityBar.style.width = `${percentage}%`;
 
-    const noMandiSelected = !currentMandiKey;
-    const zeroCapacity = capacity <= 0;
-    const full = capacity > 0 && booked >= capacity;
-
-    if (noMandiSelected) {
+    if (!currentMandiKey) {
         alertBanner.classList.add('hidden');
         submitButton.disabled = true;
         submitButton.className =
@@ -446,21 +1104,21 @@ function renderCapacityUI(isLocked, currentMandiKey) {
         return;
     }
 
+    const zeroCapacity = capacity <= 0;
+    const full = capacity > 0 && booked >= capacity;
+
     if (isLocked || zeroCapacity || full) {
         alertBanner.classList.remove('hidden');
 
         if (isLocked) {
-            alertTitle.textContent = 'MANDI TEMPORARILY LOCKED';
-            alertMessage.textContent =
-                'The Admin has locked this mandi. Please contact the administrator.';
+            alertTitle.textContent = t('lockedTitle');
+            alertMessage.textContent = t('lockedMessage');
         } else if (zeroCapacity) {
-            alertTitle.textContent = 'CAPACITY NOT CONFIGURED';
-            alertMessage.textContent =
-                'This mandi currently has zero capacity. Booking will open after the Admin sets a positive capacity.';
+            alertTitle.textContent = t('zeroTitle');
+            alertMessage.textContent = t('zeroMessage');
         } else {
-            alertTitle.textContent = 'MANDI CAPACITY FULL';
-            alertMessage.textContent =
-                'The daily capacity has been reached. Please select another mandi or contact the administrator.';
+            alertTitle.textContent = t('fullTitle');
+            alertMessage.textContent = t('fullMessage');
         }
 
         submitButton.disabled = true;
@@ -468,7 +1126,6 @@ function renderCapacityUI(isLocked, currentMandiKey) {
             'w-full bg-gray-300 text-gray-500 font-bold py-5 rounded-2xl cursor-not-allowed';
     } else {
         alertBanner.classList.add('hidden');
-
         submitButton.disabled = false;
         submitButton.className =
             'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl transition shadow cursor-pointer';
@@ -497,16 +1154,15 @@ function renderSavedBooking(booking) {
         booking.mandiName || '-';
 
     document.getElementById('summaryCommodity').textContent =
-        booking.commodity || '-';
+        getOptionLabel('commoditySelect', booking.commodity);
 
     document.getElementById('summaryVehicle').textContent =
-        booking.vehicle || '-';
+        getOptionLabel('vehicleSelect', booking.vehicle);
 
     document.getElementById('summaryQuantity').textContent =
         booking.quantity ?? '-';
 
     const delayMins = getMandiDelay(booking.mandiKey);
-
     const slotRanges = {
         slot1: [540, 690],
         slot2: [690, 840],
@@ -524,14 +1180,13 @@ function renderSavedBooking(booking) {
             booking.slotLabel || '-';
     }
 
-    document.getElementById('summaryToken').textContent =
-        booking.tokenId || '-';
+    document.getElementById('summaryToken').textContent = booking.tokenId || '-';
 
     const qrElement = document.getElementById('qrcode');
     qrElement.innerHTML = '';
 
     if (!window.QRCode || !booking.tokenId) {
-        qrElement.textContent = 'QR library unavailable';
+        qrElement.textContent = t('errQR');
         return;
     }
 
@@ -550,6 +1205,12 @@ function renderSavedBooking(booking) {
     });
 }
 
+function getOptionLabel(selectId, value) {
+    const select = document.getElementById(selectId);
+    const option = Array.from(select.options).find(item => item.value === value);
+    return option ? option.textContent : (value || '-');
+}
+
 // ======================================================
 // CONFIRM BOOKING
 // ======================================================
@@ -560,19 +1221,19 @@ function handleSlotBooking(event) {
     const mandiKey = document.getElementById('mandiSelect').value;
 
     if (!mandiKey) {
-        alert('Please select an APMC mandi.');
+        alert(t('errSelectMandi'));
         return;
     }
 
-    // This is a browser-only prototype flag, not secure authentication.
+    // This browser-only flag is not secure authentication.
     if (localStorage.getItem('kd_farmer_verified') !== 'true') {
-        alert('Please complete the Farmer Portal verification steps first.');
+        alert(t('errVerification'));
         window.location.href = 'index.html';
         return;
     }
 
     if (isMandiLocked(mandiKey)) {
-        alert('This mandi is temporarily locked by the Admin.');
+        alert(t('errLocked'));
         return;
     }
 
@@ -583,12 +1244,12 @@ function handleSlotBooking(event) {
     const inputTons = Number(document.getElementById('quantityInput').value);
 
     if (!commodity || !vehicle || !slotKey) {
-        alert('Please select commodity, vehicle, and arrival slot.');
+        alert(t('errSelections'));
         return;
     }
 
     if (!Number.isFinite(inputTons) || inputTons <= 0) {
-        alert('Please enter a valid quantity in tons.');
+        alert(t('errQuantity'));
         return;
     }
 
@@ -597,30 +1258,25 @@ function handleSlotBooking(event) {
     const existing = getStoredBooking();
 
     if (capacity <= 0) {
-        alert('This mandi has zero capacity. The Admin must set a positive capacity before booking.');
+        alert(t('errZeroCapacity'));
         return;
     }
 
-    // Exclude the existing reservation only when it belongs to this mandi.
     const existingQuantityAtThisMandi =
         existing && existing.mandiKey === mandiKey
             ? Math.max(0, Number(existing.quantity) || 0)
             : 0;
 
-    const effectiveBooked = Math.max(
-        0,
-        currentBooked - existingQuantityAtThisMandi
-    );
+    const effectiveBooked = Math.max(0, currentBooked - existingQuantityAtThisMandi);
 
     if (effectiveBooked + inputTons > capacity) {
         const available = Math.max(0, capacity - effectiveBooked);
-        alert(`Requested quantity exceeds available capacity. Available: ${available} tons.`);
+        alert(t('errCapacity', {available}));
         return;
     }
 
     const mandiSelect = document.getElementById('mandiSelect');
-    const mandiName =
-        mandiSelect.options[mandiSelect.selectedIndex].text;
+    const mandiName = mandiSelect.options[mandiSelect.selectedIndex].text;
 
     const sameMandiBooking = existing && existing.mandiKey === mandiKey;
 
@@ -643,8 +1299,6 @@ function handleSlotBooking(event) {
             : new Date().toISOString()
     };
 
-    // Update the previous mandi total if the farmer moves the booking.
-    // This prevents the old reservation from remaining counted there.
     if (existing && existing.mandiKey && existing.mandiKey !== mandiKey) {
         const oldMandiKey = existing.mandiKey;
         const oldBooked = getMandiBookedTons(oldMandiKey);
@@ -660,7 +1314,6 @@ function handleSlotBooking(event) {
         ? Math.max(0, currentBooked - existingQuantityAtThisMandi + inputTons)
         : currentBooked + inputTons;
 
-    // Save reservation totals and booking details.
     localStorage.setItem(`kd_booked_${mandiKey}`, String(updatedBooked));
     localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
 
@@ -672,7 +1325,6 @@ function handleSlotBooking(event) {
 
     renderSavedBooking(booking);
     document.getElementById('qrModal').classList.remove('hidden');
-
     refreshMandiCapacity(mandiKey);
 }
 
@@ -687,124 +1339,15 @@ function closeModal() {
 function switchRole() {
     const mandiKey = document.getElementById('mandiSelect').value;
 
-    if (mandiKey) {
-        localStorage.setItem('kd_temp_mandi', mandiKey);
-    }
+    if (mandiKey) localStorage.setItem('kd_temp_mandi', mandiKey);
 
-    localStorage.setItem(
-        'kd_temp_commodity',
-        document.getElementById('commoditySelect').value
-    );
-
-    localStorage.setItem(
-        'kd_temp_vehicle',
-        document.getElementById('vehicleSelect').value
-    );
-
-    localStorage.setItem(
-        'kd_temp_slot',
-        document.getElementById('slotSelect').value
-    );
-
-    localStorage.setItem(
-        'kd_temp_quantity',
-        document.getElementById('quantityInput').value
-    );
+    localStorage.setItem('kd_temp_commodity', document.getElementById('commoditySelect').value);
+    localStorage.setItem('kd_temp_vehicle', document.getElementById('vehicleSelect').value);
+    localStorage.setItem('kd_temp_slot', document.getElementById('slotSelect').value);
+    localStorage.setItem('kd_temp_quantity', document.getElementById('quantityInput').value);
 
     window.location.href = '../index.html';
 }
-</script>
-
-<!-- Automatic translation support for the existing 22-language selector.
-     Requires internet access. -->
-
-<div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-
-<script>
-(function () {
-    const STORAGE_KEY = 'kd_selected_lang';
-
-    const googleCodes = new Set([
-        'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
-        'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
-        'bho', 'raj'
-    ]);
-
-    function setTranslateCookie(lang) {
-        const target = googleCodes.has(lang) ? lang : 'en';
-
-        document.cookie =
-            'googtrans=/en/' + target + ';path=/;SameSite=Lax';
-
-        try {
-            localStorage.setItem(STORAGE_KEY, lang);
-        } catch (error) {
-            console.warn('Unable to save language preference.', error);
-        }
-    }
-
-    window.googleTranslateElementInit = function () {
-        if (
-            !window.google ||
-            !google.translate ||
-            !google.translate.TranslateElement
-        ) {
-            return;
-        }
-
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages:
-                'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-            autoDisplay: false
-        }, 'google_translate_element');
-
-        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-        const combo = document.querySelector('.goog-te-combo');
-
-        if (
-            combo &&
-            lang !== 'en' &&
-            Array.from(combo.options).some(option => option.value === lang)
-        ) {
-            combo.value = lang;
-            combo.dispatchEvent(new Event('change'));
-        }
-    };
-
-    window.kdApplySelectedLanguage = function (lang) {
-        setTranslateCookie(lang);
-        window.location.reload();
-    };
-
-    window.changeLanguage = function () {
-        const select = document.getElementById('langSelect');
-
-        if (select) {
-            window.kdApplySelectedLanguage(select.value);
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const select = document.getElementById('langSelect');
-        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-
-        if (select) {
-            select.value = lang;
-        }
-
-        if (!document.querySelector('script[data-kd-google-translate]')) {
-            const script = document.createElement('script');
-
-            script.src =
-                'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-
-            script.async = true;
-            script.setAttribute('data-kd-google-translate', 'true');
-            document.head.appendChild(script);
-        }
-    });
-})();
 </script>
 
 </body>
