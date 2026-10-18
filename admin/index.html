@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +17,9 @@
                 <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays & Emergency Locks</p>
             </div>
         </div>
+
         <div class="flex items-center gap-3">
-            <select id="langSelect" onchange="localStorage.setItem('kd_selected_lang', this.value)" class="bg-teal-900 text-white text-sm px-3 py-2.5 rounded-2xl border border-teal-700 font-bold">
+            <select id="langSelect" onchange="changeLanguage()" class="bg-teal-900 text-white text-sm px-3 py-2.5 rounded-2xl border border-teal-700 font-bold">
                 <option value="en">English</option>
                 <option value="hi">हिन्दी</option>
                 <option value="mr">मराठी</option>
@@ -41,7 +43,10 @@
                 <option value="bho">भोजपुरी</option>
                 <option value="raj">राजस्थानी</option>
             </select>
-            <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">Switch Role</button>
+
+            <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">
+                Switch Role
+            </button>
         </div>
     </header>
 
@@ -53,8 +58,8 @@
                     <div class="text-xs font-bold text-gray-500 uppercase">Assigned Mandi Jurisdiction</div>
                     <select id="activeAdminYard" onchange="switchAdminYard()" class="bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-2 font-bold text-teal-900 mt-1 cursor-pointer w-full">
                         <option value="pune_main">Pune Main APMC Market Yard</option>
-                        <option value="nashik_grain">Nashik Grain & Vegetable Mandi</option>
-                        <option value="nagpur_cotton">Nagpur Cotton & Grain Yard</option>
+                        <option value="nashik_grain">Nashik Grain &amp; Vegetable Mandi</option>
+                        <option value="nagpur_cotton">Nagpur Cotton &amp; Grain Yard</option>
                         <option value="amravati_grain">Amravati Regional Procurement Center</option>
                     </select>
                 </div>
@@ -63,7 +68,7 @@
             <div class="flex items-center space-x-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl w-full md:w-auto justify-between">
                 <div>
                     <div class="text-xs font-bold text-teal-800 uppercase">Live Yard Tonnage</div>
-                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">14 / 50 Tons</div>
+                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">0 / 0 Tons</div>
                 </div>
                 <span id="adminYardBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
             </div>
@@ -73,22 +78,38 @@
             <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Capacity & Emergency Lock</h2>
+                        <h2 class="text-lg font-extrabold text-teal-950">Capacity &amp; Emergency Lock</h2>
                         <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full">Safety Control</span>
                     </div>
+
                     <div class="space-y-2">
                         <div class="flex justify-between text-sm font-bold text-gray-700">
                             <span>Adjust Daily Tonnage Limit:</span>
-                            <span id="currentCapVal" class="text-teal-800 font-black">50 Tons</span>
+                            <span id="currentCapVal" class="text-teal-800 font-black">0 Tons</span>
                         </div>
-                        <input type="range" id="adminCapSlider" min="10" max="100" value="50" oninput="updateYardCapacity(this.value)" class="w-full accent-teal-600 cursor-pointer">
+
+                        <input
+                            type="range"
+                            id="adminCapSlider"
+                            min="0"
+                            max="100"
+                            step="1"
+                            value="0"
+                            oninput="updateYardCapacity(this.value)"
+                            class="w-full accent-teal-600 cursor-pointer"
+                            aria-label="Adjust daily tonnage capacity"
+                        >
+
+                        <p class="text-xs text-gray-500">Set capacity to 0 Tons to block new bookings for this yard.</p>
                     </div>
                 </div>
+
                 <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
                     <div>
                         <div class="text-sm font-extrabold text-gray-800">Instant Booking Shutdown</div>
                         <div class="text-xs text-gray-500">Halts all incoming farmer slot tokens.</div>
                     </div>
+
                     <button type="button" id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl transition cursor-pointer">
                         Halt Yard 🛑
                     </button>
@@ -98,12 +119,14 @@
             <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Break & Slowdown Delay Manager</h2>
+                        <h2 class="text-lg font-extrabold text-teal-950">Break &amp; Slowdown Delay Manager</h2>
                         <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Time Shift</span>
                     </div>
+
                     <p class="text-xs text-gray-600">Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.</p>
+
                     <div class="space-y-2">
-                        <label class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
+                        <label for="delayBufferSelect" class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
                         <select id="delayBufferSelect" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm font-bold cursor-pointer">
                             <option value="0">No Delay (0 Minutes)</option>
                             <option value="15">Shift Slots by +15 Minutes</option>
@@ -112,6 +135,7 @@
                         </select>
                     </div>
                 </div>
+
                 <button type="button" onclick="applyTimeDelay()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-3 rounded-xl transition cursor-pointer">
                     Broadcast Slot Delay to Farmers ⏰
                 </button>
@@ -119,146 +143,275 @@
         </div>
     </main>
 
+    <footer class="text-center py-4 text-xs text-gray-500">
+        KrishiDhara 2.0 • APMC Administration
+    </footer>
+
     <script>
+        const YARDS = [
+            'pune_main',
+            'nashik_grain',
+            'nagpur_cotton',
+            'amravati_grain'
+        ];
+
+        function getSelectedYard() {
+            const select = document.getElementById('activeAdminYard');
+            return YARDS.includes(select.value) ? select.value : 'pune_main';
+        }
+
+        function readNonNegativeNumber(key, fallback = 0) {
+            const raw = localStorage.getItem(key);
+
+            // An explicitly saved zero is a valid value. Only a missing or
+            // invalid value should use the fallback.
+            if (raw === null || raw.trim() === '') return fallback;
+
+            const value = Number(raw);
+            return Number.isFinite(value) && value >= 0 ? value : fallback;
+        }
+
         function switchAdminYard() {
-            const yard = document.getElementById('activeAdminYard').value;
+            const yard = getSelectedYard();
             localStorage.setItem('kd_selected_admin_yard', yard);
             loadYardState();
         }
 
         function loadYardState() {
-            const yard = document.getElementById('activeAdminYard').value || 'pune_main';
+            const yard = getSelectedYard();
             document.getElementById('activeAdminYard').value = yard;
 
-            const isLocked = localStorage.getItem(`kd_lock_${yard}`) === 'true';
-            
-            // Sync fallback capacity with farmer defaults
-            const defaultCap = yard === 'nashik_grain' ? '60' : (yard === 'nagpur_cotton' ? '40' : (yard === 'amravati_grain' ? '30' : '50'));
-            const capacity = localStorage.getItem(`kd_cap_${yard}`) || defaultCap;
-            const booked = localStorage.getItem(`kd_booked_${yard}`) || '14';
+            const capacity = Math.min(
+                100,
+                readNonNegativeNumber(`kd_cap_${yard}`, 0)
+            );
 
-            document.getElementById('adminCapSlider').value = capacity;
-            document.getElementById('currentCapVal').textContent = `${capacity} Tons`;
-            document.getElementById('adminYardTonnage').textContent = `${booked} / ${capacity} Tons`;
+            const booked = readNonNegativeNumber(`kd_booked_${yard}`, 0);
+            const isLocked = localStorage.getItem(`kd_lock_${yard}`) === 'true';
+
+            const slider = document.getElementById('adminCapSlider');
+            slider.value = capacity;
+
+            document.getElementById('currentCapVal').textContent =
+                `${capacity} Tons`;
+
+            document.getElementById('adminYardTonnage').textContent =
+                `${booked} / ${capacity} Tons`;
 
             const btnLock = document.getElementById('btnAdminLock');
             const badge = document.getElementById('adminYardBadge');
 
             if (isLocked) {
-                btnLock.textContent = "Resume Yard ▶";
-                btnLock.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer";
-                badge.textContent = "Emergency Locked 🛑";
-                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-red-100 text-red-800 uppercase";
+                btnLock.textContent = 'Resume Yard ▶';
+                btnLock.className =
+                    'bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
+
+                badge.textContent = 'Emergency Locked 🛑';
+                badge.className =
+                    'text-xs font-extrabold px-3 py-1 rounded-full bg-red-100 text-red-800 uppercase';
+            } else if (capacity === 0) {
+                btnLock.textContent = 'Halt Yard 🛑';
+                btnLock.className =
+                    'bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
+
+                badge.textContent = 'Capacity Closed';
+                badge.className =
+                    'text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800 uppercase';
             } else {
-                btnLock.textContent = "Halt Yard 🛑";
-                btnLock.className = "bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer";
-                badge.textContent = "Operational";
-                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase";
+                btnLock.textContent = 'Halt Yard 🛑';
+                btnLock.className =
+                    'bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
+
+                badge.textContent = 'Operational';
+                badge.className =
+                    'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase';
             }
 
-            const currentDelay = localStorage.getItem(`kd_delay_${yard}`) || '0';
-            document.getElementById('delayBufferSelect').value = currentDelay;
+            const savedDelay = localStorage.getItem(`kd_delay_${yard}`);
+            const validDelays = ['0', '15', '30', '60'];
+            document.getElementById('delayBufferSelect').value =
+                validDelays.includes(savedDelay) ? savedDelay : '0';
         }
 
-        function updateYardCapacity(val) {
-            const yard = document.getElementById('activeAdminYard').value;
-            document.getElementById('currentCapVal').textContent = `${val} Tons`;
-            localStorage.setItem(`kd_cap_${yard}`, val);
+        function updateYardCapacity(value) {
+            const yard = getSelectedYard();
+            const capacity = Number(value);
+
+            if (!Number.isFinite(capacity) || capacity < 0 || capacity > 100) {
+                return;
+            }
+
+            localStorage.setItem(`kd_cap_${yard}`, String(capacity));
             loadYardState();
         }
 
         function toggleYardLock() {
-            const yard = document.getElementById('activeAdminYard').value;
+            const yard = getSelectedYard();
             const currentLock = localStorage.getItem(`kd_lock_${yard}`) === 'true';
-            const newLockState = !currentLock;
 
-            localStorage.setItem(`kd_lock_${yard}`, newLockState);
+            localStorage.setItem(`kd_lock_${yard}`, String(!currentLock));
             loadYardState();
         }
 
         function applyTimeDelay() {
-            const yard = document.getElementById('activeAdminYard').value;
-            const buffer = document.getElementById('delayBufferSelect').value;
-            localStorage.setItem(`kd_delay_${yard}`, buffer);
-            localStorage.setItem('kd_last_delay_update', JSON.stringify({ yard, buffer: Number(buffer), updatedAt: new Date().toISOString() }));
-            // Persist the latest buffer in the saved booking too; the Farmer portal recalculates its token on return.
-            try {
-                const booking = JSON.parse(localStorage.getItem('kd_farmer_booking') || 'null');
-                if (booking && booking.mandiKey === yard) {
-                    booking.currentBuffer = Number(buffer);
-                    localStorage.setItem('kd_farmer_booking', JSON.stringify(booking));
-                }
-            } catch (_) {}
-            loadYardState();
-            alert(`Success! A +${buffer} minutes arrival shift buffer has been broadcasted for ${yard}.`);
-        }
+            const yard = getSelectedYard();
+            const buffer = Number(document.getElementById('delayBufferSelect').value);
+            const allowedBuffers = [0, 15, 30, 60];
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const lang = document.getElementById('langSelect');
-            if (lang) lang.value = localStorage.getItem('kd_selected_lang') || 'en';
-            const savedYard = localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
-            document.getElementById('activeAdminYard').value = savedYard;
+            if (!allowedBuffers.includes(buffer)) {
+                alert('Please select a valid delay buffer.');
+                return;
+            }
+
+            localStorage.setItem(`kd_delay_${yard}`, String(buffer));
+            localStorage.setItem(
+                'kd_last_delay_update',
+                JSON.stringify({
+                    yard,
+                    buffer,
+                    updatedAt: new Date().toISOString()
+                })
+            );
+
+            // Update the saved booking's buffer when it belongs to this yard.
+            try {
+                const booking = JSON.parse(
+                    localStorage.getItem('kd_farmer_booking') || 'null'
+                );
+
+                if (booking && booking.mandiKey === yard) {
+                    booking.currentBuffer = buffer;
+                    localStorage.setItem(
+                        'kd_farmer_booking',
+                        JSON.stringify(booking)
+                    );
+                }
+            } catch (error) {
+                console.warn('Could not update the saved farmer booking buffer.', error);
+            }
+
             loadYardState();
-        });
+            alert(
+                `Success! A +${buffer} minute arrival shift buffer has been saved for ${yard}.`
+            );
+        }
 
         function switchRole() {
             window.location.href = '../index.html';
         }
-    </script>
-\n<!-- Automatic translation support for languages without a local dictionary. Requires internet access. -->
-<div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-<script>
-(function () {
-  const STORAGE_KEY = 'kd_selected_lang';
-  // Google Translate language codes. Unsupported codes remain selectable, but may not be translated by Google.
-  const googleCodes = new Set(['en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj']);
-  function setTranslateCookie(lang) {
-    const target = googleCodes.has(lang) ? lang : 'en';
-    const value = '/en/' + target;
-    document.cookie = 'googtrans=' + value + ';path=/;SameSite=Lax';
-    // GitHub Pages may use a subdomain; a host-only cookie is also set above.
-    try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
-  }
-  window.googleTranslateElementInit = function () {
-    if (!window.google || !google.translate || !google.translate.TranslateElement) return;
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-      autoDisplay: false
-    }, 'google_translate_element');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo && lang !== 'en' && Array.from(combo.options).some(o => o.value === lang)) {
-      combo.value = lang;
-      combo.dispatchEvent(new Event('change'));
-    }
-  };
-  window.kdApplySelectedLanguage = function (lang) {
-    setTranslateCookie(lang);
-    // Reload lets Google Translate apply the saved language consistently to static and dynamic UI.
-    window.location.reload();
-  };
-  // Keep the existing language selector, but route its choice through the translation engine.
-  window.changeLanguage = function () {
-    const select = document.getElementById('langSelect');
-    if (select) window.kdApplySelectedLanguage(select.value);
-  };
-  document.addEventListener('DOMContentLoaded', function () {
-    const select = document.getElementById('langSelect');
-    const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-    if (select) select.value = lang;
-    if (!document.querySelector('script[data-kd-google-translate]')) {
-      const script = document.createElement('script');
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      script.setAttribute('data-kd-google-translate', 'true');
-      document.head.appendChild(script);
-    }
-  });
-})();
-</script>
 
+        window.addEventListener('DOMContentLoaded', () => {
+            const lang = document.getElementById('langSelect');
+            const savedLang = localStorage.getItem('kd_selected_lang') || 'en';
+
+            if (lang) lang.value = savedLang;
+
+            const savedYard = localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
+            document.getElementById('activeAdminYard').value =
+                YARDS.includes(savedYard) ? savedYard : 'pune_main';
+
+            loadYardState();
+        });
+
+        // Keep the admin yard display in sync when another portal changes
+        // the shared storage keys in a different tab.
+        window.addEventListener('storage', event => {
+            if (
+                event.key === null ||
+                event.key === 'kd_selected_admin_yard' ||
+                event.key.startsWith('kd_cap_') ||
+                event.key.startsWith('kd_booked_') ||
+                event.key.startsWith('kd_lock_') ||
+                event.key.startsWith('kd_delay_')
+            ) {
+                loadYardState();
+            }
+        });
+    </script>
+
+    <!-- Automatic translation support for all 22 selectable languages. -->
+    <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+
+    <script>
+    (function () {
+        const STORAGE_KEY = 'kd_selected_lang';
+
+        const googleCodes = new Set([
+            'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
+            'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
+            'bho', 'raj'
+        ]);
+
+        function setTranslateCookie(lang) {
+            const target = googleCodes.has(lang) ? lang : 'en';
+
+            document.cookie =
+                'googtrans=/en/' + target + ';path=/;SameSite=Lax';
+
+            try {
+                localStorage.setItem(STORAGE_KEY, lang);
+            } catch (error) {
+                console.warn('Could not save language preference.', error);
+            }
+        }
+
+        window.googleTranslateElementInit = function () {
+            if (
+                !window.google ||
+                !google.translate ||
+                !google.translate.TranslateElement
+            ) {
+                return;
+            }
+
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages:
+                    'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+            const combo = document.querySelector('.goog-te-combo');
+
+            if (
+                combo &&
+                lang !== 'en' &&
+                Array.from(combo.options).some(option => option.value === lang)
+            ) {
+                combo.value = lang;
+                combo.dispatchEvent(new Event('change'));
+            }
+        };
+
+        window.kdApplySelectedLanguage = function (lang) {
+            setTranslateCookie(lang);
+            window.location.reload();
+        };
+
+        window.changeLanguage = function () {
+            const select = document.getElementById('langSelect');
+            if (select) {
+                window.kdApplySelectedLanguage(select.value);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('langSelect');
+            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+            if (select) select.value = lang;
+
+            if (!document.querySelector('script[data-kd-google-translate]')) {
+                const script = document.createElement('script');
+                script.src =
+                    'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.async = true;
+                script.setAttribute('data-kd-google-translate', 'true');
+                document.head.appendChild(script);
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
-
-Admin/index.html
