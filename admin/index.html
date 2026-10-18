@@ -1,467 +1,526 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiDhara 2.0 - APMC Admin Portal</title>
+    <title>KrishiDhara 2.0 - Agricultural Procurement & Queue Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
 
-<body class="bg-gradient-to-br from-teal-50 via-slate-50 to-emerald-100 min-h-screen font-sans flex flex-col justify-between p-6 md:p-12">
-
-    <header class="bg-teal-800 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
-        <div class="flex items-center space-x-3">
-            <span class="text-4xl">📊</span>
+    <header class="bg-green-700 text-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-center max-w-6xl w-full mx-auto gap-4">
+        <div class="flex items-center space-x-4">
+            <span class="text-4xl">🌾</span>
             <div>
-                <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • APMC Admin Portal</h1>
-                <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays &amp; Emergency Locks</p>
+                <h1 class="text-xl md:text-2xl font-black tracking-wide" data-translate="app_title">KrishiDhara 2.0</h1>
+                <p class="text-sm text-green-200 font-medium" data-translate="app_subtitle">Smart Procurement & Queue Management System</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
-            <select id="langSelect" onchange="changeLanguage()" class="bg-teal-900 text-white text-sm px-3 py-2.5 rounded-2xl border border-teal-700 font-bold">
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-                <option value="mr">मराठी</option>
-                <option value="pa">ਪੰਜਾਬੀ</option>
-                <option value="gu">ગુજરાતી</option>
-                <option value="bn">বাংলা</option>
-                <option value="te">తెలుగు</option>
-                <option value="ta">தமிழ்</option>
-                <option value="kn">ಕನ್ನಡ</option>
-                <option value="ml">മലയാളം</option>
-                <option value="or">ଓଡ଼ିଆ</option>
-                <option value="as">অসমীয়া</option>
-                <option value="ur">اردو</option>
-                <option value="sa">संस्कृतम्</option>
-                <option value="ne">नेपाली</option>
-                <option value="sd">سنڌي</option>
-                <option value="ks">कॉशुर</option>
-                <option value="doi">डोगरी</option>
-                <option value="mni">মৈতৈলোন্</option>
-                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
-                <option value="bho">भोजपुरी</option>
-                <option value="raj">राजस्थानी</option>
+        <div class="flex items-center space-x-3 bg-green-800 px-4 py-2.5 rounded-2xl border border-green-600 shadow-inner">
+            <span class="text-lg">🌐</span>
+            <select id="langSelect" onchange="changeLanguage()" aria-label="Select language" class="bg-transparent text-white text-sm md:text-base font-bold focus:outline-none cursor-pointer">
+                <option value="en" class="text-black">English</option>
+                <option value="hi" class="text-black">हिन्दी (Hindi)</option>
+                <option value="mr" class="text-black">मराठी (Marathi)</option>
+                <option value="pa" class="text-black">ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="gu" class="text-black">ગુજરાતી (Gujarati)</option>
+                <option value="bn" class="text-black">বাংলা (Bengali)</option>
+                <option value="te" class="text-black">తెలుగు (Telugu)</option>
+                <option value="ta" class="text-black">தமிழ் (Tamil)</option>
+                <option value="kn" class="text-black">ಕನ್ನಡ (Kannada)</option>
+                <option value="ml" class="text-black">മലയാളം (Malayalam)</option>
+                <option value="or" class="text-black">ଓଡ଼ିଆ (Odia)</option>
+                <option value="as" class="text-black">অসমীয়া (Assamese)</option>
+                <option value="ur" class="text-black">اردو (Urdu)</option>
+                <option value="sa" class="text-black">संस्कृतम् (Sanskrit)</option>
+                <option value="ne" class="text-black">नेपाली (Nepali)</option>
+                <option value="sd" class="text-black">سنڌي (Sindhi)</option>
+                <option value="ks" class="text-black">कॉशुर (Kashmiri)</option>
+                <option value="doi" class="text-black">डोगरी (Dogri)</option>
+                <option value="mni" class="text-black">মৈতৈলোন্ (Manipuri)</option>
+                <option value="sat" class="text-black">संताली (Santali)</option>
+                <option value="bho" class="text-black">भोजपुरी (Bhojpuri)</option>
+                <option value="raj" class="text-black">राजस्थानी (Rajasthani)</option>
             </select>
-
-            <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">
-                Switch Role
-            </button>
         </div>
     </header>
 
-    <main class="w-full max-w-6xl mx-auto my-8 space-y-8">
-        <div class="bg-white p-6 rounded-3xl shadow-lg border-2 border-teal-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3 w-full md:w-auto">
-                <span class="text-2xl">🏬</span>
-                <div>
-                    <div class="text-xs font-bold text-gray-500 uppercase">Assigned Mandi Jurisdiction</div>
-                    <select id="activeAdminYard" onchange="switchAdminYard()" class="bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-2 font-bold text-teal-900 mt-1 cursor-pointer w-full">
-                        <option value="pune_main">Pune Main APMC Market Yard</option>
-                        <option value="nashik_grain">Nashik Grain &amp; Vegetable Mandi</option>
-                        <option value="nagpur_cotton">Nagpur Cotton &amp; Grain Yard</option>
-                        <option value="amravati_grain">Amravati Regional Procurement Center</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex items-center space-x-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl w-full md:w-auto justify-between">
-                <div>
-                    <div class="text-xs font-bold text-teal-800 uppercase">Live Yard Tonnage</div>
-                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">0 / 50 Tons</div>
-                </div>
-                <span id="adminYardBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
-            </div>
+    <main class="w-full max-w-6xl mx-auto my-10 space-y-8">
+        <div class="text-center space-y-3">
+            <h2 id="mainTitle" class="text-3xl md:text-4xl font-extrabold text-green-900" data-translate="select_portal">Select Your Portal</h2>
+            <p id="mainSubtitle" class="text-base md:text-lg text-gray-700 max-w-2xl mx-auto" data-translate="select_subtitle">Choose your role to access secure queue management and procurement tools.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div onclick="selectRole('farmer')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('farmer')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-green-200 hover:border-green-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
                 <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Capacity &amp; Emergency Lock</h2>
-                        <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full">Safety Control</span>
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm font-bold text-gray-700">
-                            <span>Adjust Daily Tonnage Limit:</span>
-                            <span id="currentCapVal" class="text-teal-800 font-black">50 Tons</span>
-                        </div>
-
-                        <input
-                            type="range"
-                            id="adminCapSlider"
-                            min="0"
-                            max="100"
-                            step="1"
-                            value="50"
-                            oninput="updateYardCapacity(this.value)"
-                            class="w-full accent-teal-600 cursor-pointer"
-                            aria-label="Adjust daily tonnage capacity"
-                        >
-
-                        <p class="text-xs text-gray-500">Set capacity to 0 Tons to block new bookings for this yard.</p>
-                    </div>
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">👨‍🌾</div>
+                    <h3 class="text-xl md:text-2xl font-extrabold text-green-900" data-translate="farmer_title">Farmer Portal</h3>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="farmer_desc">Book a procurement slot, enter crop details, complete Aadhaar verification, and generate an offline QR token.</p>
                 </div>
-
-                <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-extrabold text-gray-800">Instant Booking Shutdown</div>
-                        <div class="text-xs text-gray-500">Halts all incoming farmer slot tokens.</div>
-                    </div>
-
-                    <button type="button" id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl transition cursor-pointer">
-                        Halt Yard 🛑
-                    </button>
+                <div class="text-sm md:text-base font-bold text-green-700 flex items-center space-x-2">
+                    <span data-translate="enter_portal">Open Portal</span>
+                    <span class="text-lg">→</span>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
+            <div onclick="selectRole('officer')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('officer')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-200 hover:border-emerald-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
                 <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Break &amp; Slowdown Delay Manager</h2>
-                        <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Time Shift</span>
-                    </div>
-
-                    <p class="text-xs text-gray-600">Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.</p>
-
-                    <div class="space-y-2">
-                        <label for="delayBufferSelect" class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
-                        <select id="delayBufferSelect" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm font-bold cursor-pointer">
-                            <option value="0">No Delay (0 Minutes)</option>
-                            <option value="15">Shift Slots by +15 Minutes</option>
-                            <option value="30">Shift Slots by +30 Minutes (Lunch)</option>
-                            <option value="60">Shift Slots by +60 Minutes (Maintenance)</option>
-                        </select>
-                    </div>
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">🛡️</div>
+                    <h3 class="text-xl md:text-2xl font-extrabold text-emerald-900" data-translate="officer_title">Yard Officer Portal</h3>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="officer_desc">Manage gate entry, scan QR codes, record arrivals, and verify crop and weight details.</p>
                 </div>
+                <div class="text-sm md:text-base font-bold text-emerald-700 flex items-center space-x-2">
+                    <span data-translate="enter_portal">Open Portal</span>
+                    <span class="text-lg">→</span>
+                </div>
+            </div>
 
-                <button type="button" onclick="applyTimeDelay()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-3 rounded-xl transition cursor-pointer">
-                    Broadcast Slot Delay to Farmers ⏰
-                </button>
+            <div onclick="selectRole('admin')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('admin')}" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 hover:border-teal-600 hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-6 group">
+                <div class="space-y-4">
+                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition">📊</div>
+                    <h3 class="text-xl md:text-2xl font-extrabold text-teal-900" data-translate="admin_title">APMC Admin Portal</h3>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-translate="admin_desc">Manage mandi capacity, stop operations in emergencies, monitor traffic, and redirect arrivals when needed.</p>
+                </div>
+                <div class="text-sm md:text-base font-bold text-teal-700 flex items-center space-x-2">
+                    <span data-translate="enter_portal">Open Portal</span>
+                    <span class="text-lg">→</span>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer class="text-center py-4 text-xs text-gray-500">
-        KrishiDhara 2.0 • APMC Administration
+    <footer class="text-center py-4 text-xs md:text-sm text-gray-600 border-t bg-white/60 rounded-2xl max-w-6xl w-full mx-auto font-medium" data-translate="footer_text">
+        KrishiDhara 2.0 • Live Demonstration Build
     </footer>
 
     <script>
-        const YARDS = [
-            'pune_main',
-            'nashik_grain',
-            'nagpur_cotton',
-            'amravati_grain'
-        ];
-
-        const DEFAULT_CAPACITY = 50;
-        const DEFAULT_BOOKED = 0;
-        const MAX_CAPACITY = 100;
-
-        function getSelectedYard() {
-            const select = document.getElementById('activeAdminYard');
-            return YARDS.includes(select.value) ? select.value : 'pune_main';
-        }
-
-        function readNonNegativeNumber(key, fallback = 0) {
-            const raw = localStorage.getItem(key);
-
-            if (raw === null || raw.trim() === '') {
-                return fallback;
-            }
-
-            const value = Number(raw);
-            return Number.isFinite(value) && value >= 0
-                ? value
-                : fallback;
-        }
-
-        // One-time correction for the reported Pune demo state:
-        // if capacity is explicitly 0 but booked tons are nonzero,
-        // reset that inconsistent demo state to 0 / 50.
-        // Other yards and valid saved values are not changed.
-        function repairReportedPuneDemoState() {
-            const capKey = 'kd_cap_pune_main';
-            const bookedKey = 'kd_booked_pune_main';
-
-            const rawCapacity = localStorage.getItem(capKey);
-            const rawBooked = localStorage.getItem(bookedKey);
-
-            if (
-                rawCapacity === '0' &&
-                rawBooked !== null &&
-                Number(rawBooked) > 0
-            ) {
-                localStorage.setItem(capKey, String(DEFAULT_CAPACITY));
-                localStorage.setItem(bookedKey, String(DEFAULT_BOOKED));
-            }
-        }
-
-        function switchAdminYard() {
-            const yard = getSelectedYard();
-            localStorage.setItem('kd_selected_admin_yard', yard);
-            loadYardState();
-        }
-
-        function loadYardState() {
-            const yard = getSelectedYard();
-            document.getElementById('activeAdminYard').value = yard;
-
-            const capacity = Math.min(
-                MAX_CAPACITY,
-                readNonNegativeNumber(`kd_cap_${yard}`, DEFAULT_CAPACITY)
-            );
-
-            const booked = readNonNegativeNumber(
-                `kd_booked_${yard}`,
-                DEFAULT_BOOKED
-            );
-
-            const isLocked =
-                localStorage.getItem(`kd_lock_${yard}`) === 'true';
-
-            const slider = document.getElementById('adminCapSlider');
-            slider.value = capacity;
-
-            document.getElementById('currentCapVal').textContent =
-                `${capacity} Tons`;
-
-            document.getElementById('adminYardTonnage').textContent =
-                `${booked} / ${capacity} Tons`;
-
-            const btnLock = document.getElementById('btnAdminLock');
-            const badge = document.getElementById('adminYardBadge');
-
-            if (isLocked) {
-                btnLock.textContent = 'Resume Yard ▶';
-                btnLock.className =
-                    'bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
-
-                badge.textContent = 'Emergency Locked 🛑';
-                badge.className =
-                    'text-xs font-extrabold px-3 py-1 rounded-full bg-red-100 text-red-800 uppercase';
-            } else if (capacity === 0) {
-                btnLock.textContent = 'Halt Yard 🛑';
-                btnLock.className =
-                    'bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
-
-                badge.textContent = 'Capacity Closed';
-                badge.className =
-                    'text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800 uppercase';
-            } else {
-                btnLock.textContent = 'Halt Yard 🛑';
-                btnLock.className =
-                    'bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl cursor-pointer';
-
-                badge.textContent = 'Operational';
-                badge.className =
-                    'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase';
-            }
-
-            const savedDelay = localStorage.getItem(`kd_delay_${yard}`);
-            const validDelays = ['0', '15', '30', '60'];
-
-            document.getElementById('delayBufferSelect').value =
-                validDelays.includes(savedDelay) ? savedDelay : '0';
-        }
-
-        function updateYardCapacity(value) {
-            const yard = getSelectedYard();
-            const capacity = Number(value);
-
-            if (
-                !Number.isFinite(capacity) ||
-                capacity < 0 ||
-                capacity > MAX_CAPACITY
-            ) {
-                return;
-            }
-
-            localStorage.setItem(`kd_cap_${yard}`, String(capacity));
-            loadYardState();
-        }
-
-        function toggleYardLock() {
-            const yard = getSelectedYard();
-            const currentLock =
-                localStorage.getItem(`kd_lock_${yard}`) === 'true';
-
-            localStorage.setItem(`kd_lock_${yard}`, String(!currentLock));
-            loadYardState();
-        }
-
-        function applyTimeDelay() {
-            const yard = getSelectedYard();
-            const buffer = Number(
-                document.getElementById('delayBufferSelect').value
-            );
-
-            const allowedBuffers = [0, 15, 30, 60];
-
-            if (!allowedBuffers.includes(buffer)) {
-                alert('Please select a valid delay buffer.');
-                return;
-            }
-
-            localStorage.setItem(`kd_delay_${yard}`, String(buffer));
-
-            localStorage.setItem(
-                'kd_last_delay_update',
-                JSON.stringify({
-                    yard,
-                    buffer,
-                    updatedAt: new Date().toISOString()
-                })
-            );
-
-            try {
-                const booking = JSON.parse(
-                    localStorage.getItem('kd_farmer_booking') || 'null'
-                );
-
-                if (booking && booking.mandiKey === yard) {
-                    booking.currentBuffer = buffer;
-
-                    localStorage.setItem(
-                        'kd_farmer_booking',
-                        JSON.stringify(booking)
-                    );
-                }
-            } catch (error) {
-                console.warn(
-                    'Could not update the saved farmer booking buffer.',
-                    error
-                );
-            }
-
-            loadYardState();
-
-            alert(
-                `Success! A +${buffer} minute arrival shift buffer has been saved for ${yard}.`
-            );
-        }
-
-        function switchRole() {
-            window.location.href = '../index.html';
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            repairReportedPuneDemoState();
-
-            const savedLang =
-                localStorage.getItem('kd_selected_lang') || 'en';
-
-            document.getElementById('langSelect').value = savedLang;
-
-            const savedYard =
-                localStorage.getItem('kd_selected_admin_yard') || 'pune_main';
-
-            document.getElementById('activeAdminYard').value =
-                YARDS.includes(savedYard) ? savedYard : 'pune_main';
-
-            loadYardState();
-        });
-
-        window.addEventListener('storage', event => {
-            if (
-                event.key === null ||
-                event.key === 'kd_selected_admin_yard' ||
-                (event.key && event.key.startsWith('kd_cap_')) ||
-                (event.key && event.key.startsWith('kd_booked_')) ||
-                (event.key && event.key.startsWith('kd_lock_')) ||
-                (event.key && event.key.startsWith('kd_delay_'))
-            ) {
-                loadYardState();
-            }
-        });
-    </script>
-
-    <!-- Automatic translation support for all 22 selectable languages. -->
-    <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-
-    <script>
-    (function () {
         const STORAGE_KEY = 'kd_selected_lang';
 
-        const googleCodes = new Set([
-            'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
-            'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
-            'bho', 'raj'
-        ]);
+        /*
+         * Keep the keys in this order.
+         * Each language below supplies one complete, contextual phrase
+         * for each key rather than translating individual words.
+         */
+        const translationKeys = [
+            'app_title',
+            'app_subtitle',
+            'select_portal',
+            'select_subtitle',
+            'farmer_title',
+            'farmer_desc',
+            'officer_title',
+            'officer_desc',
+            'admin_title',
+            'admin_desc',
+            'enter_portal',
+            'footer_text'
+        ];
 
-        function setTranslateCookie(lang) {
-            const target = googleCodes.has(lang) ? lang : 'en';
+        const translationRows = {
+            en: [
+                'KrishiDhara 2.0',
+                'Smart Procurement & Queue Management System',
+                'Select Your Portal',
+                'Choose your role to access secure queue management and procurement tools.',
+                'Farmer Portal',
+                'Book a procurement slot, enter crop details, complete Aadhaar verification, and generate an offline QR token.',
+                'Yard Officer Portal',
+                'Manage gate entry, scan QR codes, record arrivals, and verify crop and weight details.',
+                'APMC Admin Portal',
+                'Manage mandi capacity, stop operations in emergencies, monitor traffic, and redirect arrivals when needed.',
+                'Open Portal',
+                'KrishiDhara 2.0 • Live Demonstration Build'
+            ],
 
-            document.cookie =
-                'googtrans=/en/' + target + ';path=/;SameSite=Lax';
+            hi: [
+                'कृषिधारा 2.0',
+                'स्मार्ट कृषि उपज खरीद और कतार प्रबंधन प्रणाली',
+                'अपना पोर्टल चुनें',
+                'सुरक्षित कतार प्रबंधन और कृषि उपज खरीद की सुविधाओं का उपयोग करने के लिए अपनी भूमिका चुनें।',
+                'किसान पोर्टल',
+                'उपज बेचने के लिए समय-स्लॉट बुक करें, फसल का विवरण भरें, आधार सत्यापन करें और ऑफ़लाइन QR टोकन बनाएँ।',
+                'मंडी अधिकारी पोर्टल',
+                'गेट पर प्रवेश सँभालें, QR कोड स्कैन करें, आवक दर्ज करें और फसल व वजन की जाँच करें।',
+                'APMC प्रशासन पोर्टल',
+                'मंडी की क्षमता नियंत्रित करें, आपात स्थिति में संचालन रोकें, यातायात पर नज़र रखें और ज़रूरत पड़ने पर वाहनों का मार्ग बदलें।',
+                'पोर्टल खोलें',
+                'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
+            ],
+
+            mr: [
+                'कृषिधारा २.०',
+                'स्मार्ट कृषिमाल खरेदी आणि रांग व्यवस्थापन प्रणाली',
+                'तुमचे पोर्टल निवडा',
+                'सुरक्षित रांग व्यवस्थापन आणि कृषिमाल खरेदीची साधने वापरण्यासाठी तुमची भूमिका निवडा.',
+                'शेतकरी पोर्टल',
+                'माल विक्रीसाठी वेळेची स्लॉट बुक करा, पिकाची माहिती भरा, आधार पडताळणी करा आणि ऑफलाइन QR टोकन तयार करा.',
+                'यार्ड अधिकारी पोर्टल',
+                'गेटवरील प्रवेश व्यवस्थापित करा, QR कोड स्कॅन करा, आवक नोंदवा आणि पीक व वजनाची पडताळणी करा.',
+                'APMC प्रशासन पोर्टल',
+                'बाजार आवाराची क्षमता नियंत्रित करा, आणीबाणीच्या वेळी कामकाज थांबवा, वाहतुकीवर लक्ष ठेवा आणि गरजेनुसार वाहनांचा मार्ग बदला.',
+                'पोर्टल उघडा',
+                'कृषिधारा २.० • थेट प्रात्यक्षिक आवृत्ती'
+            ],
+
+            pa: [
+                'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0',
+                'ਸਮਾਰਟ ਖੇਤੀ ਉਪਜ ਖਰੀਦ ਅਤੇ ਕਤਾਰ ਪ੍ਰਬੰਧਨ ਪ੍ਰਣਾਲੀ',
+                'ਆਪਣਾ ਪੋਰਟਲ ਚੁਣੋ',
+                'ਸੁਰੱਖਿਅਤ ਕਤਾਰ ਪ੍ਰਬੰਧਨ ਅਤੇ ਖੇਤੀ ਉਪਜ ਦੀ ਖਰੀਦ ਵਾਲੀਆਂ ਸਹੂਲਤਾਂ ਵਰਤਣ ਲਈ ਆਪਣੀ ਭੂਮਿਕਾ ਚੁਣੋ।',
+                'ਕਿਸਾਨ ਪੋਰਟਲ',
+                'ਫ਼ਸਲ ਵੇਚਣ ਲਈ ਸਮਾਂ-ਸਲਾਟ ਬੁੱਕ ਕਰੋ, ਫ਼ਸਲ ਦਾ ਵੇਰਵਾ ਭਰੋ, ਆਧਾਰ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਆਫ਼ਲਾਈਨ QR ਟੋਕਨ ਬਣਾਓ।',
+                'ਯਾਰਡ ਅਧਿਕਾਰੀ ਪੋਰਟਲ',
+                'ਗੇਟ ਉੱਤੇ ਦਾਖ਼ਲਾ ਸੰਭਾਲੋ, QR ਕੋਡ ਸਕੈਨ ਕਰੋ, ਆਮਦ ਦਰਜ ਕਰੋ ਅਤੇ ਫ਼ਸਲ ਤੇ ਵਜ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ।',
+                'APMC ਪ੍ਰਸ਼ਾਸਨ ਪੋਰਟਲ',
+                'ਮੰਡੀ ਦੀ ਸਮਰੱਥਾ ਨਿਯੰਤਰਿਤ ਕਰੋ, ਐਮਰਜੈਂਸੀ ਵਿੱਚ ਕੰਮ ਰੋਕੋ, ਆਵਾਜਾਈ ਉੱਤੇ ਨਜ਼ਰ ਰੱਖੋ ਅਤੇ ਲੋੜ ਪੈਣ ਤੇ ਵਾਹਨਾਂ ਦਾ ਰਸਤਾ ਬਦਲੋ।',
+                'ਪੋਰਟਲ ਖੋਲ੍ਹੋ',
+                'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • ਲਾਈਵ ਪ੍ਰਦਰਸ਼ਨ ਸੰਸਕਰਣ'
+            ],
+
+            gu: [
+                'કૃષિધારા 2.0',
+                'સ્માર્ટ કૃષિ પેદાશ ખરીદી અને કતાર વ્યવસ્થાપન પ્રણાલી',
+                'તમારું પોર્ટલ પસંદ કરો',
+                'સુરક્ષિત કતાર વ્યવસ્થાપન અને કૃષિ પેદાશની ખરીદી માટે તમારી ભૂમિકા પસંદ કરો.',
+                'ખેડૂત પોર્ટલ',
+                'પેદાશ વેચવા માટે સમય-સ્લોટ બુક કરો, પાકની વિગતો ભરો, આધારની ચકાસણી કરો અને ઑફલાઇન QR ટોકન બનાવો.',
+                'યાર્ડ અધિકારી પોર્ટલ',
+                'ગેટ પર પ્રવેશ સંભાળો, QR કોડ સ્કૅન કરો, આવક નોંધો અને પાક તથા વજનની ચકાસણી કરો.',
+                'APMC વહીવટ પોર્ટલ',
+                'મંડીની ક્ષમતા નિયંત્રિત કરો, કટોકટીમાં કામગીરી રોકો, વાહનવ્યવહાર પર નજર રાખો અને જરૂર પડે ત્યારે વાહનોનો માર્ગ બદલો.',
+                'પોર્ટલ ખોલો',
+                'કૃષિધારા 2.0 • લાઇવ પ્રદર્શન આવૃત્તિ'
+            ],
+
+            bn: [
+                'কৃষিধারা 2.0',
+                'স্মার্ট কৃষিপণ্য সংগ্রহ ও সারি ব্যবস্থাপনা ব্যবস্থা',
+                'আপনার পোর্টাল বেছে নিন',
+                'নিরাপদ সারি ব্যবস্থাপনা ও কৃষিপণ্য সংগ্রহের সুবিধা ব্যবহার করতে আপনার ভূমিকা বেছে নিন।',
+                'কৃষক পোর্টাল',
+                'ফসল বিক্রির সময়-স্লট বুক করুন, ফসলের বিবরণ দিন, আধার যাচাই করুন এবং অফলাইন QR টোকেন তৈরি করুন।',
+                'ইয়ার্ড আধিকারিক পোর্টাল',
+                'গেটে প্রবেশ নিয়ন্ত্রণ করুন, QR কোড স্ক্যান করুন, আগমন নথিভুক্ত করুন এবং ফসল ও ওজন যাচাই করুন।',
+                'APMC প্রশাসন পোর্টাল',
+                'বাজারের ধারণক্ষমতা নিয়ন্ত্রণ করুন, জরুরি অবস্থায় কাজ বন্ধ করুন, যান চলাচল পর্যবেক্ষণ করুন এবং প্রয়োজনে গাড়ির পথ পরিবর্তন করুন।',
+                'পোর্টাল খুলুন',
+                'কৃষিধারা 2.0 • সরাসরি প্রদর্শনী সংস্করণ'
+            ],
+
+            te: [
+                'కృషిధారా 2.0',
+                'స్మార్ట్ వ్యవసాయ ఉత్పత్తుల కొనుగోలు మరియు క్యూ నిర్వహణ వ్యవస్థ',
+                'మీ పోర్టల్‌ను ఎంచుకోండి',
+                'సురక్షిత క్యూ నిర్వహణ మరియు వ్యవసాయ ఉత్పత్తుల కొనుగోలు సేవలను ఉపయోగించడానికి మీ పాత్రను ఎంచుకోండి.',
+                'రైతు పోర్టల్',
+                'పంట విక్రయానికి సమయ స్లాట్ బుక్ చేయండి, పంట వివరాలు నమోదు చేయండి, ఆధార్ ధృవీకరణ పూర్తి చేసి ఆఫ్‌లైన్ QR టోకెన్ రూపొందించండి.',
+                'యార్డ్ అధికారి పోర్టల్',
+                'గేటు ప్రవేశాలను నిర్వహించండి, QR కోడ్‌లను స్కాన్ చేయండి, వచ్చిన వాహనాలను నమోదు చేసి పంట మరియు బరువును తనిఖీ చేయండి.',
+                'APMC నిర్వాహక పోర్టల్',
+                'మార్కెట్ సామర్థ్యాన్ని నియంత్రించండి, అత్యవసర పరిస్థితుల్లో కార్యకలాపాలను నిలిపివేయండి, ట్రాఫిక్‌ను పర్యవేక్షించి అవసరమైతే వాహనాల మార్గాన్ని మార్చండి.',
+                'పోర్టల్ తెరవండి',
+                'కృషిధారా 2.0 • ప్రత్యక్ష ప్రదర్శన సంచిక'
+            ],
+
+            ta: [
+                'கிருஷிதாரா 2.0',
+                'ஸ்மார்ட் வேளாண் விளைபொருள் கொள்முதல் மற்றும் வரிசை மேலாண்மை அமைப்பு',
+                'உங்கள் தளத்தைத் தேர்ந்தெடுக்கவும்',
+                'பாதுகாப்பான வரிசை மேலாண்மை மற்றும் விளைபொருள் கொள்முதல் சேவைகளைப் பயன்படுத்த உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்.',
+                'விவசாயி தளம்',
+                'விளைபொருளை விற்க நேர ஒதுக்கீட்டைப் பதிவு செய்து, பயிர் விவரங்களை உள்ளிட்டு, ஆதார் சரிபார்ப்பை முடித்து, இணையமின்றி QR டோக்கனை உருவாக்கவும்.',
+                'சந்தை அதிகாரி தளம்',
+                'வாயில் நுழைவைக் கையாளவும், QR குறியீடுகளை ஸ்கேன் செய்யவும், வருகைகளைப் பதிவு செய்து பயிர் மற்றும் எடையைச் சரிபார்க்கவும்.',
+                'APMC நிர்வாகத் தளம்',
+                'சந்தையின் கொள்ளளவைக் கட்டுப்படுத்தவும், அவசரநிலையில் செயல்பாடுகளை நிறுத்தவும், போக்குவரத்தைக் கண்காணித்து தேவைப்பட்டால் வாகன வழியை மாற்றவும்.',
+                'தளத்தைத் திறக்கவும்',
+                'கிருஷிதாரா 2.0 • நேரடி செயல்விளக்கப் பதிப்பு'
+            ],
+
+            kn: [
+                'ಕೃಷಿಧಾರಾ 2.0',
+                'ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಉತ್ಪನ್ನ ಖರೀದಿ ಮತ್ತು ಸರದಿ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆ',
+                'ನಿಮ್ಮ ಪೋರ್ಟಲ್ ಆಯ್ಕೆಮಾಡಿ',
+                'ಸುರಕ್ಷಿತ ಸರದಿ ನಿರ್ವಹಣೆ ಮತ್ತು ಕೃಷಿ ಉತ್ಪನ್ನ ಖರೀದಿ ಸೇವೆಗಳನ್ನು ಬಳಸಲು ನಿಮ್ಮ ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+                'ರೈತ ಪೋರ್ಟಲ್',
+                'ಉತ್ಪನ್ನ ಮಾರಾಟಕ್ಕೆ ಸಮಯದ ಸ್ಲಾಟ್ ಕಾಯ್ದಿರಿಸಿ, ಬೆಳೆಯ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ, ಆಧಾರ್ ಪರಿಶೀಲನೆ ಮಾಡಿ ಮತ್ತು ಆಫ್‌ಲೈನ್ QR ಟೋಕನ್ ರಚಿಸಿ.',
+                'ಯಾರ್ಡ್ ಅಧಿಕಾರಿ ಪೋರ್ಟಲ್',
+                'ಗೇಟ್ ಪ್ರವೇಶವನ್ನು ನಿರ್ವಹಿಸಿ, QR ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ, ಆಗಮನಗಳನ್ನು ದಾಖಲಿಸಿ ಮತ್ತು ಬೆಳೆ ಹಾಗೂ ತೂಕವನ್ನು ಪರಿಶೀಲಿಸಿ.',
+                'APMC ಆಡಳಿತ ಪೋರ್ಟಲ್',
+                'ಮಾರುಕಟ್ಟೆಯ ಸಾಮರ್ಥ್ಯವನ್ನು ನಿಯಂತ್ರಿಸಿ, ತುರ್ತು ಸಂದರ್ಭದಲ್ಲಿ ಕಾರ್ಯಾಚರಣೆ ನಿಲ್ಲಿಸಿ, ಸಂಚಾರ ಗಮನಿಸಿ ಮತ್ತು ಅಗತ್ಯವಿದ್ದರೆ ವಾಹನಗಳ ಮಾರ್ಗ ಬದಲಿಸಿ.',
+                'ಪೋರ್ಟಲ್ ತೆರೆಯಿರಿ',
+                'ಕೃಷಿಧಾರಾ 2.0 • ನೇರ ಪ್ರದರ್ಶನ ಆವೃತ್ತಿ'
+            ],
+
+            ml: [
+                'കൃഷിധാര 2.0',
+                'സ്മാർട്ട് കാർഷിക ഉൽപ്പന്ന സംഭരണവും ക്യൂ മാനേജ്മെന്റ് സംവിധാനവും',
+                'നിങ്ങളുടെ പോർട്ടൽ തിരഞ്ഞെടുക്കുക',
+                'സുരക്ഷിതമായ ക്യൂ മാനേജ്മെന്റും കാർഷിക ഉൽപ്പന്ന സംഭരണ സേവനങ്ങളും ഉപയോഗിക്കാൻ നിങ്ങളുടെ പങ്ക് തിരഞ്ഞെടുക്കുക.',
+                'കർഷക പോർട്ടൽ',
+                'വിള വിൽക്കാനുള്ള സമയ സ്ലോട്ട് ബുക്ക് ചെയ്യുക, വിളവിവരങ്ങൾ നൽകുക, ആധാർ പരിശോധന പൂർത്തിയാക്കി ഓഫ്‌ലൈൻ QR ടോക്കൺ സൃഷ്ടിക്കുക.',
+                'യാർഡ് ഓഫീസർ പോർട്ടൽ',
+                'ഗേറ്റ് പ്രവേശനം നിയന്ത്രിക്കുക, QR കോഡുകൾ സ്കാൻ ചെയ്യുക, വരവ് രേഖപ്പെടുത്തുക, വിളയും ഭാരവും പരിശോധിക്കുക.',
+                'APMC അഡ്മിൻ പോർട്ടൽ',
+                'മാർക്കറ്റിന്റെ ശേഷി നിയന്ത്രിക്കുക, അടിയന്തര സാഹചര്യങ്ങളിൽ പ്രവർത്തനം നിർത്തുക, ഗതാഗതം നിരീക്ഷിക്കുക, ആവശ്യമെങ്കിൽ വാഹനങ്ങളുടെ വഴി മാറ്റുക.',
+                'പോർട്ടൽ തുറക്കുക',
+                'കൃഷിധാര 2.0 • തത്സമയ പ്രദർശന പതിപ്പ്'
+            ],
+
+            or: [
+                'କୃଷିଧାରା 2.0',
+                'ସ୍ମାର୍ଟ କୃଷି ଉତ୍ପାଦ କ୍ରୟ ଓ ଧାଡ଼ି ପରିଚାଳନା ବ୍ୟବସ୍ଥା',
+                'ଆପଣଙ୍କ ପୋର୍ଟାଲ୍ ବାଛନ୍ତୁ',
+                'ସୁରକ୍ଷିତ ଧାଡ଼ି ପରିଚାଳନା ଓ କୃଷି ଉତ୍ପାଦ କ୍ରୟ ସେବା ବ୍ୟବହାର କରିବାକୁ ନିଜ ଭୂମିକା ବାଛନ୍ତୁ।',
+                'କୃଷକ ପୋର୍ଟାଲ୍',
+                'ଫସଲ ବିକ୍ରି ପାଇଁ ସମୟ ସ୍ଲଟ୍ ବୁକ୍ କରନ୍ତୁ, ଫସଲ ବିବରଣୀ ଦିଅନ୍ତୁ, ଆଧାର ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ଅଫ୍‌ଲାଇନ୍ QR ଟୋକନ୍ ତିଆରି କରନ୍ତୁ।',
+                'ୟାର୍ଡ ଅଧିକାରୀ ପୋର୍ଟାଲ୍',
+                'ଗେଟ୍ ପ୍ରବେଶ ପରିଚାଳନା କରନ୍ତୁ, QR କୋଡ୍ ସ୍କାନ୍ କରନ୍ତୁ, ଆଗମନ ଲେଖନ୍ତୁ ଏବଂ ଫସଲ ଓ ଓଜନ ଯାଞ୍ଚ କରନ୍ତୁ।',
+                'APMC ପ୍ରଶାସନ ପୋର୍ଟାଲ୍',
+                'ମଣ୍ଡିର କ୍ଷମତା ନିୟନ୍ତ୍ରଣ କରନ୍ତୁ, ଜରୁରୀ ସମୟରେ କାର୍ଯ୍ୟ ବନ୍ଦ କରନ୍ତୁ, ଯାତାୟାତ ନିରୀକ୍ଷଣ କରନ୍ତୁ ଏବଂ ଆବଶ୍ୟକ ହେଲେ ଗାଡ଼ିର ରାସ୍ତା ବଦଳାନ୍ତୁ।',
+                'ପୋର୍ଟାଲ୍ ଖୋଲନ୍ତୁ',
+                'କୃଷିଧାରା 2.0 • ସିଧାସଳଖ ପ୍ରଦର୍ଶନ ସଂସ୍କରଣ'
+            ],
+
+            as: [
+                'কৃষিধাৰা 2.0',
+                'স্মাৰ্ট কৃষিজাত সামগ্ৰী ক্ৰয় আৰু শাৰী ব্যৱস্থাপনা ব্যৱস্থা',
+                'আপোনাৰ প’ৰ্টেল বাছনি কৰক',
+                'সুৰক্ষিত শাৰী ব্যৱস্থাপনা আৰু কৃষিজাত সামগ্ৰী ক্ৰয়ৰ সুবিধা ব্যৱহাৰ কৰিবলৈ নিজৰ ভূমিকা বাছনি কৰক।',
+                'কৃষক প’ৰ্টেল',
+                'শস্য বিক্ৰীৰ বাবে সময়ৰ স্লট বুক কৰক, শস্যৰ বিৱৰণ দিয়ক, আধাৰ পৰীক্ষা সম্পূৰ্ণ কৰক আৰু অফলাইন QR টোকেন সৃষ্টি কৰক।',
+                'য়াৰ্ড বিষয়া প’ৰ্টেল',
+                'গেটৰ প্ৰৱেশ নিয়ন্ত্ৰণ কৰক, QR কোড স্কেন কৰক, আগমন লিপিবদ্ধ কৰক আৰু শস্য তথা ওজন পৰীক্ষা কৰক।',
+                'APMC প্ৰশাসন প’ৰ্টেল',
+                'মণ্ডীৰ ক্ষমতা নিয়ন্ত্ৰণ কৰক, জৰুৰী অৱস্থাত কাম বন্ধ কৰক, যান-বাহনৰ চলাচল নিৰীক্ষণ কৰক আৰু প্ৰয়োজনত বাহনৰ পথ সলনি কৰক।',
+                'প’ৰ্টেল খোলক',
+                'কৃষিধাৰা 2.0 • পোনপটীয়া প্ৰদৰ্শন সংস্কৰণ'
+            ],
+
+            ur: [
+                'کرشی دھارا 2.0',
+                'زرعی پیداوار کی خریداری اور قطار کے انتظام کا اسمارٹ نظام',
+                'اپنا پورٹل منتخب کریں',
+                'محفوظ قطار کے انتظام اور زرعی پیداوار کی خریداری کی سہولتیں استعمال کرنے کے لیے اپنا کردار منتخب کریں۔',
+                'کسان پورٹل',
+                'فصل فروخت کرنے کے لیے وقت کا سلاٹ بک کریں، فصل کی تفصیلات درج کریں، آدھار کی تصدیق مکمل کریں اور آف لائن QR ٹوکن بنائیں۔',
+                'منڈی افسر پورٹل',
+                'گیٹ پر داخلے کا انتظام کریں، QR کوڈ اسکین کریں، آمد درج کریں اور فصل و وزن کی تصدیق کریں۔',
+                'APMC انتظامی پورٹل',
+                'منڈی کی گنجائش کنٹرول کریں، ہنگامی حالت میں کام روکیں، ٹریفک پر نظر رکھیں اور ضرورت کے مطابق گاڑیوں کا راستہ بدلیں۔',
+                'پورٹل کھولیں',
+                'کرشی دھارا 2.0 • براہِ راست مظاہرے کا نسخہ'
+            ],
+
+            sa: [
+                'कृषिधारा 2.0',
+                'कृष्युत्पन्नक्रयस्य पङ्क्तिप्रबन्धनस्य च बुद्धिमत् तन्त्रम्',
+                'स्वपोर्टलम् चिनुत',
+                'सुरक्षितपङ्क्तिप्रबन्धनस्य कृष्युत्पन्नक्रयस्य च साधनानि उपयोक्तुं स्वभूमिकां चिनुत।',
+                'कृषकपोर्टलम्',
+                'कृष्युत्पन्नविक्रयार्थं समयावकाशं आरक्षत, सस्यविवरणं पूरयत, आधारसत्यापनं कुरुत, जालसम्पर्कं विना QR-सङ्केतपत्रं निर्मात।',
+                'मण्डलाधिकारीपोर्टलम्',
+                'द्वारप्रवेशं नियन्त्रयत, QR-सङ्केतं पठत, आगमनं लिखत, सस्यभारं च परीक्षत।',
+                'APMC प्रशासनपोर्टलम्',
+                'मण्ड्याः क्षमतां नियन्त्रयत, आपत्काले कार्यं स्थगयत, यातायातं निरीक्षत, आवश्यकतायां वाहनमार्गं परिवर्तयत।',
+                'पोर्टलं उद्घाटयत',
+                'कृषिधारा 2.0 • प्रत्यक्षप्रदर्शनसंस्करणम्'
+            ],
+
+            ne: [
+                'कृषिधारा 2.0',
+                'स्मार्ट कृषि उपज खरिद तथा लाम व्यवस्थापन प्रणाली',
+                'आफ्नो पोर्टल छान्नुहोस्',
+                'सुरक्षित लाम व्यवस्थापन र कृषि उपज खरिदका सुविधा प्रयोग गर्न आफ्नो भूमिका छान्नुहोस्।',
+                'किसान पोर्टल',
+                'उपज बेच्न समयको स्लट बुक गर्नुहोस्, बालीको विवरण भर्नुहोस्, आधार प्रमाणीकरण गर्नुहोस् र अफलाइन QR टोकन बनाउनुहोस्।',
+                'यार्ड अधिकारी पोर्टल',
+                'गेट प्रवेश व्यवस्थापन गर्नुहोस्, QR कोड स्क्यान गर्नुहोस्, आगमन दर्ता गर्नुहोस् र बाली तथा तौल जाँच्नुहोस्।',
+                'APMC प्रशासन पोर्टल',
+                'मण्डीको क्षमता नियन्त्रण गर्नुहोस्, आपत्कालमा काम रोक्नुहोस्, ट्राफिक निगरानी गर्नुहोस् र आवश्यक परे सवारीको मार्ग बदल्नुहोस्।',
+                'पोर्टल खोल्नुहोस्',
+                'कृषिधारा 2.0 • प्रत्यक्ष प्रदर्शन संस्करण'
+            ],
+
+            sd: [
+                'ڪرشي ڌارا 2.0',
+                'زرعي پيداوار جي خريداري ۽ قطار جي انتظام جو ذهين نظام',
+                'پنهنجو پورٽل چونڊيو',
+                'محفوظ قطار جي انتظام ۽ زرعي پيداوار جي خريداري جون سهولتون استعمال ڪرڻ لاءِ پنهنجو ڪردار چونڊيو۔',
+                'هاري پورٽل',
+                'فصل وڪڻڻ لاءِ وقت جو سلاٽ بُڪ ڪريو، فصل جا تفصيل داخل ڪريو، آڌار جي تصديق ڪريو ۽ آف لائن QR ٽوڪن ٺاهيو۔',
+                'منڊي آفيسر پورٽل',
+                'گيٽ تي داخلا سنڀاليو، QR ڪوڊ اسڪين ڪريو، آمد درج ڪريو ۽ فصل توڙي وزن جي جاچ ڪريو۔',
+                'APMC انتظامي پورٽل',
+                'منڊي جي گنجائش سنڀاليو، هنگامي حالت ۾ ڪم بند ڪريو، ٽريفڪ تي نظر رکو ۽ ضرورت پوڻ تي گاڏين جو رستو بدلايو۔',
+                'پورٽل کوليو',
+                'ڪرشي ڌارا 2.0 • سڌي نمائش وارو نسخو'
+            ],
+
+            ks: [
+                'کٔرِشی دھارا 2.0',
+                'زرعی پیداوار خریدن تہ قطار انتظام کرنُک سمارٹ نظام',
+                'پنُن پورٹل ژارِو',
+                'محفوظ قطار انتظام تہ زرعی پیداوار خریدنک سہولت استعمال کرنہ خٲطرٕ پنُن کردار ژارِو۔',
+                'کسان پورٹل',
+                'فصل فروخت کرنہ خٲطرٕ وقتُک سلاٹ بُک کریو، فصلُک تفصیل درج کریو، آدھار تصدیق کریو تہ آف لائن QR ٹوکن بناوِو۔',
+                'منڈی افسر پورٹل',
+                'گیٹ داخلہ سنبھالِو، QR کوڈ اسکین کریو، آمد درج کریو تہ فصل تہ وزن چیک کریو۔',
+                'APMC انتظامی پورٹل',
+                'منڈی ہنز گنجائش قابو کریو، ایمرجنسی منز کم بند کریو، ٹریفک نظرِ منز تھاوِو تہ ضرورتہ گاڑین ہُند راستہ بدلاوِو۔',
+                'پورٹل کھولِو',
+                'کٔرِشی دھارا 2.0 • براہِ راست مظاہرے ہُند نسخہ'
+            ],
+
+            doi: [
+                'कृषिधारा 2.0',
+                'खेती-बाड़ी दी फसल खरीद ते कतार प्रबंधन प्रणाली',
+                'अपना पोर्टल चुनो',
+                'सुरक्षित कतार प्रबंधन ते फसल खरीद दे साधन इस्तेमाल करने लेई अपनी भूमिका चुनो।',
+                'किसान पोर्टल',
+                'फसल बेचने लेई समें दा स्लॉट बुक करो, फसल दा ब्यौरा भरो, आधार दी तस्दीक करो ते ऑफलाइन QR टोकन बनाओ।',
+                'यार्ड अफसर पोर्टल',
+                'गेट पर दाखला संभालो, QR कोड स्कैन करो, आवक दर्ज करो ते फसल ते वजन दी जांच करो।',
+                'APMC प्रशासन पोर्टल',
+                'मंडी दी क्षमता संभालो, आपात स्थिति च कम्म रोको, यातायात ते नजर रखो ते लोड़ पौने पर गड्डियां दा रस्ता बदलो।',
+                'पोर्टल खोलो',
+                'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
+            ],
+
+            mni: [
+                'কৃষিধারা 2.0',
+                'স্মার্ট কৃষি পণ্য লৌথোকপা অমসু কিউ মেনেজমেন্ট সিস্টেম',
+                'নহাক্কী পোর্টেল খনবিয়ু',
+                'সুরক্ষিত কিউ মেনেজমেন্ট অমসু কৃষি পণ্য লৌথোকপগী সুবিধাশিং শিজিন্ননবা নহাক্কী ভূমিকা খনবিয়ু।',
+                'খেতি অমা পোর্টেল',
+                'পণ্য থোকহনবগী মতম বুক তৌবিয়ু, ফসলগী মরমদা পাউদম পীরো, আধার ভেরিফিকেশন লোইশিল্লো অমসু অফলাইন QR টোকেন শেম্বিয়ু।',
+                'ইয়ার্ড অফিসার পোর্টেল',
+                'গেট এন্ট্রি মেনেজ তৌবিয়ু, QR কোড স্ক্যান তৌবিয়ু, লাকপা রেকর্ড তৌবিয়ু অমসু ফসল অমসু ওয়েট চেক তৌবিয়ু।',
+                'APMC এডমিন পোর্টেল',
+                'মণ্ডীগী ক্যাপাসিটি কন্ট্রোল তৌবিয়ু, এমার্জেন্সীদা অপারেশন থিংজিনবিয়ু, ট্রাফিক মনিটর তৌবিয়ু অমসু দরকার ওইরবদা ভেহিকলগী রুট হোংদোকপিয়ু।',
+                'পোর্টেল হাংদোকউ',
+                'কৃষিধারা 2.0 • লাইভ ডেমোনস্ট্রেশন ভার্সন'
+            ],
+
+            sat: [
+                'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0',
+                'ᱥᱢᱟᱨᱴ ᱯᱟᱦᱴᱟ ᱠᱤᱱᱟᱹᱣ ᱟᱨ ᱞᱟᱹᱭᱱ ᱵᱮᱵᱚᱥᱛᱷᱟ',
+                'ᱟᱢᱟᱜ ᱯᱚᱨᱴᱟᱞ ᱵᱟᱪᱷᱟᱣ ᱢᱮ',
+                'ᱵᱷᱟᱨᱥᱟ ᱞᱟᱹᱭᱱ ᱵᱮᱵᱚᱥᱛᱷᱟ ᱟᱨ ᱯᱟᱦᱴᱟ ᱠᱤᱱᱟᱹᱣ ᱥᱮᱵᱟ ᱵᱮᱵᱷᱟᱨ ᱞᱟᱹᱜᱤᱫ ᱟᱢᱟᱜ ᱵᱷᱩᱢᱤᱠᱟ ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾',
+                'ᱨᱮᱭᱟᱜ ᱯᱚᱨᱴᱟᱞ',
+                'ᱯᱟᱦᱴᱟ ᱵᱮᱪᱟᱜ ᱞᱟᱹᱜᱤᱫ ᱥᱚᱢᱚᱭ ᱵᱩᱠ ᱢᱮ, ᱯᱟᱦᱴᱟ ᱵᱤᱵᱨᱚᱬ ᱮᱢ ᱢᱮ, ᱟᱫᱷᱟᱨ ᱵᱷᱮᱨᱤᱯᱷᱤᱠᱮᱥᱚᱱ ᱯᱩᱨᱟᱹ ᱢᱮ ᱟᱨ ᱚᱯᱷᱞᱟᱭᱤᱱ QR ᱴᱚᱠᱮᱱ ᱵᱮᱱᱟᱣ ᱢᱮ᱾',
+                'ᱭᱟᱨᱰ ᱚᱯᱷᱤᱥᱟᱨ ᱯᱚᱨᱴᱟᱞ',
+                'ᱜᱮᱴ ᱵᱮᱵᱚᱥᱛᱷᱟ ᱢᱮ, QR ᱠᱚᱰ ᱥᱠᱮᱱ ᱢᱮ, ᱦᱤᱡᱩᱜ ᱨᱮᱠᱚᱨᱰ ᱢᱮ ᱟᱨ ᱯᱟᱦᱴᱟ ᱟᱨ ᱵᱷᱟᱨ ᱵᱟᱹᱪᱷᱟᱣ ᱢᱮ᱾',
+                'APMC ᱮᱰᱢᱤᱱ ᱯᱚᱨᱴᱟᱞ',
+                'ᱢᱟᱱᱰᱤ ᱠᱷᱟᱹᱢᱛᱟ ᱵᱮᱵᱚᱥᱛᱷᱟ ᱢᱮ, ᱟᱹᱯᱟᱛᱠᱟᱞᱤᱱ ᱚᱨᱚᱛ ᱵᱚᱱᱫᱚ ᱢᱮ, ᱴᱨᱟᱯᱷᱤᱠ ᱧᱮᱞ ᱢᱮ ᱟᱨ ᱫᱚᱨᱠᱟᱨ ᱨᱮ ᱨᱩᱴ ᱵᱚᱫᱚᱞ ᱢᱮ᱾',
+                'ᱯᱚᱨᱴᱟᱞ ᱡᱷᱤᱡ ᱢᱮ',
+                'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 • ᱡᱤᱣᱤᱛ ᱫᱮᱠᱷᱟᱣ ᱵᱷᱟᱨᱥᱟ'
+            ],
+
+            bho: [
+                'कृषिधारा 2.0',
+                'खेती के उपज खरीद आ कतार प्रबंधन के स्मार्ट सिस्टम',
+                'अपना पोर्टल चुनीं',
+                'सुरक्षित कतार प्रबंधन आ खेती के उपज खरीदे के सुविधा इस्तेमाल करे खातिर आपन भूमिका चुनीं।',
+                'किसान पोर्टल',
+                'फसल बेचे खातिर समय के स्लॉट बुक करीं, फसल के जानकारी भरीं, आधार सत्यापन करीं आ ऑफलाइन QR टोकन बनाईं।',
+                'यार्ड अधिकारी पोर्टल',
+                'गेट पर आवे-जाए के व्यवस्था करीं, QR कोड स्कैन करीं, आवक दर्ज करीं आ फसल अउर वजन के जाँच करीं।',
+                'APMC प्रशासन पोर्टल',
+                'मंडी के क्षमता नियंत्रित करीं, आपातकाल में काम रोक दीं, ट्रैफिक पर नजर रखीं आ जरूरत पड़ला पर गाड़ी के रास्ता बदलीं।',
+                'पोर्टल खोलीं',
+                'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
+            ],
+
+            raj: [
+                'कृषिधारा 2.0',
+                'खेती री उपज खरीद अर कतार प्रबंधन रो स्मार्ट सिस्टम',
+                'आपरो पोर्टल चुणो',
+                'सुरक्षित कतार प्रबंधन अर खेती री उपज खरीद रा साधनां वापरण खातर आपरी भूमिका चुणो।',
+                'किसान पोर्टल',
+                'उपज बेचण खातर समय रो स्लॉट बुक करो, फसल री जानकारी भरो, आधार री जांच करो अर ऑफलाइन QR टोकन बणावो।',
+                'यार्ड अधिकारी पोर्टल',
+                'गेट पर आवण-जावण संभाळो, QR कोड स्कैन करो, आवक दर्ज करो अर फसल अने वजन री जांच करो।',
+                'APMC प्रशासन पोर्टल',
+                'मंडी री क्षमता संभाळो, आपात स्थिति में काम रोकों, यातायात पर नजर राखो अर जरूरत पड़ै तो गाड़ियां रो रस्तो बदलो।',
+                'पोर्टल खोलो',
+                'कृषिधारा 2.0 • लाइव प्रदर्शन संस्करण'
+            ]
+        };
+
+        const translations = Object.fromEntries(
+            Object.entries(translationRows).map(([lang, values]) => [
+                lang,
+                Object.fromEntries(
+                    translationKeys.map((key, index) => [key, values[index]])
+                )
+            ])
+        );
+
+        function getTranslation(lang, key) {
+            return translations[lang]?.[key] ?? translations.en[key] ?? key;
+        }
+
+        function applyLanguage(lang) {
+            const chosenLang = translations[lang] ? lang : 'en';
+
+            document.documentElement.lang = chosenLang;
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = getTranslation(chosenLang, key);
+            });
+        }
+
+        function changeLanguage() {
+            const dropdown = document.getElementById('langSelect');
+            if (!dropdown) return;
+
+            const lang = translations[dropdown.value] ? dropdown.value : 'en';
 
             try {
                 localStorage.setItem(STORAGE_KEY, lang);
             } catch (error) {
-                console.warn('Could not save language preference.', error);
+                console.warn('Could not save the selected language.', error);
+            }
+
+            applyLanguage(lang);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedLang = 'en';
+
+            try {
+                savedLang = localStorage.getItem(STORAGE_KEY) || 'en';
+            } catch (error) {
+                console.warn('Could not read the saved language.', error);
+            }
+
+            if (!translations[savedLang]) savedLang = 'en';
+
+            const dropdown = document.getElementById('langSelect');
+            if (dropdown) dropdown.value = savedLang;
+
+            applyLanguage(savedLang);
+        });
+
+        function selectRole(role) {
+            localStorage.setItem('kd_user_role', role);
+
+            if (role === 'farmer') {
+                window.location.href = './farmer/index.html';
+            } else if (role === 'officer') {
+                window.location.href = './officer/index.html';
+            } else if (role === 'admin') {
+                window.location.href = './admin/index.html';
             }
         }
 
-        window.googleTranslateElementInit = function () {
-            if (
-                !window.google ||
-                !google.translate ||
-                !google.translate.TranslateElement
-            ) {
-                return;
-            }
-
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages:
-                    'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-                autoDisplay: false
-            }, 'google_translate_element');
-
-            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-            const combo = document.querySelector('.goog-te-combo');
-
-            if (
-                combo &&
-                lang !== 'en' &&
-                Array.from(combo.options).some(option => option.value === lang)
-            ) {
-                combo.value = lang;
-                combo.dispatchEvent(new Event('change'));
-            }
-        };
-
-        window.kdApplySelectedLanguage = function (lang) {
-            setTranslateCookie(lang);
-            window.location.reload();
-        };
-
-        window.changeLanguage = function () {
-            const select = document.getElementById('langSelect');
-
-            if (select) {
-                window.kdApplySelectedLanguage(select.value);
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const select = document.getElementById('langSelect');
-            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-
-            if (select) select.value = lang;
-
-            if (!document.querySelector('script[data-kd-google-translate]')) {
-                const script = document.createElement('script');
-                script.src =
-                    'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-                script.async = true;
-                script.setAttribute('data-kd-google-translate', 'true');
-                document.head.appendChild(script);
-            }
-        });
-    })();
+        function switchRole() {
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>
