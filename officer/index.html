@@ -1,17 +1,1365 @@
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gate Receipt</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiDhara 2.0 - Officer Gate Portal</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+:root {
+  --green:#176b3a;--dark:#104c2a;--light:#e8f5eb;
+  --gold:#f2b544;--red:#b42318;--blue:#175cd3;
+  --bg:#f3f6f4;--border:#dce5de;--text:#182a20;
+  --muted:#647067;--white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,var(--dark),var(--green));color:white;padding:18px 5%}
+.header-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.brand h1{font-size:25px;margin:0 0 5px}
+.brand p{margin:0;color:#d9f4df;font-size:13px}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input,button{font:inherit}
+select,input{padding:10px;border:1px solid var(--border);border-radius:8px;background:white;min-width:0}
+button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn-light{background:white;color:var(--dark)}
+.btn-green{background:var(--green);color:white}
+.btn-gold{background:var(--gold);color:#352400}
+.btn-red{background:var(--red);color:white}
+.btn-blue{background:var(--blue);color:white}
+.btn-gray{background:#e8ece9;color:#26352b}
+main{width:min(1440px,94%);margin:22px auto 40px}
+.section-title{font-size:19px;margin:0 0 13px}
+.subtext{color:var(--muted);font-size:13px;line-height:1.5}
+.yard-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 18px;background:white;border:1px solid var(--border);border-radius:13px;margin-bottom:18px}
+.yard-name{font-size:19px;font-weight:800}
+.yard-meta{color:var(--muted);font-size:13px;margin-top:5px}
+.live-pill{display:inline-flex;align-items:center;gap:6px;color:var(--green);background:var(--light);border-radius:30px;padding:7px 10px;font-size:12px;font-weight:700}
+.live-dot{width:8px;height:8px;background:#1e9b50;border-radius:50%}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat{background:white;border:1px solid var(--border);border-radius:13px;padding:17px;min-width:0}
+.stat-label{font-size:13px;color:var(--muted);margin-bottom:11px}
+.stat-value{font-size:clamp(23px,3vw,31px);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.stat-note{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
+.capacity-track{height:9px;background:#e5ebe6;border-radius:30px;overflow:hidden;margin-top:12px}
+.capacity-fill{height:100%;width:0;background:var(--green);transition:width .25s}
+.panel{background:white;border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:20px;min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.panel-heading h2{margin:0 0 5px;font-size:18px}
+.panel-heading p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:13px;font-weight:700}
+.field input,.field select{width:100%}
+.form-actions,.small-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.small-actions{margin-top:0}
+.notice{border-radius:9px;padding:12px;margin:12px 0;font-size:13px;line-height:1.5;display:none}
+.notice.success{display:block;background:#e8f7ec;color:#176b3a}
+.notice.error{display:block;background:#fff0ef;color:#a11a13}
+.notice.info{display:block;background:#edf4ff;color:#1849a9}
+#reader{width:100%;max-width:440px;margin:12px auto;overflow:hidden;border-radius:10px}
+.scanner-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.scanner-placeholder{background:#f5f8f5;border:1px dashed #c6d5c9;padding:18px;border-radius:10px;text-align:center;color:var(--muted);font-size:13px}
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+th,td{padding:12px 11px;text-align:left;border-bottom:1px solid #e8eee9;vertical-align:top}
+th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}
+tbody tr:hover{background:#fbfdfb}
+.status{display:inline-block;padding:5px 8px;border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap}
+.status.cleared{background:#e4f6e9;color:#176b3a}
+.status.pending{background:#fff4d8;color:#875600}
+.status.rejected{background:#ffebe9;color:#b42318}
+.farmer-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.farmer-card{border:1px solid var(--border);border-radius:10px;padding:14px;min-width:0}
+.farmer-card h3{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}
+.farmer-card p{margin:5px 0;font-size:12px;color:#526056;overflow-wrap:anywhere;line-height:1.45}
+.empty{color:var(--muted);background:#f8faf8;border:1px dashed #cbd7cd;border-radius:9px;padding:18px;font-size:13px;line-height:1.6;text-align:center}
+.token-display{padding:10px;background:#f0f7f1;border-radius:8px;font-weight:700;color:var(--dark);overflow-wrap:anywhere}
+.footer-note{color:var(--muted);font-size:12px;text-align:center;line-height:1.6;padding:8px 0 18px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:560px){main{width:94%;margin-top:14px}.stats{gap:9px}.stat{padding:13px}.panel{padding:14px}.form-grid,.farmer-cards{grid-template-columns:1fr}.brand h1{font-size:21px}.header-actions{width:100%}}
+@media print{header,.no-print,#farmersPanel,#bookingPanel,#scannerPanel,.footer-note{display:none!important}body{background:white}main{width:100%;margin:0}.panel,.stat{break-inside:avoid;border-color:#bbb}.table-wrap{overflow:visible}table{min-width:0;font-size:10px}th,td{padding:6px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <h1 data-i18n>🌾 KrishiDhara 2.0</h1>
+      <p id="subtitle" data-i18n>Officer Gate Clearance Portal</p>
+    </div>
+    <div class="header-actions no-print">
+      <select id="languageSelect" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+        <option value="pa">ਪੰਜਾਬੀ</option>
+        <option value="gu">ગુજરાતી</option>
+        <option value="bn">বাংলা</option>
+        <option value="te">తెలుగు</option>
+        <option value="ta">தமிழ்</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ml">മലയാളം</option>
+        <option value="or">ଓଡ଼ିଆ</option>
+        <option value="as">অসমীয়া</option>
+        <option value="ur">اردو</option>
+        <option value="sa">संस्कृतम्</option>
+        <option value="ne">नेपाली</option>
+        <option value="sd">سنڌي</option>
+        <option value="ks">کٲشُر</option>
+        <option value="doi">डोगरी</option>
+        <option value="mni">মৈতৈলোন্</option>
+        <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
+        <option value="brx">बड़ो</option>
+        <option value="kok">कोंकणी</option>
+        <option value="mai">मैथिली</option>
+      </select>
+      <button class="btn-light" onclick="switchRole()" data-i18n>Switch Role</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="yard-bar">
+    <div>
+      <div class="yard-name" id="yardName">Pune Main Yard</div>
+      <div class="yard-meta"><span data-i18n>Yard key</span>: <strong id="yardKeyText">pune_main</strong> · <span id="lastUpdated"></span></div>
+    </div>
+    <span class="live-pill"><span class="live-dot"></span> <span data-i18n>Shared dashboard data</span></span>
+  </section>
+
+  <h2 class="section-title" data-i18n>Gate Clearance Overview</h2>
+  <section class="stats">
+    <article class="stat">
+      <div class="stat-label" data-i18n>Cleared / Total Yard Capacity</div>
+      <div class="stat-value" id="capacityValue">34 / 50 Tons</div>
+      <div class="capacity-track"><div class="capacity-fill" id="capacityFill"></div></div>
+      <div class="stat-note" id="capacityNote">68% of yard capacity</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label" data-i18n>Vehicles Cleared</div>
+      <div class="stat-value" id="vehiclesValue">4</div>
+      <div class="stat-note" id="vehiclesNote">4 cleared gate records</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label" data-i18n>Farmers Cleared</div>
+      <div class="stat-value" id="farmersValue">4</div>
+      <div class="stat-note" data-i18n>Unique farmers in cleared gate records</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label" data-i18n>Tons in Gate Logs</div>
+      <div class="stat-value" id="tonsValue">34</div>
+      <div class="stat-note" data-i18n>Sum of cleared gate record quantities</div>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <h2 data-i18n>Yard Status &amp; Data Reconciliation</h2>
+        <p data-i18n>Compare shared capacity with the gate-entry records.</p>
+      </div>
+      <button class="btn-gray no-print" onclick="refreshDashboard()">↻ <span data-i18n>Refresh Data</span></button>
+    </div>
+    <div id="reconciliationNotice" class="notice info"></div>
+    <div class="subtext" data-i18n>Capacity uses kd_cap_&lt;yard&gt; and kd_booked_&lt;yard&gt;. Cleared vehicle counts, farmer counts, and gate logs use kd_gate_entries.</div>
+  </section>
+
+  <div class="dashboard-grid">
+    <section class="panel" id="scannerPanel">
+      <div class="panel-heading">
+        <div><h2 data-i18n>📷 Scan Farmer Token</h2><p data-i18n>Scan a QR token or enter its ID manually.</p></div>
+      </div>
+      <div id="scannerPlaceholder" class="scanner-placeholder" data-i18n>Scanner stopped. Start the scanner or use demo scan.</div>
+      <div id="reader"></div>
+      <div class="scanner-actions no-print">
+        <button class="btn-green" id="startScannerBtn" onclick="startScanner()" data-i18n>Start Scanner</button>
+        <button class="btn-gray" id="stopScannerBtn" onclick="stopScanner()" disabled data-i18n>Stop Scanner</button>
+        <button class="btn-gold" onclick="demoScan()" data-i18n>Demo Scan Saved Booking</button>
+      </div>
+      <div id="scanNotice" class="notice"></div>
+      <div style="margin-top:16px" class="field">
+        <label for="tokenInput" data-i18n>Token / Booking ID</label>
+        <input id="tokenInput" placeholder="e.g. KD-1001" data-i18n-ph autocomplete="off">
+      </div>
+      <div class="form-actions no-print">
+        <button class="btn-blue" onclick="validateToken()" data-i18n>Validate Token</button>
+      </div>
+      <div id="bookingPreview" style="margin-top:12px"></div>
+    </section>
+
+    <section class="panel" id="entryPanel">
+      <div class="panel-heading">
+        <div><h2 data-i18n>✅ Gate Entry Approval</h2><p data-i18n>Verify booking information before clearing a vehicle.</p></div>
+      </div>
+      <form id="entryForm">
+        <div class="form-grid">
+          <div class="field full"><label for="fToken" data-i18n>Verified Token</label><input id="fToken" required placeholder="Validate a token first" data-i18n-ph></div>
+          <div class="field"><label for="fFarmer" data-i18n>Farmer Name</label><input id="fFarmer" required></div>
+          <div class="field"><label for="fPhone" data-i18n>Phone Number</label><input id="fPhone"></div>
+          <div class="field"><label for="fCommodity" data-i18n>Commodity</label><input id="fCommodity" required></div>
+          <div class="field"><label for="fVehicle" data-i18n>Vehicle Number</label><input id="fVehicle" required></div>
+          <div class="field"><label for="fTons" data-i18n>Quantity (Tons)</label><input id="fTons" type="number" min="0.01" step="0.01" required></div>
+          <div class="field"><label for="fGate" data-i18n>Gate Number</label><input id="fGate" value="Gate 1" required></div>
+          <div class="field full"><label for="fNotes" data-i18n>Officer Notes</label><input id="fNotes" placeholder="Optional notes" data-i18n-ph></div>
+        </div>
+        <div id="entryNotice" class="notice"></div>
+        <div class="form-actions no-print">
+          <button type="submit" class="btn-green" data-i18n>Approve Gate Entry</button>
+          <button type="button" class="btn-gray" onclick="clearEntryForm()" data-i18n>Clear Form</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <section class="panel" id="farmersPanel">
+    <div class="panel-heading">
+      <div><h2 data-i18n>👨‍🌾 Farmer Clearance Summary</h2><p data-i18n>Cleared farmers and any saved bookings still awaiting clearance.</p></div>
+    </div>
+    <div id="farmerSummary" class="farmer-cards"></div>
+  </section>
+
+  <section class="panel" id="bookingPanel">
+    <div class="panel-heading">
+      <div><h2 data-i18n>📋 Farmer Booking Register</h2><p data-i18n>Bookings are shown separately from actual gate clearance records.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i18n>Farmer</th><th data-i18n>Token</th><th data-i18n>Commodity</th><th data-i18n>Vehicle</th><th data-i18n>Tons</th><th data-i18n>Booking Status</th><th data-i18n>Gate Status</th></tr></thead>
+        <tbody id="bookingTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="logsPanel">
+    <div class="panel-heading">
+      <div><h2 data-i18n>🧾 Cleared Gate Entry Logs</h2><p data-i18n>Four demo clearances are included if no gate records existed when this page first loaded.</p></div>
+      <div class="small-actions no-print">
+        <button class="btn-green" onclick="exportCSV()" data-i18n>Export CSV</button>
+        <button class="btn-blue" onclick="window.print()" data-i18n>Print Logs</button>
+      </div>
+    </div>
+    <div class="form-grid no-print" style="margin-bottom:15px">
+      <div class="field"><label for="logSearch" data-i18n>Search logs</label><input id="logSearch" placeholder="Farmer, token, vehicle…" data-i18n-ph oninput="renderLogs()"></div>
+      <div class="field"><label for="logDate" data-i18n>Filter by date</label><input id="logDate" type="date" onchange="renderLogs()"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i18n>Date &amp; Time</th><th data-i18n>Farmer</th><th data-i18n>Token</th><th data-i18n>Vehicle</th><th data-i18n>Commodity</th><th data-i18n>Tons</th><th data-i18n>Gate</th><th data-i18n>Officer</th><th data-i18n>Status</th><th class="no-print" data-i18n>Receipt</th></tr></thead>
+        <tbody id="logsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer-note" data-i18n>KrishiDhara 2.0 · Officer Gate Portal · Demo farmer records are sample data.</div>
+</main>
+
+<!-- ===================== LANGUAGE SUPPORT (22 official languages + English) ===================== -->
+<script>
+'use strict';
+
+const LANG_KEY = 'kd_selected_lang';
+
+// English source strings. Every language row follows this exact order (132 entries).
+const KD_KEYS = [
+    'KrishiDhara 2.0',
+    'Officer Gate Clearance Portal',
+    'Switch Role',
+    'Yard key',
+    'Last refreshed',
+    'Shared dashboard data',
+    'Gate Clearance Overview',
+    'Cleared / Total Yard Capacity',
+    '{n} / {n} Tons',
+    '{n}% of yard capacity',
+    'Vehicles Cleared',
+    '{n} cleared gate record(s)',
+    'Farmers Cleared',
+    'Unique farmers in cleared gate records',
+    'Tons in Gate Logs',
+    'Sum of cleared gate record quantities',
+    'Yard Status & Data Reconciliation',
+    'Compare shared capacity with the gate-entry records.',
+    'Refresh Data',
+    'Capacity uses kd_cap_<yard> and kd_booked_<yard>. Cleared vehicle counts, farmer counts, and gate logs use kd_gate_entries.',
+    'Capacity keys were missing; demo defaults are shown where needed.',
+    'Mismatch: shared capacity counter is {n} tons, but gate logs sum to {n} tons.',
+    'Capacity total matches gate logs: {n} tons across {n} cleared vehicles.',
+    'Scan Farmer Token',
+    'Scan a QR token or enter its ID manually.',
+    'Scanner stopped. Start the scanner or use demo scan.',
+    'Start Scanner',
+    'Stop Scanner',
+    'Demo Scan Saved Booking',
+    'Token / Booking ID',
+    'e.g. KD-1001',
+    'Validate Token',
+    'Gate Entry Approval',
+    'Verify booking information before clearing a vehicle.',
+    'Verified Token',
+    'Validate a token first',
+    'Farmer Name',
+    'Phone Number',
+    'Commodity',
+    'Vehicle Number',
+    'Quantity (Tons)',
+    'Gate Number',
+    'Officer Notes',
+    'Optional notes',
+    'Approve Gate Entry',
+    'Clear Form',
+    'Farmer Clearance Summary',
+    'Cleared farmers and any saved bookings still awaiting clearance.',
+    'Farmer Booking Register',
+    'Bookings are shown separately from actual gate clearance records.',
+    'Farmer',
+    'Token',
+    'Vehicle',
+    'Tons',
+    'Booking Status',
+    'Gate Status',
+    'Cleared Gate Entry Logs',
+    'Four demo clearances are included if no gate records existed when this page first loaded.',
+    'Export CSV',
+    'Print Logs',
+    'Search logs',
+    'Farmer, token, vehicle…',
+    'Filter by date',
+    'Date & Time',
+    'Gate',
+    'Officer',
+    'Status',
+    'Receipt',
+    'KrishiDhara 2.0 · Officer Gate Portal · Demo farmer records are sample data.',
+    'GATE CLEARED',
+    'Phone',
+    'Time',
+    'Cleared quantity',
+    'Booked quantity',
+    '{n} tons',
+    'BOOKING — NOT CLEARED',
+    'No farmer records found.',
+    'No saved booking list found.',
+    'Booked',
+    'CLEARED',
+    'NOT CLEARED',
+    'No cleared gate entries match this filter.',
+    'Gate Officer',
+    'Gate {n}',
+    'Unknown farmer',
+    'Not specified',
+    'Date unavailable',
+    'Not provided',
+    'Verified booking',
+    'Enter or scan a token ID first.',
+    'Token not found in saved farmer bookings.',
+    'This token already has a cleared gate entry. Duplicate approval is blocked.',
+    'Booking token validated. Review the details before approval.',
+    'No pending booking is available for demo scan. The four seeded demo records are already cleared.',
+    'QR scanner library failed to load. Enter the token manually.',
+    'Scanner started. Point the camera at a QR token.',
+    'Camera unavailable. Allow camera access and use HTTPS/localhost, or enter the token manually.',
+    'Validate a saved booking token before approving gate entry.',
+    'This token is already cleared.',
+    'Enter a farmer, commodity, vehicle number, and valid positive tonnage.',
+    'Approval blocked: quantity exceeds remaining capacity of {n} tons.',
+    'This token was cleared in another tab. Refresh and retry.',
+    'Gate entry approved and saved successfully.',
+    'Could not save entry. Check browser storage and retry.',
+    'No cleared entries to export.',
+    'Gate record not found. Refresh and try again.',
+    'Allow pop-ups to print the receipt.',
+    'Official Gate Clearance Receipt',
+    'Receipt ID',
+    'Print Receipt',
+    'Pune',
+    'Nashik',
+    'Nagpur',
+    'Amravati',
+    'Main',
+    'Yard',
+    'Grain',
+    'Cotton',
+    'Ramesh',
+    'Kumar',
+    'Patil',
+    'Sunita',
+    'Jadhav',
+    'Suresh',
+    'Pawar',
+    'Anita',
+    'Shinde',
+    'Wheat',
+    'Paddy / Rice',
+    'Soybean',
+    'Onion',
+    'Maize'
+];
+
+const KD_ROWS = {
+hi: [
+'कृषिधारा 2.0','अधिकारी गेट क्लीयरेंस पोर्टल','भूमिका बदलें','यार्ड कोड','अंतिम रिफ़्रेश','साझा डैशबोर्ड डेटा','गेट क्लीयरेंस का अवलोकन','क्लीयर / कुल यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमता का {n}%',
+'क्लीयर हुए वाहन','{n} क्लीयर गेट रिकॉर्ड','क्लीयर हुए किसान','क्लीयर गेट रिकॉर्ड में अलग-अलग किसान','गेट लॉग में कुल टन','क्लीयर गेट रिकॉर्ड की मात्रा का योग','यार्ड की स्थिति और डेटा मिलान','साझा क्षमता की गेट-प्रवेश रिकॉर्ड से तुलना करें।','डेटा रिफ़्रेश करें','क्षमता kd_cap_<yard> और kd_booked_<yard> से ली जाती है। क्लीयर वाहनों व किसानों की संख्या और गेट लॉग kd_gate_entries से लिए जाते हैं।',
+'क्षमता के मान उपलब्ध नहीं थे; जहाँ ज़रूरी हो वहाँ डेमो के डिफ़ॉल्ट मान दिखाए गए हैं।','बेमेल: साझा क्षमता काउंटर {n} टन है, पर गेट लॉग का योग {n} टन है।','क्षमता का कुल योग गेट लॉग से मेल खाता है: {n} टन, {n} क्लीयर वाहन।','किसान टोकन स्कैन करें','QR टोकन स्कैन करें या उसकी ID हाथ से दर्ज करें।','स्कैनर बंद है। स्कैनर शुरू करें या डेमो स्कैन इस्तेमाल करें।','स्कैनर शुरू करें','स्कैनर बंद करें','सहेजी बुकिंग का डेमो स्कैन','टोकन / बुकिंग ID',
+'जैसे KD-1001','टोकन जाँचें','गेट प्रवेश की स्वीकृति','वाहन क्लीयर करने से पहले बुकिंग की जानकारी जाँचें।','सत्यापित टोकन','पहले टोकन की जाँच करें','किसान का नाम','फ़ोन नंबर','उपज','वाहन नंबर',
+'मात्रा (टन में)','गेट नंबर','अधिकारी की टिप्पणी','वैकल्पिक टिप्पणी','गेट प्रवेश स्वीकृत करें','फ़ॉर्म साफ़ करें','किसान क्लीयरेंस सारांश','क्लीयर हुए किसान और क्लीयरेंस की प्रतीक्षा वाली सहेजी बुकिंग।','किसान बुकिंग रजिस्टर','बुकिंग को वास्तविक गेट क्लीयरेंस रिकॉर्ड से अलग दिखाया गया है।',
+'किसान','टोकन','वाहन','टन','बुकिंग की स्थिति','गेट की स्थिति','क्लीयर गेट प्रवेश लॉग','इस पेज के पहली बार खुलने पर यदि कोई गेट रिकॉर्ड न हो, तो चार डेमो क्लीयरेंस जोड़े जाते हैं।','CSV निर्यात करें','लॉग प्रिंट करें',
+'लॉग खोजें','किसान, टोकन, वाहन…','तारीख़ से छाँटें','तारीख़ और समय','गेट','अधिकारी','स्थिति','रसीद','कृषिधारा 2.0 · अधिकारी गेट पोर्टल · डेमो किसान रिकॉर्ड केवल नमूना डेटा हैं।','गेट क्लीयर',
+'फ़ोन','समय','क्लीयर की गई मात्रा','बुक की गई मात्रा','{n} टन','बुकिंग — क्लीयर नहीं','किसान का कोई रिकॉर्ड नहीं मिला।','सहेजी हुई बुकिंग सूची नहीं मिली।','बुक','क्लीयर',
+'क्लीयर नहीं','इस फ़िल्टर से कोई क्लीयर गेट प्रवेश मेल नहीं खाता।','गेट अधिकारी','गेट {n}','अज्ञात किसान','निर्दिष्ट नहीं','तारीख़ उपलब्ध नहीं','उपलब्ध नहीं कराया गया','सत्यापित बुकिंग','पहले टोकन ID दर्ज करें या स्कैन करें।',
+'सहेजी गई किसान बुकिंग में टोकन नहीं मिला।','इस टोकन का गेट प्रवेश पहले ही क्लीयर हो चुका है। दोबारा स्वीकृति रोकी गई है।','बुकिंग टोकन सत्यापित हुआ। स्वीकृति से पहले विवरण जाँच लें।','डेमो स्कैन के लिए कोई लंबित बुकिंग नहीं है। चारों डेमो रिकॉर्ड पहले ही क्लीयर हैं।','QR स्कैनर लाइब्रेरी लोड नहीं हो सकी। टोकन हाथ से दर्ज करें।','स्कैनर शुरू हो गया। कैमरा QR टोकन की ओर रखें।','कैमरा उपलब्ध नहीं है। कैमरे की अनुमति दें और HTTPS/localhost का उपयोग करें, या टोकन हाथ से दर्ज करें।','गेट प्रवेश स्वीकृत करने से पहले सहेजी गई बुकिंग का टोकन जाँचें।','यह टोकन पहले ही क्लीयर हो चुका है।','किसान, उपज, वाहन नंबर और सही धनात्मक टन मात्रा दर्ज करें।',
+'स्वीकृति रोकी गई: मात्रा शेष क्षमता {n} टन से अधिक है।','यह टोकन किसी दूसरे टैब में क्लीयर हो चुका है। रिफ़्रेश करके फिर कोशिश करें।','गेट प्रवेश स्वीकृत होकर सफलतापूर्वक सहेजा गया।','प्रवेश सहेजा नहीं जा सका। ब्राउज़र स्टोरेज जाँचकर फिर कोशिश करें।','निर्यात के लिए कोई क्लीयर प्रविष्टि नहीं है।','गेट रिकॉर्ड नहीं मिला। रिफ़्रेश करके फिर कोशिश करें।','रसीद प्रिंट करने के लिए पॉप-अप की अनुमति दें।','आधिकारिक गेट क्लीयरेंस रसीद','रसीद ID','रसीद प्रिंट करें',
+'पुणे','नाशिक','नागपुर','अमरावती','मुख्य','यार्ड','अनाज','कपास','रमेश','कुमार',
+'पाटील','सुनीता','जाधव','सुरेश','पवार','अनीता','शिंदे','गेहूँ','धान / चावल','सोयाबीन',
+'प्याज़','मक्का'
+],
+mr: [
+'कृषिधारा 2.0','अधिकारी गेट क्लिअरन्स पोर्टल','भूमिका बदला','यार्ड कोड','शेवटचे रिफ्रेश','सामायिक डॅशबोर्ड डेटा','गेट क्लिअरन्स आढावा','क्लिअर / एकूण यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमतेच्या {n}%',
+'क्लिअर झालेली वाहने','{n} क्लिअर गेट नोंदी','क्लिअर झालेले शेतकरी','क्लिअर गेट नोंदींमधील वेगवेगळे शेतकरी','गेट लॉगमधील एकूण टन','क्लिअर गेट नोंदींच्या प्रमाणाची बेरीज','यार्डची स्थिती व डेटा जुळवणी','सामायिक क्षमतेची गेट-प्रवेश नोंदींशी तुलना करा.','डेटा रिफ्रेश करा','क्षमता kd_cap_<yard> व kd_booked_<yard> वरून घेतली जाते. क्लिअर वाहने, शेतकरी संख्या आणि गेट लॉग kd_gate_entries वरून घेतले जातात.',
+'क्षमतेची मूल्ये उपलब्ध नव्हती; गरजेनुसार डेमोची डिफॉल्ट मूल्ये दाखवली आहेत.','जुळत नाही: सामायिक क्षमता काउंटर {n} टन आहे, पण गेट लॉगची बेरीज {n} टन आहे.','क्षमतेची एकूण बेरीज गेट लॉगशी जुळते: {n} टन, {n} क्लिअर वाहने.','शेतकरी टोकन स्कॅन करा','QR टोकन स्कॅन करा किंवा त्याचा ID हाताने टाका.','स्कॅनर बंद आहे. स्कॅनर सुरू करा किंवा डेमो स्कॅन वापरा.','स्कॅनर सुरू करा','स्कॅनर थांबवा','जतन केलेल्या बुकिंगचा डेमो स्कॅन','टोकन / बुकिंग ID',
+'उदा. KD-1001','टोकन तपासा','गेट प्रवेश मंजुरी','वाहन क्लिअर करण्यापूर्वी बुकिंगची माहिती तपासा.','पडताळलेला टोकन','आधी टोकन तपासा','शेतकऱ्याचे नाव','फोन नंबर','शेतमाल','वाहन क्रमांक',
+'प्रमाण (टनांमध्ये)','गेट क्रमांक','अधिकाऱ्याच्या नोंदी','पर्यायी नोंदी','गेट प्रवेश मंजूर करा','फॉर्म साफ करा','शेतकरी क्लिअरन्स सारांश','क्लिअर झालेले शेतकरी आणि क्लिअरन्सची प्रतीक्षा असलेली जतन केलेली बुकिंग.','शेतकरी बुकिंग नोंदवही','बुकिंग प्रत्यक्ष गेट क्लिअरन्स नोंदींपासून वेगळी दाखवली आहे.',
+'शेतकरी','टोकन','वाहन','टन','बुकिंगची स्थिती','गेटची स्थिती','क्लिअर गेट प्रवेश लॉग','हे पेज पहिल्यांदा उघडले तेव्हा गेट नोंदी नसल्यास चार डेमो क्लिअरन्स जोडले जातात.','CSV निर्यात करा','लॉग प्रिंट करा',
+'लॉग शोधा','शेतकरी, टोकन, वाहन…','तारखेनुसार गाळा','तारीख आणि वेळ','गेट','अधिकारी','स्थिती','पावती','कृषिधारा 2.0 · अधिकारी गेट पोर्टल · डेमो शेतकरी नोंदी हा केवळ नमुना डेटा आहे.','गेट क्लिअर',
+'फोन','वेळ','क्लिअर केलेले प्रमाण','बुक केलेले प्रमाण','{n} टन','बुकिंग — क्लिअर नाही','शेतकऱ्यांच्या नोंदी सापडल्या नाहीत.','जतन केलेली बुकिंग यादी सापडली नाही.','बुक','क्लिअर',
+'क्लिअर नाही','या फिल्टरशी जुळणारी क्लिअर गेट प्रवेश नोंद नाही.','गेट अधिकारी','गेट {n}','अज्ञात शेतकरी','नमूद नाही','तारीख उपलब्ध नाही','दिलेले नाही','पडताळलेली बुकिंग','आधी टोकन ID टाका किंवा स्कॅन करा.',
+'जतन केलेल्या शेतकरी बुकिंगमध्ये टोकन सापडला नाही.','या टोकनचा गेट प्रवेश आधीच क्लिअर झाला आहे. दुहेरी मंजुरी थांबवली आहे.','बुकिंग टोकन पडताळला. मंजुरीपूर्वी तपशील तपासा.','डेमो स्कॅनसाठी प्रलंबित बुकिंग नाही. चारही डेमो नोंदी आधीच क्लिअर आहेत.','QR स्कॅनर लायब्ररी लोड झाली नाही. टोकन हाताने टाका.','स्कॅनर सुरू झाला. कॅमेरा QR टोकनकडे धरा.','कॅमेरा उपलब्ध नाही. कॅमेऱ्याची परवानगी द्या व HTTPS/localhost वापरा, किंवा टोकन हाताने टाका.','गेट प्रवेश मंजूर करण्यापूर्वी जतन केलेल्या बुकिंगचा टोकन तपासा.','हा टोकन आधीच क्लिअर झाला आहे.','शेतकरी, शेतमाल, वाहन क्रमांक आणि योग्य धन टनेज टाका.',
+'मंजुरी थांबवली: प्रमाण उरलेल्या {n} टन क्षमतेपेक्षा जास्त आहे.','हा टोकन दुसऱ्या टॅबमध्ये क्लिअर झाला आहे. रिफ्रेश करून पुन्हा प्रयत्न करा.','गेट प्रवेश मंजूर होऊन यशस्वीरीत्या जतन झाला.','नोंद जतन करता आली नाही. ब्राउझर स्टोरेज तपासून पुन्हा प्रयत्न करा.','निर्यात करण्यासाठी क्लिअर नोंदी नाहीत.','गेट नोंद सापडली नाही. रिफ्रेश करून पुन्हा प्रयत्न करा.','पावती प्रिंट करण्यासाठी पॉप-अपला परवानगी द्या.','अधिकृत गेट क्लिअरन्स पावती','पावती ID','पावती प्रिंट करा',
+'पुणे','नाशिक','नागपूर','अमरावती','मुख्य','यार्ड','धान्य','कापूस','रमेश','कुमार',
+'पाटील','सुनीता','जाधव','सुरेश','पवार','अनिता','शिंदे','गहू','भात / तांदूळ','सोयाबीन',
+'कांदा','मका'
+],
+pa: [
+'ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0','ਅਧਿਕਾਰੀ ਗੇਟ ਕਲੀਅਰੈਂਸ ਪੋਰਟਲ','ਭੂਮਿਕਾ ਬਦਲੋ','ਯਾਰਡ ਕੋਡ','ਆਖ਼ਰੀ ਰਿਫ੍ਰੈਸ਼','ਸਾਂਝਾ ਡੈਸ਼ਬੋਰਡ ਡਾਟਾ','ਗੇਟ ਕਲੀਅਰੈਂਸ ਦੀ ਝਲਕ','ਕਲੀਅਰ / ਕੁੱਲ ਯਾਰਡ ਸਮਰੱਥਾ','{n} / {n} ਟਨ','ਯਾਰਡ ਸਮਰੱਥਾ ਦਾ {n}%',
+'ਕਲੀਅਰ ਹੋਏ ਵਾਹਨ','{n} ਕਲੀਅਰ ਗੇਟ ਰਿਕਾਰਡ','ਕਲੀਅਰ ਹੋਏ ਕਿਸਾਨ','ਕਲੀਅਰ ਗੇਟ ਰਿਕਾਰਡਾਂ ਵਿੱਚ ਵੱਖੋ-ਵੱਖ ਕਿਸਾਨ','ਗੇਟ ਲੌਗ ਵਿੱਚ ਕੁੱਲ ਟਨ','ਕਲੀਅਰ ਗੇਟ ਰਿਕਾਰਡਾਂ ਦੀ ਮਾਤਰਾ ਦਾ ਜੋੜ','ਯਾਰਡ ਦੀ ਸਥਿਤੀ ਅਤੇ ਡਾਟਾ ਮਿਲਾਨ','ਸਾਂਝੀ ਸਮਰੱਥਾ ਦੀ ਗੇਟ-ਦਾਖ਼ਲਾ ਰਿਕਾਰਡਾਂ ਨਾਲ ਤੁਲਨਾ ਕਰੋ।','ਡਾਟਾ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ','ਸਮਰੱਥਾ kd_cap_<yard> ਅਤੇ kd_booked_<yard> ਤੋਂ ਲਈ ਜਾਂਦੀ ਹੈ। ਕਲੀਅਰ ਵਾਹਨਾਂ ਤੇ ਕਿਸਾਨਾਂ ਦੀ ਗਿਣਤੀ ਅਤੇ ਗੇਟ ਲੌਗ kd_gate_entries ਤੋਂ ਲਏ ਜਾਂਦੇ ਹਨ।',
+'ਸਮਰੱਥਾ ਦੇ ਮੁੱਲ ਉਪਲਬਧ ਨਹੀਂ ਸਨ; ਲੋੜ ਅਨੁਸਾਰ ਡੈਮੋ ਦੇ ਮੁੱਢਲੇ ਮੁੱਲ ਦਿਖਾਏ ਗਏ ਹਨ।','ਬੇਮੇਲ: ਸਾਂਝਾ ਸਮਰੱਥਾ ਕਾਊਂਟਰ {n} ਟਨ ਹੈ, ਪਰ ਗੇਟ ਲੌਗ ਦਾ ਜੋੜ {n} ਟਨ ਹੈ।','ਸਮਰੱਥਾ ਦਾ ਕੁੱਲ ਗੇਟ ਲੌਗ ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਹੈ: {n} ਟਨ, {n} ਕਲੀਅਰ ਵਾਹਨ।','ਕਿਸਾਨ ਟੋਕਨ ਸਕੈਨ ਕਰੋ','QR ਟੋਕਨ ਸਕੈਨ ਕਰੋ ਜਾਂ ਉਸਦੀ ID ਹੱਥੀਂ ਭਰੋ।','ਸਕੈਨਰ ਬੰਦ ਹੈ। ਸਕੈਨਰ ਚਾਲੂ ਕਰੋ ਜਾਂ ਡੈਮੋ ਸਕੈਨ ਵਰਤੋ।','ਸਕੈਨਰ ਚਾਲੂ ਕਰੋ','ਸਕੈਨਰ ਬੰਦ ਕਰੋ','ਸੰਭਾਲੀ ਬੁਕਿੰਗ ਦਾ ਡੈਮੋ ਸਕੈਨ','ਟੋਕਨ / ਬੁਕਿੰਗ ID',
+'ਜਿਵੇਂ KD-1001','ਟੋਕਨ ਜਾਂਚੋ','ਗੇਟ ਦਾਖ਼ਲੇ ਦੀ ਮਨਜ਼ੂਰੀ','ਵਾਹਨ ਕਲੀਅਰ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਬੁਕਿੰਗ ਦੀ ਜਾਣਕਾਰੀ ਜਾਂਚੋ।','ਪੁਸ਼ਟੀ ਕੀਤਾ ਟੋਕਨ','ਪਹਿਲਾਂ ਟੋਕਨ ਜਾਂਚੋ','ਕਿਸਾਨ ਦਾ ਨਾਂ','ਫ਼ੋਨ ਨੰਬਰ','ਫ਼ਸਲ','ਵਾਹਨ ਨੰਬਰ',
+'ਮਾਤਰਾ (ਟਨਾਂ ਵਿੱਚ)','ਗੇਟ ਨੰਬਰ','ਅਧਿਕਾਰੀ ਦੀਆਂ ਟਿੱਪਣੀਆਂ','ਵਿਕਲਪਿਕ ਟਿੱਪਣੀਆਂ','ਗੇਟ ਦਾਖ਼ਲਾ ਮਨਜ਼ੂਰ ਕਰੋ','ਫਾਰਮ ਸਾਫ਼ ਕਰੋ','ਕਿਸਾਨ ਕਲੀਅਰੈਂਸ ਸਾਰ','ਕਲੀਅਰ ਹੋਏ ਕਿਸਾਨ ਅਤੇ ਕਲੀਅਰੈਂਸ ਦੀ ਉਡੀਕ ਵਾਲੀਆਂ ਸੰਭਾਲੀਆਂ ਬੁਕਿੰਗਾਂ।','ਕਿਸਾਨ ਬੁਕਿੰਗ ਰਜਿਸਟਰ','ਬੁਕਿੰਗਾਂ ਨੂੰ ਅਸਲ ਗੇਟ ਕਲੀਅਰੈਂਸ ਰਿਕਾਰਡਾਂ ਤੋਂ ਵੱਖਰਾ ਦਿਖਾਇਆ ਗਿਆ ਹੈ।',
+'ਕਿਸਾਨ','ਟੋਕਨ','ਵਾਹਨ','ਟਨ','ਬੁਕਿੰਗ ਦੀ ਸਥਿਤੀ','ਗੇਟ ਦੀ ਸਥਿਤੀ','ਕਲੀਅਰ ਗੇਟ ਦਾਖ਼ਲਾ ਲੌਗ','ਇਹ ਪੰਨਾ ਪਹਿਲੀ ਵਾਰ ਖੁੱਲ੍ਹਣ ਵੇਲੇ ਜੇ ਕੋਈ ਗੇਟ ਰਿਕਾਰਡ ਨਾ ਹੋਵੇ ਤਾਂ ਚਾਰ ਡੈਮੋ ਕਲੀਅਰੈਂਸ ਜੋੜੇ ਜਾਂਦੇ ਹਨ।','CSV ਬਰਾਮਦ ਕਰੋ','ਲੌਗ ਪ੍ਰਿੰਟ ਕਰੋ',
+'ਲੌਗ ਲੱਭੋ','ਕਿਸਾਨ, ਟੋਕਨ, ਵਾਹਨ…','ਤਾਰੀਖ਼ ਅਨੁਸਾਰ ਛਾਣੋ','ਤਾਰੀਖ਼ ਅਤੇ ਸਮਾਂ','ਗੇਟ','ਅਧਿਕਾਰੀ','ਸਥਿਤੀ','ਰਸੀਦ','ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 · ਅਧਿਕਾਰੀ ਗੇਟ ਪੋਰਟਲ · ਡੈਮੋ ਕਿਸਾਨ ਰਿਕਾਰਡ ਸਿਰਫ਼ ਨਮੂਨਾ ਡਾਟਾ ਹਨ।','ਗੇਟ ਕਲੀਅਰ',
+'ਫ਼ੋਨ','ਸਮਾਂ','ਕਲੀਅਰ ਕੀਤੀ ਮਾਤਰਾ','ਬੁੱਕ ਕੀਤੀ ਮਾਤਰਾ','{n} ਟਨ','ਬੁਕਿੰਗ — ਕਲੀਅਰ ਨਹੀਂ','ਕੋਈ ਕਿਸਾਨ ਰਿਕਾਰਡ ਨਹੀਂ ਮਿਲਿਆ।','ਸੰਭਾਲੀ ਬੁਕਿੰਗ ਸੂਚੀ ਨਹੀਂ ਮਿਲੀ।','ਬੁੱਕ','ਕਲੀਅਰ',
+'ਕਲੀਅਰ ਨਹੀਂ','ਇਸ ਫਿਲਟਰ ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਕੋਈ ਕਲੀਅਰ ਗੇਟ ਦਾਖ਼ਲਾ ਨਹੀਂ।','ਗੇਟ ਅਧਿਕਾਰੀ','ਗੇਟ {n}','ਅਣਜਾਣ ਕਿਸਾਨ','ਦੱਸਿਆ ਨਹੀਂ ਗਿਆ','ਤਾਰੀਖ਼ ਉਪਲਬਧ ਨਹੀਂ','ਦਿੱਤਾ ਨਹੀਂ ਗਿਆ','ਪੁਸ਼ਟੀ ਕੀਤੀ ਬੁਕਿੰਗ','ਪਹਿਲਾਂ ਟੋਕਨ ID ਭਰੋ ਜਾਂ ਸਕੈਨ ਕਰੋ।',
+'ਸੰਭਾਲੀਆਂ ਕਿਸਾਨ ਬੁਕਿੰਗਾਂ ਵਿੱਚ ਟੋਕਨ ਨਹੀਂ ਮਿਲਿਆ।','ਇਸ ਟੋਕਨ ਦਾ ਗੇਟ ਦਾਖ਼ਲਾ ਪਹਿਲਾਂ ਹੀ ਕਲੀਅਰ ਹੋ ਚੁੱਕਾ ਹੈ। ਦੁਬਾਰਾ ਮਨਜ਼ੂਰੀ ਰੋਕੀ ਗਈ ਹੈ।','ਬੁਕਿੰਗ ਟੋਕਨ ਦੀ ਪੁਸ਼ਟੀ ਹੋਈ। ਮਨਜ਼ੂਰੀ ਤੋਂ ਪਹਿਲਾਂ ਵੇਰਵੇ ਜਾਂਚ ਲਓ।','ਡੈਮੋ ਸਕੈਨ ਲਈ ਕੋਈ ਬਕਾਇਆ ਬੁਕਿੰਗ ਨਹੀਂ ਹੈ। ਚਾਰੇ ਡੈਮੋ ਰਿਕਾਰਡ ਪਹਿਲਾਂ ਹੀ ਕਲੀਅਰ ਹਨ।','QR ਸਕੈਨਰ ਲਾਇਬ੍ਰੇਰੀ ਲੋਡ ਨਹੀਂ ਹੋਈ। ਟੋਕਨ ਹੱਥੀਂ ਭਰੋ।','ਸਕੈਨਰ ਚਾਲੂ ਹੋ ਗਿਆ। ਕੈਮਰਾ QR ਟੋਕਨ ਵੱਲ ਰੱਖੋ।','ਕੈਮਰਾ ਉਪਲਬਧ ਨਹੀਂ। ਕੈਮਰੇ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ ਅਤੇ HTTPS/localhost ਵਰਤੋ, ਜਾਂ ਟੋਕਨ ਹੱਥੀਂ ਭਰੋ।','ਗੇਟ ਦਾਖ਼ਲਾ ਮਨਜ਼ੂਰ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਸੰਭਾਲੀ ਬੁਕਿੰਗ ਦਾ ਟੋਕਨ ਜਾਂਚੋ।','ਇਹ ਟੋਕਨ ਪਹਿਲਾਂ ਹੀ ਕਲੀਅਰ ਹੋ ਚੁੱਕਾ ਹੈ।','ਕਿਸਾਨ, ਫ਼ਸਲ, ਵਾਹਨ ਨੰਬਰ ਅਤੇ ਸਹੀ ਟਨ ਮਾਤਰਾ ਭਰੋ।',
+'ਮਨਜ਼ੂਰੀ ਰੋਕੀ ਗਈ: ਮਾਤਰਾ ਬਾਕੀ {n} ਟਨ ਸਮਰੱਥਾ ਤੋਂ ਵੱਧ ਹੈ।','ਇਹ ਟੋਕਨ ਕਿਸੇ ਹੋਰ ਟੈਬ ਵਿੱਚ ਕਲੀਅਰ ਹੋ ਚੁੱਕਾ ਹੈ। ਰਿਫ੍ਰੈਸ਼ ਕਰਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।','ਗੇਟ ਦਾਖ਼ਲਾ ਮਨਜ਼ੂਰ ਹੋ ਕੇ ਸਫਲਤਾ ਨਾਲ ਸੰਭਾਲਿਆ ਗਿਆ।','ਇੰਦਰਾਜ ਸੰਭਾਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਬ੍ਰਾਊਜ਼ਰ ਸਟੋਰੇਜ ਜਾਂਚ ਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।','ਬਰਾਮਦ ਕਰਨ ਲਈ ਕੋਈ ਕਲੀਅਰ ਇੰਦਰਾਜ ਨਹੀਂ।','ਗੇਟ ਰਿਕਾਰਡ ਨਹੀਂ ਮਿਲਿਆ। ਰਿਫ੍ਰੈਸ਼ ਕਰਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।','ਰਸੀਦ ਪ੍ਰਿੰਟ ਕਰਨ ਲਈ ਪੌਪ-ਅੱਪ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ।','ਸਰਕਾਰੀ ਗੇਟ ਕਲੀਅਰੈਂਸ ਰਸੀਦ','ਰਸੀਦ ID','ਰਸੀਦ ਪ੍ਰਿੰਟ ਕਰੋ',
+'ਪੁਣੇ','ਨਾਸ਼ਿਕ','ਨਾਗਪੁਰ','ਅਮਰਾਵਤੀ','ਮੁੱਖ','ਯਾਰਡ','ਅਨਾਜ','ਕਪਾਹ','ਰਮੇਸ਼','ਕੁਮਾਰ',
+'ਪਾਟਿਲ','ਸੁਨੀਤਾ','ਜਾਧਵ','ਸੁਰੇਸ਼','ਪਵਾਰ','ਅਨੀਤਾ','ਸ਼ਿੰਦੇ','ਕਣਕ','ਝੋਨਾ / ਚਾਵਲ','ਸੋਇਆਬੀਨ',
+'ਪਿਆਜ਼','ਮੱਕੀ'
+],
+gu: [
+'કૃષિધારા 2.0','અધિકારી ગેટ ક્લિયરન્સ પોર્ટલ','ભૂમિકા બદલો','યાર્ડ કોડ','છેલ્લું રિફ્રેશ','શેર્ડ ડેશબોર્ડ ડેટા','ગેટ ક્લિયરન્સ ઝલક','ક્લિયર / કુલ યાર્ડ ક્ષમતા','{n} / {n} ટન','યાર્ડ ક્ષમતાના {n}%',
+'ક્લિયર થયેલાં વાહનો','{n} ક્લિયર ગેટ રેકોર્ડ','ક્લિયર થયેલા ખેડૂતો','ક્લિયર ગેટ રેકોર્ડમાં અલગ અલગ ખેડૂતો','ગેટ લૉગમાં કુલ ટન','ક્લિયર ગેટ રેકોર્ડના જથ્થાનો સરવાળો','યાર્ડની સ્થિતિ અને ડેટા મેળવણી','શેર્ડ ક્ષમતાની ગેટ-પ્રવેશ રેકોર્ડ સાથે સરખામણી કરો.','ડેટા રિફ્રેશ કરો','ક્ષમતા kd_cap_<yard> અને kd_booked_<yard> પરથી લેવાય છે. ક્લિયર વાહનો, ખેડૂતોની સંખ્યા અને ગેટ લૉગ kd_gate_entries પરથી લેવાય છે.',
+'ક્ષમતાના મૂલ્યો ઉપલબ્ધ ન હતા; જરૂર મુજબ ડેમોના ડિફૉલ્ટ મૂલ્યો બતાવ્યા છે.','મેળ નથી: શેર્ડ ક્ષમતા કાઉન્ટર {n} ટન છે, પણ ગેટ લૉગનો સરવાળો {n} ટન છે.','ક્ષમતાનો કુલ સરવાળો ગેટ લૉગ સાથે મળે છે: {n} ટન, {n} ક્લિયર વાહનો.','ખેડૂત ટોકન સ્કૅન કરો','QR ટોકન સ્કૅન કરો અથવા તેનો ID જાતે દાખલ કરો.','સ્કૅનર બંધ છે. સ્કૅનર શરૂ કરો અથવા ડેમો સ્કૅન વાપરો.','સ્કૅનર શરૂ કરો','સ્કૅનર બંધ કરો','સાચવેલ બુકિંગનું ડેમો સ્કૅન','ટોકન / બુકિંગ ID',
+'દા.ત. KD-1001','ટોકન ચકાસો','ગેટ પ્રવેશ મંજૂરી','વાહન ક્લિયર કરતાં પહેલાં બુકિંગની માહિતી ચકાસો.','ચકાસેલ ટોકન','પહેલા ટોકન ચકાસો','ખેડૂતનું નામ','ફોન નંબર','પેદાશ','વાહન નંબર',
+'જથ્થો (ટનમાં)','ગેટ નંબર','અધિકારીની નોંધ','વૈકલ્પિક નોંધ','ગેટ પ્રવેશ મંજૂર કરો','ફોર્મ સાફ કરો','ખેડૂત ક્લિયરન્સ સારાંશ','ક્લિયર થયેલા ખેડૂતો અને ક્લિયરન્સની રાહ જોતા સાચવેલ બુકિંગ.','ખેડૂત બુકિંગ રજિસ્ટર','બુકિંગ વાસ્તવિક ગેટ ક્લિયરન્સ રેકોર્ડથી અલગ બતાવ્યા છે.',
+'ખેડૂત','ટોકન','વાહન','ટન','બુકિંગની સ્થિતિ','ગેટની સ્થિતિ','ક્લિયર ગેટ પ્રવેશ લૉગ','આ પેજ પહેલી વાર ખૂલ્યું ત્યારે ગેટ રેકોર્ડ ન હોય તો ચાર ડેમો ક્લિયરન્સ ઉમેરાય છે.','CSV નિકાસ કરો','લૉગ પ્રિન્ટ કરો',
+'લૉગ શોધો','ખેડૂત, ટોકન, વાહન…','તારીખ પ્રમાણે ગાળો','તારીખ અને સમય','ગેટ','અધિકારી','સ્થિતિ','રસીદ','કૃષિધારા 2.0 · અધિકારી ગેટ પોર્ટલ · ડેમો ખેડૂત રેકોર્ડ માત્ર નમૂનારૂપ ડેટા છે.','ગેટ ક્લિયર',
+'ફોન','સમય','ક્લિયર કરેલ જથ્થો','બુક કરેલ જથ્થો','{n} ટન','બુકિંગ — ક્લિયર નથી','કોઈ ખેડૂત રેકોર્ડ મળ્યો નથી.','સાચવેલ બુકિંગ યાદી મળી નથી.','બુક','ક્લિયર',
+'ક્લિયર નથી','આ ફિલ્ટર સાથે મેળ ખાતી કોઈ ક્લિયર ગેટ એન્ટ્રી નથી.','ગેટ અધિકારી','ગેટ {n}','અજાણ્યા ખેડૂત','જણાવેલ નથી','તારીખ ઉપલબ્ધ નથી','આપેલ નથી','ચકાસેલ બુકિંગ','પહેલા ટોકન ID દાખલ કરો અથવા સ્કૅન કરો.',
+'સાચવેલ ખેડૂત બુકિંગમાં ટોકન મળ્યો નથી.','આ ટોકનની ગેટ એન્ટ્રી પહેલેથી ક્લિયર થઈ છે. બીજી વાર મંજૂરી અટકાવી છે.','બુકિંગ ટોકન ચકાસાયો. મંજૂરી પહેલાં વિગતો તપાસો.','ડેમો સ્કૅન માટે કોઈ બાકી બુકિંગ નથી. ચારેય ડેમો રેકોર્ડ પહેલેથી ક્લિયર છે.','QR સ્કૅનર લાઇબ્રેરી લોડ થઈ નથી. ટોકન જાતે દાખલ કરો.','સ્કૅનર શરૂ થયું. કૅમેરો QR ટોકન તરફ રાખો.','કૅમેરા ઉપલબ્ધ નથી. કૅમેરાની મંજૂરી આપો અને HTTPS/localhost વાપરો, અથવા ટોકન જાતે દાખલ કરો.','ગેટ પ્રવેશ મંજૂર કરતાં પહેલાં સાચવેલ બુકિંગનો ટોકન ચકાસો.','આ ટોકન પહેલેથી ક્લિયર થયેલ છે.','ખેડૂત, પેદાશ, વાહન નંબર અને માન્ય ટન જથ્થો દાખલ કરો.',
+'મંજૂરી અટકાવી: જથ્થો બાકી {n} ટન ક્ષમતા કરતાં વધુ છે.','આ ટોકન બીજા ટૅબમાં ક્લિયર થયો છે. રિફ્રેશ કરીને ફરી પ્રયાસ કરો.','ગેટ પ્રવેશ મંજૂર થઈ સફળતાપૂર્વક સચવાયો.','એન્ટ્રી સાચવી શકાઈ નથી. બ્રાઉઝર સ્ટોરેજ તપાસીને ફરી પ્રયાસ કરો.','નિકાસ કરવા માટે કોઈ ક્લિયર એન્ટ્રી નથી.','ગેટ રેકોર્ડ મળ્યો નથી. રિફ્રેશ કરીને ફરી પ્રયાસ કરો.','રસીદ પ્રિન્ટ કરવા પૉપ-અપ ચાલુ કરવા દો.','અધિકૃત ગેટ ક્લિયરન્સ રસીદ','રસીદ ID','રસીદ પ્રિન્ટ કરો',
+'પુણે','નાશિક','નાગપુર','અમરાવતી','મુખ્ય','યાર્ડ','અનાજ','કપાસ','રમેશ','કુમાર',
+'પાટીલ','સુનીતા','જાધવ','સુરેશ','પવાર','અનિતા','શિંદે','ઘઉં','ડાંગર / ચોખા','સોયાબીન',
+'ડુંગળી','મકાઈ'
+],
+bn: [
+'কৃষিধারা 2.0','আধিকারিক গেট ক্লিয়ারেন্স পোর্টাল','ভূমিকা বদলান','ইয়ার্ড কী','সর্বশেষ রিফ্রেশ','শেয়ার্ড ড্যাশবোর্ড ডেটা','গেট ক্লিয়ারেন্সের সংক্ষিপ্ত চিত্র','ক্লিয়ার / মোট ইয়ার্ড ক্ষমতা','{n} / {n} টন','ইয়ার্ড ক্ষমতার {n}%',
+'ক্লিয়ার হওয়া যানবাহন','{n}টি ক্লিয়ার গেট রেকর্ড','ক্লিয়ার হওয়া কৃষক','ক্লিয়ার গেট রেকর্ডে স্বতন্ত্র কৃষক','গেট লগে মোট টন','ক্লিয়ার গেট রেকর্ডের পরিমাণের যোগফল','ইয়ার্ডের অবস্থা ও ডেটা মেলানো','শেয়ার্ড ক্ষমতার সঙ্গে গেট-প্রবেশ রেকর্ড তুলনা করুন।','ডেটা রিফ্রেশ করুন','ক্ষমতা kd_cap_<yard> ও kd_booked_<yard> থেকে নেওয়া হয়। ক্লিয়ার যানবাহন, কৃষকের সংখ্যা ও গেট লগ kd_gate_entries থেকে নেওয়া হয়।',
+'ক্ষমতার মান পাওয়া যায়নি; প্রয়োজনমতো ডেমোর ডিফল্ট মান দেখানো হয়েছে।','অমিল: শেয়ার্ড ক্ষমতা কাউন্টার {n} টন, কিন্তু গেট লগের যোগফল {n} টন।','ক্ষমতার মোট পরিমাণ গেট লগের সঙ্গে মিলেছে: {n} টন, {n}টি ক্লিয়ার যানবাহন।','কৃষকের টোকেন স্ক্যান করুন','QR টোকেন স্ক্যান করুন বা তার ID হাতে লিখুন।','স্ক্যানার বন্ধ। স্ক্যানার চালু করুন বা ডেমো স্ক্যান ব্যবহার করুন।','স্ক্যানার চালু করুন','স্ক্যানার বন্ধ করুন','সংরক্ষিত বুকিংয়ের ডেমো স্ক্যান','টোকেন / বুকিং ID',
+'যেমন KD-1001','টোকেন যাচাই করুন','গেট প্রবেশের অনুমোদন','যানবাহন ক্লিয়ার করার আগে বুকিংয়ের তথ্য যাচাই করুন।','যাচাইকৃত টোকেন','আগে একটি টোকেন যাচাই করুন','কৃষকের নাম','ফোন নম্বর','ফসল','যানবাহনের নম্বর',
+'পরিমাণ (টনে)','গেট নম্বর','আধিকারিকের মন্তব্য','ঐচ্ছিক মন্তব্য','গেট প্রবেশ অনুমোদন করুন','ফর্ম মুছুন','কৃষক ক্লিয়ারেন্সের সারাংশ','ক্লিয়ার হওয়া কৃষক এবং ক্লিয়ারেন্সের অপেক্ষায় থাকা সংরক্ষিত বুকিং।','কৃষক বুকিং রেজিস্টার','বুকিং আসল গেট ক্লিয়ারেন্স রেকর্ড থেকে আলাদা করে দেখানো হয়েছে।',
+'কৃষক','টোকেন','যানবাহন','টন','বুকিংয়ের অবস্থা','গেটের অবস্থা','ক্লিয়ার গেট প্রবেশ লগ','এই পাতা প্রথমবার খোলার সময় গেট রেকর্ড না থাকলে চারটি ডেমো ক্লিয়ারেন্স যোগ করা হয়।','CSV রপ্তানি করুন','লগ প্রিন্ট করুন',
+'লগ খুঁজুন','কৃষক, টোকেন, যানবাহন…','তারিখ অনুযায়ী ছাঁকুন','তারিখ ও সময়','গেট','আধিকারিক','অবস্থা','রসিদ','কৃষিধারা 2.0 · আধিকারিক গেট পোর্টাল · ডেমো কৃষক রেকর্ড শুধু নমুনা ডেটা।','গেট ক্লিয়ার',
+'ফোন','সময়','ক্লিয়ার করা পরিমাণ','বুক করা পরিমাণ','{n} টন','বুকিং — ক্লিয়ার হয়নি','কোনও কৃষক রেকর্ড পাওয়া যায়নি।','সংরক্ষিত বুকিং তালিকা পাওয়া যায়নি।','বুক করা','ক্লিয়ার',
+'ক্লিয়ার হয়নি','এই ফিল্টারের সঙ্গে মেলে এমন ক্লিয়ার গেট প্রবেশ নেই।','গেট আধিকারিক','গেট {n}','অজানা কৃষক','উল্লেখ নেই','তারিখ পাওয়া যায়নি','দেওয়া হয়নি','যাচাইকৃত বুকিং','আগে টোকেন ID লিখুন বা স্ক্যান করুন।',
+'সংরক্ষিত কৃষক বুকিংয়ে টোকেন পাওয়া যায়নি।','এই টোকেনের গেট প্রবেশ আগেই ক্লিয়ার হয়েছে। দ্বিতীয়বার অনুমোদন বন্ধ করা হয়েছে।','বুকিং টোকেন যাচাই হয়েছে। অনুমোদনের আগে বিবরণ দেখে নিন।','ডেমো স্ক্যানের জন্য কোনও অপেক্ষমাণ বুকিং নেই। চারটি ডেমো রেকর্ড আগেই ক্লিয়ার হয়েছে।','QR স্ক্যানার লাইব্রেরি লোড হয়নি। টোকেন হাতে লিখুন।','স্ক্যানার চালু হয়েছে। ক্যামেরা QR টোকেনের দিকে ধরুন।','ক্যামেরা পাওয়া যাচ্ছে না। ক্যামেরার অনুমতি দিন ও HTTPS/localhost ব্যবহার করুন, অথবা টোকেন হাতে লিখুন।','গেট প্রবেশ অনুমোদনের আগে সংরক্ষিত বুকিংয়ের টোকেন যাচাই করুন।','এই টোকেন আগেই ক্লিয়ার হয়েছে।','কৃষক, ফসল, যানবাহনের নম্বর ও সঠিক ধনাত্মক টন পরিমাণ লিখুন।',
+'অনুমোদন বন্ধ: পরিমাণ অবশিষ্ট {n} টন ক্ষমতার চেয়ে বেশি।','এই টোকেন অন্য ট্যাবে ক্লিয়ার হয়েছে। রিফ্রেশ করে আবার চেষ্টা করুন।','গেট প্রবেশ অনুমোদিত হয়ে সফলভাবে সংরক্ষিত হয়েছে।','এন্ট্রি সংরক্ষণ করা যায়নি। ব্রাউজার স্টোরেজ দেখে আবার চেষ্টা করুন।','রপ্তানি করার মতো ক্লিয়ার এন্ট্রি নেই।','গেট রেকর্ড পাওয়া যায়নি। রিফ্রেশ করে আবার চেষ্টা করুন।','রসিদ প্রিন্ট করতে পপ-আপ অনুমতি দিন।','অফিসিয়াল গেট ক্লিয়ারেন্স রসিদ','রসিদ ID','রসিদ প্রিন্ট করুন',
+'পুনে','নাশিক','নাগপুর','অমরাবতী','প্রধান','ইয়ার্ড','শস্য','তুলা','রমেশ','কুমার',
+'পাতিল','সুনীতা','যাদব','সুরেশ','পাওয়ার','অনীতা','শিন্ডে','গম','ধান / চাল','সয়াবিন',
+'পেঁয়াজ','ভুট্টা'
+],
+te: [
+'కృషిధారా 2.0','అధికారి గేట్ క్లియరెన్స్ పోర్టల్','పాత్ర మార్చండి','యార్డ్ కీ','చివరిగా రిఫ్రెష్ చేసింది','షేర్డ్ డాష్‌బోర్డ్ డేటా','గేట్ క్లియరెన్స్ అవలోకనం','క్లియర్ అయిన / మొత్తం యార్డ్ సామర్థ్యం','{n} / {n} టన్నులు','యార్డ్ సామర్థ్యంలో {n}%',
+'క్లియర్ అయిన వాహనాలు','{n} క్లియర్ అయిన గేట్ రికార్డులు','క్లియర్ అయిన రైతులు','క్లియర్ అయిన గేట్ రికార్డుల్లోని ప్రత్యేక రైతులు','గేట్ లాగ్‌లలో టన్నులు','క్లియర్ అయిన గేట్ రికార్డుల పరిమాణాల మొత్తం','యార్డ్ స్థితి & డేటా సరిపోల్చడం','షేర్డ్ సామర్థ్యాన్ని గేట్ ప్రవేశ రికార్డులతో పోల్చండి.','డేటా రిఫ్రెష్ చేయండి','సామర్థ్యం kd_cap_<yard>, kd_booked_<yard> నుండి తీసుకోబడుతుంది. క్లియర్ అయిన వాహనాలు, రైతుల సంఖ్య, గేట్ లాగ్‌లు kd_gate_entries నుండి తీసుకోబడతాయి.',
+'సామర్థ్య విలువలు లేవు; అవసరమైన చోట డెమో డిఫాల్ట్ విలువలు చూపబడ్డాయి.','తేడా: షేర్డ్ సామర్థ్య కౌంటర్ {n} టన్నులు, కానీ గేట్ లాగ్‌ల మొత్తం {n} టన్నులు.','సామర్థ్య మొత్తం గేట్ లాగ్‌లతో సరిపోలింది: {n} టన్నులు, {n} క్లియర్ అయిన వాహనాలు.','రైతు టోకెన్ స్కాన్ చేయండి','QR టోకెన్ స్కాన్ చేయండి లేదా దాని ID ని చేతితో నమోదు చేయండి.','స్కానర్ ఆగి ఉంది. స్కానర్ ప్రారంభించండి లేదా డెమో స్కాన్ వాడండి.','స్కానర్ ప్రారంభించండి','స్కానర్ ఆపండి','సేవ్ చేసిన బుకింగ్ డెమో స్కాన్','టోకెన్ / బుకింగ్ ID',
+'ఉదా. KD-1001','టోకెన్ ధృవీకరించండి','గేట్ ప్రవేశ ఆమోదం','వాహనాన్ని క్లియర్ చేసే ముందు బుకింగ్ వివరాలను తనిఖీ చేయండి.','ధృవీకరించిన టోకెన్','ముందుగా టోకెన్ ధృవీకరించండి','రైతు పేరు','ఫోన్ నంబర్','పంట','వాహనం నంబర్',
+'పరిమాణం (టన్నులలో)','గేట్ నంబర్','అధికారి గమనికలు','ఐచ్ఛిక గమనికలు','గేట్ ప్రవేశం ఆమోదించండి','ఫారం క్లియర్ చేయండి','రైతు క్లియరెన్స్ సారాంశం','క్లియర్ అయిన రైతులు, క్లియరెన్స్ కోసం వేచి ఉన్న సేవ్ చేసిన బుకింగ్‌లు.','రైతు బుకింగ్ రిజిస్టర్','బుకింగ్‌లు అసలైన గేట్ క్లియరెన్స్ రికార్డుల నుండి వేరుగా చూపబడతాయి.',
+'రైతు','టోకెన్','వాహనం','టన్నులు','బుకింగ్ స్థితి','గేట్ స్థితి','క్లియర్ అయిన గేట్ ప్రవేశ లాగ్‌లు','ఈ పేజీ మొదటిసారి తెరిచినప్పుడు గేట్ రికార్డులు లేకపోతే నాలుగు డెమో క్లియరెన్స్‌లు చేర్చబడతాయి.','CSV ఎగుమతి','లాగ్‌లు ప్రింట్ చేయండి',
+'లాగ్‌లు వెతకండి','రైతు, టోకెన్, వాహనం…','తేదీ వారీగా ఫిల్టర్ చేయండి','తేదీ & సమయం','గేట్','అధికారి','స్థితి','రసీదు','కృషిధారా 2.0 · అధికారి గేట్ పోర్టల్ · డెమో రైతు రికార్డులు నమూనా డేటా మాత్రమే.','గేట్ క్లియర్ అయింది',
+'ఫోన్','సమయం','క్లియర్ చేసిన పరిమాణం','బుక్ చేసిన పరిమాణం','{n} టన్నులు','బుకింగ్ — క్లియర్ కాలేదు','రైతు రికార్డులు కనపడలేదు.','సేవ్ చేసిన బుకింగ్ జాబితా కనపడలేదు.','బుక్ అయింది','క్లియర్ అయింది',
+'క్లియర్ కాలేదు','ఈ ఫిల్టర్‌కు సరిపోలే క్లియర్ అయిన గేట్ ప్రవేశాలు లేవు.','గేట్ అధికారి','గేట్ {n}','తెలియని రైతు','పేర్కొనలేదు','తేదీ అందుబాటులో లేదు','ఇవ్వలేదు','ధృవీకరించిన బుకింగ్','ముందుగా టోకెన్ ID నమోదు చేయండి లేదా స్కాన్ చేయండి.',
+'సేవ్ చేసిన రైతు బుకింగ్‌లలో టోకెన్ కనపడలేదు.','ఈ టోకెన్‌కు ఇప్పటికే గేట్ ప్రవేశం క్లియర్ అయింది. రెండోసారి ఆమోదం నిరోధించబడింది.','బుకింగ్ టోకెన్ ధృవీకరించబడింది. ఆమోదించే ముందు వివరాలు సరిచూడండి.','డెమో స్కాన్‌కు పెండింగ్ బుకింగ్ లేదు. నాలుగు డెమో రికార్డులు ఇప్పటికే క్లియర్ అయ్యాయి.','QR స్కానర్ లైబ్రరీ లోడ్ కాలేదు. టోకెన్‌ను చేతితో నమోదు చేయండి.','స్కానర్ ప్రారంభమైంది. కెమెరాను QR టోకెన్ వైపు ఉంచండి.','కెమెరా అందుబాటులో లేదు. కెమెరా అనుమతి ఇచ్చి HTTPS/localhost వాడండి, లేదా టోకెన్‌ను చేతితో నమోదు చేయండి.','గేట్ ప్రవేశం ఆమోదించే ముందు సేవ్ చేసిన బుకింగ్ టోకెన్ ధృవీకరించండి.','ఈ టోకెన్ ఇప్పటికే క్లియర్ అయింది.','రైతు, పంట, వాహనం నంబర్, సరైన టన్నుల పరిమాణం నమోదు చేయండి.',
+'ఆమోదం నిరోధించబడింది: పరిమాణం మిగిలిన {n} టన్నుల సామర్థ్యాన్ని మించింది.','ఈ టోకెన్ మరో ట్యాబ్‌లో క్లియర్ అయింది. రిఫ్రెష్ చేసి మళ్లీ ప్రయత్నించండి.','గేట్ ప్రవేశం ఆమోదించబడి విజయవంతంగా సేవ్ అయింది.','ఎంట్రీ సేవ్ చేయలేకపోయాం. బ్రౌజర్ స్టోరేజ్ చూసి మళ్లీ ప్రయత్నించండి.','ఎగుమతి చేయడానికి క్లియర్ అయిన ఎంట్రీలు లేవు.','గేట్ రికార్డు కనపడలేదు. రిఫ్రెష్ చేసి మళ్లీ ప్రయత్నించండి.','రసీదు ప్రింట్ చేయడానికి పాప్-అప్‌లను అనుమతించండి.','అధికారిక గేట్ క్లియరెన్స్ రసీదు','రసీదు ID','రసీదు ప్రింట్ చేయండి',
+'పుణె','నాశిక్','నాగపూర్','అమరావతి','ప్రధాన','యార్డ్','ధాన్యం','పత్తి','రమేష్','కుమార్',
+'పాటిల్','సునీత','జాధవ్','సురేష్','పవార్','అనిత','షిండే','గోధుమ','వరి / బియ్యం','సోయాబీన్',
+'ఉల్లిపాయ','మొక్కజొన్న'
+],
+ta: [
+'கிருஷிதாரா 2.0','அதிகாரி வாயில் அனுமதி தளம்','பங்கை மாற்று','வளாக குறியீடு','கடைசியாக புதுப்பித்தது','பகிரப்பட்ட டாஷ்போர்டு தரவு','வாயில் அனுமதி மேலோட்டம்','அனுமதிக்கப்பட்டது / மொத்த வளாக கொள்ளளவு','{n} / {n} டன்','வளாக கொள்ளளவில் {n}%',
+'அனுமதிக்கப்பட்ட வாகனங்கள்','{n} அனுமதிக்கப்பட்ட வாயில் பதிவுகள்','அனுமதிக்கப்பட்ட விவசாயிகள்','அனுமதிக்கப்பட்ட வாயில் பதிவுகளில் தனித்த விவசாயிகள்','வாயில் பதிவேடுகளில் டன்','அனுமதிக்கப்பட்ட வாயில் பதிவுகளின் அளவுகளின் கூட்டுத்தொகை','வளாக நிலை மற்றும் தரவு பொருத்தம்','பகிரப்பட்ட கொள்ளளவை வாயில் நுழைவுப் பதிவுகளுடன் ஒப்பிடவும்.','தரவைப் புதுப்பி','கொள்ளளவு kd_cap_<yard> மற்றும் kd_booked_<yard> இலிருந்து எடுக்கப்படுகிறது. அனுமதிக்கப்பட்ட வாகனங்கள், விவசாயிகள் எண்ணிக்கை, வாயில் பதிவேடுகள் kd_gate_entries இலிருந்து எடுக்கப்படுகின்றன.',
+'கொள்ளளவு மதிப்புகள் இல்லை; தேவையான இடங்களில் டெமோ இயல்புநிலை மதிப்புகள் காட்டப்பட்டுள்ளன.','பொருந்தவில்லை: பகிரப்பட்ட கொள்ளளவு கணக்கு {n} டன், ஆனால் வாயில் பதிவேடுகளின் கூட்டுத்தொகை {n} டன்.','கொள்ளளவு மொத்தம் வாயில் பதிவேடுகளுடன் பொருந்துகிறது: {n} டன், {n} அனுமதிக்கப்பட்ட வாகனங்கள்.','விவசாயி டோக்கனை ஸ்கேன் செய்','QR டோக்கனை ஸ்கேன் செய்யவும் அல்லது அதன் ID-ஐ கைமுறையாக உள்ளிடவும்.','ஸ்கேனர் நிறுத்தப்பட்டுள்ளது. ஸ்கேனரைத் தொடங்கவும் அல்லது டெமோ ஸ்கேன் பயன்படுத்தவும்.','ஸ்கேனரைத் தொடங்கு','ஸ்கேனரை நிறுத்து','சேமித்த பதிவின் டெமோ ஸ்கேன்','டோக்கன் / பதிவு ID',
+'எ.கா. KD-1001','டோக்கனைச் சரிபார்','வாயில் நுழைவு ஒப்புதல்','வாகனத்தை அனுமதிக்கும் முன் பதிவு விவரங்களைச் சரிபார்க்கவும்.','சரிபார்க்கப்பட்ட டோக்கன்','முதலில் டோக்கனைச் சரிபார்க்கவும்','விவசாயி பெயர்','தொலைபேசி எண்','பயிர்','வாகன எண்',
+'அளவு (டன்னில்)','வாயில் எண்','அதிகாரி குறிப்புகள்','விருப்பக் குறிப்புகள்','வாயில் நுழைவை ஒப்புக்கொள்','படிவத்தை அழி','விவசாயி அனுமதி சுருக்கம்','அனுமதிக்கப்பட்ட விவசாயிகள் மற்றும் அனுமதிக்காக காத்திருக்கும் சேமித்த பதிவுகள்.','விவசாயி பதிவு பேரேடு','பதிவுகள் உண்மையான வாயில் அனுமதி பதிவுகளிலிருந்து தனியாகக் காட்டப்படுகின்றன.',
+'விவசாயி','டோக்கன்','வாகனம்','டன்','பதிவு நிலை','வாயில் நிலை','அனுமதிக்கப்பட்ட வாயில் நுழைவு பதிவேடுகள்','இந்தப் பக்கம் முதலில் திறந்தபோது வாயில் பதிவுகள் இல்லையெனில் நான்கு டெமோ அனுமதிகள் சேர்க்கப்படும்.','CSV ஏற்றுமதி','பதிவேடுகளை அச்சிடு',
+'பதிவேடுகளைத் தேடு','விவசாயி, டோக்கன், வாகனம்…','தேதி வாரியாக வடிகட்டு','தேதி & நேரம்','வாயில்','அதிகாரி','நிலை','ரசீது','கிருஷிதாரா 2.0 · அதிகாரி வாயில் தளம் · டெமோ விவசாயி பதிவுகள் மாதிரி தரவு மட்டுமே.','வாயில் அனுமதி',
+'தொலைபேசி','நேரம்','அனுமதித்த அளவு','பதிவு செய்த அளவு','{n} டன்','பதிவு — அனுமதிக்கப்படவில்லை','விவசாயி பதிவுகள் எதுவும் இல்லை.','சேமித்த பதிவுப் பட்டியல் இல்லை.','பதிவு செய்யப்பட்டது','அனுமதிக்கப்பட்டது',
+'அனுமதிக்கப்படவில்லை','இந்த வடிகட்டியுடன் பொருந்தும் அனுமதிக்கப்பட்ட வாயில் பதிவுகள் இல்லை.','வாயில் அதிகாரி','வாயில் {n}','தெரியாத விவசாயி','குறிப்பிடப்படவில்லை','தேதி கிடைக்கவில்லை','வழங்கப்படவில்லை','சரிபார்க்கப்பட்ட பதிவு','முதலில் டோக்கன் ID-ஐ உள்ளிடவும் அல்லது ஸ்கேன் செய்யவும்.',
+'சேமித்த விவசாயி பதிவுகளில் டோக்கன் இல்லை.','இந்த டோக்கனுக்கு ஏற்கனவே வாயில் நுழைவு அனுமதிக்கப்பட்டுள்ளது. இரண்டாம் முறை ஒப்புதல் தடுக்கப்பட்டது.','பதிவு டோக்கன் சரிபார்க்கப்பட்டது. ஒப்புதலுக்கு முன் விவரங்களைப் பார்க்கவும்.','டெமோ ஸ்கேனுக்கு நிலுவையில் உள்ள பதிவு இல்லை. நான்கு டெமோ பதிவுகளும் ஏற்கனவே அனுமதிக்கப்பட்டுள்ளன.','QR ஸ்கேனர் நூலகம் ஏற்றப்படவில்லை. டோக்கனை கைமுறையாக உள்ளிடவும்.','ஸ்கேனர் தொடங்கியது. கேமராவை QR டோக்கனை நோக்கி வைக்கவும்.','கேமரா கிடைக்கவில்லை. கேமரா அனுமதி அளித்து HTTPS/localhost பயன்படுத்தவும், அல்லது டோக்கனை கைமுறையாக உள்ளிடவும்.','வாயில் நுழைவை ஒப்புக்கொள்ளும் முன் சேமித்த பதிவின் டோக்கனைச் சரிபார்க்கவும்.','இந்த டோக்கன் ஏற்கனவே அனுமதிக்கப்பட்டுவிட்டது.','விவசாயி, பயிர், வாகன எண், சரியான டன் அளவை உள்ளிடவும்.',
+'ஒப்புதல் தடுக்கப்பட்டது: அளவு மீதமுள்ள {n} டன் கொள்ளளவை மீறுகிறது.','இந்த டோக்கன் மற்றொரு தாவலில் அனுமதிக்கப்பட்டது. புதுப்பித்து மீண்டும் முயலவும்.','வாயில் நுழைவு ஒப்புக்கொள்ளப்பட்டு வெற்றிகரமாகச் சேமிக்கப்பட்டது.','பதிவைச் சேமிக்க இயலவில்லை. உலாவி சேமிப்பகத்தைச் சரிபார்த்து மீண்டும் முயலவும்.','ஏற்றுமதி செய்ய அனுமதிக்கப்பட்ட பதிவுகள் இல்லை.','வாயில் பதிவு கிடைக்கவில்லை. புதுப்பித்து மீண்டும் முயலவும்.','ரசீதை அச்சிட பாப்-அப்களை அனுமதிக்கவும்.','அதிகாரப்பூர்வ வாயில் அனுமதி ரசீது','ரசீது ID','ரசீதை அச்சிடு',
+'புனே','நாசிக்','நாக்பூர்','அமராவதி','முதன்மை','வளாகம்','தானியம்','பருத்தி','ரமேஷ்','குமார்',
+'பாட்டீல்','சுனிதா','ஜாதவ்','சுரேஷ்','பவார்','அனிதா','ஷிண்டே','கோதுமை','நெல் / அரிசி','சோயாபீன்',
+'வெங்காயம்','மக்காச்சோளம்'
+],
+kn: [
+'ಕೃಷಿಧಾರಾ 2.0','ಅಧಿಕಾರಿ ಗೇಟ್ ಕ್ಲಿಯರೆನ್ಸ್ ಪೋರ್ಟಲ್','ಪಾತ್ರ ಬದಲಿಸಿ','ಯಾರ್ಡ್ ಕೋಡ್','ಕೊನೆಯ ರಿಫ್ರೆಶ್','ಹಂಚಿಕೆಯ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಡೇಟಾ','ಗೇಟ್ ಕ್ಲಿಯರೆನ್ಸ್ ಅವಲೋಕನ','ಕ್ಲಿಯರ್ ಆದ / ಒಟ್ಟು ಯಾರ್ಡ್ ಸಾಮರ್ಥ್ಯ','{n} / {n} ಟನ್','ಯಾರ್ಡ್ ಸಾಮರ್ಥ್ಯದ {n}%',
+'ಕ್ಲಿಯರ್ ಆದ ವಾಹನಗಳು','{n} ಕ್ಲಿಯರ್ ಆದ ಗೇಟ್ ದಾಖಲೆಗಳು','ಕ್ಲಿಯರ್ ಆದ ರೈತರು','ಕ್ಲಿಯರ್ ಆದ ಗೇಟ್ ದಾಖಲೆಗಳಲ್ಲಿ ವಿಶಿಷ್ಟ ರೈತರು','ಗೇಟ್ ಲಾಗ್‌ಗಳಲ್ಲಿ ಟನ್','ಕ್ಲಿಯರ್ ಆದ ಗೇಟ್ ದಾಖಲೆಗಳ ಪ್ರಮಾಣದ ಒಟ್ಟು ಮೊತ್ತ','ಯಾರ್ಡ್ ಸ್ಥಿತಿ ಮತ್ತು ಡೇಟಾ ಹೊಂದಾಣಿಕೆ','ಹಂಚಿಕೆಯ ಸಾಮರ್ಥ್ಯವನ್ನು ಗೇಟ್-ಪ್ರವೇಶ ದಾಖಲೆಗಳೊಂದಿಗೆ ಹೋಲಿಸಿ.','ಡೇಟಾ ರಿಫ್ರೆಶ್ ಮಾಡಿ','ಸಾಮರ್ಥ್ಯ kd_cap_<yard> ಮತ್ತು kd_booked_<yard> ನಿಂದ ಪಡೆಯಲಾಗುತ್ತದೆ. ಕ್ಲಿಯರ್ ಆದ ವಾಹನ, ರೈತರ ಸಂಖ್ಯೆ ಮತ್ತು ಗೇಟ್ ಲಾಗ್‌ಗಳು kd_gate_entries ನಿಂದ ಪಡೆಯಲಾಗುತ್ತವೆ.',
+'ಸಾಮರ್ಥ್ಯದ ಮೌಲ್ಯಗಳು ಇರಲಿಲ್ಲ; ಅಗತ್ಯವಿರುವಲ್ಲಿ ಡೆಮೊ ಡಿಫಾಲ್ಟ್ ಮೌಲ್ಯಗಳನ್ನು ತೋರಿಸಲಾಗಿದೆ.','ಹೊಂದಾಣಿಕೆ ಇಲ್ಲ: ಹಂಚಿಕೆಯ ಸಾಮರ್ಥ್ಯ ಎಣಿಕೆ {n} ಟನ್, ಆದರೆ ಗೇಟ್ ಲಾಗ್‌ಗಳ ಮೊತ್ತ {n} ಟನ್.','ಸಾಮರ್ಥ್ಯದ ಒಟ್ಟು ಮೊತ್ತ ಗೇಟ್ ಲಾಗ್‌ಗೆ ಹೊಂದುತ್ತದೆ: {n} ಟನ್, {n} ಕ್ಲಿಯರ್ ಆದ ವಾಹನಗಳು.','ರೈತ ಟೋಕನ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ','QR ಟೋಕನ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಅಥವಾ ಅದರ ID ಅನ್ನು ಕೈಯಾರೆ ನಮೂದಿಸಿ.','ಸ್ಕ್ಯಾನರ್ ನಿಂತಿದೆ. ಸ್ಕ್ಯಾನರ್ ಪ್ರಾರಂಭಿಸಿ ಅಥವಾ ಡೆಮೊ ಸ್ಕ್ಯಾನ್ ಬಳಸಿ.','ಸ್ಕ್ಯಾನರ್ ಪ್ರಾರಂಭಿಸಿ','ಸ್ಕ್ಯಾನರ್ ನಿಲ್ಲಿಸಿ','ಉಳಿಸಿದ ಬುಕಿಂಗ್‌ನ ಡೆಮೊ ಸ್ಕ್ಯಾನ್','ಟೋಕನ್ / ಬುಕಿಂಗ್ ID',
+'ಉದಾ. KD-1001','ಟೋಕನ್ ಪರಿಶೀಲಿಸಿ','ಗೇಟ್ ಪ್ರವೇಶ ಅನುಮೋದನೆ','ವಾಹನವನ್ನು ಕ್ಲಿಯರ್ ಮಾಡುವ ಮೊದಲು ಬುಕಿಂಗ್ ಮಾಹಿತಿ ಪರಿಶೀಲಿಸಿ.','ಪರಿಶೀಲಿಸಿದ ಟೋಕನ್','ಮೊದಲು ಟೋಕನ್ ಪರಿಶೀಲಿಸಿ','ರೈತನ ಹೆಸರು','ಫೋನ್ ಸಂಖ್ಯೆ','ಬೆಳೆ','ವಾಹನ ಸಂಖ್ಯೆ',
+'ಪ್ರಮಾಣ (ಟನ್‌ಗಳಲ್ಲಿ)','ಗೇಟ್ ಸಂಖ್ಯೆ','ಅಧಿಕಾರಿಯ ಟಿಪ್ಪಣಿಗಳು','ಐಚ್ಛಿಕ ಟಿಪ್ಪಣಿಗಳು','ಗೇಟ್ ಪ್ರವೇಶ ಅನುಮೋದಿಸಿ','ಫಾರ್ಮ್ ತೆರವುಗೊಳಿಸಿ','ರೈತ ಕ್ಲಿಯರೆನ್ಸ್ ಸಾರಾಂಶ','ಕ್ಲಿಯರ್ ಆದ ರೈತರು ಮತ್ತು ಕ್ಲಿಯರೆನ್ಸ್‌ಗಾಗಿ ಕಾಯುತ್ತಿರುವ ಉಳಿಸಿದ ಬುಕಿಂಗ್‌ಗಳು.','ರೈತ ಬುಕಿಂಗ್ ನೋಂದಣಿ','ಬುಕಿಂಗ್‌ಗಳನ್ನು ನಿಜವಾದ ಗೇಟ್ ಕ್ಲಿಯರೆನ್ಸ್ ದಾಖಲೆಗಳಿಂದ ಪ್ರತ್ಯೇಕವಾಗಿ ತೋರಿಸಲಾಗಿದೆ.',
+'ರೈತ','ಟೋಕನ್','ವಾಹನ','ಟನ್','ಬುಕಿಂಗ್ ಸ್ಥಿತಿ','ಗೇಟ್ ಸ್ಥಿತಿ','ಕ್ಲಿಯರ್ ಆದ ಗೇಟ್ ಪ್ರವೇಶ ಲಾಗ್‌ಗಳು','ಈ ಪುಟ ಮೊದಲ ಬಾರಿ ತೆರೆದಾಗ ಗೇಟ್ ದಾಖಲೆಗಳು ಇಲ್ಲದಿದ್ದರೆ ನಾಲ್ಕು ಡೆಮೊ ಕ್ಲಿಯರೆನ್ಸ್‌ಗಳನ್ನು ಸೇರಿಸಲಾಗುತ್ತದೆ.','CSV ರಫ್ತು ಮಾಡಿ','ಲಾಗ್‌ಗಳನ್ನು ಮುದ್ರಿಸಿ',
+'ಲಾಗ್‌ಗಳನ್ನು ಹುಡುಕಿ','ರೈತ, ಟೋಕನ್, ವಾಹನ…','ದಿನಾಂಕದ ಪ್ರಕಾರ ಶೋಧಿಸಿ','ದಿನಾಂಕ ಮತ್ತು ಸಮಯ','ಗೇಟ್','ಅಧಿಕಾರಿ','ಸ್ಥಿತಿ','ರಶೀದಿ','ಕೃಷಿಧಾರಾ 2.0 · ಅಧಿಕಾರಿ ಗೇಟ್ ಪೋರ್ಟಲ್ · ಡೆಮೊ ರೈತ ದಾಖಲೆಗಳು ಮಾದರಿ ಡೇಟಾ ಮಾತ್ರ.','ಗೇಟ್ ಕ್ಲಿಯರ್',
+'ಫೋನ್','ಸಮಯ','ಕ್ಲಿಯರ್ ಮಾಡಿದ ಪ್ರಮಾಣ','ಬುಕ್ ಮಾಡಿದ ಪ್ರಮಾಣ','{n} ಟನ್','ಬುಕಿಂಗ್ — ಕ್ಲಿಯರ್ ಆಗಿಲ್ಲ','ಯಾವುದೇ ರೈತ ದಾಖಲೆ ಸಿಕ್ಕಿಲ್ಲ.','ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಪಟ್ಟಿ ಸಿಕ್ಕಿಲ್ಲ.','ಬುಕ್ ಆಗಿದೆ','ಕ್ಲಿಯರ್ ಆಗಿದೆ',
+'ಕ್ಲಿಯರ್ ಆಗಿಲ್ಲ','ಈ ಫಿಲ್ಟರ್‌ಗೆ ಹೊಂದುವ ಕ್ಲಿಯರ್ ಆದ ಗೇಟ್ ಪ್ರವೇಶಗಳಿಲ್ಲ.','ಗೇಟ್ ಅಧಿಕಾರಿ','ಗೇಟ್ {n}','ಅಪರಿಚಿತ ರೈತ','ಉಲ್ಲೇಖಿಸಿಲ್ಲ','ದಿನಾಂಕ ಲಭ್ಯವಿಲ್ಲ','ನೀಡಿಲ್ಲ','ಪರಿಶೀಲಿಸಿದ ಬುಕಿಂಗ್','ಮೊದಲು ಟೋಕನ್ ID ನಮೂದಿಸಿ ಅಥವಾ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.',
+'ಉಳಿಸಿದ ರೈತ ಬುಕಿಂಗ್‌ಗಳಲ್ಲಿ ಟೋಕನ್ ಸಿಕ್ಕಿಲ್ಲ.','ಈ ಟೋಕನ್‌ಗೆ ಈಗಾಗಲೇ ಗೇಟ್ ಪ್ರವೇಶ ಕ್ಲಿಯರ್ ಆಗಿದೆ. ಎರಡನೇ ಬಾರಿ ಅನುಮೋದನೆ ತಡೆಯಲಾಗಿದೆ.','ಬುಕಿಂಗ್ ಟೋಕನ್ ಪರಿಶೀಲನೆಯಾಯಿತು. ಅನುಮೋದನೆಗೆ ಮುನ್ನ ವಿವರಗಳನ್ನು ನೋಡಿ.','ಡೆಮೊ ಸ್ಕ್ಯಾನ್‌ಗೆ ಬಾಕಿ ಬುಕಿಂಗ್ ಇಲ್ಲ. ನಾಲ್ಕೂ ಡೆಮೊ ದಾಖಲೆಗಳು ಈಗಾಗಲೇ ಕ್ಲಿಯರ್ ಆಗಿವೆ.','QR ಸ್ಕ್ಯಾನರ್ ಲೈಬ್ರರಿ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಟೋಕನ್ ಕೈಯಾರೆ ನಮೂದಿಸಿ.','ಸ್ಕ್ಯಾನರ್ ಪ್ರಾರಂಭವಾಯಿತು. ಕ್ಯಾಮೆರಾವನ್ನು QR ಟೋಕನ್ ಕಡೆ ಹಿಡಿಯಿರಿ.','ಕ್ಯಾಮೆರಾ ಲಭ್ಯವಿಲ್ಲ. ಕ್ಯಾಮೆರಾ ಅನುಮತಿ ನೀಡಿ ಮತ್ತು HTTPS/localhost ಬಳಸಿ, ಅಥವಾ ಟೋಕನ್ ಕೈಯಾರೆ ನಮೂದಿಸಿ.','ಗೇಟ್ ಪ್ರವೇಶ ಅನುಮೋದಿಸುವ ಮೊದಲು ಉಳಿಸಿದ ಬುಕಿಂಗ್ ಟೋಕನ್ ಪರಿಶೀಲಿಸಿ.','ಈ ಟೋಕನ್ ಈಗಾಗಲೇ ಕ್ಲಿಯರ್ ಆಗಿದೆ.','ರೈತ, ಬೆಳೆ, ವಾಹನ ಸಂಖ್ಯೆ ಮತ್ತು ಸರಿಯಾದ ಟನ್ ಪ್ರಮಾಣ ನಮೂದಿಸಿ.',
+'ಅನುಮೋದನೆ ತಡೆಯಲಾಗಿದೆ: ಪ್ರಮಾಣ ಉಳಿದ {n} ಟನ್ ಸಾಮರ್ಥ್ಯವನ್ನು ಮೀರಿದೆ.','ಈ ಟೋಕನ್ ಇನ್ನೊಂದು ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಕ್ಲಿಯರ್ ಆಗಿದೆ. ರಿಫ್ರೆಶ್ ಮಾಡಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.','ಗೇಟ್ ಪ್ರವೇಶ ಅನುಮೋದಿಸಿ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಯಿತು.','ದಾಖಲೆ ಉಳಿಸಲು ಆಗಲಿಲ್ಲ. ಬ್ರೌಸರ್ ಸಂಗ್ರಹಣೆ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.','ರಫ್ತು ಮಾಡಲು ಕ್ಲಿಯರ್ ಆದ ದಾಖಲೆಗಳಿಲ್ಲ.','ಗೇಟ್ ದಾಖಲೆ ಸಿಕ್ಕಿಲ್ಲ. ರಿಫ್ರೆಶ್ ಮಾಡಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.','ರಶೀದಿ ಮುದ್ರಿಸಲು ಪಾಪ್-ಅಪ್‌ಗಳಿಗೆ ಅನುಮತಿ ನೀಡಿ.','ಅಧಿಕೃತ ಗೇಟ್ ಕ್ಲಿಯರೆನ್ಸ್ ರಶೀದಿ','ರಶೀದಿ ID','ರಶೀದಿ ಮುದ್ರಿಸಿ',
+'ಪುಣೆ','ನಾಸಿಕ್','ನಾಗ್ಪುರ','ಅಮರಾವತಿ','ಮುಖ್ಯ','ಯಾರ್ಡ್','ಧಾನ್ಯ','ಹತ್ತಿ','ರಮೇಶ್','ಕುಮಾರ್',
+'ಪಾಟೀಲ್','ಸುನೀತಾ','ಜಾಧವ್','ಸುರೇಶ್','ಪವಾರ್','ಅನಿತಾ','ಶಿಂಧೆ','ಗೋಧಿ','ಭತ್ತ / ಅಕ್ಕಿ','ಸೋಯಾಬೀನ್',
+'ಈರುಳ್ಳಿ','ಮೆಕ್ಕೆಜೋಳ'
+],
+ml: [
+'കൃഷിധാര 2.0','ഓഫീസർ ഗേറ്റ് ക്ലിയറൻസ് പോർട്ടൽ','പങ്ക് മാറ്റുക','യാർഡ് കോഡ്','അവസാന റിഫ്രഷ്','പങ്കിട്ട ഡാഷ്ബോർഡ് ഡാറ്റ','ഗേറ്റ് ക്ലിയറൻസ് അവലോകനം','ക്ലിയർ ചെയ്തത് / ആകെ യാർഡ് ശേഷി','{n} / {n} ടൺ','യാർഡ് ശേഷിയുടെ {n}%',
+'ക്ലിയർ ചെയ്ത വാഹനങ്ങൾ','{n} ക്ലിയർ ചെയ്ത ഗേറ്റ് രേഖകൾ','ക്ലിയർ ചെയ്ത കർഷകർ','ക്ലിയർ ചെയ്ത ഗേറ്റ് രേഖകളിലെ വ്യത്യസ്ത കർഷകർ','ഗേറ്റ് ലോഗുകളിലെ ടൺ','ക്ലിയർ ചെയ്ത ഗേറ്റ് രേഖകളുടെ അളവുകളുടെ ആകെത്തുക','യാർഡ് നിലയും ഡാറ്റ ഒത്തുനോക്കലും','പങ്കിട്ട ശേഷിയെ ഗേറ്റ് പ്രവേശന രേഖകളുമായി താരതമ്യം ചെയ്യുക.','ഡാറ്റ റിഫ്രഷ് ചെയ്യുക','ശേഷി kd_cap_<yard>, kd_booked_<yard> എന്നിവയിൽ നിന്നാണ് എടുക്കുന്നത്. ക്ലിയർ ചെയ്ത വാഹനങ്ങൾ, കർഷകരുടെ എണ്ണം, ഗേറ്റ് ലോഗുകൾ എന്നിവ kd_gate_entries-ൽ നിന്നാണ്.',
+'ശേഷി മൂല്യങ്ങൾ ലഭ്യമായിരുന്നില്ല; ആവശ്യമുള്ളിടത്ത് ഡെമോ ഡിഫോൾട്ട് മൂല്യങ്ങൾ കാണിച്ചിരിക്കുന്നു.','പൊരുത്തക്കേട്: പങ്കിട്ട ശേഷി കൗണ്ടർ {n} ടൺ ആണ്, എന്നാൽ ഗേറ്റ് ലോഗുകളുടെ ആകെത്തുക {n} ടൺ.','ശേഷിയുടെ ആകെത്തുക ഗേറ്റ് ലോഗുകളുമായി ഒത്തുപോകുന്നു: {n} ടൺ, {n} ക്ലിയർ ചെയ്ത വാഹനങ്ങൾ.','കർഷക ടോക്കൺ സ്കാൻ ചെയ്യുക','QR ടോക്കൺ സ്കാൻ ചെയ്യുക അല്ലെങ്കിൽ അതിന്റെ ID കൈകൊണ്ട് നൽകുക.','സ്കാനർ നിർത്തിയിരിക്കുന്നു. സ്കാനർ ആരംഭിക്കുക അല്ലെങ്കിൽ ഡെമോ സ്കാൻ ഉപയോഗിക്കുക.','സ്കാനർ ആരംഭിക്കുക','സ്കാനർ നിർത്തുക','സേവ് ചെയ്ത ബുക്കിംഗിന്റെ ഡെമോ സ്കാൻ','ടോക്കൺ / ബുക്കിംഗ് ID',
+'ഉദാ. KD-1001','ടോക്കൺ പരിശോധിക്കുക','ഗേറ്റ് പ്രവേശന അനുമതി','വാഹനം ക്ലിയർ ചെയ്യുന്നതിന് മുമ്പ് ബുക്കിംഗ് വിവരങ്ങൾ പരിശോധിക്കുക.','പരിശോധിച്ച ടോക്കൺ','ആദ്യം ടോക്കൺ പരിശോധിക്കുക','കർഷകന്റെ പേര്','ഫോൺ നമ്പർ','വിള','വാഹന നമ്പർ',
+'അളവ് (ടണ്ണിൽ)','ഗേറ്റ് നമ്പർ','ഓഫീസറുടെ കുറിപ്പുകൾ','ഓപ്ഷണൽ കുറിപ്പുകൾ','ഗേറ്റ് പ്രവേശനം അനുവദിക്കുക','ഫോം മായ്ക്കുക','കർഷക ക്ലിയറൻസ് സംഗ്രഹം','ക്ലിയർ ചെയ്ത കർഷകരും ക്ലിയറൻസിനായി കാത്തിരിക്കുന്ന സേവ് ചെയ്ത ബുക്കിംഗുകളും.','കർഷക ബുക്കിംഗ് രജിസ്റ്റർ','ബുക്കിംഗുകൾ യഥാർത്ഥ ഗേറ്റ് ക്ലിയറൻസ് രേഖകളിൽ നിന്ന് വേറിട്ട് കാണിക്കുന്നു.',
+'കർഷകൻ','ടോക്കൺ','വാഹനം','ടൺ','ബുക്കിംഗ് നില','ഗേറ്റ് നില','ക്ലിയർ ചെയ്ത ഗേറ്റ് പ്രവേശന ലോഗുകൾ','ഈ പേജ് ആദ്യം തുറന്നപ്പോൾ ഗേറ്റ് രേഖകൾ ഇല്ലെങ്കിൽ നാല് ഡെമോ ക്ലിയറൻസുകൾ ചേർക്കും.','CSV എക്സ്പോർട്ട് ചെയ്യുക','ലോഗുകൾ പ്രിന്റ് ചെയ്യുക',
+'ലോഗുകൾ തിരയുക','കർഷകൻ, ടോക്കൺ, വാഹനം…','തീയതി അനുസരിച്ച് ഫിൽട്ടർ ചെയ്യുക','തീയതിയും സമയവും','ഗേറ്റ്','ഓഫീസർ','നില','രസീത്','കൃഷിധാര 2.0 · ഓഫീസർ ഗേറ്റ് പോർട്ടൽ · ഡെമോ കർഷക രേഖകൾ സാമ്പിൾ ഡാറ്റ മാത്രമാണ്.','ഗേറ്റ് ക്ലിയർ',
+'ഫോൺ','സമയം','ക്ലിയർ ചെയ്ത അളവ്','ബുക്ക് ചെയ്ത അളവ്','{n} ടൺ','ബുക്കിംഗ് — ക്ലിയർ ആയിട്ടില്ല','കർഷക രേഖകളൊന്നും കണ്ടെത്തിയില്ല.','സേവ് ചെയ്ത ബുക്കിംഗ് പട്ടിക കണ്ടെത്തിയില്ല.','ബുക്ക് ചെയ്തു','ക്ലിയർ ചെയ്തു',
+'ക്ലിയർ ആയിട്ടില്ല','ഈ ഫിൽട്ടറിന് യോജിക്കുന്ന ക്ലിയർ ചെയ്ത ഗേറ്റ് പ്രവേശനങ്ങളില്ല.','ഗേറ്റ് ഓഫീസർ','ഗേറ്റ് {n}','അജ്ഞാത കർഷകൻ','വ്യക്തമാക്കിയിട്ടില്ല','തീയതി ലഭ്യമല്ല','നൽകിയിട്ടില്ല','പരിശോധിച്ച ബുക്കിംഗ്','ആദ്യം ടോക്കൺ ID നൽകുക അല്ലെങ്കിൽ സ്കാൻ ചെയ്യുക.',
+'സേവ് ചെയ്ത കർഷക ബുക്കിംഗുകളിൽ ടോക്കൺ കണ്ടെത്തിയില്ല.','ഈ ടോക്കണിന്റെ ഗേറ്റ് പ്രവേശനം നേരത്തേ ക്ലിയർ ചെയ്തിട്ടുണ്ട്. ഇരട്ട അനുമതി തടഞ്ഞിരിക്കുന്നു.','ബുക്കിംഗ് ടോക്കൺ പരിശോധിച്ചു. അനുമതിക്ക് മുമ്പ് വിവരങ്ങൾ നോക്കുക.','ഡെമോ സ്കാനിന് തീർപ്പാക്കാത്ത ബുക്കിംഗ് ഇല്ല. നാല് ഡെമോ രേഖകളും നേരത്തേ ക്ലിയർ ചെയ്തു.','QR സ്കാനർ ലൈബ്രറി ലോഡ് ആയില്ല. ടോക്കൺ കൈകൊണ്ട് നൽകുക.','സ്കാനർ ആരംഭിച്ചു. ക്യാമറ QR ടോക്കണിന് നേരെ പിടിക്കുക.','ക്യാമറ ലഭ്യമല്ല. ക്യാമറ അനുമതി നൽകി HTTPS/localhost ഉപയോഗിക്കുക, അല്ലെങ്കിൽ ടോക്കൺ കൈകൊണ്ട് നൽകുക.','ഗേറ്റ് പ്രവേശനം അനുവദിക്കുന്നതിന് മുമ്പ് സേവ് ചെയ്ത ബുക്കിംഗിന്റെ ടോക്കൺ പരിശോധിക്കുക.','ഈ ടോക്കൺ നേരത്തേ ക്ലിയർ ചെയ്തതാണ്.','കർഷകൻ, വിള, വാഹന നമ്പർ, ശരിയായ ടൺ അളവ് എന്നിവ നൽകുക.',
+'അനുമതി തടഞ്ഞു: അളവ് ബാക്കിയുള്ള {n} ടൺ ശേഷിയെക്കാൾ കൂടുതലാണ്.','ഈ ടോക്കൺ മറ്റൊരു ടാബിൽ ക്ലിയർ ചെയ്തു. റിഫ്രഷ് ചെയ്ത് വീണ്ടും ശ്രമിക്കുക.','ഗേറ്റ് പ്രവേശനം അനുവദിച്ച് വിജയകരമായി സേവ് ചെയ്തു.','എൻട്രി സേവ് ചെയ്യാനായില്ല. ബ്രൗസർ സ്റ്റോറേജ് പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.','എക്സ്പോർട്ട് ചെയ്യാൻ ക്ലിയർ ചെയ്ത എൻട്രികളില്ല.','ഗേറ്റ് രേഖ കണ്ടെത്തിയില്ല. റിഫ്രഷ് ചെയ്ത് വീണ്ടും ശ്രമിക്കുക.','രസീത് പ്രിന്റ് ചെയ്യാൻ പോപ്പ്-അപ്പുകൾ അനുവദിക്കുക.','ഔദ്യോഗിക ഗേറ്റ് ക്ലിയറൻസ് രസീത്','രസീത് ID','രസീത് പ്രിന്റ് ചെയ്യുക',
+'പൂനെ','നാസിക്','നാഗ്പൂർ','അമരാവതി','മെയിൻ','യാർഡ്','ധാന്യം','പരുത്തി','രമേഷ്','കുമാർ',
+'പാട്ടീൽ','സുനിത','ജാദവ്','സുരേഷ്','പവാർ','അനിത','ഷിൻഡെ','ഗോതമ്പ്','നെല്ല് / അരി','സോയാബീൻ',
+'ഉള്ളി','ചോളം'
+],
+or: [
+'କୃଷିଧାରା 2.0','ଅଧିକାରୀ ଗେଟ୍ କ୍ଲିୟରାନ୍ସ ପୋର୍ଟାଲ୍','ଭୂମିକା ବଦଳାନ୍ତୁ','ୟାର୍ଡ କୋଡ୍','ଶେଷ ରିଫ୍ରେଶ୍','ସହଭାଗୀ ଡ୍ୟାସବୋର୍ଡ ତଥ୍ୟ','ଗେଟ୍ କ୍ଲିୟରାନ୍ସ ସାରାଂଶ','କ୍ଲିୟର୍ / ମୋଟ ୟାର୍ଡ କ୍ଷମତା','{n} / {n} ଟନ୍','ୟାର୍ଡ କ୍ଷମତାର {n}%',
+'କ୍ଲିୟର୍ ହୋଇଥିବା ଗାଡ଼ି','{n} କ୍ଲିୟର୍ ଗେଟ୍ ରେକର୍ଡ','କ୍ଲିୟର୍ ହୋଇଥିବା କୃଷକ','କ୍ଲିୟର୍ ଗେଟ୍ ରେକର୍ଡରେ ଭିନ୍ନ ଭିନ୍ନ କୃଷକ','ଗେଟ୍ ଲଗ୍‌ରେ ଟନ୍','କ୍ଲିୟର୍ ଗେଟ୍ ରେକର୍ଡର ପରିମାଣର ମୋଟ','ୟାର୍ଡ ସ୍ଥିତି ଓ ତଥ୍ୟ ମେଳନ','ସହଭାଗୀ କ୍ଷମତାକୁ ଗେଟ୍-ପ୍ରବେଶ ରେକର୍ଡ ସହ ତୁଳନା କରନ୍ତୁ।','ତଥ୍ୟ ରିଫ୍ରେଶ୍ କରନ୍ତୁ','କ୍ଷମତା kd_cap_<yard> ଓ kd_booked_<yard> ରୁ ନିଆଯାଏ। କ୍ଲିୟର୍ ଗାଡ଼ି, କୃଷକ ସଂଖ୍ୟା ଓ ଗେଟ୍ ଲଗ୍ kd_gate_entries ରୁ ନିଆଯାଏ।',
+'କ୍ଷମତା ମୂଲ୍ୟ ମିଳିଲା ନାହିଁ; ଆବଶ୍ୟକ ଥିଲେ ଡେମୋର ଡିଫଲ୍ଟ ମୂଲ୍ୟ ଦେଖାଯାଇଛି।','ମେଳ ଖାଉନାହିଁ: ସହଭାଗୀ କ୍ଷମତା କାଉଣ୍ଟର {n} ଟନ୍, କିନ୍ତୁ ଗେଟ୍ ଲଗ୍‌ର ମୋଟ {n} ଟନ୍।','କ୍ଷମତାର ମୋଟ ଗେଟ୍ ଲଗ୍ ସହ ମେଳ ଖାଏ: {n} ଟନ୍, {n} କ୍ଲିୟର୍ ଗାଡ଼ି।','କୃଷକ ଟୋକନ୍ ସ୍କାନ୍ କରନ୍ତୁ','QR ଟୋକନ୍ ସ୍କାନ୍ କରନ୍ତୁ କିମ୍ବା ତାହାର ID ନିଜେ ଦିଅନ୍ତୁ।','ସ୍କାନର୍ ବନ୍ଦ ଅଛି। ସ୍କାନର୍ ଆରମ୍ଭ କରନ୍ତୁ କିମ୍ବା ଡେମୋ ସ୍କାନ୍ ବ୍ୟବହାର କରନ୍ତୁ।','ସ୍କାନର୍ ଆରମ୍ଭ କରନ୍ତୁ','ସ୍କାନର୍ ବନ୍ଦ କରନ୍ତୁ','ସେଭ୍ ହୋଇଥିବା ବୁକିଂର ଡେମୋ ସ୍କାନ୍','ଟୋକନ୍ / ବୁକିଂ ID',
+'ଯଥା KD-1001','ଟୋକନ୍ ଯାଞ୍ଚ କରନ୍ତୁ','ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦନ','ଗାଡ଼ି କ୍ଲିୟର୍ କରିବା ପୂର୍ବରୁ ବୁକିଂ ସୂଚନା ଯାଞ୍ଚ କରନ୍ତୁ।','ଯାଞ୍ଚ ହୋଇଥିବା ଟୋକନ୍','ପ୍ରଥମେ ଟୋକନ୍ ଯାଞ୍ଚ କରନ୍ତୁ','କୃଷକଙ୍କ ନାମ','ଫୋନ୍ ନମ୍ବର','ଫସଲ','ଗାଡ଼ି ନମ୍ବର',
+'ପରିମାଣ (ଟନ୍‌ରେ)','ଗେଟ୍ ନମ୍ବର','ଅଧିକାରୀଙ୍କ ଟିପ୍ପଣୀ','ଐଚ୍ଛିକ ଟିପ୍ପଣୀ','ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦନ କରନ୍ତୁ','ଫର୍ମ ସଫା କରନ୍ତୁ','କୃଷକ କ୍ଲିୟରାନ୍ସ ସାରାଂଶ','କ୍ଲିୟର୍ ହୋଇଥିବା କୃଷକ ଓ କ୍ଲିୟରାନ୍ସ ଅପେକ୍ଷାରେ ଥିବା ସେଭ୍ ବୁକିଂ।','କୃଷକ ବୁକିଂ ରେଜିଷ୍ଟର','ବୁକିଂକୁ ପ୍ରକୃତ ଗେଟ୍ କ୍ଲିୟରାନ୍ସ ରେକର୍ଡରୁ ଅଲଗା ଦେଖାଯାଇଛି।',
+'କୃଷକ','ଟୋକନ୍','ଗାଡ଼ି','ଟନ୍','ବୁକିଂ ସ୍ଥିତି','ଗେଟ୍ ସ୍ଥିତି','କ୍ଲିୟର୍ ଗେଟ୍ ପ୍ରବେଶ ଲଗ୍','ଏହି ପୃଷ୍ଠା ପ୍ରଥମ ଥର ଖୋଲିବା ସମୟରେ ଗେଟ୍ ରେକର୍ଡ ନଥିଲେ ଚାରିଟି ଡେମୋ କ୍ଲିୟରାନ୍ସ ଯୋଡ଼ାଯାଏ।','CSV ରପ୍ତାନି କରନ୍ତୁ','ଲଗ୍ ପ୍ରିଣ୍ଟ କରନ୍ତୁ',
+'ଲଗ୍ ଖୋଜନ୍ତୁ','କୃଷକ, ଟୋକନ୍, ଗାଡ଼ି…','ତାରିଖ ଅନୁସାରେ ଛାଣନ୍ତୁ','ତାରିଖ ଓ ସମୟ','ଗେଟ୍','ଅଧିକାରୀ','ସ୍ଥିତି','ରସିଦ','କୃଷିଧାରା 2.0 · ଅଧିକାରୀ ଗେଟ୍ ପୋର୍ଟାଲ୍ · ଡେମୋ କୃଷକ ରେକର୍ଡ କେବଳ ନମୁନା ତଥ୍ୟ।','ଗେଟ୍ କ୍ଲିୟର୍',
+'ଫୋନ୍','ସମୟ','କ୍ଲିୟର୍ ହୋଇଥିବା ପରିମାଣ','ବୁକ୍ ହୋଇଥିବା ପରିମାଣ','{n} ଟନ୍','ବୁକିଂ — କ୍ଲିୟର୍ ହୋଇନାହିଁ','କୌଣସି କୃଷକ ରେକର୍ଡ ମିଳିଲା ନାହିଁ।','ସେଭ୍ ବୁକିଂ ତାଲିକା ମିଳିଲା ନାହିଁ।','ବୁକ୍ ହୋଇଛି','କ୍ଲିୟର୍ ହୋଇଛି',
+'କ୍ଲିୟର୍ ହୋଇନାହିଁ','ଏହି ଫିଲ୍ଟରକୁ ମେଳ ଖାଉଥିବା କ୍ଲିୟର୍ ଗେଟ୍ ପ୍ରବେଶ ନାହିଁ।','ଗେଟ୍ ଅଧିକାରୀ','ଗେଟ୍ {n}','ଅଜଣା କୃଷକ','ଉଲ୍ଲେଖ ନାହିଁ','ତାରିଖ ଉପଲବ୍ଧ ନାହିଁ','ଦିଆଯାଇନାହିଁ','ଯାଞ୍ଚ ହୋଇଥିବା ବୁକିଂ','ପ୍ରଥମେ ଟୋକନ୍ ID ଦିଅନ୍ତୁ କିମ୍ବା ସ୍କାନ୍ କରନ୍ତୁ।',
+'ସେଭ୍ କୃଷକ ବୁକିଂରେ ଟୋକନ୍ ମିଳିଲା ନାହିଁ।','ଏହି ଟୋକନ୍‌ର ଗେଟ୍ ପ୍ରବେଶ ପୂର୍ବରୁ କ୍ଲିୟର୍ ହୋଇଛି। ଦ୍ୱିତୀୟ ଥର ଅନୁମୋଦନ ବନ୍ଦ ହୋଇଛି।','ବୁକିଂ ଟୋକନ୍ ଯାଞ୍ଚ ହେଲା। ଅନୁମୋଦନ ପୂର୍ବରୁ ବିବରଣୀ ଦେଖନ୍ତୁ।','ଡେମୋ ସ୍କାନ୍ ପାଇଁ କୌଣସି ବାକି ବୁକିଂ ନାହିଁ। ଚାରୋଟି ଡେମୋ ରେକର୍ଡ ପୂର୍ବରୁ କ୍ଲିୟର୍ ହୋଇଛି।','QR ସ୍କାନର୍ ଲାଇବ୍ରେରୀ ଲୋଡ୍ ହେଲା ନାହିଁ। ଟୋକନ୍ ନିଜେ ଦିଅନ୍ତୁ।','ସ୍କାନର୍ ଆରମ୍ଭ ହେଲା। କ୍ୟାମେରାକୁ QR ଟୋକନ୍ ଆଡ଼କୁ ରଖନ୍ତୁ।','କ୍ୟାମେରା ଉପଲବ୍ଧ ନାହିଁ। କ୍ୟାମେରା ଅନୁମତି ଦିଅନ୍ତୁ ଓ HTTPS/localhost ବ୍ୟବହାର କରନ୍ତୁ, ଅଥବା ଟୋକନ୍ ନିଜେ ଦିଅନ୍ତୁ।','ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦନ ପୂର୍ବରୁ ସେଭ୍ ବୁକିଂର ଟୋକନ୍ ଯାଞ୍ଚ କରନ୍ତୁ।','ଏହି ଟୋକନ୍ ପୂର୍ବରୁ କ୍ଲିୟର୍ ହୋଇଛି।','କୃଷକ, ଫସଲ, ଗାଡ଼ି ନମ୍ବର ଓ ସଠିକ୍ ଟନ୍ ପରିମାଣ ଦିଅନ୍ତୁ।',
+'ଅନୁମୋଦନ ବନ୍ଦ: ପରିମାଣ ବାକି {n} ଟନ୍ କ୍ଷମତାଠାରୁ ଅଧିକ।','ଏହି ଟୋକନ୍ ଅନ୍ୟ ଟ୍ୟାବ୍‌ରେ କ୍ଲିୟର୍ ହୋଇଛି। ରିଫ୍ରେଶ୍ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।','ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦିତ ହୋଇ ସଫଳତାର ସହ ସେଭ୍ ହେଲା।','ଏଣ୍ଟ୍ରି ସେଭ୍ ହୋଇପାରିଲା ନାହିଁ। ବ୍ରାଉଜର୍ ଷ୍ଟୋରେଜ୍ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।','ରପ୍ତାନି ପାଇଁ କ୍ଲିୟର୍ ଏଣ୍ଟ୍ରି ନାହିଁ।','ଗେଟ୍ ରେକର୍ଡ ମିଳିଲା ନାହିଁ। ରିଫ୍ରେଶ୍ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।','ରସିଦ ପ୍ରିଣ୍ଟ ପାଇଁ ପପ୍-ଅପ୍‌କୁ ଅନୁମତି ଦିଅନ୍ତୁ।','ସରକାରୀ ଗେଟ୍ କ୍ଲିୟରାନ୍ସ ରସିଦ','ରସିଦ ID','ରସିଦ ପ୍ରିଣ୍ଟ କରନ୍ତୁ',
+'ପୁଣେ','ନାସିକ','ନାଗପୁର','ଅମରାବତୀ','ମୁଖ୍ୟ','ୟାର୍ଡ','ଶସ୍ୟ','କପା','ରମେଶ','କୁମାର',
+'ପାଟିଲ','ସୁନିତା','ଯାଦବ','ସୁରେଶ','ପାୱାର','ଅନିତା','ଶିନ୍ଦେ','ଗହମ','ଧାନ / ଚାଉଳ','ସୋୟାବିନ୍',
+'ପିଆଜ','ମକା'
+],
+as: [
+'কৃষিধাৰা 2.0','বিষয়া গেট ক্লিয়াৰেন্স প’ৰ্টেল','ভূমিকা সলনি কৰক','য়াৰ্ড ক’ড','শেষ ৰিফ্ৰেচ','ভাগ-বতৰা ড্যাশব’ৰ্ড তথ্য','গেট ক্লিয়াৰেন্সৰ আভাস','ক্লিয়াৰ / মুঠ য়াৰ্ড ক্ষমতা','{n} / {n} টন','য়াৰ্ড ক্ষমতাৰ {n}%',
+'ক্লিয়াৰ হোৱা বাহন','{n}টা ক্লিয়াৰ গেট ৰেকৰ্ড','ক্লিয়াৰ হোৱা কৃষক','ক্লিয়াৰ গেট ৰেকৰ্ডত বেলেগ বেলেগ কৃষক','গেট লগত মুঠ টন','ক্লিয়াৰ গেট ৰেকৰ্ডৰ পৰিমাণৰ যোগফল','য়াৰ্ডৰ অৱস্থা আৰু তথ্য মিলোৱা','ভাগ-বতৰা ক্ষমতাক গেট-প্ৰৱেশ ৰেকৰ্ডৰ সৈতে তুলনা কৰক।','তথ্য ৰিফ্ৰেচ কৰক','ক্ষমতা kd_cap_<yard> আৰু kd_booked_<yard> ৰ পৰা লোৱা হয়। ক্লিয়াৰ বাহন, কৃষকৰ সংখ্যা আৰু গেট লগ kd_gate_entries ৰ পৰা লোৱা হয়।',
+'ক্ষমতাৰ মান পোৱা নগ’ল; প্ৰয়োজন সাপেক্ষে ডেমোৰ ডিফ’ল্ট মান দেখুওৱা হৈছে।','অমিল: ভাগ-বতৰা ক্ষমতা কাউণ্টাৰ {n} টন, কিন্তু গেট লগৰ যোগফল {n} টন।','ক্ষমতাৰ মুঠ গেট লগৰ সৈতে মিলিছে: {n} টন, {n}টা ক্লিয়াৰ বাহন।','কৃষকৰ টোকেন স্কেন কৰক','QR টোকেন স্কেন কৰক বা ইয়াৰ ID হাতে দিয়ক।','স্কেনাৰ বন্ধ আছে। স্কেনাৰ আৰম্ভ কৰক বা ডেমো স্কেন ব্যৱহাৰ কৰক।','স্কেনাৰ আৰম্ভ কৰক','স্কেনাৰ বন্ধ কৰক','সংৰক্ষিত বুকিঙৰ ডেমো স্কেন','টোকেন / বুকিং ID',
+'যেনে KD-1001','টোকেন পৰীক্ষা কৰক','গেট প্ৰৱেশৰ অনুমোদন','বাহন ক্লিয়াৰ কৰাৰ আগতে বুকিঙৰ তথ্য পৰীক্ষা কৰক।','পৰীক্ষিত টোকেন','প্ৰথমে টোকেন পৰীক্ষা কৰক','কৃষকৰ নাম','ফোন নম্বৰ','শস্য','বাহনৰ নম্বৰ',
+'পৰিমাণ (টনত)','গেট নম্বৰ','বিষয়াৰ টোকা','ঐচ্ছিক টোকা','গেট প্ৰৱেশ অনুমোদন কৰক','ফৰ্ম মচক','কৃষক ক্লিয়াৰেন্সৰ সাৰাংশ','ক্লিয়াৰ হোৱা কৃষক আৰু ক্লিয়াৰেন্সৰ অপেক্ষাত থকা সংৰক্ষিত বুকিং।','কৃষক বুকিং ৰেজিষ্টাৰ','বুকিংবোৰ প্ৰকৃত গেট ক্লিয়াৰেন্স ৰেকৰ্ডৰ পৰা পৃথকে দেখুওৱা হৈছে।',
+'কৃষক','টোকেন','বাহন','টন','বুকিঙৰ অৱস্থা','গেটৰ অৱস্থা','ক্লিয়াৰ গেট প্ৰৱেশ লগ','এই পৃষ্ঠা প্ৰথমবাৰ খোলাৰ সময়ত গেট ৰেকৰ্ড নথকিলে চাৰিটা ডেমো ক্লিয়াৰেন্স যোগ কৰা হয়।','CSV ৰপ্তানি কৰক','লগ প্ৰিণ্ট কৰক',
+'লগ বিচাৰক','কৃষক, টোকেন, বাহন…','তাৰিখ অনুসৰি ছাণক','তাৰিখ আৰু সময়','গেট','বিষয়া','অৱস্থা','ৰচিদ','কৃষিধাৰা 2.0 · বিষয়া গেট প’ৰ্টেল · ডেমো কৃষক ৰেকৰ্ড কেৱল নমুনা তথ্য।','গেট ক্লিয়াৰ',
+'ফোন','সময়','ক্লিয়াৰ কৰা পৰিমাণ','বুক কৰা পৰিমাণ','{n} টন','বুকিং — ক্লিয়াৰ হোৱা নাই','কোনো কৃষক ৰেকৰ্ড পোৱা নগ’ল।','সংৰক্ষিত বুকিং তালিকা পোৱা নগ’ল।','বুক কৰা','ক্লিয়াৰ',
+'ক্লিয়াৰ হোৱা নাই','এই ফিল্টাৰৰ সৈতে মিলা ক্লিয়াৰ গেট প্ৰৱেশ নাই।','গেট বিষয়া','গেট {n}','অজ্ঞাত কৃষক','উল্লেখ নাই','তাৰিখ উপলব্ধ নহয়','দিয়া হোৱা নাই','পৰীক্ষিত বুকিং','প্ৰথমে টোকেন ID দিয়ক বা স্কেন কৰক।',
+'সংৰক্ষিত কৃষক বুকিঙত টোকেন পোৱা নগ’ল।','এই টোকেনৰ গেট প্ৰৱেশ আগতেই ক্লিয়াৰ হৈছে। দ্বিতীয়বাৰ অনুমোদন বন্ধ কৰা হৈছে।','বুকিং টোকেন পৰীক্ষা হ’ল। অনুমোদনৰ আগতে বিৱৰণ চাওক।','ডেমো স্কেনৰ বাবে কোনো বাকী বুকিং নাই। চাৰিটা ডেমো ৰেকৰ্ড আগতেই ক্লিয়াৰ হৈছে।','QR স্কেনাৰ লাইব্ৰেৰী লোড হোৱা নাই। টোকেন হাতে দিয়ক।','স্কেনাৰ আৰম্ভ হ’ল। কেমেৰা QR টোকেনৰ ফালে ৰাখক।','কেমেৰা উপলব্ধ নহয়। কেমেৰাৰ অনুমতি দিয়ক আৰু HTTPS/localhost ব্যৱহাৰ কৰক, বা টোকেন হাতে দিয়ক।','গেট প্ৰৱেশ অনুমোদনৰ আগতে সংৰক্ষিত বুকিঙৰ টোকেন পৰীক্ষা কৰক।','এই টোকেন আগতেই ক্লিয়াৰ হৈছে।','কৃষক, শস্য, বাহনৰ নম্বৰ আৰু শুদ্ধ টন পৰিমাণ দিয়ক।',
+'অনুমোদন বন্ধ: পৰিমাণ বাকী থকা {n} টন ক্ষমতাতকৈ বেছি।','এই টোকেন আন টেবত ক্লিয়াৰ হৈছে। ৰিফ্ৰেচ কৰি পুনৰ চেষ্টা কৰক।','গেট প্ৰৱেশ অনুমোদিত হৈ সফলভাৱে সংৰক্ষিত হ’ল।','এণ্ট্ৰি সংৰক্ষণ কৰিব নোৱাৰি। ব্ৰাউজাৰ ষ্ট’ৰেজ পৰীক্ষা কৰি পুনৰ চেষ্টা কৰক।','ৰপ্তানি কৰিবলৈ ক্লিয়াৰ এণ্ট্ৰি নাই।','গেট ৰেকৰ্ড পোৱা নগ’ল। ৰিফ্ৰেচ কৰি পুনৰ চেষ্টা কৰক।','ৰচিদ প্ৰিণ্ট কৰিবলৈ পপ-আপৰ অনুমতি দিয়ক।','আনুষ্ঠানিক গেট ক্লিয়াৰেন্স ৰচিদ','ৰচিদ ID','ৰচিদ প্ৰিণ্ট কৰক',
+'পুনে','নাশিক','নাগপুৰ','অমৰাৱতী','মুখ্য','য়াৰ্ড','শস্য','কপাহ','ৰমেশ','কুমাৰ',
+'পাটিল','সুনীতা','যাদৱ','সুৰেশ','পাৱাৰ','অনীতা','শিণ্ডে','ঘেঁহু','ধান / চাউল','সয়াবিন',
+'পিয়াঁজ','মকৈ'
+],
+ur: [
+'کرشی دھارا 2.0','افسر گیٹ کلیئرنس پورٹل','کردار تبدیل کریں','یارڈ کوڈ','آخری ریفریش','مشترکہ ڈیش بورڈ ڈیٹا','گیٹ کلیئرنس کا جائزہ','کلیئر / کل یارڈ گنجائش','{n} / {n} ٹن','یارڈ گنجائش کا {n}%',
+'کلیئر ہونے والی گاڑیاں','{n} کلیئر گیٹ ریکارڈ','کلیئر ہونے والے کسان','کلیئر گیٹ ریکارڈ میں منفرد کسان','گیٹ لاگ میں کل ٹن','کلیئر گیٹ ریکارڈ کی مقداروں کا مجموعہ','یارڈ کی صورتِ حال اور ڈیٹا کا موازنہ','مشترکہ گنجائش کا گیٹ داخلہ ریکارڈ سے موازنہ کریں۔','ڈیٹا ریفریش کریں','گنجائش kd_cap_<yard> اور kd_booked_<yard> سے لی جاتی ہے۔ کلیئر گاڑیوں اور کسانوں کی تعداد اور گیٹ لاگ kd_gate_entries سے لیے جاتے ہیں۔',
+'گنجائش کی قدریں دستیاب نہیں تھیں؛ جہاں ضرورت ہو ڈیمو کی ڈیفالٹ قدریں دکھائی گئی ہیں۔','عدم مطابقت: مشترکہ گنجائش کاؤنٹر {n} ٹن ہے، مگر گیٹ لاگ کا مجموعہ {n} ٹن ہے۔','گنجائش کا کل مجموعہ گیٹ لاگ سے مطابقت رکھتا ہے: {n} ٹن، {n} کلیئر گاڑیاں۔','کسان ٹوکن اسکین کریں','QR ٹوکن اسکین کریں یا اس کی ID ہاتھ سے درج کریں۔','اسکینر بند ہے۔ اسکینر شروع کریں یا ڈیمو اسکین استعمال کریں۔','اسکینر شروع کریں','اسکینر بند کریں','محفوظ بکنگ کا ڈیمو اسکین','ٹوکن / بکنگ ID',
+'مثلاً KD-1001','ٹوکن جانچیں','گیٹ داخلے کی منظوری','گاڑی کلیئر کرنے سے پہلے بکنگ کی معلومات جانچیں۔','تصدیق شدہ ٹوکن','پہلے ٹوکن جانچیں','کسان کا نام','فون نمبر','فصل','گاڑی نمبر',
+'مقدار (ٹن میں)','گیٹ نمبر','افسر کے نوٹس','اختیاری نوٹس','گیٹ داخلہ منظور کریں','فارم صاف کریں','کسان کلیئرنس کا خلاصہ','کلیئر ہونے والے کسان اور کلیئرنس کے منتظر محفوظ بکنگز۔','کسان بکنگ رجسٹر','بکنگز کو اصل گیٹ کلیئرنس ریکارڈ سے الگ دکھایا گیا ہے۔',
+'کسان','ٹوکن','گاڑی','ٹن','بکنگ کی حالت','گیٹ کی حالت','کلیئر گیٹ داخلہ لاگ','اس صفحے کے پہلی بار کھلنے پر اگر کوئی گیٹ ریکارڈ نہ ہو تو چار ڈیمو کلیئرنس شامل کی جاتی ہیں۔','CSV برآمد کریں','لاگ پرنٹ کریں',
+'لاگ تلاش کریں','کسان، ٹوکن، گاڑی…','تاریخ کے مطابق چھانٹیں','تاریخ اور وقت','گیٹ','افسر','حالت','رسید','کرشی دھارا 2.0 · افسر گیٹ پورٹل · ڈیمو کسان ریکارڈ صرف نمونہ ڈیٹا ہیں۔','گیٹ کلیئر',
+'فون','وقت','کلیئر کی گئی مقدار','بُک کی گئی مقدار','{n} ٹن','بکنگ — کلیئر نہیں','کوئی کسان ریکارڈ نہیں ملا۔','محفوظ بکنگ فہرست نہیں ملی۔','بُک','کلیئر',
+'کلیئر نہیں','اس فلٹر سے مطابقت رکھنے والا کوئی کلیئر گیٹ داخلہ نہیں۔','گیٹ افسر','گیٹ {n}','نامعلوم کسان','بیان نہیں کیا گیا','تاریخ دستیاب نہیں','فراہم نہیں کیا گیا','تصدیق شدہ بکنگ','پہلے ٹوکن ID درج کریں یا اسکین کریں۔',
+'محفوظ کسان بکنگز میں ٹوکن نہیں ملا۔','اس ٹوکن کا گیٹ داخلہ پہلے ہی کلیئر ہو چکا ہے۔ دوبارہ منظوری روک دی گئی ہے۔','بکنگ ٹوکن کی تصدیق ہو گئی۔ منظوری سے پہلے تفصیلات دیکھ لیں۔','ڈیمو اسکین کے لیے کوئی زیرِ التوا بکنگ نہیں ہے۔ چاروں ڈیمو ریکارڈ پہلے ہی کلیئر ہیں۔','QR اسکینر لائبریری لوڈ نہیں ہو سکی۔ ٹوکن ہاتھ سے درج کریں۔','اسکینر شروع ہو گیا۔ کیمرہ QR ٹوکن کی طرف رکھیں۔','کیمرہ دستیاب نہیں۔ کیمرے کی اجازت دیں اور HTTPS/localhost استعمال کریں، یا ٹوکن ہاتھ سے درج کریں۔','گیٹ داخلہ منظور کرنے سے پہلے محفوظ بکنگ کا ٹوکن جانچیں۔','یہ ٹوکن پہلے ہی کلیئر ہو چکا ہے۔','کسان، فصل، گاڑی نمبر اور درست ٹن مقدار درج کریں۔',
+'منظوری روک دی گئی: مقدار باقی {n} ٹن گنجائش سے زیادہ ہے۔','یہ ٹوکن کسی دوسرے ٹیب میں کلیئر ہو چکا ہے۔ ریفریش کر کے دوبارہ کوشش کریں۔','گیٹ داخلہ منظور ہو کر کامیابی سے محفوظ ہو گیا۔','اندراج محفوظ نہیں ہو سکا۔ براؤزر اسٹوریج دیکھ کر دوبارہ کوشش کریں۔','برآمد کرنے کے لیے کوئی کلیئر اندراج نہیں۔','گیٹ ریکارڈ نہیں ملا۔ ریفریش کر کے دوبارہ کوشش کریں۔','رسید پرنٹ کرنے کے لیے پاپ اپ کی اجازت دیں۔','سرکاری گیٹ کلیئرنس رسید','رسید ID','رسید پرنٹ کریں',
+'پونے','ناسک','ناگپور','امراوتی','مرکزی','یارڈ','اناج','کپاس','رمیش','کمار',
+'پاٹل','سنیتا','جادھو','سریش','پوار','انیتا','شندے','گندم','دھان / چاول','سویابین',
+'پیاز','مکئی'
+],
+sa: [
+'कृषिधारा 2.0','अधिकारिद्वारानुमतिपोर्टलम्','भूमिकां परिवर्तयत','प्राङ्गणसङ्केतः','अन्तिमं नवीकरणम्','साझाफलकस्य दत्तांशः','द्वारानुमतेः सिंहावलोकनम्','अनुमतम् / समग्रप्राङ्गणक्षमता','{n} / {n} टन','प्राङ्गणक्षमतायाः {n}%',
+'अनुमतानि वाहनानि','{n} अनुमतद्वारविवरणानि','अनुमताः कृषकाः','अनुमतद्वारविवरणेषु भिन्नाः कृषकाः','द्वारपत्रिकासु टन','अनुमतद्वारविवरणानां परिमाणयोगः','प्राङ्गणस्थितिः दत्तांशमेलनं च','साझां क्षमतां द्वारप्रवेशविवरणैः सह तुलयत।','दत्तांशं नवीकुरुत','क्षमता kd_cap_<yard> तथा kd_booked_<yard> इत्येताभ्यां गृह्यते। अनुमतवाहनानां कृषकसङ्ख्यायाः द्वारपत्रिकाणां च स्रोतः kd_gate_entries अस्ति।',
+'क्षमतामानानि न प्राप्तानि; आवश्यकस्थले प्रदर्शनस्य पूर्वनिर्धारितमानानि दर्शितानि।','असङ्गतिः: साझा क्षमतागणकः {n} टन, किन्तु द्वारपत्रिकायोगः {n} टन।','क्षमतायोगः द्वारपत्रिकाभिः सह समानः: {n} टन, {n} अनुमतवाहनानि।','कृषकसङ्केतं स्कैन् कुरुत','QR-सङ्केतं स्कैन् कुरुत तस्य ID वा हस्तेन लिखत।','स्कैनरः स्थगितः। स्कैनरं प्रारभत प्रदर्शनस्कैनं वा उपयुञ्जत।','स्कैनरं प्रारभत','स्कैनरं स्थगयत','सुरक्षितारक्षणस्य प्रदर्शनस्कैनम्','सङ्केत / आरक्षण ID',
+'यथा KD-1001','सङ्केतं परीक्षत','द्वारप्रवेशानुमोदनम्','वाहनम् अनुमन्तुं पूर्वम् आरक्षणसूचनां परीक्षत।','सत्यापितः सङ्केतः','प्रथमं सङ्केतं परीक्षत','कृषकनाम','दूरवाणीसङ्ख्या','उत्पन्नम्','वाहनसङ्ख्या',
+'परिमाणम् (टनमाने)','द्वारसङ्ख्या','अधिकारिणः टिप्पण्यः','ऐच्छिकाः टिप्पण्यः','द्वारप्रवेशम् अनुमोदयत','पत्रकं शोधयत','कृषकानुमतिसारः','अनुमताः कृषकाः अनुमतिं प्रतीक्षमाणानि सुरक्षितारक्षणानि च।','कृषकारक्षणपञ्जिका','आरक्षणानि वास्तविकद्वारानुमतिविवरणेभ्यः पृथक् दर्शितानि।',
+'कृषकः','सङ्केतः','वाहनम्','टन','आरक्षणस्थितिः','द्वारस्थितिः','अनुमतद्वारप्रवेशपत्रिकाः','इदं पृष्ठं प्रथमवारं उद्घाटिते द्वारविवरणानि न स्युः चेत् चतस्रः प्रदर्शनानुमतयः योज्यन्ते।','CSV निर्यातयत','पत्रिकाः मुद्रयत',
+'पत्रिकाः अन्विष्यत','कृषकः, सङ्केतः, वाहनम्…','दिनाङ्कानुसारं छानयत','दिनाङ्कः समयश्च','द्वारम्','अधिकारी','स्थितिः','प्राप्तिपत्रम्','कृषिधारा 2.0 · अधिकारिद्वारपोर्टलम् · प्रदर्शनकृषकविवरणानि केवलं निदर्शनदत्तांशः।','द्वारानुमतम्',
+'दूरवाणी','समयः','अनुमतं परिमाणम्','आरक्षितं परिमाणम्','{n} टन','आरक्षणम् — अननुमतम्','कृषकविवरणं न प्राप्तम्।','सुरक्षिता आरक्षणसूची न प्राप्ता।','आरक्षितम्','अनुमतम्',
+'अननुमतम्','अनेन छानकेन सह मेलनशीलं द्वारप्रवेशविवरणं नास्ति।','द्वाराधिकारी','द्वारम् {n}','अज्ञातः कृषकः','अनिर्दिष्टम्','दिनाङ्कः अनुपलब्धः','न प्रदत्तम्','सत्यापितम् आरक्षणम्','प्रथमं सङ्केत-ID लिखत स्कैन् वा कुरुत।',
+'सुरक्षितकृषकारक्षणेषु सङ्केतः न प्राप्तः।','अस्य सङ्केतस्य द्वारप्रवेशः पूर्वमेव अनुमतः। द्वितीयानुमोदनं निरुद्धम्।','आरक्षणसङ्केतः सत्यापितः। अनुमोदनात् पूर्वं विवरणं पश्यत।','प्रदर्शनस्कैनार्थं विचाराधीनम् आरक्षणं नास्ति। चत्वारि प्रदर्शनविवरणानि पूर्वमेव अनुमतानि।','QR-स्कैनर-पुस्तकालयः न आरूढः। सङ्केतं हस्तेन लिखत।','स्कैनरः प्रारब्धः। कॅमेरां QR-सङ्केतं प्रति धारयत।','कॅमेरा अनुपलब्धा। कॅमेरानुमतिं ददतु HTTPS/localhost उपयुञ्जत वा सङ्केतं हस्तेन लिखत।','द्वारप्रवेशानुमोदनात् पूर्वं सुरक्षितारक्षणसङ्केतं परीक्षत।','अयं सङ्केतः पूर्वमेव अनुमतः।','कृषकं, उत्पन्नं, वाहनसङ्ख्यां, शुद्धं टनपरिमाणं च लिखत।',
+'अनुमोदनं निरुद्धम्: परिमाणं शेषायाः {n} टन क्षमतायाः अधिकम्।','अयं सङ्केतः अन्यस्मिन् टैब्-मध्ये अनुमतः। नवीकृत्य पुनः प्रयतत।','द्वारप्रवेशः अनुमोदितः सुरक्षितश्च।','प्रविष्टिः सुरक्षिता कर्तुं न शक्यते। ब्राउज़र्-सञ्चयं परीक्ष्य पुनः प्रयतत।','निर्यातार्थं अनुमताः प्रविष्टयः न सन्ति।','द्वारविवरणं न प्राप्तम्। नवीकृत्य पुनः प्रयतत।','प्राप्तिपत्रमुद्रणार्थं पॉप्-अप् अनुमन्यताम्।','अधिकृतं द्वारानुमतिप्राप्तिपत्रम्','प्राप्ति-ID','प्राप्तिपत्रं मुद्रयत',
+'पुणे','नाशिक','नागपुर','अमरावती','मुख्यम्','प्राङ्गणम्','धान्यम्','कार्पासः','रमेशः','कुमारः',
+'पाटीलः','सुनीता','जाधवः','सुरेशः','पवारः','अनीता','शिन्दे','गोधूमः','धान्यम् / तण्डुलः','सोयाबीनम्',
+'पलाण्डुः','यवनालः'
+],
+ne: [
+'कृषिधारा 2.0','अधिकारी गेट क्लियरेन्स पोर्टल','भूमिका बदल्नुहोस्','यार्ड कोड','पछिल्लो रिफ्रेस','साझा ड्यासबोर्ड डेटा','गेट क्लियरेन्सको झलक','क्लियर भएको / कुल यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमताको {n}%',
+'क्लियर भएका सवारी','{n} क्लियर गेट अभिलेख','क्लियर भएका किसान','क्लियर गेट अभिलेखमा फरक-फरक किसान','गेट लगमा कुल टन','क्लियर गेट अभिलेखका परिमाणको जोड','यार्डको अवस्था र डेटा मिलान','साझा क्षमतालाई गेट-प्रवेश अभिलेखसँग तुलना गर्नुहोस्।','डेटा रिफ्रेस गर्नुहोस्','क्षमता kd_cap_<yard> र kd_booked_<yard> बाट लिइन्छ। क्लियर सवारी, किसान सङ्ख्या र गेट लग kd_gate_entries बाट लिइन्छ।',
+'क्षमताका मान उपलब्ध थिएनन्; आवश्यक ठाउँमा डेमोका पूर्वनिर्धारित मान देखाइएका छन्।','बेमेल: साझा क्षमता काउन्टर {n} टन छ, तर गेट लगको जोड {n} टन छ।','क्षमताको कुल जोड गेट लगसँग मेल खान्छ: {n} टन, {n} क्लियर सवारी।','किसान टोकन स्क्यान गर्नुहोस्','QR टोकन स्क्यान गर्नुहोस् वा यसको ID हातले राख्नुहोस्।','स्क्यानर बन्द छ। स्क्यानर सुरु गर्नुहोस् वा डेमो स्क्यान प्रयोग गर्नुहोस्।','स्क्यानर सुरु गर्नुहोस्','स्क्यानर रोक्नुहोस्','सुरक्षित बुकिङको डेमो स्क्यान','टोकन / बुकिङ ID',
+'जस्तै KD-1001','टोकन जाँच गर्नुहोस्','गेट प्रवेश स्वीकृति','सवारी क्लियर गर्नुअघि बुकिङ जानकारी जाँच गर्नुहोस्।','प्रमाणित टोकन','पहिले टोकन जाँच गर्नुहोस्','किसानको नाम','फोन नम्बर','उपज','सवारी नम्बर',
+'परिमाण (टनमा)','गेट नम्बर','अधिकारीका टिप्पणी','ऐच्छिक टिप्पणी','गेट प्रवेश स्वीकृत गर्नुहोस्','फारम खाली गर्नुहोस्','किसान क्लियरेन्सको सारांश','क्लियर भएका किसान र क्लियरेन्स पर्खिरहेका सुरक्षित बुकिङ।','किसान बुकिङ दर्ता','बुकिङलाई वास्तविक गेट क्लियरेन्स अभिलेखबाट छुट्टै देखाइएको छ।',
+'किसान','टोकन','सवारी','टन','बुकिङको अवस्था','गेटको अवस्था','क्लियर गेट प्रवेश लग','यो पृष्ठ पहिलोपटक खुल्दा गेट अभिलेख नभए चारवटा डेमो क्लियरेन्स थपिन्छन्।','CSV निर्यात गर्नुहोस्','लग प्रिन्ट गर्नुहोस्',
+'लग खोज्नुहोस्','किसान, टोकन, सवारी…','मितिअनुसार छान्नुहोस्','मिति र समय','गेट','अधिकारी','अवस्था','रसिद','कृषिधारा 2.0 · अधिकारी गेट पोर्टल · डेमो किसान अभिलेख नमूना डेटा मात्र हुन्।','गेट क्लियर',
+'फोन','समय','क्लियर गरिएको परिमाण','बुक गरिएको परिमाण','{n} टन','बुकिङ — क्लियर भएको छैन','किसानको कुनै अभिलेख भेटिएन।','सुरक्षित बुकिङ सूची भेटिएन।','बुक भएको','क्लियर भयो',
+'क्लियर भएको छैन','यो फिल्टरसँग मिल्ने क्लियर गेट प्रवेश छैन।','गेट अधिकारी','गेट {n}','अज्ञात किसान','उल्लेख छैन','मिति उपलब्ध छैन','उपलब्ध गराइएको छैन','प्रमाणित बुकिङ','पहिले टोकन ID राख्नुहोस् वा स्क्यान गर्नुहोस्।',
+'सुरक्षित किसान बुकिङमा टोकन भेटिएन।','यो टोकनको गेट प्रवेश पहिल्यै क्लियर भइसकेको छ। दोस्रो पटक स्वीकृति रोकिएको छ।','बुकिङ टोकन प्रमाणित भयो। स्वीकृतिअघि विवरण हेर्नुहोस्।','डेमो स्क्यानका लागि कुनै बाँकी बुकिङ छैन। चारै डेमो अभिलेख पहिल्यै क्लियर छन्।','QR स्क्यानर लाइब्रेरी लोड भएन। टोकन हातले राख्नुहोस्।','स्क्यानर सुरु भयो। क्यामेरा QR टोकनतर्फ राख्नुहोस्।','क्यामेरा उपलब्ध छैन। क्यामेराको अनुमति दिनुहोस् र HTTPS/localhost प्रयोग गर्नुहोस्, वा टोकन हातले राख्नुहोस्।','गेट प्रवेश स्वीकृत गर्नुअघि सुरक्षित बुकिङको टोकन जाँच गर्नुहोस्।','यो टोकन पहिल्यै क्लियर भइसकेको छ।','किसान, उपज, सवारी नम्बर र मान्य टन परिमाण राख्नुहोस्।',
+'स्वीकृति रोकियो: परिमाण बाँकी {n} टन क्षमताभन्दा बढी छ।','यो टोकन अर्को ट्याबमा क्लियर भइसकेको छ। रिफ्रेस गरेर फेरि प्रयास गर्नुहोस्।','गेट प्रवेश स्वीकृत भई सफलतापूर्वक सुरक्षित भयो।','प्रविष्टि सुरक्षित गर्न सकिएन। ब्राउजर स्टोरेज जाँचेर फेरि प्रयास गर्नुहोस्।','निर्यात गर्न क्लियर प्रविष्टि छैन।','गेट अभिलेख भेटिएन। रिफ्रेस गरेर फेरि प्रयास गर्नुहोस्।','रसिद प्रिन्ट गर्न पप-अपलाई अनुमति दिनुहोस्।','आधिकारिक गेट क्लियरेन्स रसिद','रसिद ID','रसिद प्रिन्ट गर्नुहोस्',
+'पुणे','नासिक','नागपुर','अमरावती','मुख्य','यार्ड','अन्न','कपास','रमेश','कुमार',
+'पाटिल','सुनिता','जाधव','सुरेश','पवार','अनिता','शिन्दे','गहुँ','धान / चामल','भटमास',
+'प्याज','मकै'
+],
+sd: [
+'ڪرشي ڌارا 2.0','آفيسر گيٽ ڪليئرنس پورٽل','ڪردار بدلايو','يارڊ ڪوڊ','آخري ريفريش','گڏيل ڊيش بورڊ ڊيٽا','گيٽ ڪليئرنس جو جائزو','ڪليئر / ڪل يارڊ گنجائش','{n} / {n} ٽين','يارڊ گنجائش جو {n}%',
+'ڪليئر ٿيل گاڏيون','{n} ڪليئر گيٽ رڪارڊ','ڪليئر ٿيل هاري','ڪليئر گيٽ رڪارڊ ۾ الڳ الڳ هاري','گيٽ لاگ ۾ ڪل ٽين','ڪليئر گيٽ رڪارڊ جي مقدار جو مجموعو','يارڊ جي حالت ۽ ڊيٽا جو ميلاپ','گڏيل گنجائش جو گيٽ داخلا رڪارڊ سان مقابلو ڪريو.','ڊيٽا ريفريش ڪريو','گنجائش kd_cap_<yard> ۽ kd_booked_<yard> مان ورتي ويندي آهي. ڪليئر گاڏين ۽ هارين جو تعداد ۽ گيٽ لاگ kd_gate_entries مان ورتا ويندا آهن.',
+'گنجائش جون قيمتون موجود نه هيون؛ ضرورت مطابق ڊيمو جون ڊفالٽ قيمتون ڏيکاريل آهن.','بي ميل: گڏيل گنجائش ڪائونٽر {n} ٽين آهي، پر گيٽ لاگ جو مجموعو {n} ٽين آهي.','گنجائش جو ڪل مجموعو گيٽ لاگ سان ميل کائي ٿو: {n} ٽين، {n} ڪليئر گاڏيون.','هاري ٽوڪن اسڪين ڪريو','QR ٽوڪن اسڪين ڪريو يا ان جو ID هٿ سان داخل ڪريو.','اسڪينر بند آهي. اسڪينر شروع ڪريو يا ڊيمو اسڪين استعمال ڪريو.','اسڪينر شروع ڪريو','اسڪينر بند ڪريو','محفوظ بُڪنگ جو ڊيمو اسڪين','ٽوڪن / بُڪنگ ID',
+'مثال KD-1001','ٽوڪن جاچيو','گيٽ داخلا جي منظوري','گاڏي ڪليئر ڪرڻ کان اڳ بُڪنگ جي معلومات جاچيو.','تصديق ٿيل ٽوڪن','پهرين ٽوڪن جاچيو','هاريءَ جو نالو','فون نمبر','فصل','گاڏي نمبر',
+'مقدار (ٽنن ۾)','گيٽ نمبر','آفيسر جا نوٽ','اختياري نوٽ','گيٽ داخلا منظور ڪريو','فارم صاف ڪريو','هاري ڪليئرنس جو خلاصو','ڪليئر ٿيل هاري ۽ ڪليئرنس جا منتظر محفوظ بُڪنگ.','هاري بُڪنگ رجسٽر','بُڪنگ کي اصل گيٽ ڪليئرنس رڪارڊ کان الڳ ڏيکاريو ويو آهي.',
+'هاري','ٽوڪن','گاڏي','ٽين','بُڪنگ جي حالت','گيٽ جي حالت','ڪليئر گيٽ داخلا لاگ','هي صفحو پهريون ڀيرو کلڻ مهل جيڪڏهن ڪو گيٽ رڪارڊ نه هجي ته چار ڊيمو ڪليئرنس شامل ڪيون وينديون آهن.','CSV برآمد ڪريو','لاگ پرنٽ ڪريو',
+'لاگ ڳوليو','هاري، ٽوڪن، گاڏي…','تاريخ مطابق ڇاڻيو','تاريخ ۽ وقت','گيٽ','آفيسر','حالت','رسيد','ڪرشي ڌارا 2.0 · آفيسر گيٽ پورٽل · ڊيمو هاري رڪارڊ فقط نمونو ڊيٽا آهن.','گيٽ ڪليئر',
+'فون','وقت','ڪليئر ڪيل مقدار','بُڪ ڪيل مقدار','{n} ٽين','بُڪنگ — ڪليئر نه ٿي','ڪو به هاري رڪارڊ نه مليو.','محفوظ بُڪنگ فهرست نه ملي.','بُڪ ٿيل','ڪليئر',
+'ڪليئر نه ٿيو','هن فلٽر سان ميل کائيندڙ ڪو ڪليئر گيٽ داخلا ناهي.','گيٽ آفيسر','گيٽ {n}','اڻڄاتل هاري','بيان نه ڪيل','تاريخ موجود ناهي','ڏنل ناهي','تصديق ٿيل بُڪنگ','پهرين ٽوڪن ID داخل ڪريو يا اسڪين ڪريو.',
+'محفوظ هاري بُڪنگ ۾ ٽوڪن نه مليو.','هن ٽوڪن جي گيٽ داخلا اڳ ۾ ئي ڪليئر ٿي چڪي آهي. ٻيهر منظوري روڪي وئي آهي.','بُڪنگ ٽوڪن جي تصديق ٿي وئي. منظوري کان اڳ تفصيل ڏسو.','ڊيمو اسڪين لاءِ ڪا التوا ۾ بُڪنگ ناهي. چئني ڊيمو رڪارڊ اڳ ۾ ئي ڪليئر آهن.','QR اسڪينر لائبريري لوڊ نه ٿي سگهي. ٽوڪن هٿ سان داخل ڪريو.','اسڪينر شروع ٿي ويو. ڪئميرا QR ٽوڪن ڏانهن رکو.','ڪئميرا موجود ناهي. ڪئميرا جي اجازت ڏيو ۽ HTTPS/localhost استعمال ڪريو، يا ٽوڪن هٿ سان داخل ڪريو.','گيٽ داخلا منظور ڪرڻ کان اڳ محفوظ بُڪنگ جو ٽوڪن جاچيو.','هي ٽوڪن اڳ ۾ ئي ڪليئر ٿي چڪو آهي.','هاري، فصل، گاڏي نمبر ۽ صحيح ٽين مقدار داخل ڪريو.',
+'منظوري روڪي وئي: مقدار باقي {n} ٽين گنجائش کان وڌيڪ آهي.','هي ٽوڪن ٻئي ٽيب ۾ ڪليئر ٿي چڪو آهي. ريفريش ڪري ٻيهر ڪوشش ڪريو.','گيٽ داخلا منظور ٿي ڪاميابيءَ سان محفوظ ٿي وئي.','اندراج محفوظ نه ٿي سگهيو. برائوزر اسٽوريج جاچي ٻيهر ڪوشش ڪريو.','برآمد ڪرڻ لاءِ ڪو ڪليئر اندراج ناهي.','گيٽ رڪارڊ نه مليو. ريفريش ڪري ٻيهر ڪوشش ڪريو.','رسيد پرنٽ ڪرڻ لاءِ پاپ اپ جي اجازت ڏيو.','سرڪاري گيٽ ڪليئرنس رسيد','رسيد ID','رسيد پرنٽ ڪريو',
+'پوني','ناسڪ','ناگپور','امراوتي','مکيه','يارڊ','اناج','ڪپهه','رميش','ڪمار',
+'پاٽل','سنيتا','جادو','سريش','پوار','انيتا','شنڊي','ڪڻڪ','ڏنگر / چانور','سويابين',
+'ڳنڍو','مکئي'
+],
+ks: [
+'کرِشی دھارا 2.0','افسر گیٹ کلیئرنس پورٹل','کردار بدلاوِو','یارڈ کوڈ','آخری ریفریش','مشترکہ ڈیش بورڈ ڈیٹا','گیٹ کلیئرنس ہند جائزہ','کلیئر / کل یارڈ گنجائش','{n} / {n} ٹن','یارڈ گنجائشک {n}%',
+'کلیئر گمُت گاڑی','{n} کلیئر گیٹ ریکارڈ','کلیئر گمُت کسان','کلیئر گیٹ ریکارڈس منز الگ الگ کسان','گیٹ لاگس منز کل ٹن','کلیئر گیٹ ریکارڈک مقدارن ہُند مجموعہ','یارڈک حالت تہ ڈیٹا ہُند میل','مشترکہ گنجائش گیٹ داخلہ ریکارڈن سیتۍ برابر کریو۔','ڈیٹا ریفریش کریو','گنجائش چھ kd_cap_<yard> تہ kd_booked_<yard> پیٹھ ہیوان۔ کلیئر گاڑین تہ کسانن ہُند تعداد تہ گیٹ لاگ چھ kd_gate_entries پیٹھ ہیوان۔',
+'گنجائشک قدر آسہ نہ دستیاب؛ ضرورت مطابق ڈیمو ہند ڈیفالٹ قدر چھ ہیکھنہ آمت۔','بے میل: مشترکہ گنجائش کاؤنٹر چھ {n} ٹن، مگر گیٹ لاگن ہُند مجموعہ چھ {n} ٹن۔','گنجائشک کل مجموعہ چھ گیٹ لاگن سیتۍ میل کھاں: {n} ٹن، {n} کلیئر گاڑی۔','کسان ٹوکن اسکین کریو','QR ٹوکن اسکین کریو یا تٔمس ID ہاتھہ درج کریو۔','اسکینر چھ بند۔ اسکینر شروع کریو یا ڈیمو اسکین استعمال کریو۔','اسکینر شروع کریو','اسکینر بند کریو','محفوظ بکنگک ڈیمو اسکین','ٹوکن / بکنگ ID',
+'مثلاً KD-1001','ٹوکن جانچ کریو','گیٹ داخلہ ہُند منظوری','گاڑی کلیئر کرنہ برونہہ کنہ بکنگ ہند معلومات جانچ کریو۔','تصدیق شدہ ٹوکن','پہلہ ٹوکن جانچ کریو','کسانُک ناو','فون نمبر','فصل','گاڑی نمبر',
+'مقدار (ٹنن منز)','گیٹ نمبر','افسرک نوٹ','اختیاری نوٹ','گیٹ داخلہ منظور کریو','فارم صاف کریو','کسان کلیئرنسک خلاصہ','کلیئر گمُت کسان تہ کلیئرنس ہند انتظار کران محفوظ بکنگ۔','کسان بکنگ رجسٹر','بکنگ چھ اصل گیٹ کلیئرنس ریکارڈن پیٹھ الگ ہیکھنہ آمت۔',
+'کسان','ٹوکن','گاڑی','ٹن','بکنگک حالت','گیٹک حالت','کلیئر گیٹ داخلہ لاگ','یہ صفحہ ییلہ پہلی لٹہ کھُلہ تہ گیٹ ریکارڈ نہ آسن تیلہ ہیتھ چھ ژور ڈیمو کلیئرنس شامل کرنہ یِوان۔','CSV برآمد کریو','لاگ پرنٹ کریو',
+'لاگ ژارِو','کسان، ٹوکن، گاڑی…','تاریخ مطابق چھانٹ کریو','تاریخ تہ وقت','گیٹ','افسر','حالت','رسید','کرِشی دھارا 2.0 · افسر گیٹ پورٹل · ڈیمو کسان ریکارڈ چھ صرف نمونہ ڈیٹا۔','گیٹ کلیئر',
+'فون','وقت','کلیئر کرنہ آمت مقدار','بُک کرنہ آمت مقدار','{n} ٹن','بکنگ — کلیئر گیہ نہ','کانہہ کسان ریکارڈ ملیو نہ۔','محفوظ بکنگ فہرست ملییہ نہ۔','بُک','کلیئر',
+'کلیئر گیہ نہ','یمہ فلٹرس سیتۍ میل کھانہ والۍ کانہہ کلیئر گیٹ داخلہ چھُ نہ۔','گیٹ افسر','گیٹ {n}','نامعلوم کسان','بیان کرنہ آمت نہ','تاریخ دستیاب چھ نہ','فراہم کرنہ آمت نہ','تصدیق شدہ بکنگ','پہلہ ٹوکن ID درج کریو یا اسکین کریو۔',
+'محفوظ کسان بکنگن منز ٹوکن ملیو نہ۔','یمہ ٹوکنک گیٹ داخلہ چھُ پتھ ہی کلیئر گمُت۔ دوبارہ منظوری چھ روزمُت۔','بکنگ ٹوکنک تصدیق گیہ۔ منظوری برونہہ کنہ تفصیل ووچھو۔','ڈیمو اسکینہ خاطرٕ کانہہ بکایہ بکنگ چھ نہ۔ ژور ڈیمو ریکارڈ چھ پتھ ہی کلیئر۔','QR اسکینر لائبریری لوڈ گیہ نہ۔ ٹوکن ہاتھہ درج کریو۔','اسکینر شروع گیہ۔ کیمرہ QR ٹوکنچ طرفہ تھاوِو۔','کیمرہ دستیاب چھُ نہ۔ کیمرکۍ اجازت دِیو تہ HTTPS/localhost استعمال کریو، یا ٹوکن ہاتھہ درج کریو۔','گیٹ داخلہ منظور کرنہ برونہہ کنہ محفوظ بکنگ ہند ٹوکن جانچ کریو۔','یہ ٹوکن چھُ پتھ ہی کلیئر گمُت۔','کسان، فصل، گاڑی نمبر تہ صحیح ٹن مقدار درج کریو۔',
+'منظوری روزمُت: مقدار چھ باقی {n} ٹن گنجائشہ کھوتہ زیادہ۔','یہ ٹوکن چھُ بییہ ٹیبس منز کلیئر گمُت۔ ریفریش کرِتھ دوبارہ کوشش کریو۔','گیٹ داخلہ منظور گیہ تہ کامیابی سان محفوظ گیہ۔','اندراج محفوظ کرنہ آیہ نہ۔ براؤزر اسٹوریج جانچ کرِتھ دوبارہ کوشش کریو۔','برآمد کرنہ خاطرٕ کانہہ کلیئر اندراج چھ نہ۔','گیٹ ریکارڈ ملیو نہ۔ ریفریش کرِتھ دوبارہ کوشش کریو۔','رسید پرنٹ کرنہ خاطرٕ پاپ اپس اجازت دِیو۔','سرکاری گیٹ کلیئرنس رسید','رسید ID','رسید پرنٹ کریو',
+'پونے','ناسک','ناگپور','امراوتی','مرکزی','یارڈ','اناج','کپاس','رمیش','کمار',
+'پاٹل','سنیتا','جادھو','سریش','پوار','انیتا','شندے','گوم','دھان / چاول','سویابین',
+'گنڈ','مکئی'
+],
+doi: [
+'कृषिधारा 2.0','अफसर गेट क्लीयरेंस पोर्टल','भूमिका बदलो','यार्ड कोड','अखीरी रिफ्रेश','सांझा डैशबोर्ड डेटा','गेट क्लीयरेंस दा जायजा','क्लीयर / कुल यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमता दा {n}%',
+'क्लीयर होए गड्डियां','{n} क्लीयर गेट रकार्ड','क्लीयर होए किसान','क्लीयर गेट रकार्ड च वक्खरे-वक्खरे किसान','गेट लॉग च कुल टन','क्लीयर गेट रकार्डें दी मात्रा दा जोड़','यार्ड दी हालत ते डेटा दा मेल','सांझी क्षमता दी गेट-दाखला रकार्डें कन्नै तुलना करो।','डेटा रिफ्रेश करो','क्षमता kd_cap_<yard> ते kd_booked_<yard> कोला लेई जंदी ऐ। क्लीयर गड्डियें ते किसानें दी गिनतरी ते गेट लॉग kd_gate_entries कोला लैते जंदे न।',
+'क्षमता दे मान नेईं हे; लोड़ होने उप्पर डेमो दे डिफॉल्ट मान दस्से गेदे न।','बेमेल: सांझा क्षमता काउंटर {n} टन ऐ, पर गेट लॉग दा जोड़ {n} टन ऐ।','क्षमता दा कुल जोड़ गेट लॉग कन्नै मेल खंदा ऐ: {n} टन, {n} क्लीयर गड्डियां।','किसान टोकन स्कैन करो','QR टोकन स्कैन करो जां उसदी ID हत्थें भरो।','स्कैनर बंद ऐ। स्कैनर शुरू करो जां डेमो स्कैन इस्तेमाल करो।','स्कैनर शुरू करो','स्कैनर बंद करो','सैह्जी दी बुकिंग दा डेमो स्कैन','टोकन / बुकिंग ID',
+'जियां KD-1001','टोकन जाचो','गेट दाखले दी मंजूरी','गड्डी क्लीयर करने थमां पैहलें बुकिंग दी जानकारी जाचो।','तस्दीक कीता टोकन','पैहलें टोकन जाचो','किसान दा नां','फोन नंबर','फसल','गड्डी नंबर',
+'मात्रा (टनें च)','गेट नंबर','अफसर दियां टिप्पणियां','वैकल्पिक टिप्पणियां','गेट दाखला मंजूर करो','फार्म साफ करो','किसान क्लीयरेंस दा सार','क्लीयर होए किसान ते क्लीयरेंस दी उडीक च सैह्जी दियां बुकिंगां।','किसान बुकिंग रजिस्टर','बुकिंगां गी असली गेट क्लीयरेंस रकार्डें कोला वक्खरा दस्सेआ गेदा ऐ।',
+'किसान','टोकन','गड्डी','टन','बुकिंग दी हालत','गेट दी हालत','क्लीयर गेट दाखला लॉग','एह् पन्ना पैहली बारी खुल्लने उप्पर जेकर कोई गेट रकार्ड नेईं होऐ तां चार डेमो क्लीयरेंस जोड़ी जंदियां न।','CSV बरामद करो','लॉग प्रिंट करो',
+'लॉग लब्भो','किसान, टोकन, गड्डी…','तरीक मताबक छानो','तरीक ते समां','गेट','अफसर','हालत','रसीद','कृषिधारा 2.0 · अफसर गेट पोर्टल · डेमो किसान रकार्ड सिर्फ नमूना डेटा न।','गेट क्लीयर',
+'फोन','समां','क्लीयर कीती दी मात्रा','बुक कीती दी मात्रा','{n} टन','बुकिंग — क्लीयर नेईं','कोई किसान रकार्ड नेईं मिलेआ।','सैह्जी दी बुकिंग सूची नेईं मिली।','बुक','क्लीयर',
+'क्लीयर नेईं','इस फिल्टर कन्नै मेल खाने आह्ला कोई क्लीयर गेट दाखला नेईं ऐ।','गेट अफसर','गेट {n}','अनजान किसान','दस्सेआ नेईं गेदा','तरीक उपलब्ध नेईं','दित्ता नेईं गेदा','तस्दीक कीती दी बुकिंग','पैहलें टोकन ID भरो जां स्कैन करो।',
+'सैह्जी दी किसान बुकिंग च टोकन नेईं मिलेआ।','इस टोकन दा गेट दाखला पैहलें गै क्लीयर होई चुकेआ ऐ। दुबारा मंजूरी रोकी गेई ऐ।','बुकिंग टोकन दी तस्दीक होई गेई। मंजूरी थमां पैहलें ब्यौरा दिक्खो।','डेमो स्कैन लेई कोई बकाया बुकिंग नेईं ऐ। चारैं डेमो रकार्ड पैहलें गै क्लीयर न।','QR स्कैनर लाइब्रेरी लोड नेईं होई सकी। टोकन हत्थें भरो।','स्कैनर शुरू होई गेआ। कैमरा QR टोकन वल्ल रक्खो।','कैमरा उपलब्ध नेईं ऐ। कैमरे दी इजाजत देओ ते HTTPS/localhost इस्तेमाल करो, जां टोकन हत्थें भरो।','गेट दाखला मंजूर करने थमां पैहलें सैह्जी दी बुकिंग दा टोकन जाचो।','एह् टोकन पैहलें गै क्लीयर होई चुकेआ ऐ।','किसान, फसल, गड्डी नंबर ते सही टन मात्रा भरो।',
+'मंजूरी रोकी गेई: मात्रा बाकी {n} टन क्षमता थमां जादा ऐ।','एह् टोकन दूए टैब च क्लीयर होई चुकेआ ऐ। रिफ्रेश करियै फी कोशश करो।','गेट दाखला मंजूर होईये सफलता कन्नै सैह्जोई गेआ।','इंदराज सैह्जेआ नेईं जाई सकेआ। ब्राउजर स्टोरेज जाची करियै फी कोशश करो।','बरामद करने लेई कोई क्लीयर इंदराज नेईं ऐ।','गेट रकार्ड नेईं मिलेआ। रिफ्रेश करियै फी कोशश करो।','रसीद प्रिंट करने लेई पॉप-अप दी इजाजत देओ।','सरकारी गेट क्लीयरेंस रसीद','रसीद ID','रसीद प्रिंट करो',
+'पुणे','नासिक','नागपुर','अमरावती','मुक्ख','यार्ड','अनाज','कपाह','रमेश','कुमार',
+'पाटील','सुनीता','जाधव','सुरेश','पवार','अनीता','शिंदे','कणक','धान / चौल','सोयाबीन',
+'प्याज','मक्की'
+],
+mni: [
+'কৃষিধারা 2.0','অফিসার গেট ক্লিয়ারেন্স পোর্টেল','ভূমিকা শান্নবিয়ু','ইয়ার্ড কী','মখাইগী রিফ্রেশ','শেয়ার তৌবা ডেশবোর্ড ডেটা','গেট ক্লিয়ারেন্সকী উনবা','ক্লিয়ার তৌরবা / য়ুম্ফম ইয়ার্ড ক্যাপাসিটি','{n} / {n} টন','ইয়ার্ড ক্যাপাসিটিগী {n}%',
+'ক্লিয়ার তৌরবা গাড়ীশিং','{n} ক্লিয়ার তৌরবা গেট রেকর্ড','ক্লিয়ার তৌরবা লৌ-তৌবাশিং','ক্লিয়ার গেট রেকর্দা হায়বা লৌ-তৌবাশিং','গেট লগদা টন','ক্লিয়ার গেট রেকর্দগী মরুগী য়ুমফম','ইয়ার্দগী মওং অমসুং ডেটা মেলনা','শেয়ার তৌবা ক্যাপাসিটি অসি গেট-এন্ট্রি রেকর্দশিংগা তুলনা তৌবিয়ু।','ডেটা রিফ্রেশ তৌবিয়ু','ক্যাপাসিটি অসি kd_cap_<yard> অমসুং kd_booked_<yard> তগী ফংই। ক্লিয়ার গাড়ী, লৌ-তৌবাগী মরু অমসুং গেট লগ অসি kd_gate_entries তগী ফংই।',
+'ক্যাপাসিটিগী মরু ফংদ্রে; ঙক্লবদা ডেমোগী ডিফল্ট মরু উবা ওইরি।','মেলদ্রে: শেয়ার ক্যাপাসিটি কাউন্টর {n} টন, মনুংদা গেট লগগী য়ুমফম {n} টন।','ক্যাপাসিটিগী য়ুমফম গেট লগগা মেলনরি: {n} টন, {n} ক্লিয়ার তৌরবা গাড়ী।','লৌ-তৌবাগী টোকেন স্ক্যান তৌবিয়ু','QR টোকেন স্ক্যান তৌবিয়ু নত্রগা মখোয়গী ID খুৎতা ফীয়ু।','স্ক্যানর থিংরে। স্ক্যানর হাংদোকপিয়ু নত্রগা ডেমো স্ক্যান শিজিন্নবিয়ু।','স্ক্যানর হাংদোকপিয়ু','স্ক্যানর থিংবিয়ু','সেভ তৌরবা বুকিংগী ডেমো স্ক্যান','টোকেন / বুকিং ID',
+'মখল KD-1001','টোকেন ভেরিফাই তৌবিয়ু','গেট এন্ট্রিগী অনুমতি','গাড়ী ক্লিয়ার তৌবগী মফমদা বুকিংগী খবর ভেরিফাই তৌবিয়ু।','ভেরিফাই তৌরবা টোকেন','অহানবদা টোকেন ভেরিফাই তৌবিয়ু','লৌ-তৌবাগী মমিং','ফোন নম্বর','ফসল','গাড়ীগী নম্বর',
+'মরু (টনদা)','গেট নম্বর','অফিসারগী নোট','ঙক্লবা নোট','গেট এন্ট্রি অনুমতি পীবিয়ু','ফর্ম শেরবিয়ু','লৌ-তৌবা ক্লিয়ারেন্সকী মখল','ক্লিয়ার তৌরবা লৌ-তৌবাশিং অমসুং ক্লিয়ারেন্স লৌনা লৈবা বুকিংশিং।','লৌ-তৌবা বুকিং রেজিস্টর','বুকিংশিং অসি অসলি গেট ক্লিয়ারেন্স রেকর্দশিংগী মনুংদগী অমদা উবা ওইরি।',
+'লৌ-তৌবা','টোকেন','গাড়ী','টন','বুকিংগী মওং','গেটকী মওং','ক্লিয়ার তৌরবা গেট এন্ট্রি লগ','পেজ অসি অহানবা হাংদোকপদা গেট রেকর্দ লৈদ্রবগা ডেমো ক্লিয়ারেন্স মরী যোগ তৌই।','CSV এক্সপোর্ট তৌবিয়ু','লগ প্রিন্ট তৌবিয়ু',
+'লগ খোয়ংবিয়ু','লৌ-তৌবা, টোকেন, গাড়ী…','তারিখ অনুসারে ফিল্টর তৌবিয়ু','তারিখ অমসুং মতম','গেট','অফিসার','মওং','রসিদ','কৃষিধারা 2.0 · অফিসার গেট পোর্টেল · ডেমো লৌ-তৌবা রেকর্দশিং অসি নমুনা ডেটা অদুনি।','গেট ক্লিয়ার',
+'ফোন','মতম','ক্লিয়ার তৌরবা মরু','বুক তৌরবা মরু','{n} টন','বুকিং — ক্লিয়ার তৌদ্রে','লৌ-তৌবাগী রেকর্দ খংদ্রে।','সেভ তৌরবা বুকিং লিস্ট খংদ্রে।','বুক তৌরে','ক্লিয়ার তৌরে',
+'ক্লিয়ার তৌদ্রে','ফিল্টর অদুগা মেলনবা ক্লিয়ার গেট এন্ট্রি লৈদ্রে।','গেট অফিসার','গেট {n}','খংদ্রবা লৌ-তৌবা','কৈরম্বা হায়দ্রে','তারিখ লৈদ্রে','পীদ্রে','ভেরিফাই তৌরবা বুকিং','অহানবদা টোকেন ID ফীয়ু নত্রগা স্ক্যান তৌবিয়ু।',
+'সেভ তৌরবা লৌ-তৌবা বুকিংদা টোকেন খংদ্রে।','টোকেন অসিগী গেট এন্ট্রি মমাংদা ক্লিয়ার তৌরে। অমুক অনুমতি পীবা ছিনরে।','বুকিং টোকেন ভেরিফাই তৌরে। অনুমতি পীবগী মফমদা মরমশিং উবিয়ু।','ডেমো স্ক্যানগা লৌনা লৈবা বুকিং লৈদ্রে। ডেমো রেকর্দ মরী অদু মমাংদা ক্লিয়ার তৌরে।','QR স্ক্যানর লাইব্রেরী লোড ওইদ্রে। টোকেন খুৎতা ফীয়ু।','স্ক্যানর হাংদোকলে। ক্যামেরা QR টোকেনগী মথক্তা থাবিয়ু।','ক্যামেরা লৈদ্রে। ক্যামেরা অনুমতি পীনা HTTPS/localhost শিজিন্নবিয়ু নত্রগা টোকেন খুৎতা ফীয়ু।','গেট এন্ট্রি অনুমতি পীবগী মফমদা সেভ তৌরবা বুকিংগী টোকেন ভেরিফাই তৌবিয়ু।','টোকেন অসি মমাংদা ক্লিয়ার তৌরে।','লৌ-তৌবা, ফসল, গাড়ীগী নম্বর অমসুং ময়াম্না লৈবা টন ফীয়ু।',
+'অনুমতি ছিনরে: মরু অসি লৈরিবা {n} টন ক্যাপাসিটিদগী অতৈ।','টোকেন অসি ট্যাব অমদা ক্লিয়ার তৌরে। রিফ্রেশ তৌনা অমুক ফংবিয়ু।','গেট এন্ট্রি অনুমতি ফংনা ঙমখৈদা সেভ ওইরে।','এন্ট্রি সেভ তৌনবা ঙম্দ্রে। ব্রাউজর স্টোরেজ উনা অমুক ফংবিয়ু।','এক্সপোর্ট তৌনবা ক্লিয়ার এন্ট্রি লৈদ্রে।','গেট রেকর্দ খংদ্রে। রিফ্রেশ তৌনা অমুক ফংবিয়ু।','রসিদ প্রিন্ট তৌনবা পপ-আপ অনুমতি পীবিয়ু।','অফিসিয়েল গেট ক্লিয়ারেন্স রসিদ','রসিদ ID','রসিদ প্রিন্ট তৌবিয়ু',
+'পুনে','নাসিক','নাগপুর','অমরাবতী','মেইন','ইয়ার্ড','ঈশিং-তাং','কপাস','রমেশ','কুমার',
+'পাতিল','সুনীতা','যাদব','সুরেশ','পাওয়ার','অনীতা','শিন্ডে','ঘেউ','ধান / চাক','সয়াবিন',
+'পেঁয়াজ','ভুট্টা'
+],
+sat: [
+'ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0','ᱚᱯᱷᱤᱥᱟᱨ ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱯᱚᱨᱴᱟᱞ','ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ','ᱭᱟᱨᱰ ᱠᱚᱰ','ᱢᱩᱪᱟᱹᱫ ᱨᱤᱯᱷᱨᱮᱥ','ᱥᱟᱫᱷᱟᱨᱚᱬ ᱰᱮᱥᱵᱚᱨᱰ ᱰᱮᱴᱟ','ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱧᱮᱞ','ᱠᱞᱤᱭᱟᱨ / ᱥᱚᱵ ᱭᱟᱨᱰ ᱠᱷᱟᱹᱢᱛᱟ','{n} / {n} ᱴᱚᱱ','ᱭᱟᱨᱰ ᱠᱷᱟᱹᱢᱛᱟ ᱨᱮᱭᱟᱜ {n}%',
+'ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱ ᱜᱟᱲᱤ','{n} ᱠᱞᱤᱭᱟᱨ ᱜᱮᱴ ᱨᱮᱠᱚᱨᱰ','ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱ ᱪᱟᱥᱤ','ᱠᱞᱤᱭᱟᱨ ᱜᱮᱴ ᱨᱮᱠᱚᱨᱰ ᱨᱮ ᱞᱮᱛᱟᱨ ᱪᱟᱥᱤ','ᱜᱮᱴ ᱞᱚᱜ ᱨᱮ ᱴᱚᱱ','ᱠᱞᱤᱭᱟᱨ ᱜᱮᱴ ᱨᱮᱠᱚᱨᱰ ᱨᱮᱭᱟᱜ ᱯᱚᱨᱤᱢᱟᱱ ᱦᱚᱛᱮᱛ','ᱭᱟᱨᱰ ᱛᱟᱞᱟ ᱟᱨ ᱰᱮᱴᱟ ᱢᱤᱞᱟᱣ','ᱥᱟᱫᱷᱟᱨᱚᱬ ᱠᱷᱟᱹᱢᱛᱟ ᱫᱚ ᱜᱮᱴ-ᱥᱮᱱᱟᱹ ᱨᱮᱠᱚᱨᱰ ᱥᱟᱶ ᱥᱚᱢᱟᱱ ᱧᱮᱞ ᱢᱮ᱾','ᱰᱮᱴᱟ ᱨᱤᱯᱷᱨᱮᱥ ᱢᱮ','ᱠᱷᱟᱹᱢᱛᱟ ᱫᱚ kd_cap_<yard> ᱟᱨ kd_booked_<yard> ᱠᱷᱚᱱ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ᱾ ᱠᱞᱤᱭᱟᱨ ᱜᱟᱲᱤ, ᱪᱟᱥᱤ ᱞᱮᱠᱟ ᱟᱨ ᱜᱮᱴ ᱞᱚᱜ ᱫᱚ kd_gate_entries ᱠᱷᱚᱱ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ᱾',
+'ᱠᱷᱟᱹᱢᱛᱟ ᱨᱮᱭᱟᱜ ᱢᱟᱨᱟᱝ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ; ᱞᱟᱹᱠᱛᱤ ᱛᱮ ᱰᱮᱢᱚ ᱨᱮᱭᱟᱜ ᱰᱤᱯᱷᱚᱞᱴ ᱢᱟᱨᱟᱝ ᱧᱮᱞᱚᱜ ᱠᱟᱱᱟ᱾','ᱵᱟᱝ ᱢᱤᱞᱟᱣ: ᱥᱟᱫᱷᱟᱨᱚᱬ ᱠᱷᱟᱹᱢᱛᱟ ᱜᱤᱱᱛᱤ {n} ᱴᱚᱱ, ᱢᱮᱱᱠᱷᱟᱱ ᱜᱮᱴ ᱞᱚᱜ ᱨᱮᱭᱟᱜ ᱦᱚᱛᱮᱛ {n} ᱴᱚᱱ᱾','ᱠᱷᱟᱹᱢᱛᱟ ᱨᱮᱭᱟᱜ ᱦᱚᱛᱮᱛ ᱜᱮᱴ ᱞᱚᱜ ᱥᱟᱶ ᱢᱤᱞᱟᱣ ᱠᱟᱱᱟ: {n} ᱴᱚᱱ, {n} ᱠᱞᱤᱭᱟᱨ ᱜᱟᱲᱤ᱾','ᱪᱟᱥᱤ ᱴᱚᱠᱮᱱ ᱥᱠᱮᱱ ᱢᱮ','QR ᱴᱚᱠᱮᱱ ᱥᱠᱮᱱ ᱢᱮ ᱵᱟᱝᱠᱷᱟᱱ ᱟᱡᱟᱜ ID ᱦᱮᱛ ᱛᱮ ᱚᱞ ᱢᱮ᱾','ᱥᱠᱮᱱᱟᱨ ᱵᱚᱱᱫᱚ ᱢᱮᱱᱟᱜᱼᱟ᱾ ᱥᱠᱮᱱᱟᱨ ᱮᱦᱚᱵ ᱢᱮ ᱵᱟᱝᱠᱷᱟᱱ ᱰᱮᱢᱚ ᱥᱠᱮᱱ ᱵᱮᱵᱷᱟᱨ ᱢᱮ᱾','ᱥᱠᱮᱱᱟᱨ ᱮᱦᱚᱵ ᱢᱮ','ᱥᱠᱮᱱᱟᱨ ᱵᱚᱱᱫᱚ ᱢᱮ','ᱥᱟᱸᱪᱟᱣ ᱵᱩᱠᱤᱝ ᱨᱮᱭᱟᱜ ᱰᱮᱢᱚ ᱥᱠᱮᱱ','ᱴᱚᱠᱮᱱ / ᱵᱩᱠᱤᱝ ID',
+'ᱥᱟᱛᱟᱣ KD-1001','ᱴᱚᱠᱮᱱ ᱡᱟᱪᱟᱣ ᱢᱮ','ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱢᱟᱱᱟᱣ','ᱜᱟᱲᱤ ᱠᱞᱤᱭᱟᱨ ᱥᱟᱱᱟᱢ ᱵᱷᱮᱜᱟᱨ ᱵᱩᱠᱤᱝ ᱵᱤᱵᱨᱚᱬ ᱡᱟᱪᱟᱣ ᱢᱮ᱾','ᱡᱟᱪᱟᱣ ᱟᱠᱟᱱ ᱴᱚᱠᱮᱱ','ᱯᱩᱭᱞᱩ ᱴᱚᱠᱮᱱ ᱡᱟᱪᱟᱣ ᱢᱮ','ᱪᱟᱥᱤ ᱧᱩᱛᱩᱢ','ᱯᱷᱚᱱ ᱴᱷᱟᱣ ᱮᱞ','ᱯᱟᱦᱴᱟ','ᱜᱟᱲᱤ ᱴᱷᱟᱣ ᱮᱞ',
+'ᱯᱚᱨᱤᱢᱟᱱ (ᱴᱚᱱ ᱨᱮ)','ᱜᱮᱴ ᱴᱷᱟᱣ ᱮᱞ','ᱚᱯᱷᱤᱥᱟᱨ ᱨᱮᱭᱟᱜ ᱚᱞ','ᱨᱚᱲᱟᱜ ᱚᱞ','ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱢᱟᱱᱟᱣ ᱢᱮ','ᱯᱷᱚᱨᱢ ᱥᱟᱯᱷᱟ ᱢᱮ','ᱪᱟᱥᱤ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱥᱟᱨ','ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱ ᱪᱟᱥᱤ ᱟᱨ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱞᱟᱹᱜᱤᱫ ᱨᱩᱠᱷᱤᱭᱟ ᱥᱟᱸᱪᱟᱣ ᱵᱩᱠᱤᱝ᱾','ᱪᱟᱥᱤ ᱵᱩᱠᱤᱝ ᱨᱮᱡᱤᱥᱴᱚᱨ','ᱵᱩᱠᱤᱝ ᱫᱚ ᱟᱥᱞᱤ ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱨᱮᱠᱚᱨᱰ ᱠᱷᱚᱱ ᱵᱷᱮᱜᱟᱨ ᱧᱮᱞᱚᱜ ᱠᱟᱱᱟ᱾',
+'ᱪᱟᱥᱤ','ᱴᱚᱠᱮᱱ','ᱜᱟᱲᱤ','ᱴᱚᱱ','ᱵᱩᱠᱤᱝ ᱛᱟᱞᱟ','ᱜᱮᱴ ᱛᱟᱞᱟ','ᱠᱞᱤᱭᱟᱨ ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱞᱚᱜ','ᱱᱚᱶᱟ ᱥᱟᱦᱴᱟ ᱯᱩᱭᱞᱩ ᱠᱷᱟᱞᱟᱣ ᱚᱠᱛᱮ ᱜᱮᱴ ᱨᱮᱠᱚᱨᱰ ᱵᱟᱝ ᱛᱟᱦᱮᱱᱠᱷᱟᱱ ᱯᱚᱱ ᱰᱮᱢᱚ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱥᱮᱫ ᱠᱟᱱᱟ᱾','CSV ᱵᱟᱦᱨᱮ ᱵᱷᱮᱡ ᱢᱮ','ᱞᱚᱜ ᱯᱨᱤᱱᱴ ᱢᱮ',
+'ᱞᱚᱜ ᱯᱟᱱᱛᱮ ᱢᱮ','ᱪᱟᱥᱤ, ᱴᱚᱠᱮᱱ, ᱜᱟᱲᱤ…','ᱛᱟᱨᱤᱠᱷ ᱞᱮᱠᱟᱛᱮ ᱪᱷᱟᱸᱴ ᱢᱮ','ᱛᱟᱨᱤᱠᱷ ᱟᱨ ᱚᱠᱛᱚ','ᱜᱮᱴ','ᱚᱯᱷᱤᱥᱟᱨ','ᱛᱟᱞᱟ','ᱨᱚᱥᱤᱫ','ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 · ᱚᱯᱷᱤᱥᱟᱨ ᱜᱮᱴ ᱯᱚᱨᱴᱟᱞ · ᱰᱮᱢᱚ ᱪᱟᱥᱤ ᱨᱮᱠᱚᱨᱰ ᱫᱚ ᱢᱮᱱᱮ ᱱᱢᱩᱱᱟ ᱰᱮᱴᱟ ᱠᱟᱱᱟ᱾','ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨ',
+'ᱯᱷᱚᱱ','ᱚᱠᱛᱚ','ᱠᱞᱤᱭᱟᱨ ᱠᱟᱱᱟ ᱯᱚᱨᱤᱢᱟᱱ','ᱵᱩᱠ ᱠᱟᱱᱟ ᱯᱚᱨᱤᱢᱟᱱ','{n} ᱴᱚᱱ','ᱵᱩᱠᱤᱝ — ᱠᱞᱤᱭᱟᱨ ᱵᱟᱝ ᱦᱩᱭ ᱟᱠᱟᱱᱟ','ᱪᱟᱥᱤ ᱨᱮᱠᱚᱨᱰ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ᱾','ᱥᱟᱸᱪᱟᱣ ᱵᱩᱠᱤᱝ ᱞᱤᱥᱴᱤ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ᱾','ᱵᱩᱠ ᱦᱩᱭ ᱮᱱᱟ','ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱮᱱᱟ',
+'ᱠᱞᱤᱭᱟᱨ ᱵᱟᱝ ᱦᱩᱭ ᱮᱱᱟ','ᱱᱚᱶᱟ ᱪᱷᱟᱸᱴᱤ ᱥᱟᱶ ᱢᱤᱞᱟᱣ ᱠᱞᱤᱭᱟᱨ ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱵᱟᱝ ᱢᱮᱱᱟᱜᱼᱟ᱾','ᱜᱮᱴ ᱚᱯᱷᱤᱥᱟᱨ','ᱜᱮᱴ {n}','ᱵᱟᱝ ᱪᱤᱱᱦᱟᱹ ᱪᱟᱥᱤ','ᱵᱟᱝ ᱵᱟᱛᱟᱣ ᱟᱠᱟᱱ','ᱛᱟᱨᱤᱠᱷ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ','ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱ','ᱡᱟᱪᱟᱣ ᱟᱠᱟᱱ ᱵᱩᱠᱤᱝ','ᱯᱩᱭᱞᱩ ᱴᱚᱠᱮᱱ ID ᱚᱞ ᱢᱮ ᱵᱟᱝᱠᱷᱟᱱ ᱥᱠᱮᱱ ᱢᱮ᱾',
+'ᱥᱟᱸᱪᱟᱣ ᱪᱟᱥᱤ ᱵᱩᱠᱤᱝ ᱨᱮ ᱴᱚᱠᱮᱱ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ᱾','ᱱᱚᱶᱟ ᱴᱚᱠᱮᱱ ᱨᱮᱭᱟᱜ ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱫᱚ ᱯᱩᱭᱞᱩ ᱠᱷᱚᱱ ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱᱟ᱾ ᱨᱚᱲ ᱢᱟᱱᱟᱣ ᱵᱚᱱᱫᱚ ᱠᱟᱱᱟ᱾','ᱵᱩᱠᱤᱝ ᱴᱚᱠᱮᱱ ᱡᱟᱪᱟᱣ ᱦᱩᱭ ᱮᱱᱟ᱾ ᱢᱟᱱᱟᱣ ᱢᱟᱲᱟᱝ ᱵᱤᱵᱨᱚᱬ ᱧᱮᱞ ᱢᱮ᱾','ᱰᱮᱢᱚ ᱥᱠᱮᱱ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱛᱟᱣ ᱵᱩᱠᱤᱝ ᱵᱟᱝ ᱢᱮᱱᱟᱜᱼᱟ᱾ ᱯᱚᱱ ᱰᱮᱢᱚ ᱨᱮᱠᱚᱨᱰ ᱯᱩᱭᱞᱩ ᱠᱷᱚᱱ ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱᱟ᱾','QR ᱥᱠᱮᱱᱟᱨ ᱞᱟᱭᱵᱽᱨᱮᱨᱤ ᱞᱚᱰ ᱵᱟᱝ ᱦᱩᱭ ᱞᱮᱱᱟ᱾ ᱴᱚᱠᱮᱱ ᱦᱮᱛ ᱛᱮ ᱚᱞ ᱢᱮ᱾','ᱥᱠᱮᱱᱟᱨ ᱮᱦᱚᱵ ᱦᱩᱭ ᱮᱱᱟ᱾ ᱠᱮᱢᱟᱨᱟ QR ᱴᱚᱠᱮᱱ ᱥᱮᱞᱮᱫ ᱨᱤᱱ ᱢᱮ᱾','ᱠᱮᱢᱟᱨᱟ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ᱾ ᱠᱮᱢᱟᱨᱟ ᱪᱷᱚᱜ ᱮᱢ ᱢᱮ ᱟᱨ HTTPS/localhost ᱵᱮᱵᱷᱟᱨ ᱢᱮ, ᱵᱟᱝᱠᱷᱟᱱ ᱴᱚᱠᱮᱱ ᱦᱮᱛ ᱛᱮ ᱚᱞ ᱢᱮ᱾','ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱢᱟᱱᱟᱣ ᱥᱟᱱᱟᱢ ᱥᱟᱸᱪᱟᱣ ᱵᱩᱠᱤᱝ ᱴᱚᱠᱮᱱ ᱡᱟᱪᱟᱣ ᱢᱮ᱾','ᱱᱚᱶᱟ ᱴᱚᱠᱮᱱ ᱯᱩᱭᱞᱩ ᱠᱷᱚᱱ ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱᱟ᱾','ᱪᱟᱥᱤ, ᱯᱟᱦᱴᱟ, ᱜᱟᱲᱤ ᱴᱷᱟᱣ ᱟᱨ ᱥᱟᱹᱨᱤ ᱴᱚᱱ ᱯᱚᱨᱤᱢᱟᱱ ᱚᱞ ᱢᱮ᱾',
+'ᱢᱟᱱᱟᱣ ᱵᱚᱱᱫᱚ: ᱯᱚᱨᱤᱢᱟᱱ ᱵᱟᱨᱪᱷᱟ {n} ᱴᱚᱱ ᱠᱷᱟᱹᱢᱛᱟ ᱠᱷᱚᱱ ᱵᱟᱹᱲᱛᱤ ᱠᱟᱱᱟ᱾','ᱱᱚᱶᱟ ᱴᱚᱠᱮᱱ ᱮᱴᱟᱜ ᱴᱮᱵ ᱨᱮ ᱠᱞᱤᱭᱟᱨ ᱦᱩᱭ ᱮᱱᱟ᱾ ᱨᱤᱯᱷᱨᱮᱥ ᱠᱟᱛᱮ ᱟᱨᱦᱚᱸ ᱥᱮᱸᱫᱽᱨᱟ ᱢᱮ᱾','ᱜᱮᱴ ᱥᱮᱱᱟᱹ ᱢᱟᱱᱟᱣ ᱦᱩᱭ ᱠᱟᱛᱮ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱥᱟᱸᱪᱟᱣ ᱦᱩᱭ ᱮᱱᱟ᱾','ᱮᱱᱴᱨᱤ ᱥᱟᱸᱪᱟᱣ ᱵᱟᱝ ᱦᱩᱭ ᱞᱮᱱᱟ᱾ ᱵᱨᱟᱣᱡᱟᱨ ᱥᱴᱚᱨᱮᱡ ᱧᱮᱞ ᱠᱟᱛᱮ ᱟᱨᱦᱚᱸ ᱥᱮᱸᱫᱽᱨᱟ ᱢᱮ᱾','ᱵᱟᱦᱨᱮ ᱵᱷᱮᱡ ᱞᱟᱹᱜᱤᱫ ᱠᱞᱤᱭᱟᱨ ᱮᱱᱴᱨᱤ ᱵᱟᱝ ᱢᱮᱱᱟᱜᱼᱟ᱾','ᱜᱮᱴ ᱨᱮᱠᱚᱨᱰ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ᱾ ᱨᱤᱯᱷᱨᱮᱥ ᱠᱟᱛᱮ ᱟᱨᱦᱚᱸ ᱥᱮᱸᱫᱽᱨᱟ ᱢᱮ᱾','ᱨᱚᱥᱤᱫ ᱯᱨᱤᱱᱴ ᱞᱟᱹᱜᱤᱫ ᱯᱚᱯ-ᱟᱯ ᱢᱟᱱᱟᱣ ᱢᱮ᱾','ᱥᱚᱨᱠᱟᱨᱤ ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱨᱚᱥᱤᱫ','ᱨᱚᱥᱤᱫ ID','ᱨᱚᱥᱤᱫ ᱯᱨᱤᱱᱴ ᱢᱮ',
+'ᱯᱩᱱᱮ','ᱱᱟᱥᱤᱠ','ᱱᱟᱜᱯᱩᱨ','ᱚᱢᱨᱟᱣᱛᱤ','ᱢᱩᱞ','ᱭᱟᱨᱰ','ᱫᱟᱱᱟ','ᱠᱟᱯᱟᱥ','ᱨᱚᱢᱮᱥ','ᱠᱩᱢᱟᱨ',
+'ᱯᱟᱴᱤᱞ','ᱥᱩᱱᱤᱛᱟ','ᱡᱟᱫᱚᱵ','ᱥᱩᱨᱮᱥ','ᱯᱟᱣᱟᱨ','ᱚᱱᱤᱛᱟ','ᱥᱤᱸᱰᱮ','ᱜᱷᱮᱦᱩᱸ','ᱫᱷᱟᱱ / ᱪᱟᱣᱞᱮ','ᱥᱚᱭᱟᱵᱤᱱ',
+'ᱯᱮᱸᱡ','ᱢᱚᱠᱟᱭ'
+],
+brx: [
+'कृषिधारा 2.0','अफिसार गेट क्लियारेन्स पोर्टल','भूमिका सोलायदों','यार्ड कोड','जोबोद रिफ्रेस','सानजायनाय डैसबोर्ड डेटा','गेट क्लियारेन्सनि नुजाबनाय','क्लियार / जोबोद यार्ड खामथा','{n} / {n} टन','यार्ड खामथानि {n}%',
+'क्लियार जानाय गाड़ि','{n} क्लियार गेट रेकर्ड','क्लियार जानाय किसान','क्लियार गेट रेकर्डआव मोनसे-मोनसे किसान','गेट लगआव जोबोद टन','क्लियार गेट रेकर्डनि परिमाननि जोबोद','यार्डनि थाखाय आरो डेटा मिलायनाय','सानजायनाय खामथाखौ गेट-सानायनि रेकर्डनो गोरोबथा खालाम।','डेटा रिफ्रेस खालाम','खामथाआ kd_cap_<yard> आरो kd_booked_<yard> निफ्राय लानाय जायो। क्लियार गाड़ि, किसाननि सानसिन आरो गेट लग kd_gate_entries निफ्राय लानाय जायो।',
+'खामथानि दाम थानाय जायाखै; नांगौनि जायगाव डेमोनि डिफल्ट दाम दिन्थिनाय जादों।','मिलायाखै: सानजायनाय खामथा गिनाइ {n} टन, गेट लगनि जोबोद {n} टन।','खामथानि जोबोद गेट लगनो मिलाय: {n} टन, {n} क्लियार गाड़ि।','किसान टोकेन स्कान खालाम','QR टोकेन स्कान खालाम एबा बेनि ID हाथाइ हो।','स्कानार बन्द। स्कानार जागाय एबा डेमो स्कान बाहाय।','स्कानार जागाय','स्कानार बन्द खालाम','सैखाबनाय बुकिंगनि डेमो स्कान','टोकेन / बुकिं ID',
+'नाथाय KD-1001','टोकेन जाहोन खालाम','गेट सानायनि थाङै','गाड़ि क्लियार खालामनि सिगांनि बुकिंगनि बिबांखौ जाहोन खालाम।','जाहोन खालामनाय टोकेन','गिबि टोकेन जाहोन खालाम','किसाननि मुं','फोन नम्बर','फसल','गाड़ि नम्बर',
+'परिमान (टनाव)','गेट नम्बर','अफिसारनि लिरनाय','नाथाय लिरनाय','गेट सानाय थाङै खालाम','फर्म सोफाय खालाम','किसान क्लियारेन्सनि सार','क्लियार जानाय किसान आरो क्लियारेन्सनि थाखाय बिलाइनाय सैखाबनाय बुकिं।','किसान बुकिं रेजिस्टार','बुकिंफोरखौ आसल गेट क्लियारेन्स रेकर्डनिफ्राय बायदि दिन्थिनाय जादों।',
+'किसान','टोकेन','गाड़ि','टन','बुकिंनि थाखाय','गेटनि थाखाय','क्लियार गेट सानाय लग','बे फाजो गिबि खेवनाय समाव गेट रेकर्ड नांखै जाबोनो फैसे डेमो क्लियारेन्स लायो।','CSV बाहायारि','लग प्रिन्ट खालाम',
+'लग नायदि','किसान, टोकेन, गाड़ि…','सानथिनि जोबथा छान','सान आरो समय','गेट','अफिसार','थाखाय','रसिद','कृषिधारा 2.0 · अफिसार गेट पोर्टल · डेमो किसान रेकर्ड बेसेनि नमुना डेटा।','गेट क्लियार',
+'फोन','समय','क्लियार खालामनाय परिमान','बुक खालामनाय परिमान','{n} टन','बुकिं — क्लियार जाखै','किसान रेकर्ड मोनाखै।','सैखाबनाय बुकिं लिस्टि मोनाखै।','बुक जादों','क्लियार जादों',
+'क्लियार जाखै','बे छाननि गोरोबथा क्लियार गेट सानाय नांखै।','गेट अफिसार','गेट {n}','सायाखै किसान','बुंखै','सान थाखै','हाखै','जाहोन खालामनाय बुकिं','गिबि टोकेन ID हो एबा स्कान खालाम।',
+'सैखाबनाय किसान बुकिंआव टोकेन मोनाखै।','बे टोकेननि गेट सानाय सिगांनिफ्रायनो क्लियार जानाय। फिन थाङै बन्द जादों।','बुकिं टोकेन जाहोन जादों। थाङै खालामनि सिगांनि बिबां नायदि।','डेमो स्कानाव बिलाइनाय बुकिं नांखै। मोनफ्लाइ डेमो रेकर्ड सिगांनिफ्रायनो क्लियार।','QR स्कानार लाइब्रेरि लोड जाखै। टोकेन हाथाइ हो।','स्कानार जागाय जादों। कैमेरा QR टोकेननि गिदिंआव थाग्रा।','कैमेरा थाखै। कैमेरा इजाजत हो आरो HTTPS/localhost बाहाय, एबा टोकेन हाथाइ हो।','गेट सानाय थाङै खालामनि सिगांनि सैखाबनाय बुकिंनि टोकेन जाहोन खालाम।','बे टोकेन सिगांनिफ्रायनो क्लियार जानाय।','किसान, फसल, गाड़ि नम्बर आरो थार टन परिमान हो।',
+'थाङै बन्द: परिमान बाकि {n} टन खामथानिफ्राय बांसिन।','बे टोकेन मेगोन टेबआव क्लियार जादों। रिफ्रेस खालामनो फिन खायसेनो।','गेट सानाय थाङै जानाय आरो गोजामजों सैखाब जादों।','सानाय सैखाब खालामो जाखै। ब्राउजार स्टोरेज नायनो फिन खायसेनो।','बाहायारिनि थाखाय क्लियार सानाय नांखै।','गेट रेकर्ड मोनाखै। रिफ्रेस खालामनो फिन खायसेनो।','रसिद प्रिन्टनि थाखाय पप-अप इजाजत हो।','सरकारि गेट क्लियारेन्स रसिद','रसिद ID','रसिद प्रिन्ट खालाम',
+'पुणे','नासिक','नागपुर','अमरावती','गोजौ','यार्ड','अनाज','कपास','रमेश','कुमार',
+'पाटिल','सुनिता','जादव','सुरेश','पवार','अनिता','शिन्दे','गेहुं','मैखान / माइरङ','सोयाबिन',
+'प्याज','मकै'
+],
+kok: [
+'कृषिधारा 2.0','अधिकारी गेट क्लिअरन्स पोर्टल','भुमिका बदला','यार्ड कोड','निमाणें रिफ्रेश','सामायीक डॅशबोर्ड डेटा','गेट क्लिअरन्साचो आढावो','क्लिअर / एकूण यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमतेचें {n}%',
+'क्लिअर जाल्लीं वाहनां','{n} क्लिअर गेट नोंदी','क्लिअर जाल्ले शेतकार','क्लिअर गेट नोंदींतले वेगवेगळे शेतकार','गेट लॉगांतले एकूण टन','क्लिअर गेट नोंदींच्या प्रमाणाची बेरीज','यार्डाची स्थिती आनी डेटा जुळवणी','सामायीक क्षमतेची गेट-प्रवेश नोंदींकडेन तुळा करात.','डेटा रिफ्रेश करात','क्षमता kd_cap_<yard> आनी kd_booked_<yard> कडल्यान घेतल्या. क्लिअर वाहनां, शेतकारांची संख्या आनी गेट लॉग kd_gate_entries कडल्यान घेतात.',
+'क्षमतेचीं मोलां मेळ्ळीं ना; गरजेप्रमाण डेमोचीं डिफॉल्ट मोलां दाखयल्यांत.','जुळना: सामायीक क्षमता काउंटर {n} टन आसा, पूण गेट लॉगांची बेरीज {n} टन आसा.','क्षमतेची एकूण बेरीज गेट लॉगाकडेन जुळटा: {n} टन, {n} क्लिअर वाहनां.','शेतकार टोकन स्कॅन करात','QR टोकन स्कॅन करात वा ताचो ID हातान घालात.','स्कॅनर बंद आसा. स्कॅनर सुरू करात वा डेमो स्कॅन वापरात.','स्कॅनर सुरू करात','स्कॅनर बंद करात','सांबाळिल्ल्या बुकिंगाचो डेमो स्कॅन','टोकन / बुकिंग ID',
+'उदा. KD-1001','टोकन तपासात','गेट प्रवेश मंजूरी','वाहन क्लिअर करपा आदीं बुकिंगाची म्हायती तपासात.','पडताळिल्लो टोकन','पयलीं टोकन तपासात','शेतकाराचें नांव','फोन क्रमांक','उत्पादन','वाहन क्रमांक',
+'प्रमाण (टनांनी)','गेट क्रमांक','अधिकाऱ्याच्यो नोंदी','पर्यायी नोंदी','गेट प्रवेश मंजूर करात','फॉर्म साफ करात','शेतकार क्लिअरन्स सारांश','क्लिअर जाल्ले शेतकार आनी क्लिअरन्साची वाट पळोवपी सांबाळिल्लीं बुकिंगां.','शेतकार बुकिंग नोंदवही','बुकिंगां खऱ्या गेट क्लिअरन्स नोंदींपासून वेगळीं दाखयल्यांत.',
+'शेतकार','टोकन','वाहन','टन','बुकिंगाची स्थिती','गेटाची स्थिती','क्लिअर गेट प्रवेश लॉग','हें पान पयलींच फावटी उगडटना गेट नोंदी ना जाल्यार चार डेमो क्लिअरन्स जोडटात.','CSV निर्यात करात','लॉग प्रिंट करात',
+'लॉग सोदात','शेतकार, टोकन, वाहन…','तारखे प्रमाणें गाळात','तारीख आनी वेळ','गेट','अधिकारी','स्थिती','पावती','कृषिधारा 2.0 · अधिकारी गेट पोर्टल · डेमो शेतकार नोंदी फकत नमुनो डेटा.','गेट क्लिअर',
+'फोन','वेळ','क्लिअर केल्लें प्रमाण','बुक केल्लें प्रमाण','{n} टन','बुकिंग — क्लिअर ना','शेतकार नोंदी मेळ्ळ्यो ना.','सांबाळिल्ली बुकिंग यादी मेळ्ळी ना.','बुक','क्लिअर',
+'क्लिअर ना','ह्या गाळणीक जुळपी क्लिअर गेट प्रवेश ना.','गेट अधिकारी','गेट {n}','अणदेखीत शेतकार','सांगूंक ना','तारीख उपलब्ध ना','दिल्लें ना','पडताळिल्लें बुकिंग','पयलीं टोकन ID घालात वा स्कॅन करात.',
+'सांबाळिल्ल्या शेतकार बुकिंगांनी टोकन मेळ्ळो ना.','ह्या टोकनाचो गेट प्रवेश आदींच क्लिअर जालो. दुसरी मंजूरी आडायल्या.','बुकिंग टोकन पडताळ्ळो. मंजूरी आदीं तपशील पळयात.','डेमो स्कॅनाक प्रलंबीत बुकिंग ना. चारूय डेमो नोंदी आदींच क्लिअर जाल्यात.','QR स्कॅनर लायब्ररी लोड जाली ना. टोकन हातान घालात.','स्कॅनर सुरू जालो. कॅमेरा QR टोकनाक धरात.','कॅमेरा उपलब्ध ना. कॅमेरा परवानगी दिवन HTTPS/localhost वापरात, वा टोकन हातान घालात.','गेट प्रवेश मंजूर करपा आदीं सांबाळिल्ल्या बुकिंगाचो टोकन तपासात.','हो टोकन आदींच क्लिअर जाला.','शेतकार, उत्पादन, वाहन क्रमांक आनी वैध टन प्रमाण घालात.',
+'मंजूरी आडायली: प्रमाण उरिल्ल्या {n} टन क्षमतेपरस चड आसा.','हो टोकन दुसऱ्या टॅबांत क्लिअर जालो. रिफ्रेश करून परत यत्न करात.','गेट प्रवेश मंजूर जावन सुवात्मकपणान सांबाळ्ळो.','नोंद सांबाळूंक जाली ना. ब्राउझर स्टोरेज तपासून परत यत्न करात.','निर्यातीक क्लिअर नोंदी ना.','गेट नोंद मेळ्ळी ना. रिफ्रेश करून परत यत्न करात.','पावती प्रिंट करपाक पॉप-अपांक परवानगी दियात.','अधिकृत गेट क्लिअरन्स पावती','पावती ID','पावती प्रिंट करात',
+'पुणे','नाशिक','नागपूर','अमरावती','मुखेल','यार्ड','धान्य','कापूस','रमेश','कुमार',
+'पाटील','सुनीता','जाधव','सुरेश','पवार','अनिता','शिंदे','गोव','भात / तांदूळ','सोयाबीन',
+'कांदो','मको'
+],
+mai: [
+'कृषिधारा 2.0','अधिकारी गेट क्लियरेंस पोर्टल','भूमिका बदलू','यार्ड कोड','अन्तिम रिफ्रेश','साझा डैशबोर्ड डेटा','गेट क्लियरेंसक अवलोकन','क्लियर / कुल यार्ड क्षमता','{n} / {n} टन','यार्ड क्षमताक {n}%',
+'क्लियर भेल गाड़ी','{n} क्लियर गेट रिकॉर्ड','क्लियर भेल किसान','क्लियर गेट रिकॉर्ड मे अलग-अलग किसान','गेट लॉग मे कुल टन','क्लियर गेट रिकॉर्डक मात्राक योग','यार्डक स्थिति आ डेटाक मिलान','साझा क्षमताक गेट-प्रवेश रिकॉर्ड सँ तुलना करू।','डेटा रिफ्रेश करू','क्षमता kd_cap_<yard> आ kd_booked_<yard> सँ लेल जाइत अछि। क्लियर गाड़ी, किसानक संख्या आ गेट लॉग kd_gate_entries सँ लेल जाइत अछि।',
+'क्षमताक मान उपलब्ध नहि छल; आवश्यकता भेला पर डेमोक डिफॉल्ट मान देखाओल गेल अछि।','बेमेल: साझा क्षमता काउंटर {n} टन अछि, मुदा गेट लॉगक योग {n} टन अछि।','क्षमताक कुल योग गेट लॉग सँ मेल खाइत अछि: {n} टन, {n} क्लियर गाड़ी।','किसान टोकन स्कैन करू','QR टोकन स्कैन करू वा ओकर ID हाथ सँ भरू।','स्कैनर बन्न अछि। स्कैनर शुरू करू वा डेमो स्कैन प्रयोग करू।','स्कैनर शुरू करू','स्कैनर बन्न करू','सहेजल बुकिंगक डेमो स्कैन','टोकन / बुकिंग ID',
+'जेना KD-1001','टोकन जाँचू','गेट प्रवेशक स्वीकृति','गाड़ी क्लियर करबा सँ पहिने बुकिंगक जानकारी जाँचू।','सत्यापित टोकन','पहिने टोकन जाँचू','किसानक नाम','फोन नम्बर','उपज','गाड़ी नम्बर',
+'मात्रा (टन मे)','गेट नम्बर','अधिकारीक टिप्पणी','वैकल्पिक टिप्पणी','गेट प्रवेश स्वीकृत करू','फॉर्म साफ करू','किसान क्लियरेंसक सारांश','क्लियर भेल किसान आ क्लियरेंसक प्रतीक्षा मे सहेजल बुकिंग।','किसान बुकिंग रजिस्टर','बुकिंगकेँ वास्तविक गेट क्लियरेंस रिकॉर्ड सँ अलग देखाओल गेल अछि।',
+'किसान','टोकन','गाड़ी','टन','बुकिंगक स्थिति','गेटक स्थिति','क्लियर गेट प्रवेश लॉग','ई पृष्ठ पहिल बेर खुजबा काल जँ कोनो गेट रिकॉर्ड नहि हो तँ चारि डेमो क्लियरेंस जोड़ल जाइत अछि।','CSV निर्यात करू','लॉग प्रिंट करू',
+'लॉग खोजू','किसान, टोकन, गाड़ी…','तिथि अनुसार छानू','तिथि आ समय','गेट','अधिकारी','स्थिति','रसीद','कृषिधारा 2.0 · अधिकारी गेट पोर्टल · डेमो किसान रिकॉर्ड मात्र नमूना डेटा अछि।','गेट क्लियर',
+'फोन','समय','क्लियर कएल मात्रा','बुक कएल मात्रा','{n} टन','बुकिंग — क्लियर नहि','कोनो किसान रिकॉर्ड नहि भेटल।','सहेजल बुकिंग सूची नहि भेटल।','बुक','क्लियर',
+'क्लियर नहि','एहि फिल्टर सँ मेल खाएबला कोनो क्लियर गेट प्रवेश नहि अछि।','गेट अधिकारी','गेट {n}','अज्ञात किसान','निर्दिष्ट नहि','तिथि उपलब्ध नहि','उपलब्ध नहि कराओल गेल','सत्यापित बुकिंग','पहिने टोकन ID भरू वा स्कैन करू।',
+'सहेजल किसान बुकिंग मे टोकन नहि भेटल।','एहि टोकनक गेट प्रवेश पहिनहि क्लियर भ’ चुकल अछि। दोबारा स्वीकृति रोकल गेल अछि।','बुकिंग टोकन सत्यापित भेल। स्वीकृति सँ पहिने विवरण जाँचू।','डेमो स्कैनक लेल कोनो लंबित बुकिंग नहि अछि। चारू डेमो रिकॉर्ड पहिनहि क्लियर अछि।','QR स्कैनर लाइब्रेरी लोड नहि भ’ सकल। टोकन हाथ सँ भरू।','स्कैनर शुरू भ’ गेल। कैमरा QR टोकन दिस राखू।','कैमरा उपलब्ध नहि अछि। कैमराक अनुमति दिअ’ आ HTTPS/localhost प्रयोग करू, वा टोकन हाथ सँ भरू।','गेट प्रवेश स्वीकृत करबा सँ पहिने सहेजल बुकिंगक टोकन जाँचू।','ई टोकन पहिनहि क्लियर भ’ चुकल अछि।','किसान, उपज, गाड़ी नम्बर आ सही धनात्मक टन मात्रा भरू।',
+'स्वीकृति रोकल गेल: मात्रा शेष {n} टन क्षमता सँ बेसी अछि।','ई टोकन दोसर टैब मे क्लियर भ’ चुकल अछि। रिफ्रेश क’ क’ फेर प्रयास करू।','गेट प्रवेश स्वीकृत भ’ क’ सफलतापूर्वक सहेजल गेल।','प्रविष्टि सहेजल नहि जा सकल। ब्राउजर स्टोरेज जाँचि क’ फेर प्रयास करू।','निर्यातक लेल कोनो क्लियर प्रविष्टि नहि अछि।','गेट रिकॉर्ड नहि भेटल। रिफ्रेश क’ क’ फेर प्रयास करू।','रसीद प्रिंट करबाक लेल पॉप-अपक अनुमति दिअ’।','आधिकारिक गेट क्लियरेंस रसीद','रसीद ID','रसीद प्रिंट करू',
+'पुणे','नासिक','नागपुर','अमरावती','मुख्य','यार्ड','अनाज','कपास','रमेश','कुमार',
+'पाटील','सुनीता','जाधव','सुरेश','पवार','अनीता','शिंदे','गहूम','धान / चाउर','सोयाबीन',
+'प्याज','मकई'
+]
+};
+
+// Native digit blocks per script (Unicode zero code point).
+const DIGIT_BASE = {
+    hi: 0x966, mr: 0x966, ne: 0x966, sa: 0x966, doi: 0x966, brx: 0x966, kok: 0x966, mai: 0x966,
+    bn: 0x9E6, as: 0x9E6, mni: 0x9E6, gu: 0xAE6, pa: 0xA66, or: 0xB66, ta: 0xBE6, te: 0xC66,
+    kn: 0xCE6, ml: 0xD66, sat: 0x1C50, ur: 0x6F0, sd: 0x6F0, ks: 0x6F0
+};
+
+const KD_DICT = {};
+Object.keys(KD_ROWS).forEach(function (code) {
+    if (KD_ROWS[code].length !== KD_KEYS.length) {
+        console.error('Translation count mismatch for language: ' + code + ' (' + KD_ROWS[code].length + ' of ' + KD_KEYS.length + ')');
+    }
+    KD_DICT[code] = {};
+    KD_KEYS.forEach(function (key, i) {
+        if (KD_ROWS[code][i] !== undefined) KD_DICT[code][key] = KD_ROWS[code][i];
+    });
+});
+
+let currentLang = 'en';
+
+function localizeDigits(text) {
+    const base = DIGIT_BASE[currentLang];
+    if (!base) return text;
+    return String(text).replace(/[0-9]/g, function (d) {
+        return String.fromCharCode(base + Number(d));
+    });
+}
+
+// Translate one English string. Unknown strings stay in English (never word-by-word).
+function tr(text) {
+    if (!text || currentLang === 'en') return text;
+
+    const dict = KD_DICT[currentLang];
+    if (!dict) return text;
+
+    const lead = (text.match(/^\s*/) || [''])[0];
+    const trail = (text.match(/\s*$/) || [''])[0];
+    const core = text.trim().replace(/\s+/g, ' ');
+    if (!core) return text;
+
+    function find(value) {
+        if (dict[value] !== undefined) return dict[value];
+
+        const numbers = [];
+        const template = value.replace(/\d+(?:\.\d+)?/g, function (n) {
+            numbers.push(n);
+            return '{n}';
+        });
+
+        if (template !== value && dict[template] !== undefined) {
+            return dict[template].replace(/\{n\}/g, function () {
+                return numbers.shift();
+            });
+        }
+
+        return undefined;
+    }
+
+    let result = find(core);
+
+    if (result === undefined) {
+        // Handle leading/trailing emoji or arrows (e.g. "📷 Scan Farmer Token").
+        const parts = core.match(/^([^\p{L}\p{N}]*)([\s\S]*?)([^\p{L}\p{N}.)]*)$/u);
+        if (parts && parts[2]) {
+            const inner = find(parts[2]);
+            if (inner !== undefined) result = parts[1] + inner + parts[3];
+        }
+    }
+
+    if (result === undefined) {
+        // Pure numbers are shown in the language's own digits.
+        return /\p{L}/u.test(core) ? text : lead + localizeDigits(core) + trail;
+    }
+
+    return lead + localizeDigits(result) + trail;
+}
+
+// Names and place names: whole phrase first, then word by word (e.g. "Ramesh Patil").
+function trName(text) {
+    const whole = tr(text);
+    if (whole !== text) return whole;
+    return String(text).split(' ').map(function (w) { return tr(w); }).join(' ');
+}
+
+// Show a translated message and remember its English source for re-translation.
+function setText(element, english) {
+    if (!element) return;
+    element.dataset.en = english;
+    element.textContent = tr(english);
+}
+
+function applyLanguage(lang) {
+    currentLang = (lang === 'en' || KD_DICT[lang]) ? lang : 'en';
+    document.documentElement.lang = currentLang;
+
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        if (el.dataset.en === undefined) {
+            el.dataset.en = el.textContent.trim().replace(/\s+/g, ' ');
+        }
+    });
+
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+        el.textContent = tr(el.dataset.en);
+    });
+
+    document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+        if (el.dataset.enPh === undefined) el.dataset.enPh = el.getAttribute('placeholder');
+        el.setAttribute('placeholder', tr(el.dataset.enPh));
+    });
+
+    const sel = document.getElementById('languageSelect');
+    if (sel && sel.value !== currentLang) sel.value = currentLang;
+
+    if (typeof refreshDynamic === 'function') refreshDynamic();
+}
+
+// Pop-up alerts are translated line by line.
+const nativeAlert = window.alert.bind(window);
+window.alert = function (message) {
+    nativeAlert(String(message).split('\n').map(tr).join('\n'));
+};
+</script>
+
+<script>
+"use strict";
+
+const KEYS = {
+  yard: "kd_selected_admin_yard",
+  entries: "kd_gate_entries",
+  booking: "kd_farmer_booking",
+  language: "kd_selected_lang"
+};
+
+let activeYard = localStorage.getItem(KEYS.yard) || "pune_main";
+let gateEntries = [];
+let bookings = [];
+let validatedBooking = null;
+let scanner = null;
+let scannerRunning = false;
+let lastRefresh = new Date();
+window.currentDisplayedEntries = [];
+
+const $ = id => document.getElementById(id);
+
+const COMMODITY_EN = {
+  wheat: "Wheat", paddy: "Paddy / Rice", soybean: "Soybean",
+  cotton: "Cotton", onion: "Onion", maize: "Maize"
+};
+
+function readJSON(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch (_) { return fallback; }
+}
+function writeJSON(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+function num(value, fallback=0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+function first(obj, keys, fallback="") {
+  if (!obj || typeof obj !== "object") return fallback;
+  for (const key of keys) {
+    if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
+  }
+  return fallback;
+}
+function tokenOf(r) {
+  return String(first(r,["token","tokenId","tokenID","bookingId","bookingID","farmerToken","qrToken","id"],"")).trim();
+}
+function farmerOf(r) {
+  return String(first(r,["farmerName","name","farmer","fullName","applicantName"],"Unknown farmer"));
+}
+function phoneOf(r) {
+  return String(first(r,["phone","phoneNumber","mobile","mobileNumber","contact"],""));
+}
+function commodityOf(r) {
+  return String(first(r,["commodity","crop","cropName","produce","product"],"Not specified"));
+}
+function vehicleOf(r) {
+  return String(first(r,["vehicleNumber","vehicleNo","vehicle","truckNumber","registrationNumber"],""));
+}
+function tonsOf(r) {
+  return num(first(r,["tons","quantityTons","quantityInTons","quantity","weightTons","weight","bookedTons"],0));
+}
+function yardOf(r) {
+  return String(first(r,["mandiKey","yardKey","mandiId","yardId","marketKey"],""));
+}
+function statusOf(r) {
+  return String(first(r,["status","entryStatus","gateStatus","bookingStatus"],"")).toLowerCase();
+}
+function isCleared(r) {
+  if (r && (r.cleared === true || r.gateCleared === true)) return true;
+  const s = statusOf(r);
+  if (!s) return true;
+  return ["cleared","approved","approved at gate","gate cleared","verified","success","completed","passed"].includes(s);
+}
+function dateOf(r) {
+  const raw = first(r,["timestamp","clearedAt","entryTime","dateTime","createdAt","date"],"");
+  if (!raw) return null;
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+// english=true gives the plain browser format (used for CSV export).
+function dateText(r, english) {
+  const d = dateOf(r);
+  if (!d) return english ? "Date unavailable" : tr("Date unavailable");
+  if (english || currentLang === "en") return d.toLocaleString();
+  return localizeDigits(d.toLocaleString([currentLang + "-IN", "en-IN"]));
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function normaliseList(value) {
+  if (Array.isArray(value)) return value.filter(v=>v && typeof v==="object");
+  if (value && typeof value==="object") {
+    for (const key of ["bookings","farmers","data","records","items"]) {
+      if (Array.isArray(value[key])) return value[key].filter(v=>v && typeof v==="object");
+    }
+    return [value];
+  }
+  return [];
+}
+function yardName(key) {
+  const names={pune_main:"Pune Main Yard",pune:"Pune Yard",nashik_main:"Nashik Main Yard",nagpur_main:"Nagpur Main Yard",mumbai_main:"Mumbai Main Yard"};
+  return names[key] || key.split(/[_-]/).map(s=>s?s[0].toUpperCase()+s.slice(1):"").join(" ");
+}
+// Display helpers (translate for the screen; stored data stays in English).
+function cName(v) {
+  const s = String(v);
+  return COMMODITY_EN[s.toLowerCase()] || s;
+}
+function showCommodity(v) { return trName(cName(v)); }
+function showTons(n) { return tr(n + " tons"); }
+
+/*
+ * INITIAL DEMO DATA:
+ * Seed four cleared vehicles and four farmers, totaling 34 tons.
+ * This only happens when kd_gate_entries is empty or invalid.
+ * It does not replace existing gate-entry history.
+ */
+function seedDemoDataIfEmpty() {
+  const raw = readJSON(KEYS.entries, []);
+  if (Array.isArray(raw) && raw.length > 0) return;
+
+  const yard = localStorage.getItem(KEYS.yard) || "pune_main";
+  const now = Date.now();
+
+  const demo = [
+    {
+      id:"KD-GATE-1001",token:"KD-1001",farmerName:"Ramesh Patil",
+      phone:"9000000001",commodity:"Wheat",vehicleNumber:"MH12 AB 1234",
+      tons:10,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-4*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1002",token:"KD-1002",farmerName:"Sunita Jadhav",
+      phone:"9000000002",commodity:"Soybean",vehicleNumber:"MH14 CD 5678",
+      tons:8,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-3*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1003",token:"KD-1003",farmerName:"Suresh Pawar",
+      phone:"9000000003",commodity:"Maize",vehicleNumber:"MH12 EF 9012",
+      tons:9,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-2*3600000).toISOString(),
+      notes:"Demo seed record"
+    },
+    {
+      id:"KD-GATE-1004",token:"KD-1004",farmerName:"Anita Shinde",
+      phone:"9000000004",commodity:"Onion",vehicleNumber:"MH15 GH 3456",
+      tons:7,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
+      cleared:true,mandiKey:yard,timestamp:new Date(now-3600000).toISOString(),
+      notes:"Demo seed record"
+    }
+  ];
+
+  writeJSON(KEYS.entries,demo);
+
+  // Initialize the yard values for the demo only if not already configured.
+  if (localStorage.getItem("kd_cap_"+yard) === null) {
+    localStorage.setItem("kd_cap_"+yard,"50");
+  }
+  if (localStorage.getItem("kd_booked_"+yard) === null) {
+    localStorage.setItem("kd_booked_"+yard,"34");
+  }
+
+  // Provide matching demo bookings so tokens can be validated.
+  // Do not overwrite an existing booking object/list.
+  if (localStorage.getItem(KEYS.booking) === null) {
+    writeJSON(KEYS.booking,demo.map(e=>({
+      token:e.token,farmerName:e.farmerName,phone:e.phone,
+      commodity:e.commodity,vehicleNumber:e.vehicleNumber,
+      tons:e.tons,status:"CLEARED",gateCleared:true,mandiKey:yard
+    })));
+  }
+}
+
+function loadData() {
+  activeYard=localStorage.getItem(KEYS.yard)||"pune_main";
+  const saved=readJSON(KEYS.entries,[]);
+  gateEntries=Array.isArray(saved)?saved.filter(e=>e&&typeof e==="object"):[];
+  bookings=normaliseList(readJSON(KEYS.booking,null));
+}
+function yardEntries() {
+  return gateEntries.filter(e=>!yardOf(e)||yardOf(e)===activeYard);
+}
+function clearedEntries() {
+  return yardEntries().filter(isCleared);
+}
+function capacityData() {
+  const cap=localStorage.getItem("kd_cap_"+activeYard);
+  const used=localStorage.getItem("kd_booked_"+activeYard);
+  const capAlt=localStorage.getItem("kd_capacity_"+activeYard);
+  const usedAlt=localStorage.getItem("kd_cleared_"+activeYard);
+  return {
+    capacity:num(cap??capAlt,50),
+    tons:num(used??usedAlt,34),
+    hasCapacity:cap!==null||capAlt!==null,
+    hasTons:used!==null||usedAlt!==null
+  };
+}
+function uniqueFarmers(entries) {
+  const seen=new Set();
+  return entries.filter(e=>{
+    const key=(tokenOf(e)||vehicleOf(e)||farmerOf(e)).toLowerCase();
+    if(seen.has(key)) return false;
+    seen.add(key);return true;
+  });
+}
+function renderDashboard() {
+  const entries=clearedEntries();
+  const cap=capacityData();
+  const totalTons=entries.reduce((sum,e)=>sum+tonsOf(e),0);
+  const farmers=uniqueFarmers(entries);
+  const vehicles=new Set(entries.map(e=>(vehicleOf(e)||tokenOf(e)||e.id||"").toLowerCase()).filter(Boolean));
+
+  $("yardName").textContent=trName(yardName(activeYard));
+  $("yardKeyText").textContent=activeYard;
+  setText($("capacityValue"),cap.tons+" / "+cap.capacity+" Tons");
+  $("capacityFill").style.width=Math.max(0,Math.min(100,cap.capacity?cap.tons/cap.capacity*100:0))+"%";
+  setText($("capacityNote"),(cap.capacity?((cap.tons/cap.capacity)*100).toFixed(1):"0")+"% of yard capacity");
+  setText($("vehiclesValue"),String(vehicles.size));
+  setText($("vehiclesNote"),entries.length+" cleared gate record(s)");
+  setText($("farmersValue"),String(farmers.length));
+  setText($("tonsValue"),Number(totalTons.toFixed(2)).toLocaleString());
+
+  lastRefresh=new Date();
+  $("lastUpdated").textContent=tr("Last refreshed")+": "+(currentLang==="en"
+    ? lastRefresh.toLocaleTimeString()
+    : localizeDigits(lastRefresh.toLocaleTimeString([currentLang+"-IN","en-IN"])));
+
+  const notice=$("reconciliationNotice");
+  const messages=[];
+  if(!cap.hasCapacity||!cap.hasTons) messages.push("Capacity keys were missing; demo defaults are shown where needed.");
+  if(Math.abs(totalTons-cap.tons)>0.01) {
+    messages.push("Mismatch: shared capacity counter is "+cap.tons+" tons, but gate logs sum to "+totalTons.toFixed(2)+" tons.");
+    notice.className="notice info";
+  } else {
+    messages.push("Capacity total matches gate logs: "+totalTons.toFixed(2)+" tons across "+vehicles.size+" cleared vehicles.");
+    notice.className="notice success";
+  }
+  notice.textContent=messages.map(tr).join(" ");
+  renderFarmers();
+  renderBookings();
+  renderLogs();
+}
+
+function renderFarmers() {
+  const container=$("farmerSummary");
+  const entries=uniqueFarmers(clearedEntries());
+  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean));
+  const pending=bookings.filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
+  const cards=[];
+
+  entries.forEach(e=>cards.push(`
+    <article class="farmer-card">
+      <h3>${esc(trName(farmerOf(e)))}</h3><span class="status cleared">${esc(tr("GATE CLEARED"))}</span>
+      <p><strong>${esc(tr("Token"))}:</strong> ${esc(tokenOf(e)||"—")}</p>
+      <p><strong>${esc(tr("Phone"))}:</strong> ${esc(localizeDigits(phoneOf(e)||"—"))}</p>
+      <p><strong>${esc(tr("Vehicle"))}:</strong> ${esc(vehicleOf(e)||"—")}</p>
+      <p><strong>${esc(tr("Commodity"))}:</strong> ${esc(showCommodity(commodityOf(e)))}</p>
+      <p><strong>${esc(tr("Cleared quantity"))}:</strong> ${esc(showTons(tonsOf(e)))}</p>
+      <p><strong>${esc(tr("Time"))}:</strong> ${esc(dateText(e))}</p>
+    </article>`));
+
+  pending.forEach(b=>cards.push(`
+    <article class="farmer-card">
+      <h3>${esc(trName(farmerOf(b)))}</h3><span class="status pending">${esc(tr("BOOKING — NOT CLEARED"))}</span>
+      <p><strong>${esc(tr("Token"))}:</strong> ${esc(tokenOf(b)||"—")}</p>
+      <p><strong>${esc(tr("Vehicle"))}:</strong> ${esc(vehicleOf(b)||"—")}</p>
+      <p><strong>${esc(tr("Commodity"))}:</strong> ${esc(showCommodity(commodityOf(b)))}</p>
+      <p><strong>${esc(tr("Booked quantity"))}:</strong> ${esc(showTons(tonsOf(b)))}</p>
+    </article>`));
+
+  container.innerHTML=cards.length?cards.join(""):'<div class="empty" style="grid-column:1/-1">'+esc(tr("No farmer records found."))+'</div>';
+}
+function getTokenSafe(b){return tokenOf(b).toLowerCase();}
+function renderBookings() {
+  const body=$("bookingTableBody");
+  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(t=>t.toLowerCase()));
+  if(!bookings.length) {
+    body.innerHTML='<tr><td colspan="7"><div class="empty">'+esc(tr("No saved booking list found."))+'</div></td></tr>';return;
+  }
+  body.innerHTML=bookings.map(b=>{
+    const token=tokenOf(b),done=clearedTokens.has(token.toLowerCase());
+    return `<tr>
+      <td>${esc(trName(farmerOf(b)))}</td><td>${esc(token||"—")}</td>
+      <td>${esc(showCommodity(commodityOf(b)))}</td><td>${esc(vehicleOf(b)||"—")}</td>
+      <td>${esc(localizeDigits(tonsOf(b)))}</td><td>${esc(tr(String(first(b,["status","bookingStatus"],"Booked"))))}</td>
+      <td><span class="status ${done?"cleared":"pending"}">${esc(done?tr("CLEARED"):tr("NOT CLEARED"))}</span></td>
+    </tr>`;
+  }).join("");
+}
+function renderLogs() {
+  const search=$("logSearch").value.trim().toLowerCase();
+  const dateFilter=$("logDate").value;
+  const entries=clearedEntries().filter(e=>{
+    const text=[farmerOf(e),tokenOf(e),vehicleOf(e),commodityOf(e),phoneOf(e),trName(farmerOf(e)),showCommodity(commodityOf(e))].join(" ").toLowerCase();
+    if(search&&!text.includes(search)) return false;
+    if(dateFilter) {
+      const d=dateOf(e);
+      if(!d||d.toISOString().slice(0,10)!==dateFilter) return false;
+    }
+    return true;
+  }).sort((a,b)=>(dateOf(b)?.getTime()||0)-(dateOf(a)?.getTime()||0));
+
+  window.currentDisplayedEntries=entries;
+  const body=$("logsTableBody");
+  if(!entries.length) {
+    body.innerHTML='<tr><td colspan="10"><div class="empty">'+esc(tr("No cleared gate entries match this filter."))+'</div></td></tr>';return;
+  }
+  body.innerHTML=entries.map((e,i)=>`<tr>
+    <td>${esc(dateText(e))}</td><td>${esc(trName(farmerOf(e)))}</td>
+    <td>${esc(tokenOf(e)||"—")}</td><td>${esc(vehicleOf(e)||"—")}</td>
+    <td>${esc(showCommodity(commodityOf(e)))}</td><td>${esc(localizeDigits(tonsOf(e)))}</td>
+    <td>${esc(tr(String(first(e,["gate","gateNumber"],"Gate 1"))))}</td>
+    <td>${esc(tr(String(first(e,["officer","officerName","approvedBy"],"Gate Officer"))))}</td>
+    <td><span class="status cleared">${esc(tr("CLEARED"))}</span></td>
+    <td class="no-print"><button class="btn-gray" onclick="printReceipt(${i})">${esc(tr("Receipt"))}</button></td>
+  </tr>`).join("");
+}
+function findBooking(token) {
+  return bookings.find(b=>tokenOf(b).toLowerCase()===String(token).trim().toLowerCase())||null;
+}
+function findCleared(token) {
+  return clearedEntries().find(e=>tokenOf(e).toLowerCase()===String(token).trim().toLowerCase())||null;
+}
+function notice(id,msg,type="info") {
+  const el=$(id);setText(el,msg);el.className="notice "+type;
+}
+function clearNotice(id) {
+  const el=$(id);delete el.dataset.en;el.textContent="";el.className="notice";
+}
+function renderPreview() {
+  const box=$("bookingPreview");
+  if(!validatedBooking){box.innerHTML="";return;}
+  const b=validatedBooking,token=tokenOf(b);
+  box.innerHTML=`<div class="token-display">${esc(tr("Verified booking"))}: ${esc(token)}<div style="font-size:13px;margin-top:8px;font-weight:400">${esc(tr("Farmer"))}: ${esc(trName(farmerOf(b)))}<br>${esc(tr("Commodity"))}: ${esc(showCommodity(commodityOf(b)))}<br>${esc(tr("Vehicle"))}: ${esc(vehicleOf(b)||tr("Not provided"))}<br>${esc(tr("Booked quantity"))}: ${esc(showTons(tonsOf(b)))}</div></div>`;
+}
+function validateToken() {
+  loadData();
+  const token=$("tokenInput").value.trim();
+  if(!token){notice("scanNotice","Enter or scan a token ID first.","error");return;}
+  const booking=findBooking(token);
+  if(!booking){validatedBooking=null;renderPreview();notice("scanNotice","Token not found in saved farmer bookings.","error");return;}
+  if(findCleared(token)){validatedBooking=null;renderPreview();notice("scanNotice","This token already has a cleared gate entry. Duplicate approval is blocked.","error");return;}
+  validatedBooking=booking;
+  $("fToken").value=token;
+  $("fFarmer").value=farmerOf(booking)==="Unknown farmer"?"":farmerOf(booking);
+  $("fPhone").value=phoneOf(booking);
+  $("fCommodity").value=commodityOf(booking)==="Not specified"?"":commodityOf(booking);
+  $("fVehicle").value=vehicleOf(booking);
+  $("fTons").value=tonsOf(booking)||"";
+  renderPreview();
+  notice("scanNotice","Booking token validated. Review the details before approval.","success");
+}
+function demoScan() {
+  loadData();
+  const booking=bookings.find(b=>tokenOf(b)&&!findCleared(tokenOf(b)));
+  if(!booking){notice("scanNotice","No pending booking is available for demo scan. The four seeded demo records are already cleared.","info");return;}
+  $("tokenInput").value=tokenOf(booking);validateToken();
+}
+async function startScanner() {
+  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR scanner library failed to load. Enter the token manually.","error");return;}
+  if(scannerRunning)return;
+  try {
+    scanner=new Html5Qrcode("reader");
+    $("scannerPlaceholder").style.display="none";
+    await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>{
+      $("tokenInput").value=String(text).trim();validateToken();stopScanner();
+    },()=>{});
+    scannerRunning=true;$("startScannerBtn").disabled=true;$("stopScannerBtn").disabled=false;
+    notice("scanNotice","Scanner started. Point the camera at a QR token.","info");
+  } catch(e) {
+    scanner=null;scannerRunning=false;$("scannerPlaceholder").style.display="block";
+    notice("scanNotice","Camera unavailable. Allow camera access and use HTTPS/localhost, or enter the token manually.","error");
+  }
+}
+async function stopScanner() {
+  if(scanner&&scannerRunning) {
+    try{await scanner.stop();await scanner.clear();}catch(e){console.warn(e);}
+  }
+  scanner=null;scannerRunning=false;
+  $("startScannerBtn").disabled=false;$("stopScannerBtn").disabled=true;
+  $("scannerPlaceholder").style.display="block";
+}
+function clearEntryForm() {
+  $("entryForm").reset();$("fGate").value="Gate 1";validatedBooking=null;
+  $("bookingPreview").innerHTML="";clearNotice("entryNotice");clearNotice("scanNotice");
+  $("tokenInput").value="";
+}
+$("entryForm").addEventListener("submit",e=>{e.preventDefault();approveGateEntry();});
+
+function approveGateEntry() {
+  loadData();
+  const token=$("fToken").value.trim();
+  const booking=findBooking(token);
+  if(!token||!booking||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==token.toLowerCase()) {
+    notice("entryNotice","Validate a saved booking token before approving gate entry.","error");return;
+  }
+  if(findCleared(token)){notice("entryNotice","This token is already cleared.","error");return;}
+
+  const farmer=$("fFarmer").value.trim(),commodity=$("fCommodity").value.trim();
+  const vehicle=$("fVehicle").value.trim(),tons=num($("fTons").value,0);
+  if(!farmer||!commodity||!vehicle||tons<=0) {
+    notice("entryNotice","Enter a farmer, commodity, vehicle number, and valid positive tonnage.","error");return;
+  }
+  const cap=capacityData();
+  if(cap.capacity>0&&tons>cap.capacity-cap.tons+0.0001) {
+    notice("entryNotice","Approval blocked: quantity exceeds remaining capacity of "+Math.max(0,cap.capacity-cap.tons).toFixed(2)+" tons.","error");return;
+  }
+  const entry={
+    id:"KD-GATE-"+Date.now(),token,farmerName:farmer,phone:$("fPhone").value.trim(),
+    commodity,vehicleNumber:vehicle,tons,gate:$("fGate").value.trim()||"Gate 1",
+    officer:"Gate Officer",notes:$("fNotes").value.trim(),status:"CLEARED",
+    cleared:true,mandiKey:activeYard,timestamp:new Date().toISOString()
+  };
+
+  try {
+    const latest=readJSON(KEYS.entries,[]);
+    const list=Array.isArray(latest)?latest:[];
+    if(list.some(e=>tokenOf(e).toLowerCase()===token.toLowerCase()&&isCleared(e))) {
+      notice("entryNotice","This token was cleared in another tab. Refresh and retry.","error");refreshDashboard();return;
+    }
+    list.push(entry);writeJSON(KEYS.entries,list);
+
+    const current=localStorage.getItem("kd_booked_"+activeYard);
+    if(current!==null) localStorage.setItem("kd_booked_"+activeYard,String(Number((num(current)+tons).toFixed(2))));
+
+    const rawBooking=readJSON(KEYS.booking,null);
+    if(Array.isArray(rawBooking)) {
+      writeJSON(KEYS.booking,rawBooking.map(b=>tokenOf(b).toLowerCase()===token.toLowerCase()?{...b,status:"CLEARED",gateCleared:true,clearedAt:entry.timestamp}:b));
+    } else if(rawBooking&&typeof rawBooking==="object"&&tokenOf(rawBooking).toLowerCase()===token.toLowerCase()) {
+      writeJSON(KEYS.booking,{...rawBooking,status:"CLEARED",gateCleared:true,clearedAt:entry.timestamp});
+    }
+
+    validatedBooking=null;refreshDashboard();
+    notice("entryNotice","Gate entry approved and saved successfully.","success");
+    $("tokenInput").value="";$("bookingPreview").innerHTML="";$("fToken").value="";
+  } catch(error) {
+    console.error(error);notice("entryNotice","Could not save entry. Check browser storage and retry.","error");
+  }
+}
+function exportCSV() {
+  const entries=clearedEntries();
+  if(!entries.length){alert("No cleared entries to export.");return;}
+  const headers=["Entry ID","Date & Time","Yard","Farmer","Phone","Token","Vehicle","Commodity","Tons","Gate","Officer","Status","Notes"];
+  const rows=entries.map(e=>[
+    first(e,["id","entryId"],""),dateText(e,true),yardOf(e)||activeYard,farmerOf(e),phoneOf(e),
+    tokenOf(e),vehicleOf(e),commodityOf(e),tonsOf(e),first(e,["gate","gateNumber"],"Gate 1"),
+    first(e,["officer","officerName","approvedBy"],"Gate Officer"),statusOf(e)||"cleared",
+    first(e,["notes","remarks"],"")
+  ]);
+  const cell=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const csv=[headers,...rows].map(r=>r.map(cell).join(",")).join("\r\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="KrishiDhara_Gate_Entries_"+activeYard+".csv";
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function printReceipt(index) {
+  const e=window.currentDisplayedEntries[index];
+  if(!e){alert("Gate record not found. Refresh and try again.");return;}
+  const w=window.open("","_blank","width=650,height=750");
+  if(!w){alert("Allow pop-ups to print the receipt.");return;}
+  w.document.write(`<!DOCTYPE html><html lang="${esc(currentLang)}"><head><meta charset="UTF-8"><title>${esc(tr("Receipt"))}</title>
   <style>body{font-family:Arial;padding:28px;color:#182a20}h1{color:#176b3a}.box{border:1px solid #ccc;border-radius:10px;padding:18px;margin-top:20px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.stamp{color:#176b3a;font-weight:bold;border:2px solid #176b3a;display:inline-block;padding:8px;margin-top:18px}@media print{button{display:none}}</style></head><body>
-  <h1>🌾 KrishiDhara 2.0</h1><p>Official Gate Clearance Receipt</p><div class="box">
+  <h1>🌾 ${esc(tr("KrishiDhara 2.0"))}</h1><p>${esc(tr("Official Gate Clearance Receipt"))}</p><div class="box">
   ${[
-    ["Receipt ID",first(e,["id","entryId"],"—")],["Yard",yardName(yardOf(e)||activeYard)],
-    ["Date & Time",dateText(e)],["Farmer",farmerOf(e)],["Phone",phoneOf(e)||"—"],
-    ["Token",tokenOf(e)||"—"],["Vehicle",vehicleOf(e)||"—"],["Commodity",commodityOf(e)],
-    ["Quantity",tonsOf(e)+" tons"],["Gate",first(e,["gate","gateNumber"],"Gate 1")],
-    ["Officer",first(e,["officer","officerName","approvedBy"],"Gate Officer")]
+    [tr("Receipt ID"),first(e,["id","entryId"],"—")],[tr("Yard"),trName(yardName(yardOf(e)||activeYard))],
+    [tr("Date & Time"),dateText(e)],[tr("Farmer"),trName(farmerOf(e))],[tr("Phone"),localizeDigits(phoneOf(e)||"—")],
+    [tr("Token"),tokenOf(e)||"—"],[tr("Vehicle"),vehicleOf(e)||"—"],[tr("Commodity"),showCommodity(commodityOf(e))],
+    [tr("Cleared quantity"),showTons(tonsOf(e))],[tr("Gate"),tr(String(first(e,["gate","gateNumber"],"Gate 1")))],
+    [tr("Officer"),tr(String(first(e,["officer","officerName","approvedBy"],"Gate Officer")))]
   ].map(r=>`<div class="row"><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div>`).join("")}
-  </div><div class="stamp">GATE CLEARED</div><p><button onclick="window.print()">Print Receipt</button></p></body></html>`);
+  </div><div class="stamp">${esc(tr("GATE CLEARED"))}</div><p><button onclick="window.print()">${esc(tr("Print Receipt"))}</button></p></body></html>`);
   w.document.close();
 }
 function refreshDashboard(){loadData();renderDashboard();}
+// Called whenever the language changes: re-draw everything that is built in JavaScript.
+function refreshDynamic(){loadData();renderDashboard();renderPreview();}
 function switchRole(){window.location.href=localStorage.getItem("kd_admin_portal_url")||"admin.html";}
 
 window.addEventListener("storage",e=>{
@@ -20,34 +1368,22 @@ window.addEventListener("storage",e=>{
 window.addEventListener("focus",refreshDashboard);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDashboard();});
 
-function googleTranslateElementInit() {
-  if(window.google&&google.translate) {
-    new google.translate.TranslateElement({
-      pageLanguage:"en",
-      includedLanguages:"en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
-      autoDisplay:false
-    },"google_translate_element");
-  }
-}
-(function(){
-  const s=document.createElement("script");
-  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  s.async=true;document.head.appendChild(s);
-})();
 $("languageSelect").addEventListener("change",function(){
-  const lang=this.value;localStorage.setItem(KEYS.language,lang);
-  document.cookie="googtrans=/en/"+lang+";path=/";
-  const combo=document.querySelector(".goog-te-combo");
-  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
-  else if(lang==="en")location.reload();
+  const lang=this.value;
+  try{localStorage.setItem(KEYS.language,lang);}catch(_){}
+  applyLanguage(lang);
 });
-const savedLang=localStorage.getItem(KEYS.language)||"en";
-if([...$("languageSelect").options].some(o=>o.value===savedLang))$("languageSelect").value=savedLang;
 
-/* Seed the requested demo figures, then load and render the portal. */
+/* Seed the requested demo figures, then load, apply the saved language and render the portal. */
 seedDemoDataIfEmpty();
 loadData();
-renderDashboard();
+(function(){
+  let savedLang="en";
+  try{savedLang=localStorage.getItem(KEYS.language)||"en";}catch(_){}
+  if(![...$("languageSelect").options].some(o=>o.value===savedLang))savedLang="en";
+  $("languageSelect").value=savedLang;
+  applyLanguage(savedLang);
+})();
 </script>
 </body>
 </html>
