@@ -6,392 +6,328 @@
 <title>KrishiDhara 2.0 - Officer Gate Portal</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <style>
-:root {
-  --green:#176b3a;--dark:#104c2a;--light:#e8f5eb;
-  --gold:#f2b544;--red:#b42318;--blue:#175cd3;
-  --bg:#f3f6f4;--border:#dce5de;--text:#182a20;
-  --muted:#647067;--white:#fff;
-}
+:root{--green:#176b3a;--dark:#104c2a;--gold:#f2b544;--red:#b42318;--blue:#175cd3;--bg:#f3f6f4;--border:#dce5de;--text:#182a20;--muted:#647067}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
-header{background:linear-gradient(120deg,var(--dark),var(--green));color:white;padding:18px 5%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans","Noto Sans Devanagari","Noto Sans Bengali","Noto Sans Gujarati","Noto Sans Gurmukhi","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Oriya","Noto Nastaliq Urdu","Noto Sans Ol Chiki",sans-serif}
+header{background:linear-gradient(120deg,var(--dark),var(--green));color:#fff;padding:18px 5%}
 .header-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-.brand h1{font-size:25px;margin:0 0 5px}
-.brand p{margin:0;color:#d9f4df;font-size:13px}
-.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.brand h1{font-size:25px;margin:0 0 5px}.brand p{margin:0;color:#d9f4df;font-size:13px}
 select,input,button{font:inherit}
-select,input{padding:10px;border:1px solid var(--border);border-radius:8px;background:white;min-width:0}
+select,input{padding:10px;border:1px solid var(--border);border-radius:8px;background:#fff;min-width:0}
 button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
-.btn-light{background:white;color:var(--dark)}
-.btn-green{background:var(--green);color:white}
-.btn-gold{background:var(--gold);color:#352400}
-.btn-red{background:var(--red);color:white}
-.btn-blue{background:var(--blue);color:white}
-.btn-gray{background:#e8ece9;color:#26352b}
-.panel-heading h2{margin:0 0 5px;font-size:18px}
-.panel-heading p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
-.dashboard-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.btn-light{background:#fff;color:var(--dark)}.btn-green{background:var(--green);color:#fff}.btn-blue{background:var(--blue);color:#fff}.btn-gray{background:#e8ece9;color:#26352b}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+main{width:92%;max-width:1200px;margin:20px auto}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.stat,.panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+.panel{margin-bottom:20px}
+.stat small{color:var(--muted);font-size:12px}.stat b{display:block;font-size:22px;margin:6px 0}
+.bar{height:8px;background:#e4ebe6;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--green)}
+.panel-heading h2{margin:0 0 5px;font-size:18px}.panel-heading p{margin:0 0 12px;font-size:13px;color:var(--muted)}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.field{display:flex;flex-direction:column;gap:7px;min-width:0}
-.field.full{grid-column:1/-1}
-.field label{font-size:13px;font-weight:700}
-.field input,.field select{width:100%}
-.form-actions,.small-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
-.small-actions{margin-top:0}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}.field.full{grid-column:1/-1}
+.field label{font-size:13px;font-weight:700}.field input{width:100%}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
 .notice{border-radius:9px;padding:12px;margin:12px 0;font-size:13px;line-height:1.5;display:none}
-.notice.success{display:block;background:#e8f7ec;color:#176b3a}
-.notice.error{display:block;background:#fff0ef;color:#a11a13}
-.notice.info{display:block;background:#edf4ff;color:#1849a9}
-#reader{width:100%;max-width:440px;margin:12px auto;overflow:hidden;border-radius:10px}
+.notice.success{display:block;background:#e8f7ec;color:#176b3a}.notice.error{display:block;background:#fff0ef;color:#a11a13}.notice.info{display:block;background:#edf4ff;color:#1849a9}
+#reader{width:100%;max-width:440px;margin:12px auto;border-radius:10px;overflow:hidden}
 .scanner-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .scanner-placeholder{background:#f5f8f5;border:1px dashed #c6d5c9;padding:18px;border-radius:10px;text-align:center;color:var(--muted);font-size:13px}
-.table-wrap{width:100%;overflow-x:auto}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
-th,td{padding:12px 11px;text-align:left;border-bottom:1px solid #e8eee9;vertical-align:top}
-th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}
-tbody tr:hover{background:#fbfdfb}
+th,td{padding:11px;text-align:left;border-bottom:1px solid #e8eee9}
+th{background:#f6f9f6;font-size:12px;white-space:nowrap}
 .status{display:inline-block;padding:5px 8px;border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap}
-.status.cleared{background:#e4f6e9;color:#176b3a}
-.status.pending{background:#fff4d8;color:#875600}
-.status.rejected{background:#ffebe9;color:#b42318}
+.status.cleared{background:#e4f6e9;color:#176b3a}.status.pending{background:#fff4d8;color:#875600}
 .farmer-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.farmer-card{border:1px solid var(--border);border-radius:10px;padding:14px;min-width:0}
-.empty{color:var(--muted);background:#f8faf8;border:1px dashed #cbd7cd;border-radius:9px;padding:18px;font-size:13px;line-height:1.6;text-align:center}
-#google_translate_element{background:white;border-radius:7px;padding:4px;min-height:30px;color:#222}
+.farmer-card{border:1px solid var(--border);border-radius:10px;padding:14px;font-size:13px;line-height:1.6}
+.empty{color:var(--muted);background:#f8faf8;border:1px dashed #cbd7cd;border-radius:9px;padding:18px;font-size:13px;text-align:center}
 .token-display{padding:10px;background:#f0f7f1;border-radius:8px;font-weight:700;color:var(--dark);overflow-wrap:anywhere}
-.footer-note{color:var(--muted);font-size:12px;text-align:center;line-height:1.6;padding:8px 0 18px}
-@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-grid{grid-template-columns:1fr}}
-@media(max-width:560px){main{width:94%;margin-top:14px}.stats{gap:9px}.stat{padding:13px}.panel{padding:14px}.form-grid,.farmer-cards{grid-template-columns:1fr}.brand h1{font-size:21px}.header-actions{width:100%}}
-@media print{header,.no-print,#farmersPanel,#bookingPanel,#scannerPanel,.footer-note{display:none!important}body{background:white}main{width:100%;margin:0}.panel,.stat{break-inside:avoid;border-color:#bbb}.table-wrap{overflow:visible}table{min-width:0;font-size:10px}th,td{padding:6px}}
+[dir=rtl] th,[dir=rtl] td{text-align:right}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.form-grid,.farmer-cards{grid-template-columns:1fr}.header-actions{width:100%}}
+@media print{header,.no-print,#scannerPanel,#validatePanel,#entryPanel{display:none!important}body{background:#fff}}
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
-    <div class="brand">
-      <h1>🌾 KrishiDhara 2.0</h1>
-      <p id="subtitle">Officer Gate Clearance Portal</p>
-    </div>
+    <div class="brand"><h1>🌾 KrishiDhara 2.0</h1><p data-i="0">Officer Gate Clearance Portal</p></div>
     <div class="header-actions no-print">
-      <select id="languageSelect" aria-label="Select language">
-        <option value="en">English</option>
-        <option value="hi">हिन्दी</option>
-        <option value="mr">मराठी</option>
-        <option value="pa">ਪੰਜਾਬੀ</option>
-        <option value="gu">ગુજરાતી</option>
-        <option value="bn">বাংলা</option>
-        <option value="te">తెలుగు</option>
-        <option value="ta">தமிழ்</option>
-        <option value="kn">ಕನ್ನಡ</option>
-        <option value="ml">മലയാളം</option>
-        <option value="or">ଓଡ଼ିଆ</option>
-        <option value="as">অসমীয়া</option>
-        <option value="ur">اردو</option>
-        <option value="sa">संस्कृतम्</option>
-        <option value="ne">नेपाली</option>
-        <option value="sd">سنڌي</option>
-        <option value="ks">कॉशुर</option>
-        <option value="doi">डोगरी</option>
-        <option value="mni">মৈতৈলোন্</option>
-        <option value="sat">संताली</option>
-        <option value="bho">भोजपुरी</option>
-        <option value="raj">राजस्थानी</option>
-      </select>
-            <div style="margin-top:16px" class="field">
-        <label for="tokenInput">Token / Booking ID</label>
-        <input id="tokenInput" placeholder="e.g. KD-1001" autocomplete="off">
+      <select id="languageSelect" aria-label="Language"></select>
+      <button class="btn-light" onclick="refreshDashboard()">⟳</button>
+      <button class="btn-light" onclick="switchRole()">⇄</button>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="stats">
+    <div class="stat"><small id="yardName">Yard</small><b id="capacityValue">0</b><div class="bar"><i id="capacityFill"></i></div><small id="capacityNote"></small></div>
+    <div class="stat"><small>Vehicles</small><b id="vehiclesValue">0</b><small id="vehiclesNote"></small></div>
+    <div class="stat"><small data-i="4">Farmer Name</small><b id="farmersValue">0</b></div>
+    <div class="stat"><small data-i="7">Quantity (Tons)</small><b id="tonsValue">0</b><small id="lastUpdated"></small></div>
+  </div>
+  <div id="reconciliationNotice" class="notice"></div>
+
+  <div class="dashboard-grid">
+    <section class="panel" id="scannerPanel">
+      <div class="panel-heading"><h2>📷 QR</h2><p>Scan the farmer's QR token.</p></div>
+      <div id="reader"></div>
+      <div id="scannerPlaceholder" class="scanner-placeholder">Camera is off</div>
+      <div class="scanner-actions" style="margin-top:12px">
+        <button class="btn-green" id="startScannerBtn" onclick="startScanner()">Start</button>
+        <button class="btn-gray" id="stopScannerBtn" onclick="stopScanner()" disabled>Stop</button>
+        <button class="btn-blue" onclick="demoScan()">Demo</button>
       </div>
-      <div class="form-actions no-print">
-        <button class="btn-blue" onclick="validateToken()">Validate Token</button>
-      </div>
-      <div id="bookingPreview" style="margin-top:12px"></div>
+      <div id="scanNotice" class="notice"></div>
     </section>
 
-    <section class="panel" id="entryPanel">
-      <div class="panel-heading">
-        <div><h2>✅ Gate Entry Approval</h2><p>Verify booking information before clearing a vehicle.</p></div>
+    <section class="panel" id="validatePanel">
+      <div class="panel-heading"><h2>🔎 Token</h2></div>
+      <div class="field"><label for="tokenInput" data-i="1">Token / Booking ID</label><input id="tokenInput" placeholder="KD-1001" autocomplete="off"></div>
+      <div class="form-actions"><button class="btn-blue" data-i="2" onclick="validateToken()">Validate Token</button></div>
+      <div id="bookingPreview" style="margin-top:12px"></div>
+    </section>
+  </div>
+
+  <section class="panel" id="entryPanel">
+    <div class="panel-heading"><h2>✅ Gate Entry</h2></div>
+    <form id="entryForm">
+      <div class="form-grid">
+        <div class="field full"><label for="fToken" data-i="1">Token / Booking ID</label><input id="fToken" required readonly></div>
+        <div class="field"><label for="fFarmer" data-i="4">Farmer Name</label><input id="fFarmer" required></div>
+        <div class="field"><label for="fPhone">Phone</label><input id="fPhone"></div>
+        <div class="field"><label for="fCommodity" data-i="5">Commodity</label><input id="fCommodity" required></div>
+        <div class="field"><label for="fVehicle" data-i="6">Vehicle Number</label><input id="fVehicle" required></div>
+        <div class="field"><label for="fTons" data-i="7">Quantity (Tons)</label><input id="fTons" type="number" min="0.01" step="0.01" required></div>
+        <div class="field"><label for="fGate" data-i="8">Gate Number</label><input id="fGate" value="Gate 1" required></div>
+        <div class="field full"><label for="fNotes">Notes</label><input id="fNotes"></div>
       </div>
-      <form id="entryForm">
-        <div class="form-grid">
-          <div class="field full"><label for="fToken">Verified Token</label><input id="fToken" required placeholder="Validate a token first"></div>
-          <div class="field"><label for="fFarmer">Farmer Name</label><input id="fFarmer" required></div>
-          <div class="field"><label for="fPhone">Phone Number</label><input id="fPhone"></div>
-          <div class="field"><label for="fCommodity">Commodity</label><input id="fCommodity" required></div>
-          <div class="field"><label for="fVehicle">Vehicle Number</label><input id="fVehicle" required></div>
-          <div class="field"><label for="fTons">Quantity (Tons)</label><input id="fTons" type="number" min="0.01" step="0.01" required></div>
-          <div class="field"><label for="fGate">Gate Number</label><input id="fGate" value="Gate 1" required></div>
-          <div class="field full"><label for="fNotes">Officer Notes</label><input id="fNotes" placeholder="Optional notes"></div>
-        </div>
-        <div id="entryNotice" class="notice"></div>
-        <div class="form-actions no-print">
-          <button type="submit" class="btn-green">Approve Gate Entry</button>
-          
-let activeYard = localStorage.getItem(KEYS.yard) || "pune_main";
-let gateEntries = [];
-let bookings = [];
-let validatedBooking = null;
-let scanner = null;
-let scannerRunning = false;
-window.currentDisplayedEntries = [];
+      <div id="entryNotice" class="notice"></div>
+      <div class="form-actions"><button type="submit" class="btn-green" data-i="3">Approve Gate Entry</button><button type="button" class="btn-gray" onclick="clearEntryForm()">Reset</button></div>
+    </form>
+  </section>
 
-const $ = id => document.getElementById(id);
+  <section class="panel" id="farmersPanel"><div class="panel-heading"><h2>👨‍🌾 Farmers</h2></div><div id="farmerCards" class="farmer-cards"></div></section>
 
-function readJSON(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw === null ? fallback : JSON.parse(raw);
-  } catch (_) { return fallback; }
+  <section class="panel" id="bookingPanel"><div class="panel-heading"><h2>📋 Bookings</h2></div>
+    <div class="table-wrap"><table><thead><tr><th data-i="4">Farmer Name</th><th>Token</th><th data-i="5">Commodity</th><th data-i="6">Vehicle Number</th><th data-i="7">Quantity (Tons)</th><th>Status</th><th></th></tr></thead><tbody id="bookingTableBody"></tbody></table></div></section>
+
+  <section class="panel"><div class="panel-heading"><h2>🧾 Gate Log</h2></div>
+    <div class="form-grid no-print" style="margin-bottom:12px"><input id="logSearch" placeholder="Search" oninput="renderLogs()"><input id="logDate" type="date" onchange="renderLogs()"></div>
+    <div class="table-wrap"><table><thead><tr><th>Time</th><th data-i="4">Farmer Name</th><th>Token</th><th data-i="6">Vehicle Number</th><th data-i="5">Commodity</th><th data-i="7">Quantity (Tons)</th><th data-i="8">Gate Number</th><th>Officer</th><th></th><th class="no-print"></th></tr></thead><tbody id="logsTableBody"></tbody></table></div></section>
+</main>
+
+<script>
+/* ---------- Storage keys (must match your farmer/admin files) ---------- */
+const KEYS={entries:"kd_gate_entries",booking:"kd_bookings",yard:"kd_active_yard",language:"kd_language"};
+
+/* ---------- Translations: 22 scheduled languages (+ English) ----------
+   Order: 0 title, 1 token label, 2 validate, 3 approve, 4 farmer, 5 commodity, 6 vehicle,
+          7 quantity, 8 gate, 9 CLEARED, 10 NOT CLEARED, 11 receipt, 12 token ok, 13 token bad
+   Missing entries fall back to English. */
+const LANGS=[["en","English"],["as","অসমীয়া"],["bn","বাংলা"],["brx","बड़ो"],["doi","डोगरी"],["gu","ગુજરાતી"],["hi","हिन्दी"],["kn","ಕನ್ನಡ"],["ks","کٲشُر"],["kok","कोंकणी"],["mai","मैथिली"],["ml","മലയാളം"],["mni","মৈতৈলোন্"],["mr","मराठी"],["ne","नेपाली"],["or","ଓଡ଼ିଆ"],["pa","ਪੰਜਾਬੀ"],["sa","संस्कृतम्"],["sat","ᱥᱟᱱᱛᱟᱲᱤ"],["sd","سنڌي"],["ta","தமிழ்"],["te","తెలుగు"],["ur","اردو"]];
+const RTL=["ur","sd","ks"];
+const D={
+en:["Officer Gate Clearance Portal","Token / Booking ID","Validate Token","Approve Gate Entry","Farmer Name","Commodity","Vehicle Number","Quantity (Tons)","Gate Number","CLEARED","NOT CLEARED","Receipt","Token verified. Review the details before approval.","Token not found. Check and try again."],
+hi:["अधिकारी गेट क्लीयरेंस पोर्टल","टोकन / बुकिंग आईडी","टोकन सत्यापित करें","गेट प्रवेश स्वीकृत करें","किसान का नाम","उपज","वाहन नंबर","मात्रा (टन)","गेट नंबर","स्वीकृत","स्वीकृत नहीं","रसीद","टोकन सत्यापित हुआ। स्वीकृति से पहले विवरण जाँच लें।","टोकन नहीं मिला। जाँचकर फिर प्रयास करें।"],
+mr:["अधिकारी गेट मंजुरी पोर्टल","टोकन / बुकिंग आयडी","टोकन पडताळा","गेट प्रवेशास मंजुरी द्या","शेतकऱ्याचे नाव","शेतमाल","वाहन क्रमांक","प्रमाण (टन)","गेट क्रमांक","मंजूर","मंजूर नाही","पावती","टोकन पडताळले. मंजुरीपूर्वी तपशील तपासा.","टोकन सापडले नाही. तपासून पुन्हा प्रयत्न करा."],
+pa:["ਅਧਿਕਾਰੀ ਗੇਟ ਕਲੀਅਰੈਂਸ ਪੋਰਟਲ","ਟੋਕਨ / ਬੁਕਿੰਗ ਆਈਡੀ","ਟੋਕਨ ਦੀ ਜਾਂਚ ਕਰੋ","ਗੇਟ ਦਾਖ਼ਲੇ ਦੀ ਮਨਜ਼ੂਰੀ ਦਿਓ","ਕਿਸਾਨ ਦਾ ਨਾਂ","ਫ਼ਸਲ","ਵਾਹਨ ਨੰਬਰ","ਮਾਤਰਾ (ਟਨ)","ਗੇਟ ਨੰਬਰ","ਮਨਜ਼ੂਰ","ਮਨਜ਼ੂਰ ਨਹੀਂ","ਰਸੀਦ","ਟੋਕਨ ਦੀ ਪੁਸ਼ਟੀ ਹੋਈ। ਮਨਜ਼ੂਰੀ ਤੋਂ ਪਹਿਲਾਂ ਵੇਰਵੇ ਵੇਖੋ।","ਟੋਕਨ ਨਹੀਂ ਮਿਲਿਆ। ਜਾਂਚ ਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"],
+gu:["અધિકારી ગેટ ક્લિયરન્સ પોર્ટલ","ટોકન / બુકિંગ આઈડી","ટોકન ચકાસો","ગેટ પ્રવેશને મંજૂરી આપો","ખેડૂતનું નામ","ખેતપેદાશ","વાહન નંબર","જથ્થો (ટન)","ગેટ નંબર","મંજૂર","મંજૂર નથી","રસીદ","ટોકન ચકાસાયો. મંજૂરી પહેલાં વિગતો તપાસો.","ટોકન મળ્યો નથી. તપાસીને ફરી પ્રયાસ કરો."],
+bn:["কর্মকর্তা গেট ছাড়পত্র পোর্টাল","টোকেন / বুকিং আইডি","টোকেন যাচাই করুন","গেটে প্রবেশের অনুমতি দিন","কৃষকের নাম","কৃষিপণ্য","গাড়ির নম্বর","পরিমাণ (টন)","গেট নম্বর","অনুমোদিত","অনুমোদিত নয়","রসিদ","টোকেন যাচাই হয়েছে। অনুমোদনের আগে বিবরণ দেখুন।","টোকেন পাওয়া যায়নি। যাচাই করে আবার চেষ্টা করুন।"],
+te:["అధికారి గేట్ క్లియరెన్స్ పోర్టల్","టోకెన్ / బుకింగ్ ఐడీ","టోకెన్ ధృవీకరించండి","గేట్ ప్రవేశానికి ఆమోదం ఇవ్వండి","రైతు పేరు","పంట ఉత్పత్తి","వాహన సంఖ్య","పరిమాణం (టన్నులు)","గేట్ సంఖ్య","ఆమోదించబడింది","ఆమోదించలేదు","రసీదు","టోకెన్ ధృవీకరించబడింది. ఆమోదానికి ముందు వివరాలు చూడండి.","టోకెన్ దొరకలేదు. సరిచూసి మళ్లీ ప్రయత్నించండి."],
+ta:["அதிகாரி நுழைவாயில் அனுமதி தளம்","டோக்கன் / முன்பதிவு எண்","டோக்கனை சரிபார்க்கவும்","நுழைவாயில் அனுமதியை வழங்கவும்","விவசாயியின் பெயர்","விளைபொருள்","வாகன எண்","அளவு (டன்)","நுழைவாயில் எண்","அனுமதிக்கப்பட்டது","அனுமதிக்கப்படவில்லை","ரசீது","டோக்கன் சரிபார்க்கப்பட்டது. அனுமதிக்கு முன் விவரங்களைப் பாருங்கள்.","டோக்கன் கிடைக்கவில்லை. சரிபார்த்து மீண்டும் முயலுங்கள்."],
+kn:["ಅಧಿಕಾರಿ ಗೇಟ್ ಕ್ಲಿಯರೆನ್ಸ್ ಪೋರ್ಟಲ್","ಟೋಕನ್ / ಬುಕಿಂಗ್ ಐಡಿ","ಟೋಕನ್ ಪರಿಶೀಲಿಸಿ","ಗೇಟ್ ಪ್ರವೇಶಕ್ಕೆ ಅನುಮೋದನೆ ನೀಡಿ","ರೈತನ ಹೆಸರು","ಕೃಷಿ ಉತ್ಪನ್ನ","ವಾಹನ ಸಂಖ್ಯೆ","ಪ್ರಮಾಣ (ಟನ್)","ಗೇಟ್ ಸಂಖ್ಯೆ","ಅನುಮೋದಿಸಲಾಗಿದೆ","ಅನುಮೋದಿಸಿಲ್ಲ","ರಶೀದಿ","ಟೋಕನ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ. ಅನುಮೋದನೆಗೆ ಮುನ್ನ ವಿವರ ನೋಡಿ.","ಟೋಕನ್ ಸಿಗಲಿಲ್ಲ. ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."],
+ml:["ഓഫീസർ ഗേറ്റ് ക്ലിയറൻസ് പോർട്ടൽ","ടോക്കൺ / ബുക്കിംഗ് ഐഡി","ടോക്കൺ പരിശോധിക്കുക","ഗേറ്റ് പ്രവേശനത്തിന് അനുമതി നൽകുക","കർഷകന്റെ പേര്","കാർഷികോൽപ്പന്നം","വാഹന നമ്പർ","അളവ് (ടൺ)","ഗേറ്റ് നമ്പർ","അനുവദിച്ചു","അനുവദിച്ചിട്ടില്ല","രസീത്","ടോക്കൺ പരിശോധിച്ചു. അനുമതിക്ക് മുമ്പ് വിവരങ്ങൾ നോക്കുക.","ടോക്കൺ കണ്ടെത്തിയില്ല. പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക."],
+or:["ଅଧିକାରୀ ଗେଟ୍ ଅନୁମତି ପୋର୍ଟାଲ୍","ଟୋକେନ୍ / ବୁକିଂ ଆଇଡି","ଟୋକେନ୍ ଯାଞ୍ଚ କରନ୍ତୁ","ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦନ କରନ୍ତୁ","ଚାଷୀଙ୍କ ନାମ","କୃଷି ଉତ୍ପାଦ","ଗାଡ଼ି ନମ୍ବର","ପରିମାଣ (ଟନ୍)","ଗେଟ୍ ନମ୍ବର","ଅନୁମୋଦିତ","ଅନୁମୋଦିତ ନୁହେଁ","ରସିଦ","ଟୋକେନ୍ ଯାଞ୍ଚ ହେଲା। ଅନୁମୋଦନ ପୂର୍ବରୁ ବିବରଣୀ ଦେଖନ୍ତୁ।","ଟୋକେନ୍ ମିଳିଲା ନାହିଁ। ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"],
+as:["বিষয়াৰ গেট অনুমতি পৰ্টেল","টোকেন / বুকিং আইডি","টোকেন যাচাই কৰক","গেটত প্ৰৱেশৰ অনুমতি দিয়ক","কৃষকৰ নাম","কৃষিজাত সামগ্ৰী","বাহনৰ নম্বৰ","পৰিমাণ (টন)","গেট নম্বৰ","অনুমোদিত","অনুমোদিত নহয়","ৰচিদ","টোকেন যাচাই হ'ল। অনুমোদনৰ আগত বিৱৰণ চাওক।","টোকেন পোৱা নগ'ল। যাচাই কৰি পুনৰ চেষ্টা কৰক।"],
+ur:["افسر گیٹ کلیئرنس پورٹل","ٹوکن / بکنگ آئی ڈی","ٹوکن کی تصدیق کریں","گیٹ میں داخلے کی منظوری دیں","کسان کا نام","زرعی پیداوار","گاڑی نمبر","مقدار (ٹن)","گیٹ نمبر","منظور شدہ","منظور نہیں","رسید","ٹوکن کی تصدیق ہو گئی۔ منظوری سے پہلے تفصیلات دیکھ لیں۔","ٹوکن نہیں ملا۔ جانچ کر دوبارہ کوشش کریں۔"],
+sa:["अधिकारिद्वारानुमतिपत्तनम्","टोकन् / आरक्षणसङ्ख्या","टोकन् प्रमाणयतु","द्वारप्रवेशम् अनुमोदयतु","कृषकस्य नाम","कृषिजोत्पादः","वाहनसङ्ख्या","परिमाणम् (टन्)","द्वारसङ्ख्या","अनुमोदितम्","अनुमोदितं नास्ति","रसीदः","टोकन् प्रमाणितम्। अनुमोदनात् पूर्वं विवरणं पश्यतु।","टोकन् न लब्धम्। परीक्ष्य पुनः प्रयतताम्।"],
+ne:["अधिकारी गेट स्वीकृति पोर्टल","टोकन / बुकिङ आईडी","टोकन प्रमाणित गर्नुहोस्","गेट प्रवेश स्वीकृत गर्नुहोस्","किसानको नाम","कृषि उपज","सवारी नम्बर","परिमाण (टन)","गेट नम्बर","स्वीकृत","स्वीकृत भएन","रसिद","टोकन प्रमाणित भयो। स्वीकृतिअघि विवरण हेर्नुहोस्।","टोकन फेला परेन। जाँचेर फेरि प्रयास गर्नुहोस्।"],
+sd:["آفيسر گيٽ ڪلئرنس پورٽل","ٽوڪن / بڪنگ آءِ ڊي","ٽوڪن جي تصديق ڪريو","گيٽ ۾ داخلا جي منظوري ڏيو","هاريءَ جو نالو","زرعي پيداوار","گاڏي نمبر","مقدار (ٽن)","گيٽ نمبر","منظور ٿيل","منظور ناهي","رسيد","ٽوڪن جي تصديق ٿي وئي. منظوري کان اڳ تفصيل ڏسو.","ٽوڪن نه مليو. چڪاس ڪري ٻيهر ڪوشش ڪريو."],
+doi:["अफसर गेट क्लियरेंस पोर्टल","टोकन / बुकिंग आईडी","टोकन जांचो","गेट च दाखले दी मंजूरी देओ","किसान दा नां","फसल / उपज","गड्डी नंबर","मात्रा (टन)","गेट नंबर","मंजूर","मंजूर नेईं","रसीद","टोकन दी पुष्टि होई गेई। मंजूरी कोला पैहलें ब्योरा दिक्खो।","टोकन नेईं मिलेआ। जांचियै फ'र कोशश करो।"],
+kok:["अधिकारी गेट मंजुरी पोर्टल","टोकन / बुकिंग आयडी","टोकन तपासात","गेट प्रवेशाक मंजुरी दियात","शेतकाराचें नांव","शेतमाल","वाहन क्रमांक","परिमाण (टन)","गेट क्रमांक","मंजूर","मंजूर ना","पावती","टोकन तपासलो. मंजुरी पयलीं तपशील पळयात.","टोकन मेळ्ळो ना. तपासून परतून यत्न करात."],
+mai:["अधिकारी गेट स्वीकृति पोर्टल","टोकन / बुकिंग आईडी","टोकन सत्यापित करू","गेट प्रवेश स्वीकृत करू","किसानक नाम","उपज","गाड़ी नंबर","मात्रा (टन)","गेट नंबर","स्वीकृत","स्वीकृत नहि","रसीद","टोकन सत्यापित भेल। स्वीकृति सँ पहिने विवरण देखू।","टोकन नहि भेटल। जाँचि कऽ फेर प्रयास करू।"],
+/* Best-effort: need native-speaker review before going live; unfilled keys fall back to English */
+brx:["आफसार गेट क्लियारेन्स पोर्टेल","टकेन / बुकिं आइडि","टकेन जाँच खालाम"],
+ks:["آفسر گیٹ کلیرنس پورٹل","ٹوکن / بُکنگ آئی ڈی","ٹوکن تصدیق کرو"],
+mni:["অফিসর গেট ক্লিয়ারেন্স পোর্টেল","টোকেন / বুকিং আইডি","টোকেন চেক তৌবিয়ু"],
+sat:["ᱚᱯᱷᱤᱥᱟᱨ ᱜᱮᱴ ᱠᱞᱤᱭᱟᱨᱮᱱᱥ ᱯᱚᱨᱴᱟᱞ","ᱴᱳᱠᱮᱱ / ᱵᱩᱠᱤᱝ ᱟᱭᱰᱤ","ᱴᱳᱠᱮᱱ ᱥᱟᱹᱠᱷᱤ ᱢᱮ","","ᱪᱟᱥᱤ ᱧᱩᱛᱩᱢ","","ᱜᱟᱰᱤ ᱱᱚᱢᱵᱚᱨ","ᱢᱟᱯ (ᱴᱚᱱ)","ᱜᱮᱴ ᱱᱚᱢᱵᱚᱨ"]
+};
+let lang=localStorage.getItem(KEYS.language)||"en";
+const t=i=>(D[lang]&&D[lang][i])||D.en[i];
+function applyLang(){
+  document.documentElement.lang=lang;document.documentElement.dir=RTL.includes(lang)?"rtl":"ltr";
+  document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(+el.dataset.i));
+  document.title="KrishiDhara 2.0 - "+t(0);
+  if(document.getElementById("farmerCards"))renderDashboard();
 }
-function writeJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-function num(value, fallback=0) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
-}
-function first(obj, keys, fallback="") {
-  if (!obj || typeof obj !== "object") return fallback;
-  for (const key of keys) {
-    if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
-  }
-            return String(first(r,["vehicleNumber","vehicleNo","vehicle","truckNumber","registrationNumber"],""));
-}
-function tonsOf(r) {
-  return num(first(r,["tons","quantityTons","quantityInTons","quantity","weightTons","weight","bookedTons"],0));
-}
-function yardOf(r) {
-  return String(first(r,["mandiKey","yardKey","mandiId","yardId","marketKey"],""));
-}
-function statusOf(r) {
-  return String(first(r,["status","entryStatus","gateStatus","bookingStatus"],"")).toLowerCase();
-}
-function isCleared(r) {
-  if (r && (r.cleared === true || r.gateCleared === true)) return true;
-  const s = statusOf(r);
-  if (!s) return true;
-  return ["cleared","approved","approved at gate","gate cleared","verified","success","completed","passed"].includes(s);
-}
-function dateOf(r) {
-  const raw = first(r,["timestamp","clearedAt","entryTime","dateTime","createdAt","date"],"");
-  if (!raw) return null;
-  const d = new Date(raw);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-function dateText(r) {
-  const d = dateOf(r);
-  return d ? d.toLocaleString() : "Date unavailable";
-}
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function normaliseList(value) {
-  if (Array.isArray(value)) return value.filter(v=>v && typeof v==="object");
-  if (value && typeof value==="object") {
-    for (const key of ["bookings","farmers","data","records","items"]) {
-      if (Array.isArray(value[key])) return value[key].filter(v=>v && typeof v==="object");
-    }
-    return [value];
-  }
+const sel=document.getElementById("languageSelect");
+sel.innerHTML=LANGS.map(l=>`<option value="${l[0]}">${l[1]}</option>`).join("");
+if(!D[lang]&&!LANGS.some(l=>l[0]===lang))lang="en";
+sel.value=lang;
+sel.addEventListener("change",()=>{lang=sel.value;localStorage.setItem(KEYS.language,lang);applyLang();});
+
+/* ---------- Helpers ---------- */
+const $=id=>document.getElementById(id);
+let activeYard=localStorage.getItem(KEYS.yard)||"pune_main";
+let gateEntries=[],bookings=[],validatedBooking=null,scanner=null,scannerRunning=false;
+function readJSON(k,f){try{const r=localStorage.getItem(k);return r===null?f:JSON.parse(r);}catch(_){return f;}}
+function writeJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function num(v,f=0){const n=Number(v);return Number.isFinite(n)?n:f;}
+function first(o,keys,f=""){if(!o||typeof o!=="object")return f;for(const k of keys){if(o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];}return f;}
+const tokenOf=r=>String(first(r,["token","bookingId","tokenId","bookingToken","id"],""));
+const farmerOf=r=>String(first(r,["farmerName","farmer","name"],"—"));
+const phoneOf=r=>String(first(r,["phone","mobile","phoneNumber"],""));
+const commodityOf=r=>String(first(r,["commodity","crop","product"],"—"));
+const vehicleOf=r=>String(first(r,["vehicleNumber","vehicleNo","vehicle","truckNumber"],""));
+const tonsOf=r=>num(first(r,["tons","quantityTons","quantity","weightTons","bookedTons"],0));
+const yardOf=r=>String(first(r,["mandiKey","yardKey","mandiId","yardId"],""));
+function dateOf(r){const raw=first(r,["timestamp","clearedAt","entryTime","createdAt","date"],"");if(!raw)return null;const d=new Date(raw);return isNaN(d)?null:d;}
+const dateText=r=>{const d=dateOf(r);return d?d.toLocaleString():"—";};
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function normaliseList(v){
+  if(Array.isArray(v))return v.filter(x=>x&&typeof x==="object");
+  if(v&&typeof v==="object"){for(const k of ["bookings","farmers","data","records","items"])if(Array.isArray(v[k]))return v[k].filter(x=>x&&typeof x==="object");return [v];}
   return [];
 }
-function yardName(key) {
-  const names={pune_main:"Pune Main Yard",pune:"Pune Yard",nashik_main:"Nashik Main Yard",nagpur_main:"Nagpur Main Yard",mumbai_main:"Mumbai Main Yard"};
-  return names[key] || key.split(/[_-]/).map(s=>s?s[0].toUpperCase()+s.slice(1):"").join(" ");
+function yardName(k){const n={pune_main:"Pune Main Yard",nashik_main:"Nashik Main Yard",nagpur_main:"Nagpur Main Yard",mumbai_main:"Mumbai Main Yard"};return n[k]||k.split(/[_-]/).map(s=>s?s[0].toUpperCase()+s.slice(1):"").join(" ");}
+function notice(id,msg,type){const e=$(id);e.className="notice "+type;e.textContent=msg;}
+function clearNotice(id){const e=$(id);e.className="notice";e.textContent="";}
+function isCleared(r){
+  if(r&&(r.cleared===true||r.gateCleared===true))return true;
+  const s=String(first(r,["status","entryStatus","gateStatus"],"")).toLowerCase();
+  return !s||["cleared","approved","gate cleared","verified","success","completed","passed"].includes(s);
+}
+function loadData(){
+  activeYard=localStorage.getItem(KEYS.yard)||activeYard;
+  gateEntries=normaliseList(readJSON(KEYS.entries,[]));
+  bookings=normaliseList(readJSON(KEYS.booking,[]));
+}
+const clearedEntries=()=>gateEntries.filter(isCleared).filter(e=>!yardOf(e)||yardOf(e)===activeYard);
+const findBooking=tok=>bookings.find(b=>tokenOf(b).toLowerCase()===String(tok).trim().toLowerCase());
+const findCleared=tok=>clearedEntries().find(e=>tokenOf(e).toLowerCase()===String(tok).trim().toLowerCase());
+function capacityData(){return{capacity:num(readJSON("kd_cap_"+activeYard,100),100),tons:num(readJSON("kd_booked_"+activeYard,34),34)};}
+
+function seedDemoDataIfEmpty(){
+  if(localStorage.getItem(KEYS.entries)!==null||localStorage.getItem(KEYS.booking)!==null)return;
+  const demo=[["KD-1001","Ramesh Patil","Wheat","MH12AB1234",8],["KD-1002","Suresh Jadhav","Soybean","MH14CD5678",12],["KD-1003","Anita Shinde","Maize","MH15EF9012",6],["KD-1004","Mohan Pawar","Onion","MH20GH3456",8]];
+  const now=Date.now();
+  writeJSON(KEYS.booking,demo.map(d=>({token:d[0],farmerName:d[1],commodity:d[2],vehicleNumber:d[3],tons:d[4],status:"Booked",mandiKey:activeYard})));
+  writeJSON(KEYS.entries,demo.map((d,i)=>({id:"GE-"+(1001+i),token:d[0],farmerName:d[1],commodity:d[2],vehicleNumber:d[3],tons:d[4],gate:"Gate 1",officer:"Gate Officer",status:"cleared",mandiKey:activeYard,timestamp:new Date(now-i*3600000).toISOString()})));
 }
 
-/*
-     tons:num(used??usedAlt,34),
-    hasCapacity:cap!==null||capAlt!==null,
-    hasTons:used!==null||usedAlt!==null
-  };
-}
-function uniqueFarmers(entries) {
-  const seen=new Set();
-  return entries.filter(e=>{
-    const key=(tokenOf(e)||vehicleOf(e)||farmerOf(e)).toLowerCase();
-    if(seen.has(key)) return false;
-    seen.add(key);return true;
-  });
-}
-function renderDashboard() {
-  const entries=clearedEntries();
-  const cap=capacityData();
-  const totalTons=entries.reduce((sum,e)=>sum+tonsOf(e),0);
-  const farmers=uniqueFarmers(entries);
-  const vehicles=new Set(entries.map(e=>(vehicleOf(e)||tokenOf(e)||e.id||"").toLowerCase()).filter(Boolean));
-
+/* ---------- Rendering ---------- */
+function renderDashboard(){
+  const entries=clearedEntries(),cap=capacityData();
+  const total=entries.reduce((s,e)=>s+tonsOf(e),0);
+  const seen=new Set(),farmers=entries.filter(e=>{const k=(tokenOf(e)||vehicleOf(e)||farmerOf(e)).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+  const vehicles=new Set(entries.map(e=>(vehicleOf(e)||tokenOf(e)).toLowerCase()).filter(Boolean));
+  const pct=cap.capacity?cap.tons/cap.capacity*100:0;
   $("yardName").textContent=yardName(activeYard);
-  $("yardKeyText").textContent=activeYard;
-  $("capacityValue").textContent=cap.tons+" / "+cap.capacity+" Tons";
-  $("capacityFill").style.width=Math.max(0,Math.min(100,cap.capacity?cap.tons/cap.capacity*100:0))+"%";
-  $("capacityNote").textContent=(cap.capacity?((cap.tons/cap.capacity)*100).toFixed(1):"0")+"% of yard capacity";
+  $("capacityValue").textContent=cap.tons+" / "+cap.capacity+" T";
+  $("capacityFill").style.width=Math.min(100,Math.max(0,pct))+"%";
+  $("capacityNote").textContent=pct.toFixed(1)+"%";
   $("vehiclesValue").textContent=vehicles.size;
-  $("vehiclesNote").textContent=entries.length+" cleared gate record(s)";
+  $("vehiclesNote").textContent=entries.length+" ✔";
   $("farmersValue").textContent=farmers.length;
-  $("tonsValue").textContent=Number(totalTons.toFixed(2)).toLocaleString();
-  $("lastUpdated").textContent="Last refreshed: "+new Date().toLocaleTimeString();
-
-  const notice=$("reconciliationNotice");
-  const messages=[];
-  if(!cap.hasCapacity||!cap.hasTons) messages.push("Capacity keys were missing; demo defaults are shown where needed.");
-  if(Math.abs(totalTons-cap.tons)>0.01) {
-    messages.push("Mismatch: shared capacity counter is "+cap.tons+" tons, but gate logs sum to "+totalTons.toFixed(2)+" tons.");
-    notice.className="notice info";
-  } else {
-    messages.push("Capacity total matches gate logs: "+totalTons.toFixed(2)+" tons across "+vehicles.size+" cleared vehicles.");
-    notice.className="notice success";
-  }
-  notice.textContent=messages.join(" ");
-  renderFarmers();
-  renderBookings();
-  renderLogs();
+  $("tonsValue").textContent=Number(total.toFixed(2)).toLocaleString();
+  $("lastUpdated").textContent=new Date().toLocaleTimeString();
+  const n=$("reconciliationNotice");
+  if(Math.abs(total-cap.tons)>0.01){n.className="notice info";n.textContent="Mismatch: capacity counter "+cap.tons+" T, gate logs "+total.toFixed(2)+" T.";}
+  else{n.className="notice success";n.textContent="Capacity matches gate logs: "+total.toFixed(2)+" T, "+vehicles.size+" vehicles.";}
+  $("farmerCards").innerHTML=farmers.length?farmers.map(e=>`<div class="farmer-card"><b>${esc(farmerOf(e))}</b><br>${esc(commodityOf(e))} · ${tonsOf(e)} T<br>${esc(vehicleOf(e)||"—")}<br>${esc(tokenOf(e)||"—")}</div>`).join(""):'<div class="empty" style="grid-column:1/-1">—</div>';
+  renderBookings();renderLogs();
 }
-      container.innerHTML=cards.length?cards.join(""):'<div class="empty" style="grid-column:1/-1">No farmer records found.</div>';
+function renderBookings(){
+  const done=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(x=>x.toLowerCase()));
+  $("bookingTableBody").innerHTML=bookings.length?bookings.map(b=>{
+    const tk=tokenOf(b),ok=done.has(tk.toLowerCase());
+    return `<tr><td>${esc(farmerOf(b))}</td><td>${esc(tk||"—")}</td><td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b)||"—")}</td><td>${tonsOf(b)}</td><td>${esc(first(b,["status","bookingStatus"],"Booked"))}</td><td><span class="status ${ok?"cleared":"pending"}">${ok?t(9):t(10)}</span></td></tr>`;
+  }).join(""):'<tr><td colspan="7"><div class="empty">—</div></td></tr>';
 }
-function getTokenSafe(b){return tokenOf(b).toLowerCase();}
-function renderBookings() {
-  const body=$("bookingTableBody");
-  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(t=>t.toLowerCase()));
-  if(!bookings.length) {
-    body.innerHTML='<tr><td colspan="7"><div class="empty">No saved booking list found.</div></td></tr>';return;
-  }
-  body.innerHTML=bookings.map(b=>{
-    const token=tokenOf(b),done=clearedTokens.has(token.toLowerCase());
-    return `<tr>
-      <td>${esc(farmerOf(b))}</td><td>${esc(token||"—")}</td>
-      <td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b)||"—")}</td>
-      <td>${tonsOf(b)}</td><td>${esc(first(b,["status","bookingStatus"],"Booked"))}</td>
-      <td><span class="status ${done?"cleared":"pending"}">${done?"CLEARED":"NOT CLEARED"}</span></td>
-    </tr>`;
-  }).join("");
-}
-function renderLogs() {
-  const search=$("logSearch").value.trim().toLowerCase();
-  const dateFilter=$("logDate").value;
-  const entries=clearedEntries().filter(e=>{
-    const text=[farmerOf(e),tokenOf(e),vehicleOf(e),commodityOf(e),phoneOf(e)].join(" ").toLowerCase();
-    if(search&&!text.includes(search)) return false;
-    if(dateFilter) {
-      const d=dateOf(e);
-      if(!d||d.toISOString().slice(0,10)!==dateFilter) return false;
-    }
+function renderLogs(){
+  const q=$("logSearch").value.trim().toLowerCase(),df=$("logDate").value;
+  const list=clearedEntries().filter(e=>{
+    if(q&&![farmerOf(e),tokenOf(e),vehicleOf(e),commodityOf(e),phoneOf(e)].join(" ").toLowerCase().includes(q))return false;
+    if(df){const d=dateOf(e);if(!d||d.toISOString().slice(0,10)!==df)return false;}
     return true;
   }).sort((a,b)=>(dateOf(b)?.getTime()||0)-(dateOf(a)?.getTime()||0));
+  window.currentDisplayedEntries=list;
+  $("logsTableBody").innerHTML=list.length?list.map((e,i)=>`<tr><td>${esc(dateText(e))}</td><td>${esc(farmerOf(e))}</td><td>${esc(tokenOf(e)||"—")}</td><td>${esc(vehicleOf(e)||"—")}</td><td>${esc(commodityOf(e))}</td><td>${tonsOf(e)}</td><td>${esc(first(e,["gate","gateNumber"],"Gate 1"))}</td><td>${esc(first(e,["officer","officerName"],"Gate Officer"))}</td><td><span class="status cleared">${t(9)}</span></td><td class="no-print"><button class="btn-gray" onclick="printReceipt(${i})">${t(11)}</button></td></tr>`).join(""):'<tr><td colspan="10"><div class="empty">—</div></td></tr>';
+}
 
-  window.currentDisplayedEntries=entries;
-  const body=$("logsTableBody");
-  if(!entries.length) {
-    body.innerHTML='<tr><td colspan="10"><div class="empty">No cleared gate entries match this filter.</div></td></tr>';return;
-  }
-  body.innerHTML=entries.map((e,i)=>`<tr>
-    <td>${esc(dateText(e))}</td><td>${esc(farmerOf(e))}</td>
-    <td>${esc(tokenOf(e)||"—")}</td><td>${esc(vehicleOf(e)||"—")}</td>
-    <td>${esc(commodityOf(e))}</td><td>${tonsOf(e)}</td>
-    <td>${esc(first(e,["gate","gateNumber"],"Gate 1"))}</td>
-    <td>${esc(first(e,["officer","officerName","approvedBy"],"Gate Officer"))}</td>
-    <td><span class="status cleared">CLEARED</span></td>
-    <td class="no-print"><button class="btn-gray" onclick="printReceipt(${i})">Receipt</button></td>
-  </tr>`).join("");
-}
-      $("fTons").value=tonsOf(booking)||"";
-  $("bookingPreview").innerHTML=`<div class="token-display">Verified booking: ${esc(token)}<div style="font-size:13px;margin-top:8px;font-weight:400">Farmer: ${esc(farmerOf(booking))}<br>Commodity: ${esc(commodityOf(booking))}<br>Vehicle: ${esc(vehicleOf(booking)||"Not provided")}<br>Booked quantity: ${tonsOf(booking)} tons</div></div>`;
-  notice("scanNotice","Booking token validated. Review the details before approval.","success");
-}
-function demoScan() {
+/* ---------- Token validation & approval ---------- */
+function validateToken(){
   loadData();
-  const booking=bookings.find(b=>tokenOf(b)&&!findCleared(tokenOf(b)));
-  if(!booking){notice("scanNotice","No pending booking is available for demo scan. The four seeded demo records are already cleared.","info");return;}
-  $("tokenInput").value=tokenOf(booking);validateToken();
+  const tok=$("tokenInput").value.trim(),b=findBooking(tok);
+  if(!tok||!b){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice",t(13),"error");return;}
+  if(findCleared(tok)){notice("scanNotice","Already cleared.","info");return;}
+  validatedBooking=b;
+  $("fToken").value=tokenOf(b);$("fFarmer").value=farmerOf(b)==="—"?"":farmerOf(b);$("fPhone").value=phoneOf(b);
+  $("fCommodity").value=commodityOf(b)==="—"?"":commodityOf(b);$("fVehicle").value=vehicleOf(b);$("fTons").value=tonsOf(b)||"";
+  $("bookingPreview").innerHTML=`<div class="token-display">${esc(tokenOf(b))}<div style="font-size:13px;margin-top:8px;font-weight:400">${t(4)}: ${esc(farmerOf(b))}<br>${t(5)}: ${esc(commodityOf(b))}<br>${t(6)}: ${esc(vehicleOf(b)||"—")}<br>${t(7)}: ${tonsOf(b)}</div></div>`;
+  notice("scanNotice",t(12),"success");
 }
-async function startScanner() {
-  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR scanner library failed to load. Enter the token manually.","error");return;}
+function demoScan(){
+  loadData();
+  const b=bookings.find(x=>tokenOf(x)&&!findCleared(tokenOf(x)));
+  if(!b){notice("scanNotice","No pending booking. All demo records are already cleared.","info");return;}
+  $("tokenInput").value=tokenOf(b);validateToken();
+}
+async function startScanner(){
+  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR library failed to load. Enter the token manually.","error");return;}
   if(scannerRunning)return;
-  try {
-    scanner=new Html5Qrcode("reader");
-    $("scannerPlaceholder").style.display="none";
-    await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>{
-      $("tokenInput").value=String(text).trim();validateToken();stopScanner();
-    },()=>{});
+  try{
+    scanner=new Html5Qrcode("reader");$("scannerPlaceholder").style.display="none";
+    await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},txt=>{$("tokenInput").value=String(txt).trim();validateToken();stopScanner();},()=>{});
     scannerRunning=true;$("startScannerBtn").disabled=true;$("stopScannerBtn").disabled=false;
-    notice("scanNotice","Scanner started. Point the camera at a QR token.","info");
-  } catch(e) {
-    scanner=null;scannerRunning=false;$("scannerPlaceholder").style.display="block";
-    notice("scanNotice","Camera unavailable. Allow camera access and use HTTPS/localhost, or enter the token manually.","error");
-  }
+  }catch(e){scanner=null;scannerRunning=false;$("scannerPlaceholder").style.display="block";notice("scanNotice","Camera unavailable. Allow camera access (HTTPS/localhost) or enter the token manually.","error");}
 }
-async function stopScanner() {
-  if(scanner&&scannerRunning) {
-    try{await scanner.stop();await scanner.clear();}catch(e){console.warn(e);}
-  }
-  scanner=null;scannerRunning=false;
-  $("startScannerBtn").disabled=false;$("stopScannerBtn").disabled=true;
-  $("scannerPlaceholder").style.display="block";
+async function stopScanner(){
+  if(scanner&&scannerRunning){try{await scanner.stop();await scanner.clear();}catch(e){console.warn(e);}}
+  scanner=null;scannerRunning=false;$("startScannerBtn").disabled=false;$("stopScannerBtn").disabled=true;$("scannerPlaceholder").style.display="block";
 }
-function clearEntryForm() {
-  $("entryForm").reset();$("fGate").value="Gate 1";validatedBooking=null;
-  $("bookingPreview").innerHTML="";clearNotice("entryNotice");clearNotice("scanNotice");
-  $("tokenInput").value="";
+function clearEntryForm(){
+  $("entryForm").reset();$("fGate").value="Gate 1";validatedBooking=null;$("bookingPreview").innerHTML="";
+  clearNotice("entryNotice");clearNotice("scanNotice");$("tokenInput").value="";
+}
+function approveGateEntry(){
+  loadData();
+  const tok=$("fToken").value.trim(),b=findBooking(tok);
+  if(!tok||!b||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==tok.toLowerCase()){notice("entryNotice",t(13),"error");return;}
+  if(findCleared(tok)){notice("entryNotice","Already cleared.","error");return;}
+  const entry={
+    id:"GE-"+Date.now(),token:tokenOf(b),farmerName:$("fFarmer").value.trim(),phone:$("fPhone").value.trim(),
+    commodity:$("fCommodity").value.trim(),vehicleNumber:$("fVehicle").value.trim().toUpperCase(),tons:num($("fTons").value),
+    gate:$("fGate").value.trim()||"Gate 1",notes:$("fNotes").value.trim(),officer:"Gate Officer",status:"cleared",cleared:true,
+    mandiKey:yardOf(b)||activeYard,timestamp:new Date().toISOString()
+  };
+  gateEntries.push(entry);writeJSON(KEYS.entries,gateEntries);
+  clearEntryForm();notice("entryNotice","✔ "+t(9)+": "+entry.token,"success");
+  renderDashboard();
 }
 $("entryForm").addEventListener("submit",e=>{e.preventDefault();approveGateEntry();});
 
-function approveGateEntry() {
-  loadData();
-  const token=$("fToken").value.trim();
-  const booking=findBooking(token);
-  if(!token||!booking||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==token.toLowerCase()) {
-    notice("entryNotice","Validate a saved booking token before approving gate entry.","error");return;
-  }
-      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gate Receipt</title>
-  <style>body{font-family:Arial;padding:28px;color:#182a20}h1{color:#176b3a}.box{border:1px solid #ccc;border-radius:10px;padding:18px;margin-top:20px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.stamp{color:#176b3a;font-weight:bold;border:2px solid #176b3a;display:inline-block;padding:8px;margin-top:18px}@media print{button{display:none}}</style></head><body>
-  <h1>🌾 KrishiDhara 2.0</h1><p>Official Gate Clearance Receipt</p><div class="box">
-  ${[
-    ["Receipt ID",first(e,["id","entryId"],"—")],["Yard",yardName(yardOf(e)||activeYard)],
-    ["Date & Time",dateText(e)],["Farmer",farmerOf(e)],["Phone",phoneOf(e)||"—"],
-    ["Token",tokenOf(e)||"—"],["Vehicle",vehicleOf(e)||"—"],["Commodity",commodityOf(e)],
-    ["Quantity",tonsOf(e)+" tons"],["Gate",first(e,["gate","gateNumber"],"Gate 1")],
-    ["Officer",first(e,["officer","officerName","approvedBy"],"Gate Officer")]
-  ].map(r=>`<div class="row"><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div>`).join("")}
-  </div><div class="stamp">GATE CLEARED</div><p><button onclick="window.print()">Print Receipt</button></p></body></html>`);
+function printReceipt(i){
+  const e=(window.currentDisplayedEntries||[])[i];if(!e)return;
+  const w=window.open("","_blank");if(!w)return;
+  const rows=[["Receipt ID",first(e,["id","entryId"],"—")],["Yard",yardName(yardOf(e)||activeYard)],["Time",dateText(e)],[t(4),farmerOf(e)],["Phone",phoneOf(e)||"—"],["Token",tokenOf(e)||"—"],[t(6),vehicleOf(e)||"—"],[t(5),commodityOf(e)],[t(7),tonsOf(e)],[t(8),first(e,["gate","gateNumber"],"Gate 1")],["Officer",first(e,["officer","officerName"],"Gate Officer")]];
+  w.document.write(`<!DOCTYPE html><html lang="${lang}" dir="${RTL.includes(lang)?"rtl":"ltr"}"><head><meta charset="UTF-8"><title>${esc(t(11))}</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#182a20}h1{color:#176b3a}.box{border:1px solid #ccc;border-radius:10px;padding:18px;margin-top:20px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.stamp{color:#176b3a;font-weight:bold;border:2px solid #176b3a;display:inline-block;padding:8px;margin-top:18px}@media print{button{display:none}}</style></head><body><h1>🌾 KrishiDhara 2.0</h1><p>${esc(t(11))}</p><div class="box">${rows.map(r=>`<div class="row"><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div>`).join("")}</div><div class="stamp">${esc(t(9))}</div><p><button onclick="window.print()">Print</button></p></body></html>`);
   w.document.close();
 }
 function refreshDashboard(){loadData();renderDashboard();}
-function switchRole(){window.location.href=localStorage.getItem("kd_admin_portal_url")||"admin.html";}
+function switchRole(){window.location.href=localStorage.getItem("kd_admin_portal_url")||"../admin/index.html";}
 
-window.addEventListener("storage",e=>{
-  if(e.key===null||[KEYS.entries,KEYS.booking,KEYS.yard,"kd_cap_"+activeYard,"kd_booked_"+activeYard].includes(e.key))refreshDashboard();
-});
+window.addEventListener("storage",e=>{if(e.key===null||[KEYS.entries,KEYS.booking,KEYS.yard,"kd_cap_"+activeYard,"kd_booked_"+activeYard].includes(e.key))refreshDashboard();});
 window.addEventListener("focus",refreshDashboard);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDashboard();});
 
-function googleTranslateElementInit() {
-  if(window.google&&google.translate) {
-    new google.translate.TranslateElement({
-      pageLanguage:"en",
-      includedLanguages:"en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
-      autoDisplay:false
-    },"google_translate_element");
-  }
-}
-(function(){
-  const s=document.createElement("script");
-  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  s.async=true;document.head.appendChild(s);
-})();
-$("languageSelect").addEventListener("change",function(){
-  const lang=this.value;localStorage.setItem(KEYS.language,lang);
-  document.cookie="googtrans=/en/"+lang+";path=/";
-  const combo=document.querySelector(".goog-te-combo");
-  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
-  else if(lang==="en")location.reload();
-});
-const savedLang=localStorage.getItem(KEYS.language)||"en";
-if([...$("languageSelect").options].some(o=>o.value===savedLang))$("languageSelect").value=savedLang;
-
-/* Seed the requested demo figures, then load and render the portal. */
 seedDemoDataIfEmpty();
 loadData();
-renderDashboard();
+applyLang();
 </script>
 </body>
 </html>
