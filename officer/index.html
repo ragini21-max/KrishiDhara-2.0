@@ -216,7 +216,7 @@ function seedDemoDataIfEmpty(){
   const demo=[["KD-1001","Ramesh Patil","Wheat","MH12AB1234",8],["KD-1002","Suresh Jadhav","Soybean","MH14CD5678",12],["KD-1003","Anita Shinde","Maize","MH15EF9012",6],["KD-1004","Mohan Pawar","Onion","MH20GH3456",8]];
   const now=Date.now();
   writeJSON(KEYS.booking,demo.map(d=>({token:d[0],farmerName:d[1],commodity:d[2],vehicleNumber:d[3],tons:d[4],status:"Booked",mandiKey:activeYard})));
-  writeJSON(KEYS.entries,demo.map((d,i)=>({id:"GE-"+(1001+i),token:d[0],farmerName:d[1],commodity:d[2],vehicleNumber:d[3],tons:d[4],gate:"Gate 1",officer:"Gate Officer",status:"cleared",mandiKey:activeYard,timestamp:new Date(now-i*3600000).toISOString()})));
+  writeJSON(KEYS.entries,demo.slice(1).map((d,i)=>({id:"GE-"+(1002+i),token:d[0],farmerName:d[1],commodity:d[2],vehicleNumber:d[3],tons:d[4],gate:"Gate 1",officer:"Gate Officer",status:"cleared",mandiKey:activeYard,timestamp:new Date(now-i*3600000).toISOString()})));
 }
 
 /* ---------- Rendering ---------- */
