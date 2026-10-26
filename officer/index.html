@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,7 +67,7 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
     <div class="header-actions no-print">
       <label for="yardSelect">Yard</label>
       <select id="yardSelect" aria-label="Select yard"></select>
-      <select id="languageSelect" aria-label="Select language">
+      <select id="languageSelect" onchange="changeLanguage()" aria-label="Select language">
         <option value="en">English</option>
         <option value="hi">हिन्दी</option>
         <option value="mr">मराठी</option>
@@ -88,7 +87,7 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
         <option value="ks">कॉशुर</option>
         <option value="doi">डोगरी</option>
         <option value="mni">মৈতৈলোন্</option>
-        <option value="sat">संताली</option>
+        <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
         <option value="bho">भोजपुरी</option>
         <option value="raj">राजस्थानी</option>
       </select>
@@ -100,7 +99,7 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
 <main>
   <section class="yard-bar">
     <div>
-      <div class="yard-name" id="yardName">Pune Main Yard</div>
+      <div class="yard-name" id="yardName">Pune Main APMC Market Yard</div>
       <div class="yard-meta">Yard key: <strong id="yardKeyText">pune_main</strong> · <span id="lastUpdated">Loading data…</span></div>
     </div>
     <span class="live-pill"><span class="live-dot"></span> Shared dashboard data</span>
@@ -205,12 +204,10 @@ const KEYS = {
 };
 
 const YARDS = {
-  pune_main:"Pune Main Yard",
-  nashik_main:"Nashik Main Yard",
-  nagpur_main:"Nagpur Main Yard",
-  mumbai_main:"Mumbai Main Yard",
-  pune:"Pune Yard",
-  nashik:"Nashik Yard"
+  pune_main:"Pune Main APMC Market Yard",
+  nashik_grain:"Nashik Grain & Vegetable Mandi",
+  nagpur_cotton:"Nagpur Cotton & Grain Yard",
+  amravati_grain:"Amravati Regional Procurement Center"
 };
 
 let activeYard=localStorage.getItem(KEYS.yard)||"pune_main";
@@ -268,16 +265,13 @@ function isSameToken(a,b){return tokenOf(a).toLowerCase()===String(b).trim().toL
 function sameDay(d,a){return d&&d.getFullYear()===a.getFullYear()&&d.getMonth()===a.getMonth()&&d.getDate()===a.getDate()}
 
 /*
- * Historical records are seeded once per yard using stable IDs.
- * Existing live entries are not replaced.
- * Each counter is reconciled against the actual cleared log sum.
+ * Historical records seeded for Pune (34/50 tons with 4 cleared farmers)
+ * and Nashik Grain Mandi.
  */
 function seedDemoDataIfEmpty(){
   let entries=readJSON(KEYS.entries,[]);
   if(!Array.isArray(entries))entries=[];
 
-  // Remove only the known legacy four-record demo set from the old build.
-  // Do not delete any non-demo entry.
   const oldDemo=e=>e&&(
     String(e.notes||"").includes("Demo seed record")||
     /^KD-GATE-100[1-4]$/.test(String(e.id||""))
@@ -286,7 +280,7 @@ function seedDemoDataIfEmpty(){
 
   const DAY=86400000;
   const now=Date.now();
-  const targets={pune_main:34,nashik_main:19};
+  const targets={pune_main:34,nashik_grain:19};
   const templates={
     pune_main:[
       {name:"Sunita Jadhav",phone:"9000000002",crop:"Soybean",vehicle:"MH14 CD 5678",tons:8,gate:"Gate 1",days:4},
@@ -294,7 +288,7 @@ function seedDemoDataIfEmpty(){
       {name:"Anita Shinde",phone:"9000000004",crop:"Onion",vehicle:"MH15 GH 3456",tons:7,gate:"Gate 3",days:2},
       {name:"Mahesh Kulkarni",phone:"9000000005",crop:"Wheat",vehicle:"MH12 JK 7890",tons:10,gate:"Gate 1",days:1}
     ],
-    nashik_main:[
+    nashik_grain:[
       {name:"Kavita Deshmukh",phone:"9000000011",crop:"Grapes",vehicle:"MH15 LM 2468",tons:4,gate:"Gate 1",days:4},
       {name:"Vijay More",phone:"9000000012",crop:"Onion",vehicle:"MH15 NP 1357",tons:5,gate:"Gate 2",days:3},
       {name:"Meena Pawar",phone:"9000000013",crop:"Pomegranate",vehicle:"MH14 QR 8642",tons:4,gate:"Gate 3",days:2},
@@ -331,17 +325,14 @@ function seedDemoDataIfEmpty(){
   writeJSON(KEYS.entries,entries);
   if(localStorage.getItem(KEYS.booking)===null)writeJSON(KEYS.booking,[]);
 
-  // Seed representative bookings only if no booking data exists.
-  // These are explicitly yard-tagged and are NOT cleared.
   if(normaliseList(readJSON(KEYS.booking,null)).length===0){
     const sampleBookings=[
       {token:"KD-PENDING-P-01",farmerName:"Ramesh Patil",phone:"9000000001",commodity:"Wheat",vehicleNumber:"MH12 AB 1234",tons:10,status:"PENDING",gateCleared:false,mandiKey:"pune_main"},
-      {token:"KD-PENDING-N-01",farmerName:"Rahul Pawar",phone:"9000000021",commodity:"Onion",vehicleNumber:"MH15 UV 1234",tons:3,status:"PENDING",gateCleared:false,mandiKey:"nashik_main"}
+      {token:"KD-PENDING-N-01",farmerName:"Rahul Pawar",phone:"9000000021",commodity:"Onion",vehicleNumber:"MH15 UV 1234",tons:3,status:"PENDING",gateCleared:false,mandiKey:"nashik_grain"}
     ];
     writeJSON(KEYS.booking,sampleBookings);
   }
 
-  // Reconcile each yard counter with the sum of its cleared gate logs.
   for(const yard of Object.keys(targets)){
     localStorage.setItem("kd_cap_"+yard,"50");
     const total=entries.filter(e=>yardOf(e)===yard&&isCleared(e))
@@ -394,7 +385,6 @@ function capacityData(){
 function populateYards(){
   const select=$("yardSelect");
   const keys=new Set([...Object.keys(YARDS),activeYard]);
-  // Discover yard keys already present in stored bookings/logs/capacity counters.
   [...gateEntries,...bookings].forEach(r=>{if(yardOf(r))keys.add(yardOf(r))});
   select.innerHTML=[...keys].sort().map(k=>`<option value="${esc(k)}">${esc(yardName(k))}</option>`).join("");
   select.value=activeYard;
@@ -420,7 +410,7 @@ function renderDashboard(){
   const notice=$("reconciliationNotice");
   if(Math.abs(total-cap.tons)>0.01){
     notice.className="notice error";
-    notice.textContent="Mismatch: counter is "+cap.tons+" tons, but this yard's cleared logs sum to "+total.toFixed(2)+" tons. Refresh or reconcile the yard data.";
+    notice.textContent="Mismatch: counter is "+cap.tons+" tons, but this yard's cleared logs sum to "+total.toFixed(2)+" tons.";
   }else{
     notice.className="notice success";
     notice.textContent="Reconciled: "+total.toFixed(2)+" cleared tons across "+vehicles.size+" vehicle(s).";
@@ -445,7 +435,7 @@ function renderFarmers(){
   </article>`));
 
   pending.forEach(b=>cards.push(`<article class="farmer-card">
-    <h3>${esc(farmerOf(b))}</h3><span class="status pending">BOOKING — NOT CLEARED</span>
+    <h3>${esc(farmerOf(b))}</h3><span class="status pending">NOT CLEARED</span>
     <p><strong>Token:</strong> ${esc(tokenOf(b)||"—")}</p>
     <p><strong>Vehicle:</strong> ${esc(vehicleOf(b)||"—")}</p>
     <p><strong>Commodity:</strong> ${esc(commodityOf(b))}</p>
@@ -459,7 +449,7 @@ function renderBookings(){
   const body=$("bookingTableBody");
   const tokens=clearedTokenSet();
   const list=yardBookings();
-  if(!list.length){body.innerHTML='<tr><td colspan="8"><div class="empty">No yard-tagged bookings found. The farmer booking app must save each booking with its mandiKey.</div></td></tr>';return}
+  if(!list.length){body.innerHTML='<tr><td colspan="8"><div class="empty">No yard-tagged bookings found.</div></td></tr>';return}
   body.innerHTML=list.map(b=>{
     const done=isBookingCleared(b,tokens);
     return `<tr><td>${esc(farmerOf(b))}</td><td>${esc(tokenOf(b)||"—")}</td><td>${esc(yardName(yardOf(b)))}</td>
@@ -512,8 +502,8 @@ function validateToken(){
   const token=$("tokenInput").value.trim();
   if(!token){notice("scanNotice","Enter or scan a token ID first.","error");return}
   const booking=findBooking(token);
-  if(!booking){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","Token not found in bookings for "+yardName(activeYard)+". Check the selected yard and the booking's mandiKey.","error");return}
-  if(findCleared(token)){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","This token already has a cleared gate entry. Duplicate approval is blocked.","error");return}
+  if(!booking){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","Token not found in bookings for "+yardName(activeYard)+".","error");return}
+  if(findCleared(token)){validatedBooking=null;$("bookingPreview").innerHTML="";notice("scanNotice","This token already has a cleared gate entry.","error");return}
   validatedBooking=booking;
   $("fToken").value=token;
   $("fFarmer").value=farmerOf(booking)==="Unknown farmer"?"":farmerOf(booking);
@@ -527,7 +517,7 @@ function validateToken(){
     Farmer: ${esc(farmerOf(booking))}<br>Commodity: ${esc(commodityOf(booking))}<br>
     Vehicle: ${esc(vehicleOf(booking)||"Not provided")}<br>Booked quantity: ${tonsOf(booking)} tons
     </div></div>`;
-  notice("scanNotice","Booking token validated. Review the received commodity before confirming.","success");
+  notice("scanNotice","Booking token validated. Review before confirming.","success");
 }
 function demoScan(){
   loadData();
@@ -536,7 +526,7 @@ function demoScan(){
   $("tokenInput").value=tokenOf(booking);validateToken();
 }
 async function startScanner(){
-  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR scanner library failed to load. Enter the token manually.","error");return}
+  if(typeof Html5Qrcode==="undefined"){notice("scanNotice","QR scanner library failed to load.","error");return}
   if(scannerRunning)return;
   try{
     scanner=new Html5Qrcode("reader");
@@ -550,7 +540,7 @@ async function startScanner(){
     notice("scanNotice","Scanner started. Point the camera at a QR token.","info");
   }catch(e){
     scanner=null;scannerRunning=false;$("scannerPlaceholder").style.display="block";
-    notice("scanNotice","Camera unavailable. Allow camera access and use HTTPS/localhost, or enter the token manually.","error");
+    notice("scanNotice","Camera unavailable.","error");
   }
 }
 async function stopScanner(){
@@ -565,10 +555,6 @@ function clearEntryForm(){
 }
 $("entryForm").addEventListener("submit",e=>{e.preventDefault();approveGateEntry()});
 
-/*
- * Update only the matching booking in the existing storage shape.
- * Supports arrays, a single booking object, and common wrapped arrays.
- */
 function updateBookingCleared(token,entry){
   const raw=readJSON(KEYS.booking,null);
   const match=b=>tokenOf(b).toLowerCase()===token.toLowerCase()&&yardOf(b)===activeYard;
@@ -593,12 +579,12 @@ function approveGateEntry(){
 
   const farmer=$("fFarmer").value.trim(),commodity=$("fCommodity").value.trim();
   const vehicle=$("fVehicle").value.trim(),tons=num($("fTons").value,0);
-  if(!farmer||!commodity||!vehicle||tons<=0){notice("entryNotice","Enter farmer, commodity, vehicle and a valid positive tonnage.","error");return}
+  if(!farmer||!commodity||!vehicle||tons<=0){notice("entryNotice","Enter farmer, commodity, vehicle and valid positive tonnage.","error");return}
 
   const cap=capacityData();
   if(localStorage.getItem("kd_lock_"+activeYard)==="true"){notice("entryNotice","Approval blocked: this yard is emergency-locked.","error");return}
   if(cap.capacity<=0||cap.tons>cap.capacity+0.0001||tons>cap.capacity-cap.tons+0.0001){
-    notice("entryNotice","Approval blocked: remaining capacity is "+Math.max(0,cap.capacity-cap.tons).toFixed(2)+" tons.","error");return
+    notice("entryNotice","Approval blocked: remaining capacity exceeded.","error");return
   }
 
   const entry={
@@ -615,23 +601,19 @@ function approveGateEntry(){
       notice("entryNotice","This token was cleared in another tab. Refresh and retry.","error");refreshDashboard();return
     }
 
-    // Persist the gate record first. Never overwrite existing records.
     list.push(entry);
     writeJSON(KEYS.entries,list);
-
-    // Persist cleared state to the matching yard's booking.
     updateBookingCleared(token,entry);
 
-    // Reconcile to the actual sum rather than incrementing a stale counter.
     const total=list.filter(e=>yardOf(e)===activeYard&&isCleared(e)).reduce((s,e)=>s+tonsOf(e),0);
     localStorage.setItem("kd_booked_"+activeYard,String(Number(total.toFixed(2))));
     if(localStorage.getItem("kd_cap_"+activeYard)===null)localStorage.setItem("kd_cap_"+activeYard,"50");
 
     validatedBooking=null;refreshDashboard();
-    notice("entryNotice","Commodity receipt confirmed. Gate entry and booking status saved.","success");
+    notice("entryNotice","Commodity receipt confirmed successfully.","success");
     $("tokenInput").value="";$("bookingPreview").innerHTML="";$("fToken").value="";
   }catch(error){
-    console.error(error);notice("entryNotice","Could not save the entry. Check browser storage and retry.","error");
+    console.error(error);notice("entryNotice","Could not save the entry.","error");
   }
 }
 function exportCSV(){
@@ -653,7 +635,7 @@ function exportCSV(){
 }
 function printReceipt(index){
   const e=window.currentDisplayedEntries[index];
-  if(!e){alert("Gate record not found. Refresh and try again.");return}
+  if(!e){alert("Gate record not found.");return}
   const w=window.open("","_blank","width=650,height=750");
   if(!w){alert("Allow pop-ups to print the receipt.");return}
   const rows=[
@@ -686,26 +668,82 @@ window.addEventListener("storage",e=>{
 window.addEventListener("focus",refreshDashboard);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDashboard()});
 
-/*
- * Preserve the saved language preference and selector.
- * This replacement keeps the portal usable in English; the original
- * extensive phrase dictionary can be merged back without affecting storage.
- */
-const langs=["en","hi","mr","pa","gu","bn","te","ta","kn","ml","or","as","ur","sa","ne","sd","ks","doi","mni","sat","bho","raj"];
-const savedLang=localStorage.getItem(KEYS.language)||"en";
-$("languageSelect").value=langs.includes(savedLang)?savedLang:"en";
-$("languageSelect").addEventListener("change",function(){
-  localStorage.setItem(KEYS.language,this.value);
-  // Non-English translations require a translation dictionary.
-  if(this.value!=="en"){
-    notice("reconciliationNotice","The selected language is saved, but this build's interface translations are not included. English labels remain active.","info");
-  }else refreshDashboard();
-});
-
 seedDemoDataIfEmpty();
 loadData();
 populateYards();
 renderDashboard();
+</script>
+
+<!-- Automatic translation support for all 22 selectable languages. -->
+<div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+
+<script>
+(function () {
+    const STORAGE_KEY = 'kd_selected_lang';
+
+    const googleCodes = new Set([
+        'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
+        'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
+        'bho', 'raj'
+    ]);
+
+    function setTranslateCookie(lang) {
+        const target = googleCodes.has(lang) ? lang : 'en';
+        document.cookie = 'googtrans=/en/' + target + ';path=/;SameSite=Lax';
+        try {
+            localStorage.setItem(STORAGE_KEY, lang);
+        } catch (error) {
+            console.warn('Could not save language preference.', error);
+        }
+    }
+
+    window.googleTranslateElementInit = function () {
+        if (!window.google || !google.translate || !google.translate.TranslateElement) {
+            return;
+        }
+
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+        const combo = document.querySelector('.goog-te-combo');
+
+        if (combo && lang !== 'en' && Array.from(combo.options).some(option => option.value === lang)) {
+            combo.value = lang;
+            combo.dispatchEvent(new Event('change'));
+        }
+    };
+
+    window.kdApplySelectedLanguage = function (lang) {
+        setTranslateCookie(lang);
+        window.location.reload();
+    };
+
+    window.changeLanguage = function () {
+        const select = document.getElementById('languageSelect');
+        if (select) {
+            window.kdApplySelectedLanguage(select.value);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('languageSelect');
+        const lang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+        if (select) select.value = lang;
+
+        if (!document.querySelector('script[data-kd-google-translate]')) {
+            const script = document.createElement('script');
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            script.async = true;
+            script.setAttribute('data-kd-google-translate', 'true');
+            document.head.appendChild(script);
+        }
+    });
+})();
 </script>
 </body>
 </html>
