@@ -464,6 +464,32 @@ function uniqueFarmers(entries) {
     seen.add(key);return true;
   });
 }
+
+/* Lower-cased set of every token that has a cleared gate entry. */
+function clearedTokenSet() {
+  return new Set(
+    clearedEntries().map(e=>tokenOf(e).toLowerCase()).filter(Boolean)
+  );
+}
+/* A booking counts as cleared if a cleared gate entry exists for its token,
+   or the booking record itself is marked cleared. */
+function isBookingCleared(b, clearedTokens) {
+  const t=tokenOf(b).toLowerCase();
+  if (t && clearedTokens.has(t)) return true;
+  if (b && b.gateCleared===true) return true;
+  return String(first(b,["status","bookingStatus","gateStatus"],"")).toLowerCase()==="cleared";
+}
+/* Remove duplicate bookings that share the same token. */
+function uniqueBookings(list) {
+  const seen=new Set();
+  return list.filter(b=>{
+    const t=tokenOf(b).toLowerCase();
+    if(!t) return true;
+    if(seen.has(t)) return false;
+    seen.add(t);return true;
+  });
+}
+
 function renderDashboard() {
   const entries=clearedEntries();
   const cap=capacityData();
@@ -501,8 +527,10 @@ function renderDashboard() {
 function renderFarmers() {
   const container=$("farmerSummary");
   const entries=uniqueFarmers(clearedEntries());
-  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean));
-  const pending=bookings.filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
+  const clearedTokens=clearedTokenSet();
+
+  // FIX: only bookings that are NOT already cleared are shown as pending
+  const pending=uniqueBookings(bookings).filter(b=>!isBookingCleared(b,clearedTokens));
   const cards=[];
 
   entries.forEach(e=>cards.push(`
@@ -527,15 +555,15 @@ function renderFarmers() {
 
   container.innerHTML=cards.length?cards.join(""):'<div class="empty" style="grid-column:1/-1">No farmer records found.</div>';
 }
-function getTokenSafe(b){return tokenOf(b).toLowerCase();}
 function renderBookings() {
   const body=$("bookingTableBody");
-  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(t=>t.toLowerCase()));
-  if(!bookings.length) {
+  const clearedTokens=clearedTokenSet();
+  const list=uniqueBookings(bookings);
+  if(!list.length) {
     body.innerHTML='<tr><td colspan="7"><div class="empty">No saved booking list found.</div></td></tr>';return;
   }
-  body.innerHTML=bookings.map(b=>{
-    const token=tokenOf(b),done=clearedTokens.has(token.toLowerCase());
+  body.innerHTML=list.map(b=>{
+    const token=tokenOf(b),done=isBookingCleared(b,clearedTokens);
     return `<tr>
       <td>${esc(farmerOf(b))}</td><td>${esc(token||"—")}</td>
       <td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b)||"—")}</td>
@@ -835,6 +863,3 @@ renderDashboard();
 </script>
 </body>
 </html>
-
-
-There is a prb in this that the people which have cleared are again written in  not cleared the info card has been duplicated
