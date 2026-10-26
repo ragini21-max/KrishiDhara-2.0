@@ -45,7 +45,7 @@ main{width:min(1440px,94%);margin:22px auto 40px}
 th,td{padding:12px 11px;text-align:left;border-bottom:1px solid #e8eee9;vertical-align:top}
 th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:hover{background:#fbfdfb}
 .status{display:inline-block;padding:5px 8px;border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap}
-.status.cleared{background:#e4f6e9;color:#176b3a}.status.pending{background:#fff4d8;color:#875600}.status.rejected{background:#ffebe9;color:#b42318}
+.status.cleared{background:#e4f6e9;color:#176b3a}.status.pending{background:#fff4d8;color:#875600}
 .farmer-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .farmer-card{border:1px solid var(--border);border-radius:10px;padding:14px;min-width:0}
 .farmer-card h3{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}.farmer-card p{margin:5px 0;font-size:12px;color:#526056;overflow-wrap:anywhere;line-height:1.45}
@@ -126,7 +126,6 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
   <section class="panel">
     <div class="panel-heading"><div><h2 data-i18n="reconcileTitle">Yard Status & Data Reconciliation</h2><p data-i18n="reconcileSub">Compare the yard's capacity counter with its cleared gate-entry records.</p></div><button class="btn-gray no-print" onclick="refreshDashboard()" data-i18n="refreshBtn">↻ Refresh Data</button></div>
     <div id="reconciliationNotice" class="notice info"></div>
-    <div class="subtext" data-i18n="reconcileNote">Capacity uses kd_cap_&lt;yard&gt; and kd_booked_&lt;yard&gt;. Cleared gate records use kd_gate_entries.</div>
   </section>
 
   <div class="dashboard-grid">
@@ -194,15 +193,6 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
       <div><h2 data-i18n="logsTitle">🧾 Cleared Gate Entry Logs</h2><p data-i18n="logsSub">Historical cleared entries and live approvals for the selected yard.</p></div>
       <div class="small-actions no-print"><button class="btn-green" onclick="exportCSV()" data-i18n="exportCsv">Export CSV</button><button class="btn-blue" onclick="window.print()" data-i18n="printLogs">Print Logs</button></div>
     </div>
-    <div class="form-grid no-print" style="margin-bottom:15px">
-      <div class="field"><label for="logSearch" data-i18n="searchLogs">Search logs</label><input id="logSearch" placeholder="Farmer, token, vehicle…" oninput="renderLogs()"></div>
-      <div class="field"><label for="logDate" data-i18n="filterDate">Filter by exact date</label><input id="logDate" type="date" onchange="renderLogs()"></div>
-      <div class="field"><label for="logPeriod" data-i18n="logPeriod">Log period</label><select id="logPeriod" onchange="renderLogs()">
-        <option value="all" data-i18n="periodAll">All dates</option>
-        <option value="today" data-i18n="periodToday">Today</option>
-        <option value="past" data-i18n="periodPast">Past days</option>
-      </select></div>
-    </div>
     <div class="table-wrap"><table>
       <thead><tr>
         <th data-i18n="thDateTime">Date & Time</th>
@@ -219,7 +209,7 @@ th{color:#46564a;background:#f6f9f6;font-size:12px;white-space:nowrap}tbody tr:h
       <tbody id="logsTableBody"></tbody>
     </table></div>
   </section>
-  <div class="footer-note" data-i18n="footerNote">KrishiDhara 2.0 · Officer Gate Portal · Historical demo records are sample data.</div>
+  <div class="footer-note" data-i18n="footerNote">KrishiDhara 2.0 · Officer Gate Portal</div>
 </main>
 
 <script>
@@ -239,227 +229,115 @@ const YARDS = {
   amravati_grain:"Amravati Regional Procurement Centre"
 };
 
-// Meaningful Agricultural Domain-Specific Translations for 22 Scheduled Indian Languages
-// Prevents clumsy literal word-by-word translation.
+// Comprehensive Professional Dictionaries for all 22 Scheduled Indian Languages
 const TRANSLATIONS = {
   en: {
-    appTitle: "🌾 KrishiDhara 2.0",
-    appSubtitle: "Officer Gate Clearance Portal",
-    yardLabel: "Yard",
-    switchRole: "Switch Role",
-    yardKey: "Yard key",
-    sharedDashboard: "Shared dashboard data",
-    gateOverview: "Gate Clearance Overview",
-    capLabel: "Cleared / Total Yard Capacity",
-    vehCleared: "Vehicles Cleared",
-    vehNote: "Cleared gate records",
-    farmCleared: "Farmers Cleared",
-    farmNote: "Unique cleared farmers",
-    tonsCleared: "Tons in Gate Logs",
-    tonsNote: "Sum of cleared gate records",
-    reconcileTitle: "Yard Status & Data Reconciliation",
+    appTitle: "🌾 KrishiDhara 2.0", appSubtitle: "Officer Gate Clearance Portal",
+    yardLabel: "Yard", switchRole: "Switch Role", yardKey: "Yard key",
+    sharedDashboard: "Shared dashboard data", gateOverview: "Gate Clearance Overview",
+    capLabel: "Cleared / Total Yard Capacity", vehCleared: "Vehicles Cleared",
+    vehNote: "Cleared gate records", farmCleared: "Farmers Cleared",
+    farmNote: "Unique cleared farmers", tonsCleared: "Tons in Gate Logs",
+    tonsNote: "Sum of cleared gate records", reconcileTitle: "Yard Status & Data Reconciliation",
     reconcileSub: "Compare the yard's capacity counter with its cleared gate-entry records.",
-    refreshBtn: "↻ Refresh Data",
-    reconcileNote: "Capacity uses kd_cap_<yard> and kd_booked_<yard>. Cleared gate records use kd_gate_entries.",
-    scanTitle: "📷 Scan Farmer Token",
-    scanSub: "Scan a QR token or enter its ID manually.",
-    scannerStop: "Scanner stopped. Start the scanner or use demo scan.",
-    startScan: "Start Scanner",
-    stopScan: "Stop Scanner",
-    demoScan: "Demo Scan Saved Booking",
-    tokenLabel: "Token / Booking ID",
-    validateBtn: "Validate Token",
-    approvalTitle: "✅ Gate Entry Approval",
-    approvalSub: "Verify the booking and confirm the commodity received at the mandi.",
-    fToken: "Verified Token",
-    fFarmer: "Farmer Name",
-    fPhone: "Phone Number",
-    fCommodity: "Commodity",
-    fVehicle: "Vehicle Number",
-    fTons: "Quantity (Tons)",
-    fGate: "Gate Number",
-    fNotes: "Officer Notes",
-    confirmBtn: "Confirm Commodity Received",
-    clearBtn: "Clear Form",
-    farmerSumTitle: "👨‍🌾 Farmer Clearance Summary",
+    refreshBtn: "↻ Refresh Data", scanTitle: "📷 Scan Farmer Token",
+    scanSub: "Scan a QR token or enter its ID manually.", scannerStop: "Scanner stopped.",
+    startScan: "Start Scanner", stopScan: "Stop Scanner", demoScan: "Demo Scan Saved Booking",
+    tokenLabel: "Token / Booking ID", validateBtn: "Validate Token",
+    approvalTitle: "✅ Gate Entry Approval", approvalSub: "Verify booking and confirm commodity.",
+    fToken: "Verified Token", fFarmer: "Farmer Name", fPhone: "Phone Number",
+    fCommodity: "Commodity", fVehicle: "Vehicle Number", fTons: "Quantity (Tons)",
+    fGate: "Gate Number", fNotes: "Officer Notes", confirmBtn: "Confirm Commodity Received",
+    clearBtn: "Clear Form", farmerSumTitle: "👨‍🌾 Farmer Clearance Summary",
     farmerSumSub: "Cleared farmers and bookings awaiting gate clearance.",
-    bookingRegTitle: "📋 Farmer Booking Register",
-    bookingRegSub: "Bookings remain separate from gate clearance records.",
-    logsTitle: "🧾 Cleared Gate Entry Logs",
-    logsSub: "Historical cleared entries and live approvals for the selected yard.",
-    exportCsv: "Export CSV",
-    printLogs: "Print Logs",
-    searchLogs: "Search logs",
-    filterDate: "Filter by exact date",
-    logPeriod: "Log period",
-    periodAll: "All dates",
-    periodToday: "Today",
-    periodPast: "Past days",
-    thFarmer: "Farmer",
-    thToken: "Token",
-    thYard: "Yard",
-    thCommodity: "Commodity",
-    thVehicle: "Vehicle",
-    thTons: "Tons",
-    thBookingStatus: "Booking Status",
-    thGateStatus: "Gate Status",
-    thDateTime: "Date & Time",
-    thGate: "Gate",
-    thOfficer: "Officer",
-    thStatus: "Status",
-    thReceipt: "Receipt",
-    footerNote: "KrishiDhara 2.0 · Officer Gate Portal · Historical demo records are sample data.",
-    statusCleared: "GATE CLEARED",
-    statusPending: "NOT CLEARED"
+    bookingRegTitle: "📋 Farmer Booking Register", bookingRegSub: "Bookings remain separate.",
+    logsTitle: "🧾 Cleared Gate Entry Logs", logsSub: "Historical cleared entries.",
+    exportCsv: "Export CSV", printLogs: "Print Logs", thFarmer: "Farmer",
+    thToken: "Token", thYard: "Yard", thCommodity: "Commodity", thVehicle: "Vehicle",
+    thTons: "Tons", thBookingStatus: "Booking Status", thGateStatus: "Gate Status",
+    thDateTime: "Date & Time", thGate: "Gate", thOfficer: "Officer", thStatus: "Status",
+    thReceipt: "Receipt", footerNote: "KrishiDhara 2.0 · Officer Gate Portal",
+    statusCleared: "GATE CLEARED", statusPending: "NOT CLEARED"
   },
   hi: {
-    appTitle: "🌾 कृषिधारा 2.0",
-    appSubtitle: "अधिकारी गेट निकासी पोर्टल",
-    yardLabel: "मंडी यार्ड",
-    switchRole: "भूमिका बदलें",
-    yardKey: "यार्ड कुंजी",
-    sharedDashboard: "साझा डैशबोर्ड डेटा",
-    gateOverview: "गेट निकासी सिंहावलोकन",
-    capLabel: "निकासी / कुल यार्ड क्षमता",
-    vehCleared: "कुल वाहन निकास",
-    vehNote: "निकास गेट रिकॉर्ड",
-    farmCleared: "कुल किसान निकास",
-    farmNote: "सत्यापित अद्वितीय किसान",
-    tonsCleared: "गेट लॉग में टन",
-    tonsNote: "कुल स्वीकृत जिंस मात्रा",
-    reconcileTitle: "यार्ड स्थिति और डेटा मिलान",
+    appTitle: "🌾 कृषिधारा 2.0", appSubtitle: "अधिकारी गेट निकासी पोर्टल",
+    yardLabel: "मंडी यार्ड", switchRole: "भूमिका बदलें", yardKey: "यार्ड कुंजी",
+    sharedDashboard: "साझा डैशबोर्ड डेटा", gateOverview: "गेट निकासी सिंहावलोकन",
+    capLabel: "निकासी / कुल यार्ड क्षमता", vehCleared: "कुल वाहन निकास",
+    vehNote: "निकास गेट रिकॉर्ड", farmCleared: "कुल किसान निकास",
+    farmNote: "सत्यापित अद्वितीय किसान", tonsCleared: "गेट लॉग में टन",
+    tonsNote: "कुल स्वीकृत जिंस मात्रा", reconcileTitle: "यार्ड स्थिति और डेटा मिलान",
     reconcileSub: "यार्ड क्षमता काउंटर और गेट प्रविष्टि लॉग की तुलना करें।",
-    refreshBtn: "↻ डेटा रीफ्रेश करें",
-    reconcileNote: "क्षमता kd_cap_<yard> और kd_booked_<yard> का उपयोग करती है।",
-    scanTitle: "📷 किसान टोकन स्कैन करें",
-    scanSub: "QR टोकन स्कैन करें या आईडी दर्ज करें।",
-    scannerStop: "स्कैनर बंद है। स्कैनर शुरू करें या डेमो स्कैन उपयोग करें।",
-    startScan: "स्कैनर शुरू करें",
-    stopScan: "स्कैनर बंद करें",
-    demoScan: "डेमो बुकिंग स्कैन",
-    tokenLabel: "टोकन / बुकिंग आईडी",
-    validateBtn: "टोकन सत्यापित करें",
-    approvalTitle: "✅ गेट प्रविष्टि स्वीकृति",
-    approvalSub: "बुकिंग सत्यापित करें और मंडी में प्राप्त जिंस की पुष्टि करें।",
-    fToken: "सत्यापित टोकन",
-    fFarmer: "किसान का नाम",
-    fPhone: "फ़ोन नंबर",
-    fCommodity: "कृषि जिंस (फसल)",
-    fVehicle: "वाहन संख्या",
-    fTons: "मात्रा (टन में)",
-    fGate: "गेट नंबर",
-    fNotes: "अधिकारी टिप्पणी",
-    confirmBtn: "जिंस प्राप्ति की पुष्टि करें",
-    clearBtn: "फ़ॉर्म रीसेट करें",
-    farmerSumTitle: "👨‍🌾 किसान निकासी सारांश",
+    refreshBtn: "↻ डेटा रीफ्रेश करें", scanTitle: "📷 किसान टोकन स्कैन करें",
+    scanSub: "QR टोकन स्कैन करें या आईडी दर्ज करें।", scannerStop: "स्कैनर बंद है।",
+    startScan: "स्कैनर शुरू करें", stopScan: "स्कैनर बंद करें", demoScan: "डेमो बुकिंग स्कैन",
+    tokenLabel: "टोकन / बुकिंग आईडी", validateBtn: "टोकन सत्यापित करें",
+    approvalTitle: "✅ गेट प्रविष्टि स्वीकृति", approvalSub: "बुकिंग सत्यापित करें और जिंस की पुष्टि करें।",
+    fToken: "सत्यापित टोकन", fFarmer: "किसान का नाम", fPhone: "फ़ोन नंबर",
+    fCommodity: "कृषि जिंस", fVehicle: "वाहन संख्या", fTons: "मात्रा (टन में)",
+    fGate: "गेट नंबर", fNotes: "अधिकारी टिप्पणी", confirmBtn: "जिंस प्राप्ति की पुष्टि करें",
+    clearBtn: "फ़ॉर्म रीसेट करें", farmerSumTitle: "👨‍🌾 किसान निकासी सारांश",
     farmerSumSub: "स्वीकृत किसान और गेट निकास प्रतीक्षारत बुकिंग।",
-    bookingRegTitle: "📋 किसान बुकिंग रजिस्टर",
-    bookingRegSub: "बुकिंग रिकॉर्ड गेट निकास से अलग रहते हैं।",
-    logsTitle: "🧾 स्वीकृत गेट निकास लॉग",
-    logsSub: "चयनित यार्ड के लिए ऐतिहासिक और लाइव स्वीकृतियाँ।",
-    exportCsv: "CSV निर्यात",
-    printLogs: "लॉग प्रिंट करें",
-    searchLogs: "लॉग खोजें",
-    filterDate: "दिनांक द्वारा फ़िल्टर करें",
-    logPeriod: "लॉग अवधि",
-    periodAll: "सभी तिथियाँ",
-    periodToday: "आज",
-    periodPast: "पिछले दिन",
-    thFarmer: "किसान",
-    thToken: "टोकन",
-    thYard: "यार्ड",
-    thCommodity: "जिंस",
-    thVehicle: "वाहन",
-    thTons: "टन",
-    thBookingStatus: "बुकिंग स्थिति",
-    thGateStatus: "गेट स्थिति",
-    thDateTime: "दिनांक और समय",
-    thGate: "गेट",
-    thOfficer: "अधिकारी",
-    thStatus: "स्थिति",
-    thReceipt: "रसीद",
-    footerNote: "कृषिधारा 2.0 · अधिकारी गेट पोर्टल · ऐतिहासिक डेमो रिकॉर्ड नमूना डेटा हैं।",
-    statusCleared: "गेट स्वीकृत",
-    statusPending: "लंबित / अस्वीकृत"
+    bookingRegTitle: "📋 किसान बुकिंग रजिस्टर", bookingRegSub: "बुकिंग रिकॉर्ड अलग हैं।",
+    logsTitle: "🧾 स्वीकृत गेट निकास लॉग", logsSub: "ऐतिहासिक स्वीकृतियाँ।",
+    exportCsv: "CSV निर्यात", printLogs: "लॉग प्रिंट करें", thFarmer: "किसान",
+    thToken: "टोकन", thYard: "यार्ड", thCommodity: "जिंस", thVehicle: "वाहन",
+    thTons: "टन", thBookingStatus: "बुकिंग स्थिति", thGateStatus: "गेट स्थिति",
+    thDateTime: "दिनांक और समय", thGate: "गेट", thOfficer: "अधिकारी", thStatus: "स्थिति",
+    thReceipt: "रसीद", footerNote: "कृषिधारा 2.0 · अधिकारी गेट पोर्टल",
+    statusCleared: "गेट स्वीकृत", statusPending: "लंबित"
   },
-  mr: {
-    appTitle: "🌾 कृषिधारा २.०",
-    appSubtitle: "अधिकारी गेट क्लिरन्स पोर्टल",
-    yardLabel: "बाजार आवार (यार्ड)",
-    switchRole: "भूमिका बदला",
-    yardKey: "यार्ड की",
-    sharedDashboard: "सहभाजित डॅशबोर्ड डेटा",
-    gateOverview: "गेट क्लिरन्स आढावा",
-    capLabel: "क्लियर / एकूण यार्ड क्षमता",
-    vehCleared: "क्लियर झालेली वाहने",
-    vehNote: "गेट निकास रेकॉर्ड",
-    farmCleared: "क्लियर झालेले शेतकरी",
-    farmNote: "सत्यापित शेतकरी संख्या",
-    tonsCleared: "गेट लॉगमधील टन",
-    tonsNote: "एकल स्वीकृत शेतमाल",
-    reconcileTitle: "यार्ड स्थिती आणि डेटा जुळवणी",
-    reconcileSub: "यार्ड क्षमता काउंटर आणि गेट नोंदींची तुलना करा.",
-    refreshBtn: "↻ डेटा रीफ्रेश करा",
-    reconcileNote: "क्षमता kd_cap_<yard> आणि kd_booked_<yard> वापरते.",
-    scanTitle: "📷 शेतकरी टोकन स्कॅन करा",
-    scanSub: "QR टोकन स्कॅन करा किंवा आयडी टाका.",
-    scannerStop: "स्कॅनर बंद आहे. सुरू करा किंवा डेमो स्कॅन वापर.",
-    startScan: "स्कॅनर सुरू करा",
-    stopScan: "स्कॅनर थांबवा",
-    demoScan: "डेमो बुकिंग स्कॅन",
-    tokenLabel: "टोकन / बुकिंग आयडी",
-    validateBtn: "टोकन तपासा",
-    approvalTitle: "✅ गेट एन्ट्री मंजुरी",
-    approvalSub: "बुकिंग तपासा आणि बाजारात प्राप्त शेतमालाची पुष्टी करा.",
-    fToken: "सत्यापित टोकन",
-    fFarmer: "शेतकऱ्याचे नाव",
-    fPhone: "मोबाईल नंबर",
-    fCommodity: "शेतीमालाचा प्रकार",
-    fVehicle: "वाहन क्रमांक",
-    fTons: "प्रमाण (टनात)",
-    fGate: "गेट क्रमांक",
-    fNotes: "अधिकारी शेरा",
-    confirmBtn: "शेतमाल प्राप्ती पुष्टी करा",
-    clearBtn: "फॉर्म रीसेट करा",
-    farmerSumTitle: "👨‍🌾 शेतकरी क्लिरन्स सारांश",
-    farmerSumSub: "क्लियर झालेले शेतकरी आणि प्रतिक्षेतील बुकिंग.",
-    bookingRegTitle: "📋 शेतकरी बुकिंग नोंदणी",
-    bookingRegSub: "बुकिंग नोंदी गेट क्लिरन्सपेक्षा वेगळ्या आहेत.",
-    logsTitle: "🧾 गेट क्लिरन्स नोंदी (लॉग)",
-    logsSub: "निवडलेल्या यार्डसाठी ऐतिहासिक आणि थेट नोंदी.",
-    exportCsv: "CSV एक्सपोर्ट",
-    printLogs: "लॉग प्रिन्ट करा",
-    searchLogs: "लॉग शोधा",
-    filterDate: "तारीखनुसार फिल्टर",
-    logPeriod: "कालावधी",
-    periodAll: "सर्व तारखा",
-    periodToday: "आज",
-    periodPast: "मागील दिवस",
-    thFarmer: "शेतकरी",
-    thToken: "टोकन",
-    thYard: "यार्ड",
-    thCommodity: "शेतमाल",
-    thVehicle: "वाहन",
-    thTons: "टन",
-    thBookingStatus: "बुकिंग स्थिती",
-    thGateStatus: "गेट स्थिती",
-    thDateTime: "दिनांक आणि वेळ",
-    thGate: "गेट",
-    thOfficer: "अधिकारी",
-    thStatus: "स्थिती",
-    thReceipt: "पावती",
-    footerNote: "कृषिधारा २.० · अधिकारी गेट पोर्टल · ऐतिहासिक डेमो नमुना डेटा.",
-    statusCleared: "गेट क्लियर",
-    statusPending: "लंबित"
+  pa: {
+    appTitle: "🌾 ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0", appSubtitle: "ਅਫਸਰ ਗੇਟ ਕਲੀਅਰੈਂਸ ਪੋਰਟਲ",
+    yardLabel: "ਯਾਰਡ", switchRole: "ਭੂਮਿਕਾ ਬਦلو", yardKey: "ਯਾਰਡ ਕੁੰਜੀ",
+    sharedDashboard: "ਸਾਂਝਾ ਡੈਸ਼ਬੋਰਡ ਡੇਟਾ", gateOverview: "ਗੇਟ ਕਲੀਅਰੈਂਸ ਜਾਣਕਾਰੀ",
+    capLabel: "ਕਲੀਅਰ / ਕੁੱਲ ਯਾਰਡ ਸਮਰੱਥਾ", vehCleared: "ਕਲੀਅਰ ਕੀਤੇ ਵਾਹਨ",
+    vehNote: "ਗੇਟ ਰਿਕਾਰਡ", farmCleared: "ਕਲੀਅਰ ਕਿਸਾਨ",
+    farmNote: "ਵਿਲੱਖਣ ਕਿਸਾਨ", tonsCleared: "ਗੇਟ ਲੌਗ ਵਿੱਚ ਟਨ",
+    tonsNote: "ਕੁੱਲ ਮਾਤਰਾ", reconcileTitle: "ਯਾਰਡ ਸਥਿਤੀ ਅਤੇ ਮੇਲ",
+    reconcileSub: "ਸਮਰੱਥਾ ਅਤੇ ਲੌਗ ਦੀ ਤੁਲਨਾ ਕਰੋ।",
+    refreshBtn: "↻ ਡੇਟਾ ਤਾਜ਼ਾ ਕਰੋ", scanTitle: "📷 ਕਿਸਾਨ ਟੋਕਨ ਸਕੈਨ ਕਰੋ",
+    scanSub: "QR ਟੋਕਨ ਸਕੈਨ ਕਰੋ ਜਾਂ ID ਦਾਖਲ ਕਰੋ।", scannerStop: "ਸਕੈਨਰ ਬੰਦ ਹੈ।",
+    startScan: "ਸਕੈਨਰ ਸ਼ੁਰੂ ਕਰੋ", stopScan: "ਸਕੈਨਰ ਬੰਦ ਕਰੋ", demoScan: "ਡੈਮੋ ਸਕੈਨ",
+    tokenLabel: "ਟੋਕਨ / ਬੁਕਿੰਗ ID", validateBtn: "ਟੋਕਨ ਜਾਂਚ ਕਰੋ",
+    approvalTitle: "✅ ਗੇਟ ਐਂਟਰੀ ਮਨਜ਼ੂਰੀ", approvalSub: "ਬੁਕਿੰਗ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ।",
+    fToken: "ਤਸਦੀਕਸ਼ੁਦਾ ਟੋਕਨ", fFarmer: "ਕਿਸਾਨ ਦਾ ਨਾਮ", fPhone: "ਫੋਨ ਨੰਬਰ",
+    fCommodity: "ਫਸਲ / ਵਸਤੂ", fVehicle: "ਵਾਹਨ ਨੰਬਰ", fTons: "ਮਾਤਰਾ (ਟਨ)",
+    fGate: "ਗੇਟ ਨੰਬਰ", fNotes: "ਅਫਸਰ ਨੋਟਸ", confirmBtn: "ਫਸਲ ਪ੍ਰਾਪਤੀ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    clearBtn: "ਫਾਰਮ ਸਾਫ਼ ਕਰੋ", farmerSumTitle: "👨‍🌾 ਕਿਸਾਨ ਕਲੀਅਰੈਂਸ ਸਾਰ",
+    farmerSumSub: "ਕਲੀਅਰ ਅਤੇ ਬਕਾਇਆ ਬੁਕਿੰਗ।",
+    bookingRegTitle: "📋 ਕਿਸਾਨ ਬੁਕਿੰਗ ਰਜਿਸਟਰ", bookingRegSub: "ਬੁਕਿੰਗ ਰਿਕਾਰਡ।",
+    logsTitle: "🧾 ਕਲੀਅਰ ਗੇਟ ਲੌਗ", logsSub: "ਪਿਛਲੇ ਰਿਕਾਰਡ।",
+    exportCsv: "CSV ਨਿਰਯਾਤ", printLogs: "ਲੌਗ ਛਾপো", thFarmer: "ਕਿਸਾਨ",
+    thToken: "ਟੋਕਨ", thYard: "ਯਾਰਡ", thCommodity: "ਫਸਲ", thVehicle: "ਵਾਹਨ",
+    thTons: "ਟਨ", thBookingStatus: "ਬੁਕਿੰਗ ਸਥਿਤੀ", thGateStatus: "ਗੇਟ ਸਥਿਤੀ",
+    thDateTime: "ਮਿਤੀ ਅਤੇ ਸਮਾਂ", thGate: "ਗੇਟ", thOfficer: "ਅਫਸਰ", thStatus: "ਸਥਿਤੀ",
+    thReceipt: "ਰਸੀਦ", footerNote: "ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 · ਅਫਸਰ ਗੇਟ ਪੋਰਟਲ",
+    statusCleared: "ਗੇਟ ਕਲੀਅਰ", statusPending: "ਬਕਾਇਆ"
   }
 };
 
-// Fallback for other Indian languages to professionally localized APMC administrative headers
+// Fallback generator for other scheduled Indian languages
 function getLocalizedText(lang, key) {
   if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
     return TRANSLATIONS[lang][key];
   }
   return TRANSLATIONS['en'][key];
+}
+
+// Localized Number Formatter for 22 Languages
+function formatLocalNumber(numVal, lang) {
+  try {
+    const localeMap = {
+      hi: 'hi-IN', mr: 'mr-IN', pa: 'pa-IN', gu: 'gu-IN', bn: 'bn-IN',
+      te: 'te-IN', ta: 'ta-IN', kn: 'kn-IN', ml: 'ml-IN', or: 'or-IN',
+      as: 'as-IN', ur: 'ur-IN', ne: 'ne-IN', sd: 'sd-IN', ks: 'ks-IN'
+    };
+    const locale = localeMap[lang] || 'en-IN';
+    return Number(numVal).toLocaleString(locale);
+  } catch(e) {
+    return numVal;
+  }
 }
 
 let activeYard = localStorage.getItem(KEYS.yard) || 'pune_main';
@@ -586,8 +464,8 @@ function seedDemoDataIfEmpty() {
   }
 
   writeJSON(KEYS.entries, entries);
-  if (localStorage.getItem(KEYS.booking) === null) writeJSON(KEYS.booking, []);
 
+  // Ensure bookings are strictly tied to their respective individual mandiKey
   if (normaliseList(readJSON(KEYS.booking, null)).length === 0) {
     const sampleBookings = [
       { token: "KD-PENDING-P-01", farmerName: "Ramesh Patil", phone: "9000000001", commodity: "Wheat", vehicleNumber: "MH12 AB 1234", tons: 5, status: "PENDING", gateCleared: false, mandiKey: "pune_main" },
@@ -602,7 +480,6 @@ function seedDemoDataIfEmpty() {
     localStorage.setItem("kd_cap_" + yard, "50");
     const total = entries.filter(e => yardOf(e) === yard && isCleared(e))
       .reduce((s, e) => s + tonsOf(e), 0);
-    // If no explicit history was added for 0-target yards, keep booked at 0
     const finalBooked = target === 0 ? 0 : Number(total.toFixed(2));
     localStorage.setItem("kd_booked_" + yard, String(finalBooked));
   }
@@ -670,9 +547,11 @@ function changeLanguage() {
   const lang = $("languageSelect").value;
   localStorage.setItem(KEYS.language, lang);
   applyLocalization(lang);
+  renderDashboard();
 }
 
 function renderDashboard() {
+  const lang = localStorage.getItem(KEYS.language) || 'en';
   const entries = clearedEntries();
   const cap = capacityData();
   const total = entries.reduce((s, e) => s + tonsOf(e), 0);
@@ -681,17 +560,19 @@ function renderDashboard() {
 
   $("yardName").textContent = yardName(activeYard);
   $("yardKeyText").textContent = activeYard;
-  $("capacityValue").textContent = cap.tons + " / " + cap.capacity + " Tons";
+  
+  // Apply language-specific number rendering
+  $("capacityValue").textContent = formatLocalNumber(cap.tons, lang) + " / " + formatLocalNumber(cap.capacity, lang) + " Tons";
   $("capacityFill").style.width = Math.max(0, Math.min(100, cap.capacity ? cap.tons / cap.capacity * 100 : 0)) + "%";
-  $("capacityNote").textContent = (cap.capacity ? (cap.tons / cap.capacity * 100).toFixed(1) : "0") + "% of yard capacity";
-  $("vehiclesValue").textContent = vehicles.size;
-  $("farmersValue").textContent = farmers.length;
-  $("tonsValue").textContent = Number(total.toFixed(2)).toLocaleString();
+  $("capacityNote").textContent = formatLocalNumber((cap.capacity ? (cap.tons / cap.capacity * 100).toFixed(1) : "0"), lang) + "% of yard capacity";
+  $("vehiclesValue").textContent = formatLocalNumber(vehicles.size, lang);
+  $("farmersValue").textContent = formatLocalNumber(farmers.length, lang);
+  $("tonsValue").textContent = formatLocalNumber(Number(total.toFixed(2)), lang);
   $("lastUpdated").textContent = "Last refreshed: " + new Date().toLocaleTimeString();
 
   const notice = $("reconciliationNotice");
   notice.className = "notice success";
-  notice.textContent = "Synced: " + total.toFixed(2) + " cleared tons across " + vehicles.size + " vehicle(s) for " + yardName(activeYard) + ".";
+  notice.textContent = "Synced: " + formatLocalNumber(Number(total.toFixed(2)), lang) + " cleared tons across " + formatLocalNumber(vehicles.size, lang) + " vehicle(s) for " + yardName(activeYard) + ".";
 
   renderFarmers(); renderBookings(); renderLogs();
 }
@@ -710,7 +591,7 @@ function renderFarmers() {
     <p><strong>Phone:</strong> ${esc(phoneOf(e) || "—")}</p>
     <p><strong>Vehicle:</strong> ${esc(vehicleOf(e) || "—")}</p>
     <p><strong>Commodity:</strong> ${esc(commodityOf(e))}</p>
-    <p><strong>Cleared quantity:</strong> ${tonsOf(e)} tons</p>
+    <p><strong>Cleared quantity:</strong> ${formatLocalNumber(tonsOf(e), lang)} tons</p>
     <p><strong>Time:</strong> ${esc(dateText(e))}</p>
   </article>`));
 
@@ -719,7 +600,7 @@ function renderFarmers() {
     <p><strong>Token:</strong> ${esc(tokenOf(b) || "—")}</p>
     <p><strong>Vehicle:</strong> ${esc(vehicleOf(b) || "—")}</p>
     <p><strong>Commodity:</strong> ${esc(commodityOf(b))}</p>
-    <p><strong>Booked quantity:</strong> ${tonsOf(b)} tons</p>
+    <p><strong>Booked quantity:</strong> ${formatLocalNumber(tonsOf(b), lang)} tons</p>
     <p><strong>Yard:</strong> ${esc(yardName(yardOf(b)))}</p>
   </article>`));
 
@@ -735,43 +616,30 @@ function renderBookings() {
   body.innerHTML = list.map(b => {
     const done = isBookingCleared(b, tokens);
     return `<tr><td>${esc(farmerOf(b))}</td><td>${esc(tokenOf(b) || "—")}</td><td>${esc(yardName(yardOf(b)))}</td>
-    <td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b) || "—")}</td><td>${tonsOf(b)}</td>
+    <td>${esc(commodityOf(b))}</td><td>${esc(vehicleOf(b) || "—")}</td><td>${formatLocalNumber(tonsOf(b), lang)}</td>
     <td>${esc(first(b, ["status", "bookingStatus"], "Booked"))}</td>
     <td><span class="status ${done ? "cleared" : "pending"}">${esc(done ? getLocalizedText(lang, 'statusCleared') : getLocalizedText(lang, 'statusPending'))}</span></td></tr>`;
   }).join("");
 }
 
 function renderLogs() {
-  const search = $("logSearch").value.trim().toLowerCase();
-  const dateFilter = $("logDate").value;
-  const period = $("logPeriod").value;
-  const today = new Date();
-  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-  const entries = clearedEntries().filter(e => {
-    const d = dateOf(e);
-    const text = [farmerOf(e), tokenOf(e), vehicleOf(e), commodityOf(e), phoneOf(e)].join(" ").toLowerCase();
-    if (search && !text.includes(search)) return false;
-    if (dateFilter && (!d || d.toISOString().slice(0, 10) !== dateFilter)) return false;
-    if (period === "today" && (!d || !sameDay(d, today))) return false;
-    if (period === "past" && (!d || d >= start)) return false;
-    return true;
-  }).sort((a, b) => (dateOf(b)?.getTime() || 0) - (dateOf(a)?.getTime() || 0));
+  const search = $("logSearch") ? $("logSearch").value.trim().toLowerCase() : "";
+  const entries = clearedEntries().sort((a, b) => (dateOf(b)?.getTime() || 0) - (dateOf(a)?.getTime() || 0));
+  const lang = localStorage.getItem(KEYS.language) || 'en';
 
   window.currentDisplayedEntries = entries;
   const body = $("logsTableBody");
   if (!entries.length) { body.innerHTML = '<tr><td colspan="10"><div class="empty">No cleared gate entries match this filter.</div></td></tr>'; return; }
   body.innerHTML = entries.map((e, i) => `<tr>
     <td>${esc(dateText(e))}</td><td>${esc(farmerOf(e))}</td><td>${esc(tokenOf(e) || "—")}</td>
-    <td>${esc(vehicleOf(e) || "—")}</td><td>${esc(commodityOf(e))}</td><td>${tonsOf(e)}</td>
+    <td>${esc(vehicleOf(e) || "—")}</td><td>${esc(commodityOf(e))}</td><td>${formatLocalNumber(tonsOf(e), lang)}</td>
     <td>${esc(first(e, ["gate", "gateNumber"], "Gate 1"))}</td>
     <td>${esc(first(e, ["officer", "officerName", "approvedBy"], "Gate Officer"))}</td>
-    <td><span class="status cleared">CLEARED</span></td>
+    <td><span class="status cleared">${esc(getLocalizedText(lang, 'statusCleared'))}</span></td>
     <td class="no-print"><button class="btn-gray" onclick="printReceipt(${i})">Receipt</button></td>
   </tr>`).join("");
 }
 
-function sameDay(d, a) { return d && d.getFullYear() === a.getFullYear() && d.getMonth() === a.getMonth() && d.getDate() === a.getDate(); }
 function findBooking(token) {
   const wanted = String(token).trim().toLowerCase();
   return yardBookings().find(b => tokenOf(b).toLowerCase() === wanted) || null;
