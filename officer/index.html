@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,7 +77,6 @@ tbody tr:hover{background:#fbfdfb}
 .farmer-card h3{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}
 .farmer-card p{margin:5px 0;font-size:12px;color:#526056;overflow-wrap:anywhere;line-height:1.45}
 .empty{color:var(--muted);background:#f8faf8;border:1px dashed #cbd7cd;border-radius:9px;padding:18px;font-size:13px;line-height:1.6;text-align:center}
-#google_translate_element{background:white;border-radius:7px;padding:4px;min-height:30px;color:#222}
 .token-display{padding:10px;background:#f0f7f1;border-radius:8px;font-weight:700;color:var(--dark);overflow-wrap:anywhere}
 .footer-note{color:var(--muted);font-size:12px;text-align:center;line-height:1.6;padding:8px 0 18px}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-grid{grid-template-columns:1fr}}
@@ -118,7 +116,6 @@ tbody tr:hover{background:#fbfdfb}
         <option value="bho">भोजपुरी</option>
         <option value="raj">राजस्थानी</option>
       </select>
-      <div id="google_translate_element"></div>
       <button class="btn-light" onclick="switchRole()">Switch Role</button>
     </div>
   </div>
@@ -223,8 +220,7 @@ tbody tr:hover{background:#fbfdfb}
     </div>
     <div id="farmerSummary" class="farmer-cards"></div>
   </section>
-
-  <section class="panel" id="bookingPanel">
+    <section class="panel" id="bookingPanel">
     <div class="panel-heading">
       <div><h2>📋 Farmer Booking Register</h2><p>Bookings are shown separately from actual gate clearance records.</p></div>
     </div>
@@ -238,7 +234,7 @@ tbody tr:hover{background:#fbfdfb}
 
   <section class="panel" id="logsPanel">
     <div class="panel-heading">
-      <div><h2>🧾 Cleared Gate Entry Logs</h2><p>Four demo clearances are included if no gate records existed when this page first loaded.</p></div>
+      <div><h2>🧾 Cleared Gate Entry Logs</h2><p>Four demo farmers are cleared (34 tons total); Ramesh Patil remains pending.</p></div>
       <div class="small-actions no-print">
         <button class="btn-green" onclick="exportCSV()">Export CSV</button>
         <button class="btn-blue" onclick="window.print()">Print Logs</button>
@@ -353,72 +349,71 @@ function normaliseList(value) {
   return [];
 }
 function yardName(key) {
-  const names={pune_main:"Pune Main Yard",pune:"Pune Yard",nashik_main:"Nashik Main Yard",nagpur_main:"Nagpur Main Yard",mumbai_main:"Mumbai Main Yard"};
+  const names={
+    pune_main:"Pune Main APMC Market Yard",
+    nashik_grain:"Nashik Grain & Vegetable Mandi",
+    nagpur_cotton:"Nagpur Cotton & Grain Yard",
+    amravati_grain:"Amravati Regional Procurement Center"
+  };
   return names[key] || key.split(/[_-]/).map(s=>s?s[0].toUpperCase()+s.slice(1):"").join(" ");
 }
 
 /*
  * INITIAL DEMO DATA:
- * Seed four cleared vehicles and four farmers, totaling 34 tons.
- * This only happens when kd_gate_entries is empty or invalid.
- * It does not replace existing gate-entry history.
+ * Pune: 4 farmers / 34 tons. Nashik: cleared sample records totaling 19 tons.
+ * Nagpur and Amravati remain empty at 0/50 with no demo gate logs.
+ * Seed only an empty store or a store containing only this portal's old demo
+ * seed. Existing real gate-entry history is never overwritten.
  */
 function seedDemoDataIfEmpty() {
   const raw = readJSON(KEYS.entries, []);
-  if (Array.isArray(raw) && raw.length > 0) return;
+  const existing = Array.isArray(raw) ? raw : [];
+  const isKnownDemo = e => e && typeof e === "object" && (
+    String(e.notes || "").includes("Demo seed record") ||
+    /^KD-GATE-(?:100[1-4]|200[1-3]|300[1-3])$/.test(String(e.id || ""))
+  );
+  if (existing.length && !existing.every(isKnownDemo)) return;
 
-  const yard = localStorage.getItem(KEYS.yard) || "pune_main";
   const now = Date.now();
-
+  const makeEntry = (id, token, farmerName, phone, commodity, vehicleNumber, tons, gate, yard, hoursAgo) => ({
+    id, token, farmerName, phone, commodity, vehicleNumber, tons, gate,
+    officer:"Gate Officer", status:"CLEARED", cleared:true, mandiKey:yard,
+    timestamp:new Date(now-hoursAgo*3600000).toISOString(), notes:"Demo seed record"
+  });
   const demo = [
-    {
-      id:"KD-GATE-1001",token:"KD-1001",farmerName:"Ramesh Patil",
-      phone:"9000000001",commodity:"Wheat",vehicleNumber:"MH12 AB 1234",
-      tons:10,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
-      cleared:true,mandiKey:yard,timestamp:new Date(now-4*3600000).toISOString(),
-      notes:"Demo seed record"
-    },
-    {
-      id:"KD-GATE-1002",token:"KD-1002",farmerName:"Sunita Jadhav",
-      phone:"9000000002",commodity:"Soybean",vehicleNumber:"MH14 CD 5678",
-      tons:8,gate:"Gate 1",officer:"Gate Officer",status:"CLEARED",
-      cleared:true,mandiKey:yard,timestamp:new Date(now-3*3600000).toISOString(),
-      notes:"Demo seed record"
-    },
-    {
-      id:"KD-GATE-1003",token:"KD-1003",farmerName:"Suresh Pawar",
-      phone:"9000000003",commodity:"Maize",vehicleNumber:"MH12 EF 9012",
-      tons:9,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
-      cleared:true,mandiKey:yard,timestamp:new Date(now-2*3600000).toISOString(),
-      notes:"Demo seed record"
-    },
-    {
-      id:"KD-GATE-1004",token:"KD-1004",farmerName:"Anita Shinde",
-      phone:"9000000004",commodity:"Onion",vehicleNumber:"MH15 GH 3456",
-      tons:7,gate:"Gate 2",officer:"Gate Officer",status:"CLEARED",
-      cleared:true,mandiKey:yard,timestamp:new Date(now-3600000).toISOString(),
-      notes:"Demo seed record"
-    }
+    // Pune Main: four cleared farmers, 34 tons.
+    makeEntry("KD-GATE-1001","KD-1001","Sunita Jadhav","9000000002","Soybean","MH14 CD 5678",8,"Gate 1","pune_main",4),
+    makeEntry("KD-GATE-1002","KD-1002","Suresh Pawar","9000000003","Maize","MH12 EF 9012",9,"Gate 2","pune_main",3),
+    makeEntry("KD-GATE-1003","KD-1003","Anita Shinde","9000000004","Onion","MH15 GH 3456",7,"Gate 2","pune_main",2),
+    makeEntry("KD-GATE-1004","KD-1004","Mahesh Kulkarni","9000000005","Wheat","MH12 JK 7890",10,"Gate 1","pune_main",1),
+    // Nashik: match Admin's existing 19/50 capacity reading.
+    makeEntry("KD-GATE-2001","KD-2001","Prakash Deshmukh","9000000011","Onion","MH15 LM 2468",6,"Gate 1","nashik_grain",5),
+    makeEntry("KD-GATE-2002","KD-2002","Meena Ahire","9000000012","Grapes","MH15 NP 1357",7,"Gate 2","nashik_grain",4),
+    makeEntry("KD-GATE-2003","KD-2003","Vijay Shinde","9000000013","Tomato","MH15 QR 8642",6,"Gate 1","nashik_grain",3),
   ];
-
-  writeJSON(KEYS.entries,demo);
-
-  // Initialize the yard values for the demo only if not already configured.
-  if (localStorage.getItem("kd_cap_"+yard) === null) {
-    localStorage.setItem("kd_cap_"+yard,"50");
-  }
-  if (localStorage.getItem("kd_booked_"+yard) === null) {
-    localStorage.setItem("kd_booked_"+yard,"34");
-  }
-
-  // Provide matching demo bookings so tokens can be validated.
-  // Do not overwrite an existing booking object/list.
-  if (localStorage.getItem(KEYS.booking) === null) {
-    writeJSON(KEYS.booking,demo.map(e=>({
+  const pendingRamesh = {
+    token:"KD-1005",farmerName:"Ramesh Patil",phone:"9000000001",
+    commodity:"Wheat",vehicleNumber:"MH12 AB 1234",tons:10,
+    status:"PENDING",gateCleared:false,mandiKey:"pune_main",
+    notes:"Demo pending booking"
+  };
+  writeJSON(KEYS.entries, demo);
+  writeJSON(KEYS.booking, [
+    ...demo.map(e => ({
       token:e.token,farmerName:e.farmerName,phone:e.phone,
-      commodity:e.commodity,vehicleNumber:e.vehicleNumber,
-      tons:e.tons,status:"CLEARED",gateCleared:true,mandiKey:yard
-    })));
+      commodity:e.commodity,vehicleNumber:e.vehicleNumber,tons:e.tons,
+      status:"CLEARED",gateCleared:true,mandiKey:e.mandiKey
+    })),
+    pendingRamesh
+  ]);
+
+  // Keep the Officer portal aligned with the existing Admin counters.
+  // Do not add demo bookings for Nagpur or Amravati; both remain 0/50.
+  for (const [yard, capacity, booked] of [
+    ["pune_main",50,34], ["nashik_grain",50,19], ["nagpur_cotton",50,0], ["amravati_grain",50,0]
+  ]) {
+    localStorage.setItem("kd_cap_"+yard, String(capacity));
+    localStorage.setItem("kd_booked_"+yard, String(booked));
   }
 }
 
@@ -429,19 +424,34 @@ function loadData() {
   bookings=normaliseList(readJSON(KEYS.booking,null));
 }
 function yardEntries() {
-  return gateEntries.filter(e=>!yardOf(e)||yardOf(e)===activeYard);
+  // Older records without a yard key are treated as Pune-only legacy records,
+  // never duplicated across all four mandis.
+  return gateEntries.filter(e => yardOf(e) === activeYard || (!yardOf(e) && activeYard === "pune_main"));
 }
 function clearedEntries() {
   return yardEntries().filter(isCleared);
 }
+function yardBookings() {
+  // Keep bookings scoped to the selected mandi just like gate entries.
+  return bookings.filter(b => yardOf(b) === activeYard || (!yardOf(b) && activeYard === "pune_main"));
+}
 function capacityData() {
-  const cap=localStorage.getItem("kd_cap_"+activeYard);
+    const cap=localStorage.getItem("kd_cap_"+activeYard);
   const used=localStorage.getItem("kd_booked_"+activeYard);
   const capAlt=localStorage.getItem("kd_capacity_"+activeYard);
   const usedAlt=localStorage.getItem("kd_cleared_"+activeYard);
+  // These defaults match APMC Admin: 50-ton capacity and 0 booked tons.
+  // When a counter is absent but gate logs already exist, derive the counter
+  // from cleared records and persist it so both portals show the same figure.
+  const clearedLogTons = yardEntries().filter(isCleared).reduce((sum,e)=>sum+tonsOf(e),0);
+  const capacity = num(cap, num(capAlt, 50));
+  const tons = used !== null ? num(used, 0) : (usedAlt !== null ? num(usedAlt, clearedLogTons) : clearedLogTons);
+  // Mirror legacy alias keys into the exact keys read by APMC Admin.
+  if (cap === null) localStorage.setItem("kd_cap_"+activeYard, String(capacity));
+  if (used === null) localStorage.setItem("kd_booked_"+activeYard, String(Number(tons.toFixed(2))));
   return {
-    capacity:num(cap??capAlt,50),
-    tons:num(used??usedAlt,34),
+    capacity,
+    tons,
     hasCapacity:cap!==null||capAlt!==null,
     hasTons:used!==null||usedAlt!==null
   };
@@ -449,8 +459,10 @@ function capacityData() {
 function uniqueFarmers(entries) {
   const seen=new Set();
   return entries.filter(e=>{
-    const key=(tokenOf(e)||vehicleOf(e)||farmerOf(e)).toLowerCase();
-    if(seen.has(key)) return false;
+    // A farmer with multiple tokens/loads is still one farmer. Prefer phone,
+    // then normalized name; token IDs must not inflate the farmer count.
+    const key=(phoneOf(e).replace(/\D/g,"") || farmerOf(e).trim().toLowerCase());
+    if(!key || seen.has(key)) return false;
     seen.add(key);return true;
   });
 }
@@ -459,7 +471,9 @@ function renderDashboard() {
   const cap=capacityData();
   const totalTons=entries.reduce((sum,e)=>sum+tonsOf(e),0);
   const farmers=uniqueFarmers(entries);
-  const vehicles=new Set(entries.map(e=>(vehicleOf(e)||tokenOf(e)||e.id||"").toLowerCase()).filter(Boolean));
+  // Count actual distinct vehicle registrations only. Missing vehicle numbers
+  // must not be counted as separate vehicles just because tokens differ.
+  const vehicles=new Set(entries.map(e=>vehicleOf(e).replace(/\s+/g,"").toUpperCase()).filter(Boolean));
 
   $("yardName").textContent=yardName(activeYard);
   $("yardKeyText").textContent=activeYard;
@@ -474,7 +488,7 @@ function renderDashboard() {
 
   const notice=$("reconciliationNotice");
   const messages=[];
-  if(!cap.hasCapacity||!cap.hasTons) messages.push("Capacity keys were missing; demo defaults are shown where needed.");
+  if(!cap.hasCapacity||!cap.hasTons) messages.push("A missing capacity counter was initialized from this mandi's cleared gate logs, using the Admin portal's 50-ton default capacity.");
   if(Math.abs(totalTons-cap.tons)>0.01) {
     messages.push("Mismatch: shared capacity counter is "+cap.tons+" tons, but gate logs sum to "+totalTons.toFixed(2)+" tons.");
     notice.className="notice info";
@@ -492,7 +506,7 @@ function renderFarmers() {
   const container=$("farmerSummary");
   const entries=uniqueFarmers(clearedEntries());
   const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean));
-  const pending=bookings.filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
+  const pending=yardBookings().filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
   const cards=[];
 
   entries.forEach(e=>cards.push(`
@@ -521,10 +535,11 @@ function getTokenSafe(b){return tokenOf(b).toLowerCase();}
 function renderBookings() {
   const body=$("bookingTableBody");
   const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean).map(t=>t.toLowerCase()));
-  if(!bookings.length) {
-    body.innerHTML='<tr><td colspan="7"><div class="empty">No saved booking list found.</div></td></tr>';return;
+  const scopedBookings=yardBookings();
+  if(!scopedBookings.length) {
+    body.innerHTML='<tr><td colspan="7"><div class="empty">No saved booking list found for this mandi.</div></td></tr>';return;
   }
-  body.innerHTML=bookings.map(b=>{
+  body.innerHTML=scopedBookings.map(b=>{
     const token=tokenOf(b),done=clearedTokens.has(token.toLowerCase());
     return `<tr>
       <td>${esc(farmerOf(b))}</td><td>${esc(token||"—")}</td>
@@ -563,7 +578,7 @@ function renderLogs() {
   </tr>`).join("");
 }
 function findBooking(token) {
-  return bookings.find(b=>tokenOf(b).toLowerCase()===String(token).trim().toLowerCase())||null;
+  return yardBookings().find(b=>tokenOf(b).toLowerCase()===String(token).trim().toLowerCase())||null;
 }
 function findCleared(token) {
   return clearedEntries().find(e=>tokenOf(e).toLowerCase()===String(token).trim().toLowerCase())||null;
@@ -604,7 +619,16 @@ async function startScanner() {
     scanner=new Html5Qrcode("reader");
     $("scannerPlaceholder").style.display="none";
     await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>{
-      $("tokenInput").value=String(text).trim();validateToken();stopScanner();
+      let token=String(text).trim();
+      try {
+        const payload=JSON.parse(token);
+        if(payload && typeof payload==="object" && typeof payload.tokenId==="string") {
+          token=payload.tokenId.trim();
+        }
+      } catch (_) {
+        // Plain-text token QR codes remain supported.
+      }
+      $("tokenInput").value=token;validateToken();stopScanner();
     },()=>{});
     scannerRunning=true;$("startScannerBtn").disabled=true;$("stopScannerBtn").disabled=false;
     notice("scanNotice","Scanner started. Point the camera at a QR token.","info");
@@ -631,8 +655,7 @@ $("entryForm").addEventListener("submit",e=>{e.preventDefault();approveGateEntry
 function approveGateEntry() {
   loadData();
   const token=$("fToken").value.trim();
-  const booking=findBooking(token);
-  if(!token||!booking||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==token.toLowerCase()) {
+    if(!token||!booking||!validatedBooking||tokenOf(validatedBooking).toLowerCase()!==token.toLowerCase()) {
     notice("entryNotice","Validate a saved booking token before approving gate entry.","error");return;
   }
   if(findCleared(token)){notice("entryNotice","This token is already cleared.","error");return;}
@@ -643,8 +666,12 @@ function approveGateEntry() {
     notice("entryNotice","Enter a farmer, commodity, vehicle number, and valid positive tonnage.","error");return;
   }
   const cap=capacityData();
-  if(cap.capacity>0&&tons>cap.capacity-cap.tons+0.0001) {
-    notice("entryNotice","Approval blocked: quantity exceeds remaining capacity of "+Math.max(0,cap.capacity-cap.tons).toFixed(2)+" tons.","error");return;
+  const yardLocked=localStorage.getItem("kd_lock_"+activeYard)==="true";
+  if(yardLocked) {
+    notice("entryNotice","Approval blocked: this yard is emergency-locked.","error");return;
+  }
+  if(cap.capacity<=0 || cap.tons>cap.capacity+0.0001 || tons>cap.capacity-cap.tons+0.0001) {
+    notice("entryNotice","Approval blocked: the yard is closed or the quantity exceeds remaining capacity of "+Math.max(0,cap.capacity-cap.tons).toFixed(2)+" tons.","error");return;
   }
   const entry={
     id:"KD-GATE-"+Date.now(),token,farmerName:farmer,phone:$("fPhone").value.trim(),
@@ -656,13 +683,13 @@ function approveGateEntry() {
   try {
     const latest=readJSON(KEYS.entries,[]);
     const list=Array.isArray(latest)?latest:[];
-    if(list.some(e=>tokenOf(e).toLowerCase()===token.toLowerCase()&&isCleared(e))) {
+    if(list.some(e=>(yardOf(e)===activeYard || (!yardOf(e) && activeYard==="pune_main")) && tokenOf(e).toLowerCase()===token.toLowerCase()&&isCleared(e))) {
       notice("entryNotice","This token was cleared in another tab. Refresh and retry.","error");refreshDashboard();return;
     }
     list.push(entry);writeJSON(KEYS.entries,list);
 
     const current=localStorage.getItem("kd_booked_"+activeYard);
-    if(current!==null) localStorage.setItem("kd_booked_"+activeYard,String(Number((num(current)+tons).toFixed(2))));
+    localStorage.setItem("kd_booked_"+activeYard,String(Number((num(current,0)+tons).toFixed(2))));
 
     const rawBooking=readJSON(KEYS.booking,null);
     if(Array.isArray(rawBooking)) {
@@ -714,7 +741,7 @@ function printReceipt(index) {
   w.document.close();
 }
 function refreshDashboard(){loadData();renderDashboard();}
-function switchRole(){window.location.href=localStorage.getItem("kd_admin_portal_url")||"admin.html";}
+function switchRole(){window.location.href="../index.html";}
 
 window.addEventListener("storage",e=>{
   if(e.key===null||[KEYS.entries,KEYS.booking,KEYS.yard,"kd_cap_"+activeYard,"kd_booked_"+activeYard].includes(e.key))refreshDashboard();
@@ -722,31 +749,66 @@ window.addEventListener("storage",e=>{
 window.addEventListener("focus",refreshDashboard);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDashboard();});
 
-function googleTranslateElementInit() {
-  if(window.google&&google.translate) {
-    new google.translate.TranslateElement({
-      pageLanguage:"en",
-      includedLanguages:"en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj",
-      autoDisplay:false
-    },"google_translate_element");
-  }
+/* Offline phrase translations. No Google Translate is used. */
+const KD_LANGS=['en','hi','mr','pa','gu','bn','te','ta','kn','ml','or','as','ur','sa','ne','sd','ks','doi','mni','sat','bho','raj'];
+const KD_TEXT={
+'Switch Role':['Switch Role','भूमिका बदलें','भूमिका बदला','ਭੂਮਿਕਾ ਬਦਲੋ','ભૂમિકા બદલો','ভূমিকা বদলান','పాత్ర మార్చండి','பாத்திரத்தை மாற்று','ಪಾತ್ರ ಬದಲಿಸಿ','പങ്ക് മാറ്റുക','ଭୂମିକା ବଦଳାନ୍ତୁ','ভূমিকা সলনি কৰক','کردار تبدیل کریں','भूमिकां परिवर्तय','भूमिका बदल्नुहोस्','ڪردار تبديل ڪريو','کردار بدلو','भूमका बदलो','ꯃꯤꯇꯩ ꯑꯣꯟꯅꯕ','ᱵᱷᱩᱢᱤᱠᱟ ᱵᱚᱫᱚᱞ','भूमिका बदलीं','भूमिका बदलो'],
+'Gate Clearance Overview':['Gate Clearance Overview','गेट निकासी अवलोकन','गेट मंजुरीचा आढावा','ਗੇਟ ਕਲੀਅਰੈਂਸ ਦਾ ਜਾਇਜ਼ਾ','ગેટ મંજૂરીની ઝાંખી','গেট ছাড়পত্রের সারসংক্ষেপ','గేట్ క్లియరెన్స్ సమీక్ష','கேட் அனுமதி மேலோட்டம்','ಗೇಟ್ ಅನುಮತಿ ಅವಲೋಕನ','ഗേറ്റ് അനുമതി അവലോകനം','ଗେଟ୍ ଅନୁମତି ସାରାଂଶ','গেট অনুমতিৰ আভাস','گیٹ کلیئرنس کا جائزہ','द्वार-निर्गमनस्य सिंहावलोकनम्','गेट निकासीको सारांश','گيٽ ڪليئرنس جو جائزو','گیٹ کلیئرنس ہُنٛد جائِزہ','गेट मंजूरी दा सार','ꯒꯦꯠ ꯀ꯭ꯂꯤꯌꯔꯦꯟꯁ ꯑꯣꯚꯔꯚꯤꯌꯨ','ᱜᱮᱴ ᱪᱷᱟᱲ ᱥᱟᱨᱟᱝᱥ','गेट क्लीयरेंस के सार','गेट मंजूरी रो सार'],
+'Vehicles Cleared':['Vehicles Cleared','स्वीकृत वाहन','मंजूर वाहने','ਮਨਜ਼ੂਰ ਵਾਹਨ','મંજૂર વાહનો','ছাড়পত্র পাওয়া যান','క్లియర్ అయిన వాహనాలు','அனுமதி பெற்ற வாகனங்கள்','ಅನುಮತಿ ಪಡೆದ ವಾಹನಗಳು','അനുമതി ലഭിച്ച വാഹനങ്ങൾ','ଅନୁମତିପ୍ରାପ୍ତ ଯାନ','অনুমতি পোৱা বাহন','منظور شدہ گاڑیاں','अनुमतानि वाहनानि','स्वीकृत सवारीसाधन','منظور ٿيل گاڏيون','منظور گاڑۍ','मंजूर गड्डियां','ꯀ꯭ꯂꯤꯌꯔ ꯇꯧꯔꯕ ꯚꯦꯍꯤꯀꯜ','ᱪᱷᱟᱲ ᱦᱚᱪᱚ ᱜᱟᱹᱰᱤ','मंजूर गाड़ियाँ','मंजूर गाड़ियां'],
+'Farmers Cleared':['Farmers Cleared','स्वीकृत किसान','मंजूर शेतकरी','ਮਨਜ਼ੂਰ ਕਿਸਾਨ','મંજૂર ખેડૂતો','ছাড়পত্র পাওয়া কৃষক','క్లియర్ అయిన రైతులు','அனுமதி பெற்ற விவசாயிகள்','ಅನುಮತಿ ಪಡೆದ ರೈತರು','അനുമതി ലഭിച്ച കർഷകർ','ଅନୁମତିପ୍ରାପ୍ତ ଚାଷୀ','অনুমতি পোৱা কৃষক','منظور شدہ کسان','अनुमताः कृषकाः','स्वीकृत किसानहरू','منظور ٿيل هاري','منظور کسان','मंजूर किसान','ꯀ꯭ꯂꯤꯌꯔ ꯇꯧꯔꯕ ꯂꯧꯃꯤ','ᱪᱷᱟᱲ ᱦᱚᱪᱚ ᱠᱤᱥᱟᱹᱱ','मंजूर किसान','मंजूर किसान'],
+'Validate Token':['Validate Token','टोकन सत्यापित करें','टोकन पडताळा','ਟੋਕਨ ਦੀ ਜਾਂਚ ਕਰੋ','ટોકન ચકાસો','টোকেন যাচাই করুন','టోకెన్ ధృవీకరించండి','டோக்கனைச் சரிபார்','ಟೋಕನ್ ಪರಿಶೀಲಿಸಿ','ടോക്കൺ പരിശോധിക്കുക','ଟୋକେନ୍ ଯାଞ୍ଚ କରନ୍ତୁ','টোকেন পৰীক্ষা কৰক','ٹوکن کی تصدیق کریں','टोकनं प्रमाणीकुरुत','टोकन प्रमाणित गर्नुहोस्','ٽوڪن جي تصديق ڪريو','ٹوکن تصدیق کٔرِو','टोकन जांचो','ꯇꯣꯀꯦꯟ ꯌꯥꯑꯣꯅꯕ','ᱴᱚᱠᱮᱱ ᱥᱟᱹᱨᱤ ᱢᱮ','टोकन जांचीं','टोकन जांचो'],
+'Gate Entry Approval':['Gate Entry Approval','गेट प्रवेश स्वीकृति','गेट प्रवेश मंजुरी','ਗੇਟ ਐਂਟਰੀ ਮਨਜ਼ੂਰੀ','ગેટ પ્રવેશ મંજૂરી','গেটে প্রবেশের অনুমোদন','గేట్ ప్రవేశ ఆమోదం','கேட் நுழைவு அனுமதி','ಗೇಟ್ ಪ್ರವೇಶ ಅನುಮತಿ','ഗേറ്റ് പ്രവേശന അനുമതി','ଗେଟ୍ ପ୍ରବେଶ ଅନୁମୋଦନ','গেট প্ৰৱেশৰ অনুমতি','گیٹ داخلے کی منظوری','द्वारप्रवेशस्य अनुमोदनम्','गेट प्रवेश स्वीकृति','گيٽ داخلا جي منظوري','گیٹ اندر داخلہ منظوری','गेट प्रवेश मंजूरी','ꯒꯦꯠ ꯆꯪꯕ ꯑꯅꯨꯃꯇꯤ','ᱜᱮᱴ ᱵᱚᱞᱚ ᱟᱹᱲᱟᱹ','गेट प्रवेश मंजूरी','गेट प्रवेश मंजूरी']
+};
+const KD_LOOKUP=new Map();
+for(const [en,translations] of Object.entries(KD_TEXT)){
+  translations.forEach(phrase=>{if(phrase)KD_LOOKUP.set(phrase,en);});
 }
-(function(){
-  const s=document.createElement("script");
-  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  s.async=true;document.head.appendChild(s);
-})();
-$("languageSelect").addEventListener("change",function(){
-  const lang=this.value;localStorage.setItem(KEYS.language,lang);
-  document.cookie="googtrans=/en/"+lang+";path=/";
-  const combo=document.querySelector(".goog-te-combo");
-  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
-  else if(lang==="en")location.reload();
+function kdTranslatePhrase(text,lang){
+  const trimmed=text.trim();
+  const english=KD_LOOKUP.get(trimmed)||trimmed;
+  const row=KD_TEXT[english];
+  if(!row)return text;
+  const index=KD_LANGS.indexOf(lang);
+  const translated=row[index]||english;
+  return text.replace(trimmed,translated);
+}
+function kdApplyLanguage(lang){
+  if(!KD_LANGS.includes(lang))lang='en';
+  document.documentElement.lang=lang;
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  for(const node of nodes){
+    if(!node.nodeValue||!node.nodeValue.trim())continue;
+    const parent=node.parentElement;
+    if(parent&&['SCRIPT','STYLE','NOSCRIPT'].includes(parent.tagName))continue;
+    const translated=kdTranslatePhrase(node.nodeValue,lang);
+    if(translated!==node.nodeValue)node.nodeValue=translated;
+  }
+  document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(el=>{
+    for(const attr of ['placeholder','aria-label','title']){
+      if(el.hasAttribute(attr)){
+        const oldValue=el.getAttribute(attr);
+        const newValue=kdTranslatePhrase(oldValue,lang);
+        if(newValue!==oldValue)el.setAttribute(attr,newValue);
+      }
+    }
+  });
+}
+function kdSetLanguage(lang){
+  localStorage.setItem(KEYS.language,lang);
+  kdApplyLanguage(lang);
+}
+$('languageSelect').addEventListener('change',function(){kdSetLanguage(this.value);});
+const kdSavedLang=localStorage.getItem(KEYS.language)||'en';
+if(KD_LANGS.includes(kdSavedLang))$('languageSelect').value=kdSavedLang;
+const kdTranslationObserver=new MutationObserver(()=>{
+  const lang=localStorage.getItem(KEYS.language)||'en';
+  if(lang!=='en')kdApplyLanguage(lang);
 });
-const savedLang=localStorage.getItem(KEYS.language)||"en";
-if([...$("languageSelect").options].some(o=>o.value===savedLang))$("languageSelect").value=savedLang;
+kdTranslationObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+kdApplyLanguage(kdSavedLang);
 
-/* Seed the requested demo figures, then load and render the portal. */
 seedDemoDataIfEmpty();
 loadData();
 renderDashboard();
