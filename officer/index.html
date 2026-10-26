@@ -503,33 +503,60 @@ function renderDashboard() {
 }
 
 function renderFarmers() {
-  const container=$("farmerSummary");
-  const entries=uniqueFarmers(clearedEntries());
-  const clearedTokens=new Set(clearedEntries().map(tokenOf).filter(Boolean));
-  const pending=yardBookings().filter(b=>!getTokenSafe(b)||!clearedTokens.has(getTokenSafe(b)));
-  const cards=[];
+  function renderFarmers() {
+  const container = $("farmerSummary");
 
-  entries.forEach(e=>cards.push(`
-    <article class="farmer-card">
-      <h3>${esc(farmerOf(e))}</h3><span class="status cleared">GATE CLEARED</span>
-      <p><strong>Token:</strong> ${esc(tokenOf(e)||"—")}</p>
-      <p><strong>Phone:</strong> ${esc(phoneOf(e)||"—")}</p>
-      <p><strong>Vehicle:</strong> ${esc(vehicleOf(e)||"—")}</p>
-      <p><strong>Commodity:</strong> ${esc(commodityOf(e))}</p>
-      <p><strong>Cleared quantity:</strong> ${tonsOf(e)} tons</p>
-      <p><strong>Time:</strong> ${esc(dateText(e))}</p>
-    </article>`));
+  // Show cleared farmers only from actual cleared gate records.
+  const entries = uniqueFarmers(clearedEntries());
 
-  pending.forEach(b=>cards.push(`
-    <article class="farmer-card">
-      <h3>${esc(farmerOf(b))}</h3><span class="status pending">BOOKING — NOT CLEARED</span>
-      <p><strong>Token:</strong> ${esc(tokenOf(b)||"—")}</p>
-      <p><strong>Vehicle:</strong> ${esc(vehicleOf(b)||"—")}</p>
-      <p><strong>Commodity:</strong> ${esc(commodityOf(b))}</p>
-      <p><strong>Booked quantity:</strong> ${tonsOf(b)} tons</p>
-    </article>`));
+  // Normalize token IDs so capitalization differences don't cause duplicates.
+  const clearedTokens = new Set(
+    clearedEntries()
+      .map(tokenOf)
+      .filter(Boolean)
+      .map(t => t.trim().toLowerCase())
+  );
 
-  container.innerHTML=cards.length?cards.join(""):'<div class="empty" style="grid-column:1/-1">No farmer records found.</div>';
+  // Show only bookings that are not cleared.
+  // A booking with a cleared token must never appear in the pending section.
+  const pending = yardBookings().filter(b => {
+    const token = getTokenSafe(b).trim().toLowerCase();
+    return token && !clearedTokens.has(token);
+  });
+
+  const cards = [];
+
+  entries.forEach(e => {
+    cards.push(`
+      <article class="farmer-card">
+        <h3>${esc(farmerOf(e))}</h3>
+        <span class="status cleared">GATE CLEARED</span>
+        <p><strong>Token:</strong> ${esc(tokenOf(e) || "—")}</p>
+        <p><strong>Phone:</strong> ${esc(phoneOf(e) || "—")}</p>
+        <p><strong>Vehicle:</strong> ${esc(vehicleOf(e) || "—")}</p>
+        <p><strong>Commodity:</strong> ${esc(commodityOf(e))}</p>
+        <p><strong>Cleared quantity:</strong> ${tonsOf(e)} tons</p>
+        <p><strong>Time:</strong> ${esc(dateText(e))}</p>
+      </article>
+    `);
+  });
+
+  pending.forEach(b => {
+    cards.push(`
+      <article class="farmer-card">
+        <h3>${esc(farmerOf(b))}</h3>
+        <span class="status pending">BOOKING — NOT CLEARED</span>
+        <p><strong>Token:</strong> ${esc(tokenOf(b) || "—")}</p>
+        <p><strong>Vehicle:</strong> ${esc(vehicleOf(b) || "—")}</p>
+        <p><strong>Commodity:</strong> ${esc(commodityOf(b))}</p>
+        <p><strong>Booked quantity:</strong> ${tonsOf(b)} tons</p>
+      </article>
+    `);
+  });
+
+  container.innerHTML = cards.length
+    ? cards.join("")
+    : '<div class="empty" style="grid-column:1/-1">No farmer records found.</div>';
 }
 function getTokenSafe(b){return tokenOf(b).toLowerCase();}
 function renderBookings() {
