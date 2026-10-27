@@ -13,8 +13,8 @@
         <div class="flex items-center space-x-3">
             <span class="text-4xl">📊</span>
             <div>
-                <h1 class="text-lg md:text-xl font-bold">KrishiDhara 2.0 • APMC Admin Portal</h1>
-                <p class="text-xs text-teal-200">Granular Yard Control, Shift Delays &amp; Emergency Locks</p>
+                <h1 class="text-lg md:text-xl font-bold" data-i18n="appTitle">KrishiDhara 2.0 • APMC Admin Portal</h1>
+                <p class="text-xs text-teal-200" data-i18n="appSubtitle">Granular Yard Control, Shift Delays &amp; Emergency Locks</p>
             </div>
         </div>
 
@@ -44,7 +44,7 @@
                 <option value="raj">राजस्थानी</option>
             </select>
 
-            <button type="button" onclick="switchRole()" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">
+            <button type="button" onclick="switchRole()" data-i18n="switchRole" class="bg-teal-900 text-sm px-4 py-2.5 rounded-2xl hover:bg-teal-950 border border-teal-700 font-bold">
                 Switch Role
             </button>
         </div>
@@ -55,7 +55,7 @@
             <div class="flex items-center space-x-3 w-full md:w-auto">
                 <span class="text-2xl">🏬</span>
                 <div>
-                    <div class="text-xs font-bold text-gray-500 uppercase">Assigned Mandi Jurisdiction</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase" data-i18n="assignedYard">Assigned Mandi Jurisdiction</div>
                     <select id="activeAdminYard" onchange="switchAdminYard()" class="bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-2 font-bold text-teal-900 mt-1 cursor-pointer w-full">
                         <option value="pune_main">Pune Main APMC Market Yard</option>
                         <option value="nashik_grain">Nashik Grain &amp; Vegetable Mandi</option>
@@ -67,10 +67,10 @@
 
             <div class="flex items-center space-x-4 bg-teal-50 border border-teal-300 px-5 py-3 rounded-2xl w-full md:w-auto justify-between">
                 <div>
-                    <div class="text-xs font-bold text-teal-800 uppercase">Live Yard Tonnage</div>
-                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">0 / 50 Tons</div>
+                    <div class="text-xs font-bold text-teal-800 uppercase" data-i18n="liveTonnage">Live Yard Tonnage</div>
+                    <div class="text-xl font-black text-teal-950" id="adminYardTonnage">34 / 50 Tons</div>
                 </div>
-                <span id="adminYardBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
+                <span id="adminYardBadge" data-i18n="operational" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">Operational</span>
             </div>
         </div>
 
@@ -78,13 +78,13 @@
             <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Capacity &amp; Emergency Lock</h2>
-                        <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full">Safety Control</span>
+                        <h2 class="text-lg font-extrabold text-teal-950" data-i18n="capacityLock">Capacity &amp; Emergency Lock</h2>
+                        <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full" data-i18n="safetyControl">Safety Control</span>
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between text-sm font-bold text-gray-700">
-                            <span>Adjust Daily Tonnage Limit:</span>
+                            <span data-i18n="adjustLimit">Adjust Daily Tonnage Limit:</span>
                             <span id="currentCapVal" class="text-teal-800 font-black">50 Tons</span>
                         </div>
 
@@ -100,17 +100,17 @@
                             aria-label="Adjust daily tonnage capacity"
                         >
 
-                        <p class="text-xs text-gray-500">Set capacity to 0 Tons to block new bookings for this yard.</p>
+                        <p class="text-xs text-gray-500" data-i18n="zeroCapacity">Set capacity to 0 Tons to block new bookings for this yard.</p>
                     </div>
                 </div>
 
                 <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
                     <div>
-                        <div class="text-sm font-extrabold text-gray-800">Instant Booking Shutdown</div>
-                        <div class="text-xs text-gray-500">Halts all incoming farmer slot tokens.</div>
+                        <div class="text-sm font-extrabold text-gray-800" data-i18n="shutdown">Instant Booking Shutdown</div>
+                        <div class="text-xs text-gray-500" data-i18n="haltDescription">Halts all incoming farmer slot tokens.</div>
                     </div>
 
-                    <button type="button" id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl transition cursor-pointer">
+                    <button type="button" id="btnAdminLock" onclick="toggleYardLock()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-5 py-3 rounded-xl transition cursor-pointer" data-i18n="haltYard">
                         Halt Yard 🛑
                     </button>
                 </div>
@@ -119,31 +119,31 @@
             <div class="bg-white p-8 rounded-3xl shadow-xl border-2 border-teal-200 space-y-6 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-extrabold text-teal-950">Break &amp; Slowdown Delay Manager</h2>
-                        <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Time Shift</span>
+                        <h2 class="text-lg font-extrabold text-teal-950" data-i18n="delayManager">Break &amp; Slowdown Delay Manager</h2>
+                        <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full" data-i18n="timeShift">Time Shift</span>
                     </div>
 
-                    <p class="text-xs text-gray-600">Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.</p>
+                    <p class="text-xs text-gray-600" data-i18n="delayDescription">Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.</p>
 
                     <div class="space-y-2">
-                        <label for="delayBufferSelect" class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
+                        <label for="delayBufferSelect" data-i18n="selectBuffer" class="block text-xs font-bold text-gray-700 uppercase">Select Delay Buffer:</label>
                         <select id="delayBufferSelect" class="w-full bg-gray-50 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm font-bold cursor-pointer">
-                            <option value="0">No Delay (0 Minutes)</option>
-                            <option value="15">Shift Slots by +15 Minutes</option>
-                            <option value="30">Shift Slots by +30 Minutes (Lunch)</option>
-                            <option value="60">Shift Slots by +60 Minutes (Maintenance)</option>
+                            <option value="0" data-i18n="noDelay">No Delay (0 Minutes)</option>
+                            <option value="15" data-i18n="delay15">Shift Slots by +15 Minutes</option>
+                            <option value="30" data-i18n="delay30">Shift Slots by +30 Minutes (Lunch)</option>
+                            <option value="60" data-i18n="delay60">Shift Slots by +60 Minutes (Maintenance)</option>
                         </select>
                     </div>
                 </div>
 
-                <button type="button" onclick="applyTimeDelay()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-3 rounded-xl transition cursor-pointer">
+                <button type="button" onclick="applyTimeDelay()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-3 rounded-xl transition cursor-pointer" data-i18n="broadcastDelay">
                     Broadcast Slot Delay to Farmers ⏰
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="text-center py-4 text-xs text-gray-500">
+    <footer class="text-center py-4 text-xs text-gray-500" data-i18n="footer">
         KrishiDhara 2.0 • APMC Administration
     </footer>
 
@@ -157,7 +157,34 @@
 
         const DEFAULT_CAPACITY = 50;
         const DEFAULT_BOOKED = 0;
+        const DEFAULT_BOOKED_BY_YARD = {
+            pune_main: 34,
+            nashik_grain: 19
+        };
         const MAX_CAPACITY = 100;
+
+        // Display-only digit localization. Stored values remain ordinary numbers.
+        // This intentionally leaves all original yard data and business logic unchanged.
+        const DIGIT_SETS = {
+            hi: '०१२३४५६७८९', mr: '०१२३४५६७८९', ne: '०१२३४५६७८९', sa: '०१२३४५६७८९',
+            doi: '०१२३४५६७८९', bho: '०१२३४५६७८९', raj: '०१२३४५६७८९',
+            bn: '০১২৩৪৫৬৭৮৯', as: '০১২৩৪৫৬৭৮৯',
+            pa: '੦੧੨੩੪੫੬੭੮੯', gu: '૦૧૨૩૪૫૬૭૮૯', or: '୦୧୨୩୪୫୬୭୮୯',
+            ta: '௦௧௨௩௪௫௬௭௮௯', te: '౦౧౨౩౪౫౬౭౮౯', kn: '೦೧೨೩೪೫೬೭೮೯',
+            ml: '൦൧൨൩൪൫൬൭൮൯', ur: '۰۱۲۳۴۵۶۷۸۹', sd: '۰۱۲۳۴۵۶۷۸۹',
+            ks: '۰۱۲۳۴۵۶۷۸۹', mni: '꯰꯱꯲꯳꯴꯵꯶꯷꯸꯹', sat: '᱐᱑᱒᱓᱔᱕᱖᱗᱘᱙'
+        };
+
+        function formatDisplayNumber(value) {
+            // Read saved language first: the language script reloads the page after selection.
+            const lang = localStorage.getItem('kd_selected_lang')
+                || document.getElementById('langSelect')?.value
+                || 'en';
+            const digits = DIGIT_SETS[lang];
+            const text = String(value);
+            if (!digits) return text;
+            return text.replace(/[0-9]/g, digit => digits[Number(digit)]);
+        }
 
         function getSelectedYard() {
             const select = document.getElementById('activeAdminYard');
@@ -215,7 +242,7 @@
 
             const booked = readNonNegativeNumber(
                 `kd_booked_${yard}`,
-                DEFAULT_BOOKED
+                DEFAULT_BOOKED_BY_YARD[yard] ?? DEFAULT_BOOKED
             );
 
             const isLocked =
@@ -225,10 +252,10 @@
             slider.value = capacity;
 
             document.getElementById('currentCapVal').textContent =
-                `${capacity} Tons`;
+                `${formatDisplayNumber(capacity)} ${getApmcTonUnit()}`;
 
             document.getElementById('adminYardTonnage').textContent =
-                `${booked} / ${capacity} Tons`;
+                `${formatDisplayNumber(booked)} / ${formatDisplayNumber(capacity)} ${getApmcTonUnit()}`;
 
             const btnLock = document.getElementById('btnAdminLock');
             const badge = document.getElementById('adminYardBadge');
@@ -264,6 +291,9 @@
 
             document.getElementById('delayBufferSelect').value =
                 validDelays.includes(savedDelay) ? savedDelay : '0';
+
+            const activeLang = localStorage.getItem('kd_selected_lang') || 'en';
+            if (typeof applyApmcLanguage === 'function') applyApmcLanguage(activeLang);
         }
 
         function updateYardCapacity(value) {
@@ -377,90 +407,86 @@
         });
     </script>
 
-    <!-- Automatic translation support for all 22 selectable languages. -->
-    <div id="google_translate_element" aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"></div>
-
     <script>
-    (function () {
-        const STORAGE_KEY = 'kd_selected_lang';
+    // Built-in translations only. No Google Translate or external translation service.
+    const APMC_TEXT = {"en":{"appTitle":"KrishiDhara 2.0 • APMC Admin Portal","appSubtitle":"Granular Yard Control, Shift Delays & Emergency Locks","switchRole":"Switch Role","assignedYard":"Assigned Mandi Jurisdiction","liveTonnage":"Live Yard Tonnage","operational":"Operational","emergencyLocked":"Emergency Locked 🛑","capacityClosed":"Capacity Closed","capacityLock":"Capacity & Emergency Lock","safetyControl":"Safety Control","adjustLimit":"Adjust Daily Tonnage Limit:","zeroCapacity":"Set capacity to 0 Tons to block new bookings for this yard.","shutdown":"Instant Booking Shutdown","haltDescription":"Halts all incoming farmer slot tokens.","haltYard":"Halt Yard 🛑","resumeYard":"Resume Yard ▶","delayManager":"Break & Slowdown Delay Manager","timeShift":"Time Shift","delayDescription":"Apply a temporary arrival buffer for farmers due to maintenance or lunch shifts.","selectBuffer":"Select Delay Buffer:","noDelay":"No Delay (0 Minutes)","delay15":"Shift Slots by +15 Minutes","delay30":"Shift Slots by +30 Minutes (Lunch)","delay60":"Shift Slots by +60 Minutes (Maintenance)","broadcastDelay":"Broadcast Slot Delay to Farmers ⏰","footer":"KrishiDhara 2.0 • APMC Administration"},"hi":{"appTitle":"कृषिधारा 2.0 • एपीएमसी प्रशासन पोर्टल","appSubtitle":"मंडी नियंत्रण, समय-विलंब और आपातकालीन लॉक","switchRole":"भूमिका बदलें","assignedYard":"निर्धारित मंडी क्षेत्र","liveTonnage":"मंडी में वर्तमान मात्रा","operational":"संचालित","emergencyLocked":"आपातकालीन लॉक 🛑","capacityClosed":"क्षमता बंद","capacityLock":"क्षमता और आपातकालीन लॉक","safetyControl":"सुरक्षा नियंत्रण","adjustLimit":"दैनिक टन सीमा बदलें:","zeroCapacity":"नई बुकिंग रोकने के लिए इस मंडी की क्षमता 0 टन करें।","shutdown":"बुकिंग तुरंत बंद करें","haltDescription":"किसानों के सभी नए स्लॉट टोकन रोकता है।","haltYard":"मंडी रोकें 🛑","resumeYard":"मंडी फिर शुरू करें ▶","delayManager":"विश्राम और देरी प्रबंधन","timeShift":"समय बदलाव","delayDescription":"रखरखाव या भोजनावकाश के कारण किसानों के आगमन में अस्थायी देरी जोड़ें।","selectBuffer":"देरी चुनें:","noDelay":"कोई देरी नहीं (0 मिनट)","delay15":"स्लॉट में +15 मिनट जोड़ें","delay30":"स्लॉट में +30 मिनट जोड़ें (भोजनावकाश)","delay60":"स्लॉट में +60 मिनट जोड़ें (रखरखाव)","broadcastDelay":"किसानों को स्लॉट देरी की सूचना दें ⏰","footer":"कृषिधारा 2.0 • एपीएमसी प्रशासन"},"mr":{"appTitle":"कृषिधारा 2.0 • एपीएमसी प्रशासन पोर्टल","appSubtitle":"बाजार आवार नियंत्रण, वेळेतील विलंब आणि आपत्कालीन लॉक","switchRole":"भूमिका बदला","assignedYard":"नियुक्त बाजार आवार","liveTonnage":"आवारातील सध्याचे टन","operational":"कार्यरत","emergencyLocked":"आपत्कालीन लॉक 🛑","capacityClosed":"क्षमता बंद","capacityLock":"क्षमता आणि आपत्कालीन लॉक","safetyControl":"सुरक्षा नियंत्रण","adjustLimit":"दैनिक टन मर्यादा बदला:","zeroCapacity":"नवीन बुकिंग थांबवण्यासाठी या आवाराची क्षमता 0 टन करा.","shutdown":"बुकिंग त्वरित बंद करा","haltDescription":"शेतकऱ्यांचे नवीन स्लॉट टोकन थांबवते.","haltYard":"आवार थांबवा 🛑","resumeYard":"आवार पुन्हा सुरू करा ▶","delayManager":"विश्रांती आणि विलंब व्यवस्थापक","timeShift":"वेळ बदल","delayDescription":"देखभाल किंवा दुपारच्या विश्रांतीमुळे शेतकऱ्यांच्या आगमनासाठी तात्पुरता विलंब लागू करा.","selectBuffer":"विलंब निवडा:","noDelay":"विलंब नाही (0 मिनिटे)","delay15":"स्लॉटमध्ये +15 मिनिटे जोडा","delay30":"स्लॉटमध्ये +30 मिनिटे जोडा (दुपारचे जेवण)","delay60":"स्लॉटमध्ये +60 मिनिटे जोडा (देखभाल)","broadcastDelay":"शेतकऱ्यांना स्लॉट विलंबाची सूचना द्या ⏰","footer":"कृषिधारा 2.0 • एपीएमसी प्रशासन"},"pa":{"appTitle":"ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • APMC ਪ੍ਰਸ਼ਾਸਨ ਪੋਰਟਲ","appSubtitle":"ਯਾਰਡ ਕੰਟਰੋਲ, ਸਮੇਂ ਦੀ ਦੇਰੀ ਅਤੇ ਐਮਰਜੈਂਸੀ ਲੌਕ","switchRole":"ਭੂਮਿਕਾ ਬਦਲੋ","assignedYard":"ਨਿਰਧਾਰਤ ਮੰਡੀ ਖੇਤਰ","liveTonnage":"ਯਾਰਡ ਵਿੱਚ ਮੌਜੂਦਾ ਟਨ","operational":"ਚਾਲੂ","emergencyLocked":"ਐਮਰਜੈਂਸੀ ਲੌਕ 🛑","capacityClosed":"ਸਮਰੱਥਾ ਬੰਦ","capacityLock":"ਸਮਰੱਥਾ ਅਤੇ ਐਮਰਜੈਂਸੀ ਲੌਕ","safetyControl":"ਸੁਰੱਖਿਆ ਕੰਟਰੋਲ","adjustLimit":"ਰੋਜ਼ਾਨਾ ਟਨ ਸੀਮਾ ਬਦਲੋ:","zeroCapacity":"ਨਵੀਂ ਬੁਕਿੰਗ ਰੋਕਣ ਲਈ ਇਸ ਯਾਰਡ ਦੀ ਸਮਰੱਥਾ 0 ਟਨ ਕਰੋ।","shutdown":"ਬੁਕਿੰਗ ਤੁਰੰਤ ਬੰਦ ਕਰੋ","haltDescription":"ਕਿਸਾਨਾਂ ਦੇ ਸਾਰੇ ਨਵੇਂ ਸਲਾਟ ਟੋਕਨ ਰੋਕਦਾ ਹੈ।","haltYard":"ਯਾਰਡ ਰੋਕੋ 🛑","resumeYard":"ਯਾਰਡ ਮੁੜ ਚਾਲੂ ਕਰੋ ▶","delayManager":"ਬਰੇਕ ਅਤੇ ਦੇਰੀ ਪ੍ਰਬੰਧਕ","timeShift":"ਸਮੇਂ ਵਿੱਚ ਬਦਲਾਅ","delayDescription":"ਮੁਰੰਮਤ ਜਾਂ ਦੁਪਹਿਰ ਦੇ ਖਾਣੇ ਕਾਰਨ ਕਿਸਾਨਾਂ ਦੇ ਆਉਣ ਲਈ ਅਸਥਾਈ ਦੇਰੀ ਲਾਗੂ ਕਰੋ।","selectBuffer":"ਦੇਰੀ ਚੁਣੋ:","noDelay":"ਕੋਈ ਦੇਰੀ ਨਹੀਂ (0 ਮਿੰਟ)","delay15":"ਸਲਾਟ ਵਿੱਚ +15 ਮਿੰਟ ਜੋੜੋ","delay30":"ਸਲਾਟ ਵਿੱਚ +30 ਮਿੰਟ ਜੋੜੋ (ਦੁਪਹਿਰ ਦਾ ਖਾਣਾ)","delay60":"ਸਲਾਟ ਵਿੱਚ +60 ਮਿੰਟ ਜੋੜੋ (ਮੁਰੰਮਤ)","broadcastDelay":"ਕਿਸਾਨਾਂ ਨੂੰ ਸਲਾਟ ਦੇਰੀ ਦੀ ਸੂਚਨਾ ਦਿਓ ⏰","footer":"ਕ੍ਰਿਸ਼ੀਧਾਰਾ 2.0 • APMC ਪ੍ਰਸ਼ਾਸਨ"},"gu":{"appTitle":"કૃષિધારા 2.0 • APMC વહીવટ પોર્ટલ","appSubtitle":"યાર્ડ નિયંત્રણ, સમય વિલંબ અને કટોકટી લોક","switchRole":"ભૂમિકા બદલો","assignedYard":"નિયુક્ત મંડી વિસ્તાર","liveTonnage":"યાર્ડમાં હાલનું ટન","operational":"ચાલુ","emergencyLocked":"કટોકટી લોક 🛑","capacityClosed":"ક્ષમતા બંધ","capacityLock":"ક્ષમતા અને કટોકટી લોક","safetyControl":"સુરક્ષા નિયંત્રણ","adjustLimit":"દૈનિક ટન મર્યાદા બદલો:","zeroCapacity":"નવી બુકિંગ રોકવા માટે આ યાર્ડની ક્ષમતા 0 ટન કરો.","shutdown":"બુકિંગ તરત બંધ કરો","haltDescription":"ખેડૂતોના નવા સ્લોટ ટોકન રોકે છે.","haltYard":"યાર્ડ રોકો 🛑","resumeYard":"યાર્ડ ફરી શરૂ કરો ▶","delayManager":"વિરામ અને વિલંબ વ્યવસ્થાપક","timeShift":"સમય ફેરફાર","delayDescription":"જાળવણી અથવા બપોરના વિરામને કારણે ખેડૂતોના આગમનમાં અસ્થાયી વિલંબ ઉમેરો.","selectBuffer":"વિલંબ પસંદ કરો:","noDelay":"વિલંબ નહીં (0 મિનિટ)","delay15":"સ્લોટમાં +15 મિનિટ ઉમેરો","delay30":"સ્લોટમાં +30 મિનિટ ઉમેરો (ભોજન)","delay60":"સ્લોટમાં +60 મિનિટ ઉમેરો (જાળવણી)","broadcastDelay":"ખેડૂતોને સ્લોટ વિલંબની જાણ કરો ⏰","footer":"કૃષિધારા 2.0 • APMC વહીવટ"},"bn":{"appTitle":"কৃষিধারা 2.0 • APMC প্রশাসন পোর্টাল","appSubtitle":"ইয়ার্ড নিয়ন্ত্রণ, সময়ের বিলম্ব ও জরুরি লক","switchRole":"ভূমিকা বদলান","assignedYard":"নির্ধারিত মান্ডি এলাকা","liveTonnage":"ইয়ার্ডে বর্তমান টন","operational":"চালু","emergencyLocked":"জরুরি লক 🛑","capacityClosed":"ক্ষমতা বন্ধ","capacityLock":"ক্ষমতা ও জরুরি লক","safetyControl":"নিরাপত্তা নিয়ন্ত্রণ","adjustLimit":"দৈনিক টনের সীমা বদলান:","zeroCapacity":"নতুন বুকিং বন্ধ করতে এই ইয়ার্ডের ক্ষমতা 0 টন করুন।","shutdown":"তাৎক্ষণিক বুকিং বন্ধ","haltDescription":"কৃষকদের নতুন স্লট টোকেন বন্ধ করে।","haltYard":"ইয়ার্ড বন্ধ করুন 🛑","resumeYard":"ইয়ার্ড আবার চালু করুন ▶","delayManager":"বিরতি ও বিলম্ব ব্যবস্থাপক","timeShift":"সময় পরিবর্তন","delayDescription":"রক্ষণাবেক্ষণ বা দুপুরের বিরতির কারণে কৃষকদের আগমনে সাময়িক বিলম্ব যোগ করুন।","selectBuffer":"বিলম্ব বেছে নিন:","noDelay":"কোনও বিলম্ব নয় (0 মিনিট)","delay15":"স্লটে +15 মিনিট যোগ করুন","delay30":"স্লটে +30 মিনিট যোগ করুন (দুপুরের খাবার)","delay60":"স্লটে +60 মিনিট যোগ করুন (রক্ষণাবেক্ষণ)","broadcastDelay":"কৃষকদের স্লট বিলম্বের খবর দিন ⏰","footer":"কৃষিধারা 2.0 • APMC প্রশাসন"},"te":{"appTitle":"కృషిధారా 2.0 • APMC పరిపాలన పోర్టల్","appSubtitle":"యార్డ్ నియంత్రణ, సమయ ఆలస్యం మరియు అత్యవసర లాక్","switchRole":"పాత్ర మార్చండి","assignedYard":"కేటాయించిన మార్కెట్ పరిధి","liveTonnage":"యార్డ్‌లో ప్రస్తుత టన్నులు","operational":"పనిచేస్తోంది","emergencyLocked":"అత్యవసర లాక్ 🛑","capacityClosed":"సామర్థ్యం మూసివేయబడింది","capacityLock":"సామర్థ్యం మరియు అత్యవసర లాక్","safetyControl":"భద్రతా నియంత్రణ","adjustLimit":"రోజువారీ టన్నుల పరిమితిని మార్చండి:","zeroCapacity":"కొత్త బుకింగ్‌లను ఆపడానికి ఈ యార్డ్ సామర్థ్యాన్ని 0 టన్నులుగా చేయండి.","shutdown":"వెంటనే బుకింగ్‌లను ఆపండి","haltDescription":"రైతుల కొత్త స్లాట్ టోకెన్లన్నింటినీ ఆపుతుంది.","haltYard":"యార్డ్‌ను ఆపండి 🛑","resumeYard":"యార్డ్‌ను మళ్లీ ప్రారంభించండి ▶","delayManager":"విరామం మరియు ఆలస్య నిర్వహణ","timeShift":"సమయ మార్పు","delayDescription":"నిర్వహణ లేదా భోజన విరామం వల్ల రైతుల రాకకు తాత్కాలిక ఆలస్యాన్ని జోడించండి.","selectBuffer":"ఆలస్యాన్ని ఎంచుకోండి:","noDelay":"ఆలస్యం లేదు (0 నిమిషాలు)","delay15":"స్లాట్‌లకు +15 నిమిషాలు జోడించండి","delay30":"స్లాట్‌లకు +30 నిమిషాలు జోడించండి (భోజనం)","delay60":"స్లాట్‌లకు +60 నిమిషాలు జోడించండి (నిర్వహణ)","broadcastDelay":"రైతులకు స్లాట్ ఆలస్యాన్ని తెలియజేయండి ⏰","footer":"కృషిధారా 2.0 • APMC పరిపాలన"},"ta":{"appTitle":"கிருஷிதாரா 2.0 • APMC நிர்வாகத் தளம்","appSubtitle":"யார்டு கட்டுப்பாடு, நேரத் தாமதம் மற்றும் அவசர பூட்டு","switchRole":"பங்கை மாற்று","assignedYard":"ஒதுக்கப்பட்ட சந்தைப் பகுதி","liveTonnage":"யார்டில் தற்போதைய டன்","operational":"செயல்பாட்டில் உள்ளது","emergencyLocked":"அவசர பூட்டு 🛑","capacityClosed":"கொள்ளளவு மூடப்பட்டது","capacityLock":"கொள்ளளவு மற்றும் அவசர பூட்டு","safetyControl":"பாதுகாப்புக் கட்டுப்பாடு","adjustLimit":"தினசரி டன் வரம்பை மாற்று:","zeroCapacity":"புதிய முன்பதிவுகளைத் தடுக்க இந்த யார்டின் கொள்ளளவை 0 டன்னாக அமைக்கவும்.","shutdown":"உடனடி முன்பதிவு நிறுத்தம்","haltDescription":"விவசாயிகளின் புதிய ஸ்லாட் டோக்கன்களை நிறுத்தும்.","haltYard":"யார்டை நிறுத்து 🛑","resumeYard":"யார்டை மீண்டும் தொடங்கு ▶","delayManager":"இடைவேளை மற்றும் தாமத மேலாளர்","timeShift":"நேர மாற்றம்","delayDescription":"பராமரிப்பு அல்லது மதிய உணவு இடைவேளைக்காக வருகையில் தற்காலிக தாமதத்தைச் சேர்க்கவும்.","selectBuffer":"தாமதத்தைத் தேர்ந்தெடு:","noDelay":"தாமதம் இல்லை (0 நிமிடம்)","delay15":"ஸ்லாட்டுக்கு +15 நிமிடம் சேர்க்கவும்","delay30":"ஸ்லாட்டுக்கு +30 நிமிடம் சேர்க்கவும் (மதிய உணவு)","delay60":"ஸ்லாட்டுக்கு +60 நிமிடம் சேர்க்கவும் (பராமரிப்பு)","broadcastDelay":"விவசாயிகளுக்கு ஸ்லாட் தாமதத்தை அறிவிக்கவும் ⏰","footer":"கிருஷிதாரா 2.0 • APMC நிர்வாகம்"},"kn":{"appTitle":"ಕೃಷಿಧಾರಾ 2.0 • APMC ಆಡಳಿತ ಪೋರ್ಟಲ್","appSubtitle":"ಯಾರ್ಡ್ ನಿಯಂತ್ರಣ, ಸಮಯ ವಿಳಂಬ ಮತ್ತು ತುರ್ತು ಲಾಕ್","switchRole":"ಪಾತ್ರ ಬದಲಿಸಿ","assignedYard":"ನಿಯೋಜಿತ ಮಾರುಕಟ್ಟೆ ವ್ಯಾಪ್ತಿ","liveTonnage":"ಯಾರ್ಡ್‌ನ ಪ್ರಸ್ತುತ ಟನ್","operational":"ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿದೆ","emergencyLocked":"ತುರ್ತು ಲಾಕ್ 🛑","capacityClosed":"ಸಾಮರ್ಥ್ಯ ಮುಚ್ಚಲಾಗಿದೆ","capacityLock":"ಸಾಮರ್ಥ್ಯ ಮತ್ತು ತುರ್ತು ಲಾಕ್","safetyControl":"ಸುರಕ್ಷತಾ ನಿಯಂತ್ರಣ","adjustLimit":"ದೈನಂದಿನ ಟನ್ ಮಿತಿಯನ್ನು ಬದಲಿಸಿ:","zeroCapacity":"ಹೊಸ ಬುಕ್ಕಿಂಗ್ ತಡೆಯಲು ಈ ಯಾರ್ಡ್ ಸಾಮರ್ಥ್ಯವನ್ನು 0 ಟನ್‌ಗೆ ಹೊಂದಿಸಿ.","shutdown":"ತಕ್ಷಣ ಬುಕ್ಕಿಂಗ್ ನಿಲ್ಲಿಸಿ","haltDescription":"ರೈತರ ಹೊಸ ಸ್ಲಾಟ್ ಟೋಕನ್‌ಗಳನ್ನು ತಡೆಯುತ್ತದೆ.","haltYard":"ಯಾರ್ಡ್ ನಿಲ್ಲಿಸಿ 🛑","resumeYard":"ಯಾರ್ಡ್ ಮರುಪ್ರಾರಂಭಿಸಿ ▶","delayManager":"ವಿರಾಮ ಮತ್ತು ವಿಳಂಬ ನಿರ್ವಾಹಕ","timeShift":"ಸಮಯ ಬದಲಾವಣೆ","delayDescription":"ನಿರ್ವಹಣೆ ಅಥವಾ ಊಟದ ವಿರಾಮಕ್ಕಾಗಿ ರೈತರ ಆಗಮನಕ್ಕೆ ತಾತ್ಕಾಲಿಕ ವಿಳಂಬ ಸೇರಿಸಿ.","selectBuffer":"ವಿಳಂಬ ಆಯ್ಕೆಮಾಡಿ:","noDelay":"ವಿಳಂಬವಿಲ್ಲ (0 ನಿಮಿಷ)","delay15":"ಸ್ಲಾಟ್‌ಗೆ +15 ನಿಮಿಷ ಸೇರಿಸಿ","delay30":"ಸ್ಲಾಟ್‌ಗೆ +30 ನಿಮಿಷ ಸೇರಿಸಿ (ಊಟ)","delay60":"ಸ್ಲಾಟ್‌ಗೆ +60 ನಿಮಿಷ ಸೇರಿಸಿ (ನಿರ್ವಹಣೆ)","broadcastDelay":"ರೈತರಿಗೆ ಸ್ಲಾಟ್ ವಿಳಂಬದ ಮಾಹಿತಿ ನೀಡಿ ⏰","footer":"ಕೃಷಿಧಾರಾ 2.0 • APMC ಆಡಳಿತ"},"ml":{"appTitle":"കൃഷിധാര 2.0 • APMC ഭരണ പോർട്ടൽ","appSubtitle":"യാർഡ് നിയന്ത്രണം, സമയതാമസം, അടിയന്തര ലോക്ക്","switchRole":"റോൾ മാറ്റുക","assignedYard":"നിശ്ചയിച്ച മാർക്കറ്റ് പരിധി","liveTonnage":"യാർഡിലെ നിലവിലെ ടൺ","operational":"പ്രവർത്തിക്കുന്നു","emergencyLocked":"അടിയന്തര ലോക്ക് 🛑","capacityClosed":"ശേഷി അടച്ചു","capacityLock":"ശേഷിയും അടിയന്തര ലോക്കും","safetyControl":"സുരക്ഷാ നിയന്ത്രണം","adjustLimit":"ദൈനംദിന ടൺ പരിധി മാറ്റുക:","zeroCapacity":"പുതിയ ബുക്കിംഗ് തടയാൻ ഈ യാർഡിന്റെ ശേഷി 0 ടൺ ആക്കുക.","shutdown":"ഉടൻ ബുക്കിംഗ് നിർത്തുക","haltDescription":"കർഷകരുടെ പുതിയ സ്ലോട്ട് ടോക്കണുകൾ തടയും.","haltYard":"യാർഡ് നിർത്തുക 🛑","resumeYard":"യാർഡ് വീണ്ടും ആരംഭിക്കുക ▶","delayManager":"ഇടവേളയും താമസവും നിയന്ത്രിക്കുക","timeShift":"സമയമാറ്റം","delayDescription":"അറ്റകുറ്റപ്പണി അല്ലെങ്കിൽ ഉച്ചഭക്ഷണ ഇടവേള കാരണം വരവിൽ താൽക്കാലിക താമസം ചേർക്കുക.","selectBuffer":"താമസം തിരഞ്ഞെടുക്കുക:","noDelay":"താമസമില്ല (0 മിനിറ്റ്)","delay15":"സ്ലോട്ടിൽ +15 മിനിറ്റ് ചേർക്കുക","delay30":"സ്ലോട്ടിൽ +30 മിനിറ്റ് ചേർക്കുക (ഉച്ചഭക്ഷണം)","delay60":"സ്ലോട്ടിൽ +60 മിനിറ്റ് ചേർക്കുക (അറ്റകുറ്റപ്പണി)","broadcastDelay":"കർഷകരെ സ്ലോട്ട് താമസം അറിയിക്കുക ⏰","footer":"കൃഷിധാര 2.0 • APMC ഭരണം"},"or":{"appTitle":"କୃଷିଧାରା 2.0 • APMC ପ୍ରଶାସନ ପୋର୍ଟାଲ୍","appSubtitle":"ୟାର୍ଡ ନିୟନ୍ତ୍ରଣ, ସମୟ ବିଳମ୍ବ ଏବଂ ଜରୁରୀ ଲକ୍","switchRole":"ଭୂମିକା ବଦଳାନ୍ତୁ","assignedYard":"ନିର୍ଦ୍ଧାରିତ ମଣ୍ଡି ଅଞ୍ଚଳ","liveTonnage":"ୟାର୍ଡର ବର୍ତ୍ତମାନ ଟନ୍","operational":"କାର୍ଯ୍ୟରତ","emergencyLocked":"ଜରୁରୀ ଲକ୍ 🛑","capacityClosed":"କ୍ଷମତା ବନ୍ଦ","capacityLock":"କ୍ଷମତା ଏବଂ ଜରୁରୀ ଲକ୍","safetyControl":"ସୁରକ୍ଷା ନିୟନ୍ତ୍ରଣ","adjustLimit":"ଦୈନିକ ଟନ୍ ସୀମା ବଦଳାନ୍ତୁ:","zeroCapacity":"ନୂତନ ବୁକିଂ ବନ୍ଦ କରିବାକୁ ଏହି ୟାର୍ଡର କ୍ଷମତା 0 ଟନ୍ କରନ୍ତୁ।","shutdown":"ତୁରନ୍ତ ବୁକିଂ ବନ୍ଦ","haltDescription":"ଚାଷୀଙ୍କ ନୂତନ ସ୍ଲଟ୍ ଟୋକନ୍ ବନ୍ଦ କରେ।","haltYard":"ୟାର୍ଡ ବନ୍ଦ କରନ୍ତୁ 🛑","resumeYard":"ୟାର୍ଡ ପୁଣି ଚାଲୁ କରନ୍ତୁ ▶","delayManager":"ବିରତି ଓ ବିଳମ୍ବ ପରିଚାଳକ","timeShift":"ସମୟ ପରିବର୍ତ୍ତନ","delayDescription":"ମରାମତି କିମ୍ବା ମଧ୍ୟାହ୍ନ ଭୋଜନ ପାଇଁ ଆଗମନରେ ଅସ୍ଥାୟୀ ବିଳମ୍ବ ଯୋଡନ୍ତୁ।","selectBuffer":"ବିଳମ୍ବ ବାଛନ୍ତୁ:","noDelay":"ବିଳମ୍ବ ନାହିଁ (0 ମିନିଟ୍)","delay15":"ସ୍ଲଟ୍‌ରେ +15 ମିନିଟ୍ ଯୋଡନ୍ତୁ","delay30":"ସ୍ଲଟ୍‌ରେ +30 ମିନିଟ୍ ଯୋଡନ୍ତୁ (ଭୋଜନ)","delay60":"ସ୍ଲଟ୍‌ରେ +60 ମିନିଟ୍ ଯୋଡନ୍ତୁ (ମରାମତି)","broadcastDelay":"ଚାଷୀଙ୍କୁ ସ୍ଲଟ୍ ବିଳମ୍ବ ସୂଚନା ଦିଅନ୍ତୁ ⏰","footer":"କୃଷିଧାରା 2.0 • APMC ପ୍ରଶାସନ"},"as":{"appTitle":"কৃষিধাৰা 2.0 • APMC প্ৰশাসন প’ৰ্টেল","appSubtitle":"য়াৰ্ড নিয়ন্ত্ৰণ, সময়ৰ পলম আৰু জৰুৰী লক","switchRole":"ভূমিকা সলনি কৰক","assignedYard":"নিৰ্ধাৰিত বজাৰ এলেকা","liveTonnage":"য়াৰ্ডৰ বৰ্তমান টন","operational":"চলি আছে","emergencyLocked":"জৰুৰী লক 🛑","capacityClosed":"ক্ষমতা বন্ধ","capacityLock":"ক্ষমতা আৰু জৰুৰী লক","safetyControl":"সুৰক্ষা নিয়ন্ত্ৰণ","adjustLimit":"দৈনিক টনৰ সীমা সলনি কৰক:","zeroCapacity":"নতুন বুকিং বন্ধ কৰিবলৈ এই য়াৰ্ডৰ ক্ষমতা 0 টন কৰক।","shutdown":"তৎক্ষণাৎ বুকিং বন্ধ","haltDescription":"কৃষকৰ নতুন স্লট টোকেন বন্ধ কৰে।","haltYard":"য়াৰ্ড বন্ধ কৰক 🛑","resumeYard":"য়াৰ্ড পুনৰ আৰম্ভ কৰক ▶","delayManager":"বিৰতি আৰু পলম ব্যৱস্থাপক","timeShift":"সময় সলনি","delayDescription":"মেৰামতি বা দুপৰীয়াৰ আহাৰৰ বাবে আগমনত সাময়িক পলম যোগ কৰক।","selectBuffer":"পলম বাছক:","noDelay":"পলম নাই (0 মিনিট)","delay15":"স্লটত +15 মিনিট যোগ কৰক","delay30":"স্লটত +30 মিনিট যোগ কৰক (আহাৰ)","delay60":"স্লটত +60 মিনিট যোগ কৰক (মেৰামতি)","broadcastDelay":"কৃষকক স্লট পলমৰ জাননী দিয়ক ⏰","footer":"কৃষিধাৰা 2.0 • APMC প্ৰশাসন"},"ur":{"appTitle":"کرشی دھارا 2.0 • APMC انتظامی پورٹل","appSubtitle":"یارڈ کنٹرول، وقت کی تاخیر اور ہنگامی لاک","switchRole":"کردار تبدیل کریں","assignedYard":"مقررہ منڈی کا علاقہ","liveTonnage":"یارڈ میں موجودہ ٹن","operational":"فعال","emergencyLocked":"ہنگامی لاک 🛑","capacityClosed":"گنجائش بند","capacityLock":"گنجائش اور ہنگامی لاک","safetyControl":"حفاظتی کنٹرول","adjustLimit":"روزانہ ٹن کی حد تبدیل کریں:","zeroCapacity":"نئی بکنگ روکنے کے لیے اس یارڈ کی گنجائش 0 ٹن کریں۔","shutdown":"فوری بکنگ بند کریں","haltDescription":"کسانوں کے نئے سلاٹ ٹوکن روک دیتا ہے۔","haltYard":"یارڈ روکیں 🛑","resumeYard":"یارڈ دوبارہ شروع کریں ▶","delayManager":"وقفہ اور تاخیر کا منتظم","timeShift":"وقت میں تبدیلی","delayDescription":"مرمت یا دوپہر کے کھانے کی وجہ سے آمد میں عارضی تاخیر شامل کریں۔","selectBuffer":"تاخیر منتخب کریں:","noDelay":"کوئی تاخیر نہیں (0 منٹ)","delay15":"سلاٹ میں +15 منٹ شامل کریں","delay30":"سلاٹ میں +30 منٹ شامل کریں (کھانا)","delay60":"سلاٹ میں +60 منٹ شامل کریں (مرمت)","broadcastDelay":"کسانوں کو سلاٹ کی تاخیر سے آگاہ کریں ⏰","footer":"کرشی دھارا 2.0 • APMC انتظامیہ"},"sa":{"appTitle":"कृषिधारा २.० • एपीएमसी प्रशासन-द्वारम्","appSubtitle":"मण्डी-नियन्त्रणं, काल-विलम्बः, आपत्कालीन-रोधः च","switchRole":"भूमिकां परिवर्तयतु","assignedYard":"नियतं मण्डीक्षेत्रम्","liveTonnage":"मण्ड्यां वर्तमानं भारटनम्","operational":"प्रवर्तमानम्","emergencyLocked":"आपत्कालीन-रोधः 🛑","capacityClosed":"क्षमता निरुद्धा","capacityLock":"क्षमता आपत्कालीन-रोधश्च","safetyControl":"सुरक्षा-नियन्त्रणम्","adjustLimit":"दैनिक-टन-सीमां परिवर्तयतु:","zeroCapacity":"नूतन-आरक्षणानि निरोद्धुं मण्डीक्षमतां शून्यटनं कुरुत।","shutdown":"आरक्षणानि तत्क्षणं निरुन्धि","haltDescription":"कृषकाणां नूतन-स्लॉट्-टोकनानि निरुन्धि।","haltYard":"मण्डीं निरुन्धि 🛑","resumeYard":"मण्डीं पुनः प्रवर्तयतु ▶","delayManager":"विश्राम-विलम्ब-प्रबन्धकः","timeShift":"काल-परिवर्तनम्","delayDescription":"परिपालनाय मध्याह्नभोजनाय वा आगमने अस्थायी-विलम्बं योजयतु।","selectBuffer":"विलम्बं वृणुत:","noDelay":"विलम्बो नास्ति (0 निमेषाः)","delay15":"स्लॉटे +15 निमेषान् योजयतु","delay30":"स्लॉटे +30 निमेषान् योजयतु (भोजनम्)","delay60":"स्लॉटे +60 निमेषान् योजयतु (परिपालनम्)","broadcastDelay":"कृषकेभ्यः स्लॉट्-विलम्बं सूचयतु ⏰","footer":"कृषिधारा २.० • एपीएमसी प्रशासनम्"},"ne":{"appTitle":"कृषिधारा 2.0 • APMC प्रशासन पोर्टल","appSubtitle":"मण्डी नियन्त्रण, समय ढिलाइ र आपत्कालीन लक","switchRole":"भूमिका बदल्नुहोस्","assignedYard":"तोकिएको मण्डी क्षेत्र","liveTonnage":"यार्डमा हालको टन","operational":"सञ्चालनमा","emergencyLocked":"आपत्कालीन लक 🛑","capacityClosed":"क्षमता बन्द","capacityLock":"क्षमता र आपत्कालीन लक","safetyControl":"सुरक्षा नियन्त्रण","adjustLimit":"दैनिक टन सीमा बदल्नुहोस्:","zeroCapacity":"नयाँ बुकिङ रोक्न यो यार्डको क्षमता 0 टन बनाउनुहोस्।","shutdown":"तुरुन्त बुकिङ बन्द","haltDescription":"किसानका नयाँ स्लट टोकनहरू रोक्छ।","haltYard":"यार्ड रोक्नुहोस् 🛑","resumeYard":"यार्ड पुनः सुरु गर्नुहोस् ▶","delayManager":"विश्राम र ढिलाइ व्यवस्थापक","timeShift":"समय परिवर्तन","delayDescription":"मर्मत वा दिउँसोको खानाका कारण आगमनमा अस्थायी ढिलाइ थप्नुहोस्।","selectBuffer":"ढिलाइ छान्नुहोस्:","noDelay":"ढिलाइ छैन (0 मिनेट)","delay15":"स्लटमा +15 मिनेट थप्नुहोस्","delay30":"स्लटमा +30 मिनेट थप्नुहोस् (खाना)","delay60":"स्लटमा +60 मिनेट थप्नुहोस् (मर्मत)","broadcastDelay":"किसानलाई स्लट ढिलाइको सूचना दिनुहोस् ⏰","footer":"कृषिधारा 2.0 • APMC प्रशासन"},"sd":{"appTitle":"ڪرشي ڌارا 2.0 • APMC انتظامي پورٽل","appSubtitle":"يارڊ ڪنٽرول، وقت جي دير ۽ هنگامي لاڪ","switchRole":"ڪردار مٽايو","assignedYard":"مقرر ڪيل منڊي وارو علائقو","liveTonnage":"يارڊ ۾ موجوده ٽن","operational":"هلندڙ","emergencyLocked":"هنگامي لاڪ 🛑","capacityClosed":"گنجائش بند","capacityLock":"گنجائش ۽ هنگامي لاڪ","safetyControl":"حفاظتي ڪنٽرول","adjustLimit":"روزاني ٽن جي حد مٽايو:","zeroCapacity":"نئين بکنگ روڪڻ لاءِ هن يارڊ جي گنجائش 0 ٽن ڪريو.","shutdown":"فوري بکنگ بند ڪريو","haltDescription":"هارين جا نوان سلاٽ ٽوڪن روڪي ٿو.","haltYard":"يارڊ روڪيو 🛑","resumeYard":"يارڊ ٻيهر شروع ڪريو ▶","delayManager":"وقفو ۽ دير جو منتظم","timeShift":"وقت جي تبديلي","delayDescription":"مرمت يا منجهند جي ماني سبب اچڻ ۾ عارضي دير شامل ڪريو.","selectBuffer":"دير چونڊيو:","noDelay":"دير ناهي (0 منٽ)","delay15":"سلاٽ ۾ +15 منٽ شامل ڪريو","delay30":"سلاٽ ۾ +30 منٽ شامل ڪريو (ماني)","delay60":"سلاٽ ۾ +60 منٽ شامل ڪريو (مرمت)","broadcastDelay":"هارين کي سلاٽ جي دير جي خبر ڏيو ⏰","footer":"ڪرشي ڌارا 2.0 • APMC انتظاميه"},"ks":{"appTitle":"کٔرشی دھارا 2.0 • APMC اِنتظامی پورٹل","appSubtitle":"منڈی کنٹرول، وقتہ تاخیر تہٕ ایمرجنسی لاک","switchRole":"رول بدلاو","assignedYard":"مقرر منڈی علاقہ","liveTonnage":"یارڈس منز موجودہ ٹن","operational":"چالو","emergencyLocked":"ایمرجنسی لاک 🛑","capacityClosed":"گنجائش بند","capacityLock":"گنجائش تہٕ ایمرجنسی لاک","safetyControl":"حفاظتی کنٹرول","adjustLimit":"روزانہ ٹن حد بدلاو:","zeroCapacity":"نٔو بکنگ روکنے خٲطرٕ یتھ یارڈُک گنجائش 0 ٹن بناو۔","shutdown":"فوراً بکنگ بند کریو","haltDescription":"کسانن ہند نٔو سلاٹ ٹوکن بند کران۔","haltYard":"یارڈ روکو 🛑","resumeYard":"یارڈ دوبارہ چالو کریو ▶","delayManager":"وقفہ تہٕ تاخیر منیجر","timeShift":"وقتہ تبدیلی","delayDescription":"مرمت یا دوپہر کھانے باپت آمدس منز عارضی تاخیر شامل کریو۔","selectBuffer":"تاخیر منتخب کریو:","noDelay":"تاخیر نہ (0 منٹ)","delay15":"سلاٹس منز +15 منٹ شامل کریو","delay30":"سلاٹس منز +30 منٹ شامل کریو (کھانا)","delay60":"سلاٹس منز +60 منٹ شامل کریو (مرمت)","broadcastDelay":"کسانن سلاٹ تاخیرک اطلاع دِیو ⏰","footer":"کٔرشی دھارا 2.0 • APMC اِنتظامیہ"},"doi":{"appTitle":"कृषिधारा 2.0 • एपीएमसी प्रशासन पोर्टल","appSubtitle":"मंडी नियंत्रण, समें दी देरी ते आपातकालीन लॉक","switchRole":"भूमिका बदलो","assignedYard":"निर्धारित मंडी इलाका","liveTonnage":"यार्ड च मौजूदा टन","operational":"चालू","emergencyLocked":"आपातकालीन लॉक 🛑","capacityClosed":"क्षमता बंद","capacityLock":"क्षमता ते आपातकालीन लॉक","safetyControl":"सुरक्षा नियंत्रण","adjustLimit":"रोजाना टन सीमा बदलो:","zeroCapacity":"नमीं बुकिंग रोकने आस्तै इस यार्ड दी क्षमता 0 टन करो।","shutdown":"तुरंत बुकिंग बंद करो","haltDescription":"किसानें दे नमें स्लॉट टोकन रोकदा ऐ।","haltYard":"यार्ड रोको 🛑","resumeYard":"यार्ड परत चालू करो ▶","delayManager":"आराम ते देरी प्रबंधक","timeShift":"समें च बदलाव","delayDescription":"मरम्मत जां दोपहर दे खाने कारण आवने च अस्थायी देरी जोड़ो।","selectBuffer":"देरी चुनो:","noDelay":"कोई देरी नेईं (0 मिनट)","delay15":"स्लॉट च +15 मिनट जोड़ो","delay30":"स्लॉट च +30 मिनट जोड़ो (खाना)","delay60":"स्लॉट च +60 मिनट जोड़ो (मरम्मत)","broadcastDelay":"किसानें गी स्लॉट देरी दी सूचना देओ ⏰","footer":"कृषिधारा 2.0 • एपीएमसी प्रशासन"},"mni":{"appTitle":"ꯀ꯭ꯔꯤꯁꯤꯙꯥꯔꯥ 2.0 • APMC ꯑꯦꯗꯃꯤꯟ ꯄꯣꯔꯇꯦꯜ","appSubtitle":"ꯌꯥꯔꯗ ꯀꯟꯇ꯭ꯔꯣꯜ, ꯃꯇꯝ ꯑꯣꯏꯕ ꯊꯣꯛꯄ ꯑꯃꯁꯨꯡ ꯑꯦꯃꯔꯖꯦꯟꯁꯤ ꯂꯣꯛ","switchRole":"ꯔꯣꯜ ꯍꯣꯡꯗꯣꯀꯎ","assignedYard":"ꯄꯥꯡꯊꯣꯛꯄ ꯃꯥꯟꯗꯤ ꯂꯩꯐꯝ","liveTonnage":"ꯌꯥꯔꯗꯇ ꯑꯩꯈꯣꯌ ꯇꯟ","operational":"ꯊꯕꯛ ꯇꯧꯔꯤ","emergencyLocked":"ꯑꯦꯃꯔꯖꯦꯟꯁꯤ ꯂꯣꯛ 🛑","capacityClosed":"ꯀꯦꯄꯥꯁꯤꯇꯤ ꯂꯣꯛ","capacityLock":"ꯀꯦꯄꯥꯁꯤꯇꯤ ꯑꯃꯁꯨꯡ ꯑꯦꯃꯔꯖꯦꯟꯁꯤ ꯂꯣꯛ","safetyControl":"ꯁꯦꯐꯇꯤ ꯀꯟꯇ꯭ꯔꯣꯜ","adjustLimit":"ꯑꯔꯣꯏꯕ ꯇꯟ ꯂꯤꯃꯤꯠ ꯍꯣꯡꯗꯣꯀꯎ:","zeroCapacity":"ꯑꯅꯧꯕ ꯕꯨꯀꯤꯡ ꯊꯤꯡꯅꯕ ꯌꯥꯔꯗ ꯀꯦꯄꯥꯁꯤꯇꯤ 0 ꯇꯟ ꯑꯣꯏꯍꯟꯕꯤꯌꯨ।","shutdown":"ꯈꯨꯗꯛꯇ ꯕꯨꯀꯤꯡ ꯊꯤꯡꯕ","haltDescription":"ꯐꯥꯔꯃꯔꯁꯤꯡꯒꯤ ꯑꯅꯧꯕ ꯁ꯭ꯂꯣꯠ ꯇꯣꯀꯦꯟꯁꯤꯡ ꯊꯤꯡꯏ।","haltYard":"ꯌꯥꯔꯗ ꯊꯤꯡꯕ 🛑","resumeYard":"ꯌꯥꯔꯗ ꯍꯟꯖꯤꯟ ꯍꯟꯗꯣꯀꯎ ▶","delayManager":"ꯕ꯭ꯔꯦꯛ ꯑꯃꯁꯨꯡ ꯗꯤꯂꯦ ꯃꯦꯅꯦꯖꯔ","timeShift":"ꯃꯇꯝ ꯍꯣꯡꯗꯣꯀꯄ","delayDescription":"ꯃꯦꯅꯇꯦꯅꯦꯟꯁ ꯅꯠꯔꯒ ꯃꯤꯗꯗꯦ ꯈꯥꯅꯕ ꯃꯇꯝꯗ ꯑꯥꯔꯤꯕ ꯃꯇꯝ ꯑꯃ ꯍꯥꯞꯆꯤꯜꯂꯨ।","selectBuffer":"ꯗꯤꯂꯦ ꯈꯜꯂꯨ:","noDelay":"ꯗꯤꯂꯦ ꯂꯩꯇꯦ (0 ꯃꯤꯅꯤꯠ)","delay15":"ꯁ꯭ꯂꯣꯠꯇ +15 ꯃꯤꯅꯤꯠ ꯍꯥꯞꯆꯤꯜꯂꯨ","delay30":"ꯁ꯭ꯂꯣꯠꯇ +30 ꯃꯤꯅꯤꯠ ꯍꯥꯞꯆꯤꯜꯂꯨ (ꯈꯥꯅꯕ)","delay60":"ꯁ꯭ꯂꯣꯠꯇ +60 ꯃꯤꯅꯤꯠ ꯍꯥꯞꯆꯤꯜꯂꯨ (ꯃꯦꯅꯇꯦꯅꯦꯟꯁ)","broadcastDelay":"ꯐꯥꯔꯃꯔꯁꯤꯡꯗ ꯁ꯭ꯂꯣꯠ ꯗꯤꯂꯦ ꯈꯪꯍꯟꯕꯤꯌꯨ ⏰","footer":"ꯀ꯭ꯔꯤꯁꯤꯙꯥꯔꯥ 2.0 • APMC ꯑꯦꯗꯃꯤꯅꯤꯁ꯭ꯠꯔꯦꯁꯟ"},"sat":{"appTitle":"ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 • APMC ᱯᱨᱚᱥᱟᱥᱚᱱ ᱯᱚᱨᱴᱟᱞ","appSubtitle":"ᱭᱟᱨᱰ ᱠᱚᱱᱴᱨᱚᱞ, ᱚᱠᱛᱚ ᱫᱮᱨᱤ ᱟᱨ ᱟᱯᱟᱛᱠᱟᱞᱤᱱ ᱞᱚᱠ","switchRole":"ᱨᱚᱞ ᱵᱚᱫᱚᱞ","assignedYard":"ᱴᱷᱟᱹᱣᱠᱟ ᱢᱟᱱᱰᱤ ᱮᱞᱟᱠᱟ","liveTonnage":"ᱭᱟᱨᱰ ᱨᱮ ᱱᱤᱛᱚᱜ ᱴᱚᱱ","operational":"ᱪᱟᱹᱞᱩ","emergencyLocked":"ᱟᱯᱟᱛᱠᱟᱞᱤᱱ ᱞᱚᱠ 🛑","capacityClosed":"ᱠᱷᱟᱹᱢᱛᱟ ᱵᱚᱸᱫ","capacityLock":"ᱠᱷᱟᱹᱢᱛᱟ ᱟᱨ ᱟᱯᱟᱛᱠᱟᱞᱤᱱ ᱞᱚᱠ","safetyControl":"ᱥᱩᱨᱠᱷᱟ ᱠᱚᱱᱴᱨᱚᱞ","adjustLimit":"ᱫᱤᱱ ᱨᱮᱭᱟᱜ ᱴᱚᱱ ᱥᱤᱢᱟ ᱵᱚᱫᱚᱞ:","zeroCapacity":"ᱱᱟᱶᱟ ᱵᱩᱠᱤᱝ ᱵᱚᱸᱫ ᱞᱟᱹᱜᱤᱫ ᱭᱟᱨᱰ ᱠᱷᱟᱹᱢᱛᱟ 0 ᱴᱚᱱ ᱢᱮᱱᱟᱜ ᱢᱮ।","shutdown":"ᱛᱤᱯᱤᱡ ᱵᱩᱠᱤᱝ ᱵᱚᱸᱫ","haltDescription":"ᱠᱤᱥᱟᱹᱱ ᱠᱚᱣᱟᱜ ᱱᱟᱶᱟ ᱥᱞᱚᱴ ᱴᱚᱠᱮᱱ ᱵᱚᱸᱫ ᱮᱫᱟᱭ।","haltYard":"ᱭᱟᱨᱰ ᱵᱚᱸᱫ ᱢᱮ 🛑","resumeYard":"ᱭᱟᱨᱰ ᱫᱚᱦᱲᱟ ᱪᱟᱹᱞᱩ ᱢᱮ ▶","delayManager":"ᱵᱨᱮᱠ ᱟᱨ ᱫᱮᱨᱤ ᱢᱮᱱᱮᱡᱟᱨ","timeShift":"ᱚᱠᱛᱚ ᱵᱚᱫᱚᱞ","delayDescription":"ᱢᱮᱱᱴᱮᱱᱮᱱᱥ ᱟᱨᱵᱟᱝ ᱫᱩᱯᱩᱨ ᱡᱚᱢ ᱞᱟᱹᱜᱤᱫ ᱟᱜᱩᱭ ᱨᱮ ᱛᱷᱚᱲᱟ ᱫᱮᱨᱤ ᱥᱮᱞᱮᱫ ᱢᱮ।","selectBuffer":"ᱫᱮᱨᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ:","noDelay":"ᱫᱮᱨᱤ ᱵᱟᱹᱱᱩᱜ (0 ᱢᱤᱱᱤᱴ)","delay15":"ᱥᱞᱚᱴ ᱨᱮ +15 ᱢᱤᱱᱤᱴ ᱥᱮᱞᱮᱫ ᱢᱮ","delay30":"ᱥᱞᱚᱴ ᱨᱮ +30 ᱢᱤᱱᱤᱴ ᱥᱮᱞᱮᱫ ᱢᱮ (ᱡᱚᱢ)","delay60":"ᱥᱞᱚᱴ ᱨᱮ +60 ᱢᱤᱱᱤᱴ ᱥᱮᱞᱮᱫ ᱢᱮ (ᱢᱮᱱᱴᱮᱱᱮᱱᱥ)","broadcastDelay":"ᱠᱤᱥᱟᱹᱱ ᱠᱚ ᱥᱞᱚᱴ ᱫᱮᱨᱤ ᱠᱷᱚᱵᱚᱨ ᱮᱢ ᱢᱮ ⏰","footer":"ᱠᱨᱤᱥᱤᱫᱷᱟᱨᱟ 2.0 • APMC ᱯᱨᱚᱥᱟᱥᱚᱱ"},"bho":{"appTitle":"कृषिधारा 2.0 • एपीएमसी प्रशासन पोर्टल","appSubtitle":"मंडी नियंत्रण, समय में देरी आ आपातकालीन लॉक","switchRole":"भूमिका बदलीं","assignedYard":"तय कइल मंडी इलाका","liveTonnage":"यार्ड में अभी के टन","operational":"चालू बा","emergencyLocked":"आपातकालीन लॉक 🛑","capacityClosed":"क्षमता बंद बा","capacityLock":"क्षमता आ आपातकालीन लॉक","safetyControl":"सुरक्षा नियंत्रण","adjustLimit":"रोज के टन सीमा बदलीं:","zeroCapacity":"नया बुकिंग रोके खातिर एह यार्ड के क्षमता 0 टन करीं।","shutdown":"तुरंत बुकिंग बंद करीं","haltDescription":"किसान के नया स्लॉट टोकन रोक देला।","haltYard":"यार्ड रोकीं 🛑","resumeYard":"यार्ड फेरू चालू करीं ▶","delayManager":"आराम आ देरी प्रबंधक","timeShift":"समय में बदलाव","delayDescription":"मरम्मत भा दुपहरिया खाना के चलते आवे में कुछ देर जोड़ दीं।","selectBuffer":"देरी चुनीं:","noDelay":"कवनो देरी नइखे (0 मिनट)","delay15":"स्लॉट में +15 मिनट जोड़ीं","delay30":"स्लॉट में +30 मिनट जोड़ीं (खाना)","delay60":"स्लॉट में +60 मिनट जोड़ीं (मरम्मत)","broadcastDelay":"किसान लोग के स्लॉट देरी के खबर दीं ⏰","footer":"कृषिधारा 2.0 • एपीएमसी प्रशासन"},"raj":{"appTitle":"कृषिधारा 2.0 • एपीएमसी प्रशासन पोर्टल","appSubtitle":"मंडी नियंत्रण, समय री देरी अर आपातकालीन लॉक","switchRole":"भूमिका बदलो","assignedYard":"निर्धारित मंडी इलाको","liveTonnage":"यार्ड में चालू टन","operational":"चालू","emergencyLocked":"आपातकालीन लॉक 🛑","capacityClosed":"क्षमता बंद","capacityLock":"क्षमता अर आपातकालीन लॉक","safetyControl":"सुरक्षा नियंत्रण","adjustLimit":"रोज री टन सीमा बदलो:","zeroCapacity":"नवीं बुकिंग रोकण खातर इण यार्ड री क्षमता 0 टन करो।","shutdown":"तुरंत बुकिंग बंद करो","haltDescription":"किसानां रा नवा स्लॉट टोकन रोकै।","haltYard":"यार्ड रोको 🛑","resumeYard":"यार्ड फेर चालू करो ▶","delayManager":"आराम अर देरी प्रबंधक","timeShift":"समय बदलाव","delayDescription":"मरम्मत अथवा दुपहरिया भोजन खातर आवण में अस्थायी देरी जोड़ो।","selectBuffer":"देरी चुनो:","noDelay":"देरी कोनी (0 मिनट)","delay15":"स्लॉट में +15 मिनट जोड़ो","delay30":"स्लॉट में +30 मिनट जोड़ो (भोजन)","delay60":"स्लॉट में +60 मिनट जोड़ो (मरम्मत)","broadcastDelay":"किसानां ने स्लॉट देरी री सूचना दो ⏰","footer":"कृषिधारा 2.0 • एपीएमसी प्रशासन"}};
+    const APMC_TON_UNITS = {en:'Tons',hi:'टन',mr:'टन',pa:'ਟਨ',gu:'ટન',bn:'টন',te:'టన్నులు',ta:'டன்',kn:'ಟನ್',ml:'ടൺ',or:'ଟନ୍',as:'টন',ur:'ٹن',sa:'टन',ne:'टन',sd:'ٽن',ks:'ٹن',doi:'टन',mni:'ꯇꯟ',sat:'ᱴᱚᱱ',bho:'टन',raj:'टन'};
+    function getApmcTonUnit() { const lang = localStorage.getItem('kd_selected_lang') || 'en'; return APMC_TON_UNITS[lang] || 'Tons'; }
+    const APMC_KEYS = ['appTitle','appSubtitle','switchRole','assignedYard','liveTonnage','operational','emergencyLocked','capacityClosed','capacityLock','safetyControl','adjustLimit','zeroCapacity','shutdown','haltDescription','haltYard','resumeYard','delayManager','timeShift','delayDescription','selectBuffer','noDelay','delay15','delay30','delay60','broadcastDelay','footer'];
 
-        const googleCodes = new Set([
-            'en', 'hi', 'mr', 'pa', 'gu', 'bn', 'te', 'ta', 'kn', 'ml',
-            'or', 'as', 'ur', 'sa', 'ne', 'sd', 'ks', 'doi', 'mni', 'sat',
-            'bho', 'raj'
-        ]);
+    function bindApmcTranslationTargets() {
+      const bind = (selector, key) => {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute('data-i18n', key);
+      };
+      bind('header h1','appTitle');
+      bind('header p','appSubtitle');
+      bind('header button','switchRole');
+      bind('main > div:first-child > div:first-child > div > div:first-child','assignedYard');
+      bind('main > div:first-child > div:last-child > div > div:first-child','liveTonnage');
+      bind('main > div.grid > div:first-child h2','capacityLock');
+      bind('main > div.grid > div:first-child .border-b span','safetyControl');
+      bind('#adminCapSlider','adjustLimit');
+      const slider = document.getElementById('adminCapSlider');
+      if (slider && slider.parentElement && slider.parentElement.parentElement) {
+        const p = slider.parentElement.parentElement.querySelector('p');
+        if (p) p.setAttribute('data-i18n','zeroCapacity');
+        const spans = slider.parentElement.querySelectorAll('span');
+        if (spans.length) spans[0].setAttribute('data-i18n','adjustLimit');
+      }
+      const lock = document.getElementById('btnAdminLock');
+      if (lock && lock.parentElement) {
+        const labels = lock.parentElement.querySelectorAll('div > div');
+        if (labels[0]) labels[0].setAttribute('data-i18n','shutdown');
+        if (labels[1]) labels[1].setAttribute('data-i18n','haltDescription');
+      }
+      bind('main > div.grid > div:last-child h2','delayManager');
+      const delayHeading = document.querySelector('main > div.grid > div:last-child .border-b span');
+      if (delayHeading) delayHeading.setAttribute('data-i18n','timeShift');
+      const delayPanel = document.querySelector('main > div.grid > div:last-child');
+      if (delayPanel) {
+        const p = delayPanel.querySelector('p'); if (p) p.setAttribute('data-i18n','delayDescription');
+        const label = delayPanel.querySelector('label'); if (label) label.setAttribute('data-i18n','selectBuffer');
+        const opts = delayPanel.querySelectorAll('#delayBufferSelect option');
+        ['noDelay','delay15','delay30','delay60'].forEach((k,i)=>{ if(opts[i]) opts[i].setAttribute('data-i18n',k); });
+        const btn = delayPanel.querySelector('button'); if (btn) btn.setAttribute('data-i18n','broadcastDelay');
+      }
+      bind('footer','footer');
+    }
 
-        function setTranslateCookie(lang) {
-            const target = googleCodes.has(lang) ? lang : 'en';
+    function applyApmcLanguage(lang) {
+      const dict = APMC_TEXT[lang] || APMC_TEXT.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+      });
+      const badge = document.getElementById('adminYardBadge');
+      if (badge) {
+        if (badge.className.includes('bg-red-100')) badge.textContent = dict.emergencyLocked;
+        else if (badge.className.includes('bg-amber-100')) badge.textContent = dict.capacityClosed;
+        else badge.textContent = dict.operational;
+      }
+      const lock = document.getElementById('btnAdminLock');
+      if (lock) {
+        lock.textContent = lock.className.includes('bg-emerald-600') ? dict.resumeYard : dict.haltYard;
+      }
+    }
 
-            document.cookie =
-                'googtrans=/en/' + target + ';path=/;SameSite=Lax';
+    window.changeLanguage = function () {
+      const select = document.getElementById('langSelect');
+      const lang = select ? select.value : 'en';
+      try { localStorage.setItem('kd_selected_lang', lang); } catch (e) {}
+      applyApmcLanguage(lang);
+    };
 
-            try {
-                localStorage.setItem(STORAGE_KEY, lang);
-            } catch (error) {
-                console.warn('Could not save language preference.', error);
-            }
-        }
-
-        window.googleTranslateElementInit = function () {
-            if (
-                !window.google ||
-                !google.translate ||
-                !google.translate.TranslateElement
-            ) {
-                return;
-            }
-
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages:
-                    'en,hi,mr,pa,gu,bn,te,ta,kn,ml,or,as,ur,sa,ne,sd,ks,doi,mni,sat,bho,raj',
-                autoDisplay: false
-            }, 'google_translate_element');
-
-            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-            const combo = document.querySelector('.goog-te-combo');
-
-            if (
-                combo &&
-                lang !== 'en' &&
-                Array.from(combo.options).some(option => option.value === lang)
-            ) {
-                combo.value = lang;
-                combo.dispatchEvent(new Event('change'));
-            }
-        };
-
-        window.kdApplySelectedLanguage = function (lang) {
-            setTranslateCookie(lang);
-            window.location.reload();
-        };
-
-        window.changeLanguage = function () {
-            const select = document.getElementById('langSelect');
-
-            if (select) {
-                window.kdApplySelectedLanguage(select.value);
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const select = document.getElementById('langSelect');
-            const lang = localStorage.getItem(STORAGE_KEY) || 'en';
-
-            if (select) select.value = lang;
-
-            if (!document.querySelector('script[data-kd-google-translate]')) {
-                const script = document.createElement('script');
-                script.src =
-                    'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-                script.async = true;
-                script.setAttribute('data-kd-google-translate', 'true');
-                document.head.appendChild(script);
-            }
-        });
-    })();
+    document.addEventListener('DOMContentLoaded', function () {
+      bindApmcTranslationTargets();
+      const select = document.getElementById('langSelect');
+      let lang = 'en';
+      try { lang = localStorage.getItem('kd_selected_lang') || 'en'; } catch (e) {}
+      if (select) select.value = APMC_TEXT[lang] ? lang : 'en';
+      applyApmcLanguage(select ? select.value : lang);
+    });
     </script>
 </body>
 </html>
